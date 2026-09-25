@@ -47,12 +47,12 @@ SEAGAS is a Proof of Concept (POC) web-based platform that uses Natural Language
 
 ```
 Group10_ProjectA/
-├── frontend/           # React frontend (Ren Hang)
-├── backend/            # FastAPI backend (Carl)
-├── nlp/                # NLP & AI matching engine (Yong Hin)
-├── recommendation/     # Rule-based recommendation engine (Aaron)
-├── database/           # Database schema & migrations (Carl)
-├── data/               # Synthetic dataset & JD dataset (Yong Hin)
+├── frontend/           # React frontend
+├── backend/            # FastAPI backend
+├── nlp/                # NLP & AI matching engine
+├── recommendation/     # Rule-based recommendation engine
+├── database/           # Database schema & migrations
+├── data/               # Synthetic dataset & JD dataset
 ├── docs/               # Technical documentation
 └── README.md
 ```
