@@ -1,0 +1,76 @@
+SEAGAS Synthetic Dataset — Summary Statistics
+Generated: 2026-09-26 17:59   seed=42
+============================================================
+Students:              500
+Student skill entries: 5046  (mean 10.1 per student, min 1, max 19)
+Projects:              938
+Certifications:        409
+GPA:                   mean 3.00, min 2.00, max 4.00
+
+Target role:
+  Software Developer             119  ( 23.8%)
+  Data Analyst                   100  ( 20.0%)
+  Web Developer                   84  ( 16.8%)
+  Cybersecurity Analyst           70  ( 14.0%)
+  Cloud Engineer                  70  ( 14.0%)
+  Data Scientist                  57  ( 11.4%)
+
+Archetype:
+  average                        275  ( 55.0%)
+  strong                         116  ( 23.2%)
+  weak                           109  ( 21.8%)
+
+Year of study:
+  Year 3                         186  ( 37.2%)
+  Year 2                         147  ( 29.4%)
+  Year 4                         104  ( 20.8%)
+  Year 1                          63  ( 12.6%)
+
+Internships:
+  0 internship(s)                343  ( 68.6%)
+  1 internship(s)                143  ( 28.6%)
+  2 internship(s)                 14  (  2.8%)
+
+Proficiency level:
+  intermediate                  2740  ( 54.3%)
+  advanced                      1359  ( 26.9%)
+  beginner                       947  ( 18.8%)
+
+Mean core-skill coverage by archetype:
+  strong      93.4%  (n=116)
+  average     70.5%  (n=275)
+  weak        37.2%  (n=109)
+
+Students holding each skill:
+  SQL                            366  ( 73.2%)
+  Python                         357  ( 71.4%)
+  Problem Solving                302  ( 60.4%)
+  Teamwork                       268  ( 53.6%)
+  Git                            237  ( 47.4%)
+  Communication                  236  ( 47.2%)
+  Leadership                     204  ( 40.8%)
+  Linux                          193  ( 38.6%)
+  Time Management                186  ( 37.2%)
+  Docker                         184  ( 36.8%)
+  Machine Learning               177  ( 35.4%)
+  Data Visualisation             169  ( 33.8%)
+  Data Analysis                  168  ( 33.6%)
+  JavaScript                     158  ( 31.6%)
+  Cloud Computing                157  ( 31.4%)
+  Node.js                        155  ( 31.0%)
+  React                          135  ( 27.0%)
+  Statistical Analysis           134  ( 26.8%)
+  R                              129  ( 25.8%)
+  Flask                          122  ( 24.4%)
+  Excel                          110  ( 22.0%)
+  Tableau                        110  ( 22.0%)
+  Azure                          101  ( 20.2%)
+  Java                            97  ( 19.4%)
+  FastAPI                         95  ( 19.0%)
+  Power BI                        90  ( 18.0%)
+  C++                             88  ( 17.6%)
+  AWS                             83  ( 16.6%)
+  Research Skills                 73  ( 14.6%)
+  Deep Learning                   68  ( 13.6%)
+  Natural Language Processing     56  ( 11.2%)
+  AI Literacy                     38  (  7.6%)
