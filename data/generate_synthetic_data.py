@@ -30,7 +30,7 @@ Design notes (for the Dataset section of the report):
     so the profile is internally consistent.
   * Counts in student_profiles (project_count, etc.) equal the rows generated in
     the detail tables.
-  * All emails use the reserved domain @synthetic.seagas.test so synthetic data
+  * All emails use the reserved example domain @synthetic.example.com so synthetic data
     can be identified and removed with one DELETE.
   * No real personal data is used. Fixed random seed => reproducible dataset.
 """
@@ -52,10 +52,10 @@ except ImportError:  # bcrypt is already in backend/requirements.txt
     bcrypt = None
 
 # ── Config ────────────────────────────────────────────────────────────────
-DEFAULT_N = 500
+DEFAULT_N = 5000
 DEFAULT_SEED = 42
 DEMO_PASSWORD = "Seagas@2026"          # same password for every synthetic account
-EMAIL_DOMAIN = "synthetic.seagas.test"
+EMAIL_DOMAIN = "synthetic.example.com"
 UNIVERSITY = "Swinburne University of Technology (INTI International College Subang)"
 CURRENT_YEAR = 2026
 

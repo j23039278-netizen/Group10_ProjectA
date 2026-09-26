@@ -2,7 +2,7 @@
 
 **Author:** Ng Yong Hin (AI / NLP Engineer)
 
-500 anonymised, synthetic student profiles for the SEAGAS POC. Every table and column
+5,000 anonymised, synthetic student profiles for the SEAGAS POC. Every table and column
 matches `database/schema.sql`. No real student data is used.
 
 ## Load into PostgreSQL (no Python needed)
@@ -16,8 +16,8 @@ psql -U postgres -d seagas_db -f data/output/seed_synthetic_students.sql
 This inserts rows into `users`, `student_profiles`, `student_skills`,
 `student_projects` and `student_certifications`, all inside one transaction.
 
-**Demo login:** any account from `student0001@synthetic.seagas.test` to
-`student0500@synthetic.seagas.test`. The password is `Seagas@2026`.
+**Demo login:** any account from `student0001@synthetic.example.com` to
+`student5000@synthetic.example.com`. The password is `Seagas@2026`.
 
 **Remove all synthetic data** (cascades to their assessments too):
 
@@ -33,8 +33,8 @@ run the delete script first.
 ```bash
 pip install faker bcrypt
 cd data
-python generate_synthetic_data.py              # 500 students, seed 42
-python generate_synthetic_data.py --n 300 --seed 7
+python generate_synthetic_data.py              # 5000 students, seed 42
+python generate_synthetic_data.py --n 500            # smaller set
 ```
 
 The script stops with an error if it uses a skill name that is not in
@@ -69,5 +69,5 @@ the new skills to `ROLES`, `PROJECTS` and `CERTIFICATIONS` in the script.
 - **Noise:** 0–2 random off-role skills are added per student.
 - **Names:** romanised Malaysian names (Chinese, Malay and Indian) plus a few
   international names.
-- **Emails:** all use the reserved `.test` domain, so no real address can be
+- **Emails:** all use `synthetic.example.com`, a domain reserved for examples (RFC 2606). It passes Pydantic `EmailStr` validation, and no real address can be
   hit.

@@ -3,4 +3,4 @@
 -- assessments and recommendations as well.
 -- Usage: psql -U postgres -d seagas_db -f data/delete_synthetic_data.sql
 
-DELETE FROM users WHERE email LIKE '%@synthetic.seagas.test';
+DELETE FROM users WHERE email LIKE '%@synthetic.example.com';
