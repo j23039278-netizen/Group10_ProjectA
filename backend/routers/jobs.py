@@ -58,7 +58,13 @@ def get_role_required_skills(role_id: str, db: Session = Depends(get_db)):
             FROM job_role_skills jrs
             JOIN skills_library sl ON sl.skill_id = jrs.skill_id
             WHERE jrs.role_id = :rid
-            ORDER BY jrs.importance, sl.category, sl.skill_name
+            ORDER BY
+                CASE jrs.importance
+                    WHEN 'required'  THEN 1
+                    WHEN 'preferred' THEN 2
+                    WHEN 'bonus'     THEN 3
+                END,
+                sl.category, sl.skill_name
         """),
         {"rid": role_id}
     ).fetchall()
