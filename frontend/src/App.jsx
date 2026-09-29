@@ -1,7 +1,9 @@
 // SEAGAS — Main App with routing
 import { useState, useEffect } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import Home from './pages/Home'
 import Login from './pages/Login'
+import Register from './pages/Register'
 import Dashboard from './pages/Dashboard'
 import Profile from './pages/Profile'
 import JobAnalysis from './pages/JobAnalysis'
@@ -39,7 +41,16 @@ function App() {
   }
 
   if (!isLoggedIn) {
-    return <Login onLogin={handleLogin} />
+    return (
+      <BrowserRouter>
+        <Routes>
+          <Route path="/"      element={<Home />} />
+          <Route path="/login" element={<Login onLogin={handleLogin} />} />
+          <Route path="/register" element={<Register onLogin={handleLogin} />} />
+          <Route path="*"      element={<Navigate to="/" />} />
+        </Routes>
+      </BrowserRouter>
+    )
   }
 
   return (
