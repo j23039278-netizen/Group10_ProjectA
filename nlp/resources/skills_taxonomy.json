@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-29 22:00",
+  "generated_at": "2026-09-29 22:07",
   "source": "data/skills/skills_library.csv",
   "skill_count": 138,
   "skills": [
@@ -125,7 +125,9 @@
         "MS Excel",
         "Spreadsheet"
       ],
-      "ambiguous_aliases": [],
+      "ambiguous_aliases": [
+        "Excel"
+      ],
       "description": "Spreadsheet tool used for data analysis and reporting.",
       "source": "v1"
     },
@@ -434,7 +436,9 @@
         "Golang",
         "Go language"
       ],
-      "ambiguous_aliases": [],
+      "ambiguous_aliases": [
+        "Go"
+      ],
       "description": "Fast compiled language for cloud and backend systems.",
       "source": "v2"
     },
@@ -469,7 +473,9 @@
         "Swift iOS",
         "Apple Swift"
       ],
-      "ambiguous_aliases": [],
+      "ambiguous_aliases": [
+        "Swift"
+      ],
       "description": "Apple language for iOS and macOS development.",
       "source": "v2"
     },
@@ -1195,12 +1201,13 @@
       "category": "Soft",
       "subcategory": "Soft",
       "aliases": [
-        "Flexibility",
         "Agility",
-        "Resilience",
         "Adaptable"
       ],
-      "ambiguous_aliases": [],
+      "ambiguous_aliases": [
+        "Resilience",
+        "Flexibility"
+      ],
       "description": "Adjusting to new conditions and challenges.",
       "source": "v2"
     },
@@ -1330,11 +1337,12 @@
       "aliases": [
         "RESTful API",
         "RESTful services",
-        "REST",
         "Web API",
         "API development"
       ],
-      "ambiguous_aliases": [],
+      "ambiguous_aliases": [
+        "REST"
+      ],
       "description": "Designing and consuming HTTP APIs that follow REST principles.",
       "source": "v2"
     },

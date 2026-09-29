@@ -1,0 +1,4 @@
+sample:fictional-example-too-short 2026-09-29
+Title: Data Analyst Intern
+
+Intern needed. Must know Excel and SQL. Apply now.

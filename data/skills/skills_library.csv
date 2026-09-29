@@ -8,7 +8,7 @@ C++,Technical,Programming Language,CPP|C Plus Plus,,Systems programming language
 R,Technical,Programming Language,R programming|R language,R,Statistical programming language used in data analysis.,v1
 Power BI,Technical,Data & BI,PowerBI|Microsoft Power BI,,Business intelligence and data visualisation tool by Microsoft.,v1
 Tableau,Technical,Data & BI,Tableau Desktop|Tableau Public,,Data visualisation platform for creating interactive dashboards.,v1
-Excel,Technical,Data & BI,Microsoft Excel|MS Excel|Spreadsheet,,Spreadsheet tool used for data analysis and reporting.,v1
+Excel,Technical,Data & BI,Microsoft Excel|MS Excel|Spreadsheet,Excel,Spreadsheet tool used for data analysis and reporting.,v1
 FastAPI,Technical,Web Framework,Fast API,,Modern Python web framework for building APIs.,v1
 Flask,Technical,Web Framework,Flask Python,,Lightweight Python web framework.,v1
 Node.js,Technical,Web Framework,NodeJS,Node,JavaScript runtime for backend development.,v1
@@ -32,10 +32,10 @@ Teamwork,Soft,Soft,Collaboration|Team player|Cooperative work,,Working effective
 Time Management,Soft,Soft,Prioritisation|Meeting deadlines,Organisation,Managing tasks and deadlines efficiently.,v1
 Leadership,Soft,Soft,Team leadership|Project leadership,,Guiding and motivating a team toward objectives.,v1
 C#,Technical,Programming Language,CSharp|C Sharp|.NET C#,,Microsoft language for enterprise and game development.,v2
-Go,Technical,Programming Language,Golang|Go language,,Fast compiled language for cloud and backend systems.,v2
+Go,Technical,Programming Language,Golang|Go language,Go,Fast compiled language for cloud and backend systems.,v2
 Rust,Technical,Programming Language,Rust lang,,Systems language focused on safety and performance.,v2
 PHP,Technical,Programming Language,PHP 8|Laravel PHP,,Server-side scripting language for web development.,v2
-Swift,Technical,Programming Language,Swift iOS|Apple Swift,,Apple language for iOS and macOS development.,v2
+Swift,Technical,Programming Language,Swift iOS|Apple Swift,Swift,Apple language for iOS and macOS development.,v2
 Kotlin,Technical,Programming Language,Kotlin Android,,Modern JVM language for Android development.,v2
 Bash,Technical,Programming Language,Shell scripting|Bash scripting,Shell,Unix shell scripting for automation.,v2
 PowerShell,Technical,Programming Language,PS scripting|Windows scripting,,Windows automation and task scripting.,v2
@@ -93,7 +93,7 @@ Data Modelling,Analytical,Analytical,ER diagram|Database modelling|Schema design
 Systems Thinking,Analytical,Analytical,Systems analysis|Holistic thinking,,Understanding how components interact in a system.,v2
 A/B Testing,Analytical,Analytical,Split testing|Experimentation,,Comparing two versions to determine which performs better.,v2
 Financial Analysis,Analytical,Analytical,Financial modelling|Budgeting|Cost analysis,,Evaluating financial data to support decisions.,v2
-Adaptability,Soft,Soft,Flexibility|Agility|Resilience|Adaptable,,Adjusting to new conditions and challenges.,v2
+Adaptability,Soft,Soft,Agility|Adaptable,Resilience|Flexibility,Adjusting to new conditions and challenges.,v2
 Presentation Skills,Soft,Soft,Public speaking|Presenting|Slide presentation,,Delivering clear and engaging presentations.,v2
 Project Management,Soft,Soft,Project planning|Project coordination,PM,Planning and executing projects on time.,v2
 Attention to Detail,Soft,Soft,Detail-oriented|Thoroughness,Accuracy,Carefully checking work for accuracy.,v2
@@ -103,7 +103,7 @@ Documentation,Soft,Soft,Technical writing|Report writing|Technical documentation
 TypeScript,Technical,Programming Language,TypeScript programming,TS,Typed superset of JavaScript used for large-scale web applications.,v2
 HTML,Technical,Web Development,HTML5|HyperText Markup Language,,Markup language for structuring web pages.,v2
 CSS,Technical,Web Development,CSS3|Cascading Style Sheets|Tailwind CSS|Sass,,Style sheet language for the layout and design of web pages.,v2
-REST API,Technical,Web Development,RESTful API|RESTful services|REST|Web API|API development,,Designing and consuming HTTP APIs that follow REST principles.,v2
+REST API,Technical,Web Development,RESTful API|RESTful services|Web API|API development,REST,Designing and consuming HTTP APIs that follow REST principles.,v2
 GraphQL,Technical,Web Development,GraphQL API|Apollo GraphQL,,Query language and runtime for flexible client-driven APIs.,v2
 Express.js,Technical,Web Framework,ExpressJS|Express framework,Express,Minimal Node.js web framework for building APIs and web servers.,v2
 Object-Oriented Programming,Technical,Software Engineering,OOP|Object oriented design|OOD,,"Designing software around objects, classes, inheritance and encapsulation.",v2

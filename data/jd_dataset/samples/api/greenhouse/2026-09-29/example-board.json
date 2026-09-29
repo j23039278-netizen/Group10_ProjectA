@@ -1,0 +1,15 @@
+{
+  "source": "api:greenhouse:example-board",
+  "source_license": "Fictional test data in Greenhouse Job Board API format (no licence needed)",
+  "collected_date": "2026-09-29",
+  "jobs": [
+    {
+      "id": 1001,
+      "title": "Graduate Data Analyst",
+      "location": {"name": "Kuala Lumpur, Malaysia"},
+      "absolute_url": "https://boards.greenhouse.io/example-board/jobs/1001",
+      "company_name": "Example Payments",
+      "content": "&lt;p&gt;Example Payments is hiring a Graduate Data Analyst to support our risk and growth teams.&lt;/p&gt;&lt;ul&gt;&lt;li&gt;Query transaction data with SQL and BigQuery&lt;/li&gt;&lt;li&gt;Clean data and automate reports in Python&lt;/li&gt;&lt;li&gt;Build Looker Studio and Tableau dashboards&lt;/li&gt;&lt;li&gt;Run A/B testing analysis for product experiments&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;Requirements: degree in Statistics, Economics or Computer Science; strong Excel and SQL skills; good communication and stakeholder engagement. Knowledge of ETL tools is a plus.&lt;/p&gt;"
+    }
+  ]
+}

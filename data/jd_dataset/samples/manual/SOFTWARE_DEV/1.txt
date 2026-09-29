@@ -1,0 +1,22 @@
+sample:fictional-example 2026-09-29
+Title: Software Engineer (Fresh Graduate)
+Location: Cyberjaya
+
+Our product team builds logistics software used by hundreds of warehouses in the region. We are hiring fresh graduates who enjoy solving problems with clean, well-tested code.
+
+Responsibilities:
+- Design and build backend services in Java (Spring Boot) and Python.
+- Build and consume RESTful APIs.
+- Write unit tests and take part in code reviews.
+- Work in an Agile team with two-week sprints.
+- Use Git and our CI/CD pipeline to ship changes safely.
+
+Requirements:
+- Degree in Computer Science or Software Engineering.
+- Good understanding of object-oriented programming and data structures and algorithms.
+- Knowledge of SQL and relational databases such as PostgreSQL or MySQL.
+- Good problem-solving and communication skills.
+
+Nice to have:
+- Experience with Docker, Linux or microservices.
+- Knowledge of TypeScript or React.

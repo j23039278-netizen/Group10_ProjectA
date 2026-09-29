@@ -1,0 +1,25 @@
+sample:fictional-example-duplicate 2026-09-29
+Title: Junior Data Analyst
+Location: Kuala Lumpur
+
+About the role
+Example Retail Sdn Bhd is looking for a Junior Data Analyst to join our commercial insights team.   You will turn sales and customer data into clear reports that help store managers make better decisions.
+
+Responsibilities:
+- Write SQL queries to extract and combine data from our sales database.
+- Clean and prepare data in Python (Pandas) and Excel before analysis.
+- Build and maintain Power BI dashboards for weekly and monthly KPIs.
+- Perform statistical analysis to explain changes in sales performance.
+- Present findings to business stakeholders in a clear, simple way.
+
+Requirements:
+- Degree in Computer Science, Statistics, or a related field.
+- Good knowledge of SQL and Microsoft Excel.
+- Experience with Python for data analysis.
+- Strong attention to detail and communication skills.
+
+Nice to have:
+- Experience with Tableau or Looker Studio.
+- Basic understanding of machine learning.
+
+To apply, email hr@example.com or call +60 3-1234 5678.

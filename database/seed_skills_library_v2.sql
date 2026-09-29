@@ -7,7 +7,7 @@
 --     psql -U postgres -d seagas_db -f database/seed_skills_library_v2.sql
 --
 -- Total skills : 138  (AI_Digital 20, Analytical 15, Soft 14, Technical 89)
--- Generated at : 2026-09-29 22:00
+-- Generated at : 2026-09-29 22:07
 --
 -- Run AFTER schema.sql. Idempotent: ON CONFLICT (skill_name) DO UPDATE, so
 -- alias / category / description fixes to the 32 v1 skills also take effect.
@@ -113,7 +113,7 @@ INSERT INTO skills_library (skill_name, category, aliases, description) VALUES
 ('Systems Thinking', 'Analytical', ARRAY['Systems analysis', 'Holistic thinking']::TEXT[], 'Understanding how components interact in a system.'),
 ('A/B Testing', 'Analytical', ARRAY['Split testing', 'Experimentation']::TEXT[], 'Comparing two versions to determine which performs better.'),
 ('Financial Analysis', 'Analytical', ARRAY['Financial modelling', 'Budgeting', 'Cost analysis']::TEXT[], 'Evaluating financial data to support decisions.'),
-('Adaptability', 'Soft', ARRAY['Flexibility', 'Agility', 'Resilience', 'Adaptable']::TEXT[], 'Adjusting to new conditions and challenges.'),
+('Adaptability', 'Soft', ARRAY['Agility', 'Adaptable']::TEXT[], 'Adjusting to new conditions and challenges.'),
 ('Presentation Skills', 'Soft', ARRAY['Public speaking', 'Presenting', 'Slide presentation']::TEXT[], 'Delivering clear and engaging presentations.'),
 ('Project Management', 'Soft', ARRAY['Project planning', 'Project coordination']::TEXT[], 'Planning and executing projects on time.'),
 ('Attention to Detail', 'Soft', ARRAY['Detail-oriented', 'Thoroughness']::TEXT[], 'Carefully checking work for accuracy.'),
@@ -123,7 +123,7 @@ INSERT INTO skills_library (skill_name, category, aliases, description) VALUES
 ('TypeScript', 'Technical', ARRAY['TypeScript programming']::TEXT[], 'Typed superset of JavaScript used for large-scale web applications.'),
 ('HTML', 'Technical', ARRAY['HTML5', 'HyperText Markup Language']::TEXT[], 'Markup language for structuring web pages.'),
 ('CSS', 'Technical', ARRAY['CSS3', 'Cascading Style Sheets', 'Tailwind CSS', 'Sass']::TEXT[], 'Style sheet language for the layout and design of web pages.'),
-('REST API', 'Technical', ARRAY['RESTful API', 'RESTful services', 'REST', 'Web API', 'API development']::TEXT[], 'Designing and consuming HTTP APIs that follow REST principles.'),
+('REST API', 'Technical', ARRAY['RESTful API', 'RESTful services', 'Web API', 'API development']::TEXT[], 'Designing and consuming HTTP APIs that follow REST principles.'),
 ('GraphQL', 'Technical', ARRAY['GraphQL API', 'Apollo GraphQL']::TEXT[], 'Query language and runtime for flexible client-driven APIs.'),
 ('Express.js', 'Technical', ARRAY['ExpressJS', 'Express framework']::TEXT[], 'Minimal Node.js web framework for building APIs and web servers.'),
 ('Object-Oriented Programming', 'Technical', ARRAY['OOP', 'Object oriented design', 'OOD']::TEXT[], 'Designing software around objects, classes, inheritance and encapsulation.'),
