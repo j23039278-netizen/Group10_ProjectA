@@ -62,7 +62,7 @@ NLP 做关键词匹配时，一个词只能指向一个技能。现在这些词�
 3. **不要碰** `backend/.env`、`frontend/`、`recommendation/`、`backend/routers/`（除了 Phase 0 的只读检查）。
 4. 所有 SQL seed 都要**可以重复执行**（`ON CONFLICT ... DO UPDATE`），出错时整个 transaction 回滚，技能名拼错时要报错，不能静默跳过。
 5. 真实采集来的 JD 原文放 `data/raw/`（已在 `.gitignore`），**不要 commit 原始爬取文件**。可以 commit 清洗后、去掉公司敏感信息的数据集。
-6. 不写自动爬虫去抓 LinkedIn / JobStreet / Indeed 等网站（违反服务条款）。JD 来源见 Phase 4。
+6. **这次执行不写 JD 采集脚本。** 通过公开 API 自动采集 JD 的工作排在后面的 **Phase 6（后续任务）**，Yong Hin 明确说开始之前不要做。任何时候都不抓 LinkedIn / JobStreet / Indeed 的网页（违反服务条款）。
 7. 每个 Phase 一个 commit，commit message 用 `feat:` / `fix:` / `docs:` / `test:` 前缀。**不要 push 到 `dev` 或 `main`**，只 push feature 分支，然后开 PR 到 `dev`（有 `gh` 就用 `gh pr create`，没有就告诉 Yong Hin 去网页上开）。
 8. Windows 环境：命令用 PowerShell 或 `cmd` 能跑的写法；路径有空格（`C:\FYP Repo\...`），要加引号。
 
@@ -140,8 +140,8 @@ git pull origin dev
 - **AI**：Prompt Engineering、Data Ethics / Responsible AI
 - **Soft / Analytical**：Stakeholder Communication（注意别和 Interpersonal Skills 冲突）、Decision Making、Customer Focus
 
-⚠️ **需要确认（category）**：v2 把 Cybersecurity、Network Security、Cryptography、Ethical Hacking、Digital Forensics、Incident Response、Vulnerability Assessment 放在 `AI_Digital`。`assessments` 表按 category 算 `score_ai_digital`，这样网络安全学生的「AI/数字」分会虚高。
-**默认做法：** 把这些安全技能改成 `Technical`（subcategory = `Security Practice`）。改之前在总结里提醒 Yong Hin 跟 Carl 确认 category 和 7 个维度分数怎么对应。
+⚠️ **需要确认（category）**：v2 把 Cybersecurity、Network Security、Cryptography、Ethical Hacking、Digital Forensics、Incident Response、Vulnerability Assessment 放在 `AI_Digital`，却把安全工具（Wireshark、Nmap、Splunk、SIEM、Metasploit、Nessus…）放在 `Technical`。`assessments.py` 的 `category_score()` 按 category 算维度分（该职位 required 技能里属于这个 category、学生已具备的比例），所以数值不会被放大，问题在于：(1) 网络安全方面的缺口会显示成「AI/Digital skills」低分，标签误导学生和顾问；(2) 同一个安全领域被拆进两个维度，顾问仪表板（`advisor.py` 按 category 分组）上也分散在两组。
+**默认做法：** 整个安全领域统一放在 `Technical`（实践类 subcategory = `Security Practice`，工具类 = `Security Tool`）。在总结里提醒 Yong Hin 跟 Carl 确认 `AI_Digital` 的定义；如果组里决定 AI_Digital = 「数字化/新兴技术」并包括安全，那就把安全工具也一起移过去，**不能拆开**。
 
 #### 1.4 由 CSV 生成 SQL seed
 
@@ -239,7 +239,7 @@ POC 要求「约 5–10 个 IT 职位的 JD」。这部分**需要人参与采�
 
 1. **公开数据集**（最省时，而且许可条款清楚）：Kaggle 上的公开职位数据集（例如 LinkedIn Job Postings、Data Science Job Postings 这类）。Yong Hin 手动下载后放在 `data/raw/`，Claude Code 负责筛选出 6 个职位的 JD。**使用前检查并记录每个数据集的 license。**
 2. **手动收集**：Yong Hin 从 JobStreet Malaysia / LinkedIn / 公司招聘页复制，每条粘贴成 `data/raw/manual/<role_code>/<n>.txt`，第一行写来源 URL 和日期。
-3. 不做自动爬虫（规则第 6 条）。
+3. **公开 API 自动采集**：排在 Phase 6，这次不做。但 `ingest_jds.py` 要**预留接口**：能读 `data/raw/api/<source>/*.json`，`source` 列支持 `api:<来源>` 格式。这样 Phase 6 做完后，采集到的数据可以直接进同一套清洗流程，不用改 Phase 4 的代码。
 
 **数量目标：** 6 个职位 × 至少 30 条 = **最少 180 条**，理想是每个职位 50–100 条。（角色说明里写的「每个职位 100–500 条」是上限，不是这个 Sprint 的硬指标。）
 
@@ -254,7 +254,7 @@ POC 要求「约 5–10 个 IT 职位的 JD」。这部分**需要人参与采�
 | `title` | 原始职位名 |
 | `company` | ⚠️ 默认填 `"Anonymised"`，不公开公司名 |
 | `location`、`seniority`（entry / junior / mid） | |
-| `source`（`kaggle:<dataset>` / `manual`）、`source_license`、`collected_date` | |
+| `source`（`kaggle:<dataset>` / `manual` / 预留 `api:greenhouse:<board>`、`api:remotive`）、`source_url`、`source_license`、`collected_date` | |
 | `raw_text` | 清洗后的 JD 全文 |
 
 #### 4.3 工具脚本（放 `data/jd_dataset/`）
@@ -301,12 +301,49 @@ Commit：`docs: skills library, synthetic data and JD dataset documentation`
 
 ---
 
+### Phase 6 — JD 自动采集（公开 API）【后续任务，暂不执行】
+
+> ⏸ **Claude Code 这次不要做这一步。** 等 Phase 0–5 合并进 `dev`，并且 Yong Hin 明确说「开始 Phase 6」之后再做。建议安排在 Sprint 3 初，或者 Phase 4 的 Kaggle 加手动数据不够每个职位 30 条时再做。
+
+**目的：** 用招聘平台主动公开的 API 自动补充 JD，让每个职位达到 50–100 条，不违反网站条款。
+
+**来源（开工前都要重新核对一次最新条款）：**
+
+| 来源 | 接口 | 注意事项 |
+|---|---|---|
+| Greenhouse 公司招聘页 | `GET https://boards-api.greenhouse.io/v1/boards/{board_token}/jobs?content=true`（不用登录，`content=true` 返回完整 JD） | 需要一份公司名单（挑在马来西亚/新加坡有技术职位的公司），board token 在公司招聘页网址里找 |
+| Lever 等其他招聘系统（ATS） | 各自的公开 postings 接口 | 开工前逐个确认有没有公开接口、条款怎么写 |
+| Remotive | 公开 Remote Jobs API（返回完整 HTML JD） | 每分钟最多 2 次请求；要注明来源并附原链接；职位延迟 24 小时显示；多数是全球远程岗位 |
+| Adzuna | 需要免费 API key | 查到的资料说不支持马来西亚，也还没确认返回的是全文还是摘要，**只当备用** |
+
+**不做：** 抓 LinkedIn / JobStreet / Indeed 的网页、绕过验证码或登录、伪造 User-Agent。
+
+**要写的东西：**
+- `data/jd_dataset/collect_jds.py`：
+  - 读配置文件 `data/jd_dataset/sources.yaml`（每个来源的开关、公司名单、职位关键词 → `role_code` 对应、请求间隔）
+  - 按每个来源的限制控制请求频率，出错就重试并做指数退避，断了可以接着跑
+  - 原始响应存为 `data/raw/api/<source>/<日期>/*.json`（不进 git）
+  - 每条 JD 记录 `source_url`、采集时间、来源条款说明
+  - 用 `--dry-run` 先只打印会请求哪些 URL，不真的发请求
+- 采集完直接交给 Phase 4 的 `ingest_jds.py` 清洗、去重、导入，不另写一套流程。
+- 更新 `data/jd_dataset/README.md`：各来源、条款摘要和引用方式（例如 Remotive 要求注明来源）。
+- 报告的「Dataset description」和「Ethical considerations」各补一段：数据怎么采集、为什么不抓网页、国际 JD 和马来西亚本地市场之间的差异（局限）。
+
+**验收：**
+- 先 `--dry-run`，再用 1–2 家公司小规模试跑，确认请求频率和条款都没问题，然后才跑全量。
+- 采集后每个职位 JD ≥ 50 条（含 Phase 4 已有的），去重后没有重复。
+- `data/raw/` 没有被 commit。
+
+分支：`feature/jd-collector`（从合并后的 `dev` 新开）。Commit：`feat: API-based JD collector (Greenhouse, Remotive)`
+
+---
+
 ## 4. 协作注意（Claude Code 要写进 PR 描述）
 
 | 对象 | 影响 | 要做的事 |
 |---|---|---|
 | **Aaron**（推荐引擎，技能库共同负责人） | `recommendations_library` 用 `skill_id` 关联；新技能没有推荐资源 | v1 技能名没改，他已有的 seed 不受影响；PR 里附上新增技能清单，请他给重点技能（尤其安全和云）补资源 |
-| **Carl**（后端 / schema） | category 调整影响 7 维度分数；以后 NLP 结果写入 `jd_extracted_skills` 时要用 `skills_taxonomy.json` | 请他确认 category → 维度的对应；确认新职位要不要加进 `job_roles` |
+| **Carl**（后端 / schema） | category 调整会改变 7 维度分数的含义（`category_score()` 按 category 分组）；以后 NLP 结果写入 `jd_extracted_skills` 时要用 `skills_taxonomy.json` | 请他确认 category → 维度的对应；确认新职位要不要加进 `job_roles` |
 | **全组** | 合成数据 UUID 会变 | 合并后每个人都要跑 delete 脚本，然后重新导入 |
 
 ---
@@ -315,10 +352,11 @@ Commit：`docs: skills library, synthetic data and JD dataset documentation`
 
 | # | 问题 | 默认做法 |
 |---|---|---|
-| 1 | 安全类技能从 `AI_Digital` 改成 `Technical`？ | 改，并请 Carl 确认 |
+| 1 | 安全类技能放哪个 category？（关键是整个安全领域要放在同一个 category） | 全部放 `Technical`，并请 Carl 确认 `AI_Digital` 的定义 |
 | 2 | 要不要加 Business Analyst / DevOps / AI-ML Engineer 职位？ | 这个 Sprint 不加，只提建议 |
 | 3 | 合成数据默认数量 500 还是 5000？ | 5000（和已合并的一致），可以用 `--n 500` 生成演示集 |
-| 4 | JD 数据来源用哪个 Kaggle 数据集 / 要手动收多少？ | 需要 Yong Hin 提供；脚本先用示例数据测通 |
+| 4 | JD 数据来源用哪个 Kaggle 数据集 / 要手动收多少？ | 需要 Yong Hin 提供；脚本先用示例数据测通。API 自动采集放到 Phase 6 再做 |
+| 7 | 什么时候开始 Phase 6（API 采集）？Greenhouse 用哪些公司？ | 等 Yong Hin 说开始；公司名单由他提供 |
 | 5 | JD 里的公司名要不要保留？ | 匿名化 |
 | 6 | Phase 5 的全新数据库测试会删掉本机 `seagas_db` | 执行前先问 |
 
@@ -334,12 +372,15 @@ Commit：`docs: skills library, synthetic data and JD dataset documentation`
 - [ ] README、报告 Dataset 章节草稿、Work Log 条目都已写好
 - [ ] feature 分支已 push，PR 已开到 `dev`，没有直接 push 到 `dev` / `main`
 
+**后续（不属于这次的完成标准）：**
+- [ ] Phase 6：API 采集脚本完成，每个职位 JD ≥ 50 条
+
 ---
 
 ## 附：给 Claude Code 的启动提示（直接复制）
 
 ```
-读 docs/SPRINT2_SKILLS_DATASET_PLAN.md，按 Phase 0 → 5 执行。
+读 docs/SPRINT2_SKILLS_DATASET_PLAN.md，按 Phase 0 → 5 执行。Phase 6（JD 自动采集）这次不要做。
 规则：不改 schema.sql；不改名、不删除 v1 的 32 个技能；每个 Phase 验收通过后单独 commit；
 只 push feature/skills-library-v2，不要 push dev/main。
 遇到「⚠️ 需要确认」先问我；我没回复就用文件里的默认做法，最后汇总告诉我。
