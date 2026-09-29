@@ -6,8 +6,8 @@
 --     python -m pytest tests/test_skills_library.py -q
 --     psql -U postgres -d seagas_db -f database/seed_skills_library_v2.sql
 --
--- Total skills : 138  (AI_Digital 20, Analytical 15, Soft 14, Technical 89)
--- Generated at : 2026-09-29 22:07
+-- Total skills : 138  (AI_Digital 21, Analytical 15, Soft 14, Technical 88)
+-- Generated at : 2026-09-29 22:18
 --
 -- Run AFTER schema.sql. Idempotent: ON CONFLICT (skill_name) DO UPDATE, so
 -- alias / category / description fixes to the 32 v1 skills also take effect.
@@ -140,7 +140,7 @@ INSERT INTO skills_library (skill_name, category, aliases, description) VALUES
 ('Looker', 'Technical', ARRAY['Looker Studio', 'Google Data Studio']::TEXT[], 'Google business intelligence and dashboarding platform.'),
 ('Google Analytics', 'Technical', ARRAY['GA4', 'Web analytics']::TEXT[], 'Web analytics service for tracking and reporting website traffic.'),
 ('Jupyter', 'Technical', ARRAY['Jupyter Notebook', 'JupyterLab', 'Google Colab']::TEXT[], 'Interactive notebook environment for data analysis and ML.'),
-('Serverless', 'Technical', ARRAY['Serverless computing', 'AWS Lambda', 'Azure Functions', 'Cloud Functions']::TEXT[], 'Running code on managed cloud functions without managing servers.'),
+('Serverless', 'AI_Digital', ARRAY['Serverless computing', 'AWS Lambda', 'Azure Functions', 'Cloud Functions']::TEXT[], 'Running code on managed cloud functions without managing servers.'),
 ('Monitoring & Observability', 'Technical', ARRAY['Monitoring', 'Observability', 'Prometheus', 'Grafana', 'Datadog', 'CloudWatch']::TEXT[], 'Collecting metrics, logs and traces to monitor system health.'),
 ('Networking', 'Technical', ARRAY['Computer networking', 'TCP/IP', 'DNS', 'DHCP', 'Routing and switching', 'LAN/WAN', 'OSI model']::TEXT[], 'Fundamentals of computer networks, protocols and network configuration.'),
 ('Identity & Access Management', 'Technical', ARRAY['IAM', 'Access control', 'Active Directory', 'Single sign-on', 'SSO', 'RBAC']::TEXT[], 'Managing digital identities, authentication and access permissions.'),

@@ -120,7 +120,7 @@ Data Warehousing,Technical,Data & BI,Data warehouse|Snowflake|Amazon Redshift|Di
 Looker,Technical,Data & BI,Looker Studio|Google Data Studio,,Google business intelligence and dashboarding platform.,v2
 Google Analytics,Technical,Data & BI,GA4|Web analytics,GA,Web analytics service for tracking and reporting website traffic.,v2
 Jupyter,Technical,Data & BI,Jupyter Notebook|JupyterLab|Google Colab,,Interactive notebook environment for data analysis and ML.,v2
-Serverless,Technical,Cloud,Serverless computing|AWS Lambda|Azure Functions|Cloud Functions,,Running code on managed cloud functions without managing servers.,v2
+Serverless,AI_Digital,Cloud,Serverless computing|AWS Lambda|Azure Functions|Cloud Functions,,Running code on managed cloud functions without managing servers.,v2
 Monitoring & Observability,Technical,DevOps,Monitoring|Observability|Prometheus|Grafana|Datadog|CloudWatch,,"Collecting metrics, logs and traces to monitor system health.",v2
 Networking,Technical,Infrastructure,Computer networking|TCP/IP|DNS|DHCP|Routing and switching|LAN/WAN|OSI model,,"Fundamentals of computer networks, protocols and network configuration.",v2
 Identity & Access Management,Technical,Security Practice,IAM|Access control|Active Directory|Single sign-on|SSO|RBAC,,"Managing digital identities, authentication and access permissions.",v2

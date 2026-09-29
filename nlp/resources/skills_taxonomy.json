@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-29 22:07",
+  "generated_at": "2026-09-29 22:18",
   "source": "data/skills/skills_library.csv",
   "skill_count": 138,
   "skills": [
@@ -1565,7 +1565,7 @@
     },
     {
       "skill_name": "Serverless",
-      "category": "Technical",
+      "category": "AI_Digital",
       "subcategory": "Cloud",
       "aliases": [
         "Serverless computing",
