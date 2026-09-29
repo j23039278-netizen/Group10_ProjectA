@@ -69,6 +69,28 @@ if "%HASTABLES%"=="t" (
     echo       schema.sql loaded
 )
 
+echo [2b/4] Checking skills library ...
+set "SKILLCOUNT=0"
+for /f "usebackq delims=" %%i in (`psql -d seagas_db -tAc "SELECT count(*) FROM skills_library"`) do set "SKILLCOUNT=%%i"
+if "%SKILLCOUNT%" LSS "100" (
+    echo       Loading skills library v2 ...
+    psql -d seagas_db -q -f "..\database\seed_skills_library_v2.sql"
+    echo       skills_library loaded
+) else (
+    echo       skills_library already has %SKILLCOUNT% skills
+)
+
+echo [2c/4] Checking job role skills ...
+set "ROLECOUNT=0"
+for /f "usebackq delims=" %%i in (`psql -d seagas_db -tAc "SELECT count(*) FROM job_role_skills"`) do set "ROLECOUNT=%%i"
+if "%ROLECOUNT%"=="0" (
+    echo       Loading job role skills ...
+    psql -d seagas_db -q -f "..\database\seed_job_role_skills.sql"
+    echo       job_role_skills loaded
+) else (
+    echo       job_role_skills already has %ROLECOUNT% entries
+)
+
 echo [3/4] Checking synthetic students ...
 set "SYN=0"
 for /f "usebackq delims=" %%i in (`psql -d seagas_db -tAc "SELECT count(*) FROM users WHERE email LIKE '%%@synthetic.example.com'"`) do set "SYN=%%i"
