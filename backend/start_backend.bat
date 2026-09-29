@@ -113,7 +113,8 @@ echo  Backend starting at http://127.0.0.1:8000/docs
 echo  Test login:  student0001@synthetic.example.com / Seagas@2026
 echo  Press Ctrl+C in this window to stop the server.
 echo ============================================================
-start "" cmd /c "timeout /t 5 >nul & start http://127.0.0.1:8000/docs"
+REM start_all.bat sets SEAGAS_NO_DOCS=1 so only the frontend page opens
+if not defined SEAGAS_NO_DOCS start "" cmd /c "timeout /t 5 >nul & start http://127.0.0.1:8000/docs"
 %PY% -m uvicorn main:app --reload
 goto :end
 
