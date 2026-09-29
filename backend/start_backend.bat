@@ -3,9 +3,10 @@ REM ============================================================
 REM SEAGAS - one-click local setup + start backend (Windows)
 REM Double-click this file. Safe to run again: every step checks first.
 REM   1. create seagas_db if missing
-REM   2. run database\schema.sql if tables are missing
+REM   2. run database\schema.sql if tables are missing,
+REM      then seed_skills_library_v2.sql and seed_job_role_skills.sql
 REM   3. load 5000 synthetic students if none are loaded
-REM   4. install Python packages and start FastAPI
+REM   4. install Python packages, load the JD dataset (if present), start FastAPI
 REM Requires: PostgreSQL 17 (postgres password = postgres123), Python 3.10+
 REM ============================================================
 setlocal
@@ -69,27 +70,17 @@ if "%HASTABLES%"=="t" (
     echo       schema.sql loaded
 )
 
-echo [2b/4] Checking skills library ...
-set "SKILLCOUNT=0"
-for /f "usebackq delims=" %%i in (`psql -d seagas_db -tAc "SELECT count(*) FROM skills_library"`) do set "SKILLCOUNT=%%i"
-if "%SKILLCOUNT%" LSS "100" (
-    echo       Loading skills library v2 ...
-    psql -d seagas_db -q -f "..\database\seed_skills_library_v2.sql"
-    echo       skills_library loaded
-) else (
-    echo       skills_library already has %SKILLCOUNT% skills
-)
+REM Both seeds are idempotent (upsert), so they always run: this also brings
+REM older local databases up to the latest skills library v2 and role mappings.
+echo [2b/4] Loading skills library v2 ...
+psql -d seagas_db -q -v ON_ERROR_STOP=1 -o NUL -f "..\database\seed_skills_library_v2.sql"
+if errorlevel 1 goto :fail
+for /f "usebackq delims=" %%i in (`psql -d seagas_db -tAc "SELECT count(*) FROM skills_library"`) do echo       skills_library: %%i skills
 
-echo [2c/4] Checking job role skills ...
-set "ROLECOUNT=0"
-for /f "usebackq delims=" %%i in (`psql -d seagas_db -tAc "SELECT count(*) FROM job_role_skills"`) do set "ROLECOUNT=%%i"
-if "%ROLECOUNT%"=="0" (
-    echo       Loading job role skills ...
-    psql -d seagas_db -q -f "..\database\seed_job_role_skills.sql"
-    echo       job_role_skills loaded
-) else (
-    echo       job_role_skills already has %ROLECOUNT% entries
-)
+echo [2c/4] Loading job role skills ...
+psql -d seagas_db -q -v ON_ERROR_STOP=1 -f "..\database\seed_job_role_skills.sql"
+if errorlevel 1 goto :fail
+for /f "usebackq delims=" %%i in (`psql -d seagas_db -tAc "SELECT count(*) FROM job_role_skills"`) do echo       job_role_skills: %%i entries
 
 echo [3/4] Checking synthetic students ...
 set "SYN=0"
@@ -106,6 +97,14 @@ for /f "usebackq delims=" %%i in (`psql -d seagas_db -tAc "SELECT count(*) FROM 
 echo [4/4] Installing Python packages ...
 %PY% -m pip install -q -r requirements.txt "psycopg[binary]" "pydantic[email]" python-multipart
 if errorlevel 1 goto :fail
+
+echo [4b/4] Checking JD dataset ...
+if exist "..\data\jd_dataset\jd_dataset.csv" (
+    %PY% "..\data\jd_dataset\load_jds.py"
+    if errorlevel 1 goto :fail
+) else (
+    echo       no data\jd_dataset\jd_dataset.csv yet - skipped
+)
 
 echo.
 echo ============================================================

@@ -1,0 +1,4 @@
+sample:fictional-example-senior 2026-09-29
+Title: Senior Frontend Lead
+
+We are looking for a senior frontend lead with 8+ years of experience to lead a team of web developers. You will own the architecture of our React and TypeScript front-end, mentor junior developers, set coding standards, and work with product managers on the roadmap. Experience with micro-frontends, performance optimisation and accessibility is required. This posting is used only to test that senior roles are skipped by ingest_jds.py.

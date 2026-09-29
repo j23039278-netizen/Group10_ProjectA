@@ -1,0 +1,1802 @@
+{
+  "generated_at": "2026-09-29 22:18",
+  "source": "data/skills/skills_library.csv",
+  "skill_count": 138,
+  "skills": [
+    {
+      "skill_name": "Python",
+      "category": "Technical",
+      "subcategory": "Programming Language",
+      "aliases": [
+        "Python 3",
+        "Python programming"
+      ],
+      "ambiguous_aliases": [],
+      "description": "General-purpose programming language widely used in data science and backend development.",
+      "source": "v1"
+    },
+    {
+      "skill_name": "SQL",
+      "category": "Technical",
+      "subcategory": "Programming Language",
+      "aliases": [
+        "Structured Query Language",
+        "SQL queries",
+        "T-SQL",
+        "PL/SQL"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Database query language for relational databases.",
+      "source": "v1"
+    },
+    {
+      "skill_name": "JavaScript",
+      "category": "Technical",
+      "subcategory": "Programming Language",
+      "aliases": [
+        "JS",
+        "ES6",
+        "ECMAScript"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Core web programming language for frontend and backend (Node.js) development.",
+      "source": "v1"
+    },
+    {
+      "skill_name": "React",
+      "category": "Technical",
+      "subcategory": "Web Framework",
+      "aliases": [
+        "React.js",
+        "ReactJS"
+      ],
+      "ambiguous_aliases": [],
+      "description": "JavaScript library for building user interfaces.",
+      "source": "v1"
+    },
+    {
+      "skill_name": "Java",
+      "category": "Technical",
+      "subcategory": "Programming Language",
+      "aliases": [
+        "Java SE",
+        "Java EE"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Object-oriented programming language used in enterprise applications.",
+      "source": "v1"
+    },
+    {
+      "skill_name": "C++",
+      "category": "Technical",
+      "subcategory": "Programming Language",
+      "aliases": [
+        "CPP",
+        "C Plus Plus"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Systems programming language used in performance-critical applications.",
+      "source": "v1"
+    },
+    {
+      "skill_name": "R",
+      "category": "Technical",
+      "subcategory": "Programming Language",
+      "aliases": [
+        "R programming",
+        "R language"
+      ],
+      "ambiguous_aliases": [
+        "R"
+      ],
+      "description": "Statistical programming language used in data analysis.",
+      "source": "v1"
+    },
+    {
+      "skill_name": "Power BI",
+      "category": "Technical",
+      "subcategory": "Data & BI",
+      "aliases": [
+        "PowerBI",
+        "Microsoft Power BI"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Business intelligence and data visualisation tool by Microsoft.",
+      "source": "v1"
+    },
+    {
+      "skill_name": "Tableau",
+      "category": "Technical",
+      "subcategory": "Data & BI",
+      "aliases": [
+        "Tableau Desktop",
+        "Tableau Public"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Data visualisation platform for creating interactive dashboards.",
+      "source": "v1"
+    },
+    {
+      "skill_name": "Excel",
+      "category": "Technical",
+      "subcategory": "Data & BI",
+      "aliases": [
+        "Microsoft Excel",
+        "MS Excel",
+        "Spreadsheet"
+      ],
+      "ambiguous_aliases": [
+        "Excel"
+      ],
+      "description": "Spreadsheet tool used for data analysis and reporting.",
+      "source": "v1"
+    },
+    {
+      "skill_name": "FastAPI",
+      "category": "Technical",
+      "subcategory": "Web Framework",
+      "aliases": [
+        "Fast API"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Modern Python web framework for building APIs.",
+      "source": "v1"
+    },
+    {
+      "skill_name": "Flask",
+      "category": "Technical",
+      "subcategory": "Web Framework",
+      "aliases": [
+        "Flask Python"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Lightweight Python web framework.",
+      "source": "v1"
+    },
+    {
+      "skill_name": "Node.js",
+      "category": "Technical",
+      "subcategory": "Web Framework",
+      "aliases": [
+        "NodeJS"
+      ],
+      "ambiguous_aliases": [
+        "Node"
+      ],
+      "description": "JavaScript runtime for backend development.",
+      "source": "v1"
+    },
+    {
+      "skill_name": "Docker",
+      "category": "Technical",
+      "subcategory": "DevOps",
+      "aliases": [
+        "Docker container",
+        "Containerisation"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Platform for building and running containerised applications.",
+      "source": "v1"
+    },
+    {
+      "skill_name": "Git",
+      "category": "Technical",
+      "subcategory": "DevOps",
+      "aliases": [
+        "GitHub",
+        "GitLab",
+        "Version control"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Version control system for tracking code changes.",
+      "source": "v1"
+    },
+    {
+      "skill_name": "Linux",
+      "category": "Technical",
+      "subcategory": "Infrastructure",
+      "aliases": [
+        "Ubuntu",
+        "Linux administration",
+        "Unix",
+        "Red Hat",
+        "RHEL"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Operating system widely used in server and cloud environments.",
+      "source": "v1"
+    },
+    {
+      "skill_name": "Machine Learning",
+      "category": "AI_Digital",
+      "subcategory": "ML/AI",
+      "aliases": [
+        "ML",
+        "Supervised learning",
+        "Unsupervised learning"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Building models that learn patterns from data.",
+      "source": "v1"
+    },
+    {
+      "skill_name": "Deep Learning",
+      "category": "AI_Digital",
+      "subcategory": "ML/AI",
+      "aliases": [
+        "Neural networks",
+        "CNN",
+        "RNN"
+      ],
+      "ambiguous_aliases": [
+        "DL"
+      ],
+      "description": "Subset of machine learning using multi-layer neural networks.",
+      "source": "v1"
+    },
+    {
+      "skill_name": "Natural Language Processing",
+      "category": "AI_Digital",
+      "subcategory": "ML/AI",
+      "aliases": [
+        "NLP",
+        "Text processing",
+        "Text mining"
+      ],
+      "ambiguous_aliases": [],
+      "description": "AI techniques for processing and understanding human language.",
+      "source": "v1"
+    },
+    {
+      "skill_name": "Data Visualisation",
+      "category": "AI_Digital",
+      "subcategory": "Data & BI",
+      "aliases": [
+        "Data viz",
+        "Dashboard creation",
+        "Creating interactive dashboards",
+        "Charts and graphs"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Representing data visually through charts, graphs, and dashboards.",
+      "source": "v1"
+    },
+    {
+      "skill_name": "Cloud Computing",
+      "category": "AI_Digital",
+      "subcategory": "Cloud",
+      "aliases": [
+        "Cloud platforms",
+        "Cloud infrastructure",
+        "Cloud services"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Delivering computing services over the internet.",
+      "source": "v1"
+    },
+    {
+      "skill_name": "AWS",
+      "category": "AI_Digital",
+      "subcategory": "Cloud",
+      "aliases": [
+        "Amazon Web Services",
+        "AWS Cloud",
+        "Amazon Cloud"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Amazon cloud computing platform.",
+      "source": "v1"
+    },
+    {
+      "skill_name": "Azure",
+      "category": "AI_Digital",
+      "subcategory": "Cloud",
+      "aliases": [
+        "Microsoft Azure",
+        "Azure Cloud"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Microsoft cloud computing platform.",
+      "source": "v1"
+    },
+    {
+      "skill_name": "AI Literacy",
+      "category": "AI_Digital",
+      "subcategory": "ML/AI",
+      "aliases": [
+        "Artificial Intelligence",
+        "AI concepts",
+        "AI fundamentals"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Understanding of AI concepts, applications, and ethical considerations.",
+      "source": "v1"
+    },
+    {
+      "skill_name": "Statistical Analysis",
+      "category": "Analytical",
+      "subcategory": "Analytical",
+      "aliases": [
+        "Statistics",
+        "Statistical modelling",
+        "Quantitative analysis",
+        "Hypothesis testing"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Applying statistical methods to interpret data.",
+      "source": "v1"
+    },
+    {
+      "skill_name": "Data Analysis",
+      "category": "Analytical",
+      "subcategory": "Analytical",
+      "aliases": [
+        "Data analytics",
+        "Exploratory data analysis",
+        "EDA"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Inspecting and modelling data to discover insights.",
+      "source": "v1"
+    },
+    {
+      "skill_name": "Problem Solving",
+      "category": "Analytical",
+      "subcategory": "Analytical",
+      "aliases": [
+        "Analytical problem solving",
+        "Troubleshooting"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Identifying and resolving complex challenges systematically.",
+      "source": "v1"
+    },
+    {
+      "skill_name": "Research Skills",
+      "category": "Analytical",
+      "subcategory": "Analytical",
+      "aliases": [
+        "Literature review",
+        "Academic research"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Ability to investigate, evaluate, and synthesise information.",
+      "source": "v1"
+    },
+    {
+      "skill_name": "Communication",
+      "category": "Soft",
+      "subcategory": "Soft",
+      "aliases": [
+        "Verbal communication",
+        "Written communication",
+        "Communication skills"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Conveying information clearly to technical and non-technical audiences.",
+      "source": "v1"
+    },
+    {
+      "skill_name": "Teamwork",
+      "category": "Soft",
+      "subcategory": "Soft",
+      "aliases": [
+        "Collaboration",
+        "Team player",
+        "Cooperative work"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Working effectively with others toward shared goals.",
+      "source": "v1"
+    },
+    {
+      "skill_name": "Time Management",
+      "category": "Soft",
+      "subcategory": "Soft",
+      "aliases": [
+        "Prioritisation",
+        "Meeting deadlines"
+      ],
+      "ambiguous_aliases": [
+        "Organisation"
+      ],
+      "description": "Managing tasks and deadlines efficiently.",
+      "source": "v1"
+    },
+    {
+      "skill_name": "Leadership",
+      "category": "Soft",
+      "subcategory": "Soft",
+      "aliases": [
+        "Team leadership",
+        "Project leadership"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Guiding and motivating a team toward objectives.",
+      "source": "v1"
+    },
+    {
+      "skill_name": "C#",
+      "category": "Technical",
+      "subcategory": "Programming Language",
+      "aliases": [
+        "CSharp",
+        "C Sharp",
+        ".NET C#"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Microsoft language for enterprise and game development.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Go",
+      "category": "Technical",
+      "subcategory": "Programming Language",
+      "aliases": [
+        "Golang",
+        "Go language"
+      ],
+      "ambiguous_aliases": [
+        "Go"
+      ],
+      "description": "Fast compiled language for cloud and backend systems.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Rust",
+      "category": "Technical",
+      "subcategory": "Programming Language",
+      "aliases": [
+        "Rust lang"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Systems language focused on safety and performance.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "PHP",
+      "category": "Technical",
+      "subcategory": "Programming Language",
+      "aliases": [
+        "PHP 8",
+        "Laravel PHP"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Server-side scripting language for web development.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Swift",
+      "category": "Technical",
+      "subcategory": "Programming Language",
+      "aliases": [
+        "Swift iOS",
+        "Apple Swift"
+      ],
+      "ambiguous_aliases": [
+        "Swift"
+      ],
+      "description": "Apple language for iOS and macOS development.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Kotlin",
+      "category": "Technical",
+      "subcategory": "Programming Language",
+      "aliases": [
+        "Kotlin Android"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Modern JVM language for Android development.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Bash",
+      "category": "Technical",
+      "subcategory": "Programming Language",
+      "aliases": [
+        "Shell scripting",
+        "Bash scripting"
+      ],
+      "ambiguous_aliases": [
+        "Shell"
+      ],
+      "description": "Unix shell scripting for automation.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "PowerShell",
+      "category": "Technical",
+      "subcategory": "Programming Language",
+      "aliases": [
+        "PS scripting",
+        "Windows scripting"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Windows automation and task scripting.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Vue.js",
+      "category": "Technical",
+      "subcategory": "Web Framework",
+      "aliases": [
+        "Vue",
+        "VueJS"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Progressive JavaScript framework for UIs.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Angular",
+      "category": "Technical",
+      "subcategory": "Web Framework",
+      "aliases": [
+        "AngularJS",
+        "Angular 2+"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Google TypeScript-based web framework.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Django",
+      "category": "Technical",
+      "subcategory": "Web Framework",
+      "aliases": [
+        "Django Python",
+        "Django REST"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Full-featured Python web framework.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Spring Boot",
+      "category": "Technical",
+      "subcategory": "Web Framework",
+      "aliases": [
+        "Spring Framework",
+        "SpringBoot"
+      ],
+      "ambiguous_aliases": [
+        "Spring"
+      ],
+      "description": "Java framework for enterprise applications.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "MongoDB",
+      "category": "Technical",
+      "subcategory": "Database",
+      "aliases": [
+        "Mongo",
+        "MongoDB Atlas"
+      ],
+      "ambiguous_aliases": [],
+      "description": "NoSQL document database.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Redis",
+      "category": "Technical",
+      "subcategory": "Database",
+      "aliases": [
+        "Redis cache"
+      ],
+      "ambiguous_aliases": [],
+      "description": "In-memory data structure store for caching.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "MySQL",
+      "category": "Technical",
+      "subcategory": "Database",
+      "aliases": [
+        "MySQL DB"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Popular open-source relational database.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "SQLite",
+      "category": "Technical",
+      "subcategory": "Database",
+      "aliases": [
+        "SQLite DB"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Lightweight embedded relational database.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Kubernetes",
+      "category": "Technical",
+      "subcategory": "DevOps",
+      "aliases": [
+        "K8s",
+        "Kube"
+      ],
+      "ambiguous_aliases": [
+        "K8"
+      ],
+      "description": "Container orchestration platform.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "CI/CD",
+      "category": "Technical",
+      "subcategory": "DevOps",
+      "aliases": [
+        "Continuous Integration",
+        "GitHub Actions",
+        "Jenkins",
+        "CircleCI"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Automated build, test and deployment pipelines.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Terraform",
+      "category": "Technical",
+      "subcategory": "DevOps",
+      "aliases": [
+        "Infrastructure as Code",
+        "IaC",
+        "Terraform HCL"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Infrastructure-as-code tool for cloud provisioning.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Ansible",
+      "category": "Technical",
+      "subcategory": "DevOps",
+      "aliases": [
+        "Ansible automation"
+      ],
+      "ambiguous_aliases": [],
+      "description": "IT automation and configuration management tool.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Pandas",
+      "category": "Technical",
+      "subcategory": "Data & BI",
+      "aliases": [
+        "Python Pandas"
+      ],
+      "ambiguous_aliases": [
+        "pd"
+      ],
+      "description": "Python library for data manipulation.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "NumPy",
+      "category": "Technical",
+      "subcategory": "Data & BI",
+      "aliases": [
+        "Python NumPy"
+      ],
+      "ambiguous_aliases": [
+        "np"
+      ],
+      "description": "Python library for numerical computing.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Matplotlib",
+      "category": "Technical",
+      "subcategory": "Data & BI",
+      "aliases": [
+        "Matplotlib Python",
+        "pyplot"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Python plotting library.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Seaborn",
+      "category": "Technical",
+      "subcategory": "Data & BI",
+      "aliases": [
+        "Seaborn Python"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Statistical data visualisation library.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Apache Spark",
+      "category": "Technical",
+      "subcategory": "Data & BI",
+      "aliases": [
+        "Spark",
+        "PySpark",
+        "Spark SQL"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Large-scale data processing engine.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Hadoop",
+      "category": "Technical",
+      "subcategory": "Data & BI",
+      "aliases": [
+        "Apache Hadoop",
+        "HDFS",
+        "MapReduce"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Distributed storage and processing framework.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Wireshark",
+      "category": "Technical",
+      "subcategory": "Security Tool",
+      "aliases": [
+        "Packet analysis",
+        "Wireshark tool"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Network protocol analyser for traffic inspection.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Nmap",
+      "category": "Technical",
+      "subcategory": "Security Tool",
+      "aliases": [
+        "Network mapper",
+        "nmap scan"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Network scanning and discovery tool.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Metasploit",
+      "category": "Technical",
+      "subcategory": "Security Tool",
+      "aliases": [
+        "Metasploit Framework"
+      ],
+      "ambiguous_aliases": [
+        "MSF"
+      ],
+      "description": "Penetration testing framework.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Burp Suite",
+      "category": "Technical",
+      "subcategory": "Security Tool",
+      "aliases": [
+        "BurpSuite"
+      ],
+      "ambiguous_aliases": [
+        "Burp"
+      ],
+      "description": "Web application security testing tool.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Splunk",
+      "category": "Technical",
+      "subcategory": "Security Tool",
+      "aliases": [
+        "Splunk SIEM"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Security information and event management platform.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "SIEM",
+      "category": "Technical",
+      "subcategory": "Security Tool",
+      "aliases": [
+        "Security Information Event Management",
+        "QRadar",
+        "ArcSight"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Security monitoring and log analysis.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Nessus",
+      "category": "Technical",
+      "subcategory": "Security Tool",
+      "aliases": [
+        "Nessus scanner",
+        "Tenable"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Vulnerability scanning tool.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Kali Linux",
+      "category": "Technical",
+      "subcategory": "Security Tool",
+      "aliases": [
+        "Kali",
+        "Kali OS"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Linux distribution for penetration testing.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Snort",
+      "category": "Technical",
+      "subcategory": "Security Tool",
+      "aliases": [
+        "Snort IDS"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Open-source intrusion detection system.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Firewall Management",
+      "category": "Technical",
+      "subcategory": "Security Tool",
+      "aliases": [
+        "Firewall config",
+        "Network firewall",
+        "pfSense"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Configuring and managing network firewalls.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "VPN",
+      "category": "Technical",
+      "subcategory": "Security Tool",
+      "aliases": [
+        "Virtual Private Network",
+        "OpenVPN",
+        "VPN setup"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Secure encrypted network tunnelling.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "GCP",
+      "category": "AI_Digital",
+      "subcategory": "Cloud",
+      "aliases": [
+        "Google Cloud",
+        "Google Cloud Platform",
+        "BigQuery"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Google cloud computing platform.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "MLOps",
+      "category": "AI_Digital",
+      "subcategory": "ML/AI",
+      "aliases": [
+        "ML Operations",
+        "Model deployment",
+        "ML pipeline"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Deploying and managing ML models in production.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Generative AI",
+      "category": "AI_Digital",
+      "subcategory": "ML/AI",
+      "aliases": [
+        "GenAI",
+        "LLM",
+        "Large Language Models",
+        "GPT"
+      ],
+      "ambiguous_aliases": [],
+      "description": "AI systems that generate text, images or code.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Feature Engineering",
+      "category": "AI_Digital",
+      "subcategory": "ML/AI",
+      "aliases": [
+        "Feature selection",
+        "Feature extraction"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Creating and selecting input features for ML models.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Model Evaluation",
+      "category": "AI_Digital",
+      "subcategory": "ML/AI",
+      "aliases": [
+        "Model assessment",
+        "Precision recall F1",
+        "ROC AUC"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Measuring and comparing ML model performance.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "TensorFlow",
+      "category": "AI_Digital",
+      "subcategory": "ML/AI",
+      "aliases": [
+        "TensorFlow Keras"
+      ],
+      "ambiguous_aliases": [
+        "TF"
+      ],
+      "description": "Open-source ML framework by Google.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "PyTorch",
+      "category": "AI_Digital",
+      "subcategory": "ML/AI",
+      "aliases": [
+        "PyTorch ML"
+      ],
+      "ambiguous_aliases": [
+        "Torch"
+      ],
+      "description": "Open-source ML framework by Meta.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Scikit-learn",
+      "category": "AI_Digital",
+      "subcategory": "ML/AI",
+      "aliases": [
+        "sklearn",
+        "scikit learn"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Python ML library for classical algorithms.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Hugging Face",
+      "category": "AI_Digital",
+      "subcategory": "ML/AI",
+      "aliases": [
+        "HuggingFace",
+        "Transformers library"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Platform and library for NLP transformer models.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Cybersecurity",
+      "category": "Technical",
+      "subcategory": "Security Practice",
+      "aliases": [
+        "Information security",
+        "InfoSec",
+        "Cyber defence"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Protecting systems and networks from digital attacks.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Network Security",
+      "category": "Technical",
+      "subcategory": "Security Practice",
+      "aliases": [
+        "Network defence",
+        "Network protection"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Securing computer networks from threats.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Cryptography",
+      "category": "Technical",
+      "subcategory": "Security Practice",
+      "aliases": [
+        "Encryption",
+        "Decryption",
+        "PKI"
+      ],
+      "ambiguous_aliases": [
+        "Crypto"
+      ],
+      "description": "Techniques for securing information through encoding.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Ethical Hacking",
+      "category": "Technical",
+      "subcategory": "Security Practice",
+      "aliases": [
+        "Penetration testing",
+        "Pen testing",
+        "White hat"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Authorised testing of systems for vulnerabilities.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Digital Forensics",
+      "category": "Technical",
+      "subcategory": "Security Practice",
+      "aliases": [
+        "Cyber forensics",
+        "Computer forensics",
+        "Forensic investigation"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Investigating digital evidence from cyber incidents.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Incident Response",
+      "category": "Technical",
+      "subcategory": "Security Practice",
+      "aliases": [
+        "Cyber incident response",
+        "CSIRT"
+      ],
+      "ambiguous_aliases": [
+        "IR"
+      ],
+      "description": "Responding to and managing cybersecurity incidents.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Vulnerability Assessment",
+      "category": "Technical",
+      "subcategory": "Security Practice",
+      "aliases": [
+        "Vulnerability scanning"
+      ],
+      "ambiguous_aliases": [
+        "VA"
+      ],
+      "description": "Identifying and evaluating security weaknesses.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Computer Vision",
+      "category": "AI_Digital",
+      "subcategory": "ML/AI",
+      "aliases": [
+        "Image recognition",
+        "Object detection"
+      ],
+      "ambiguous_aliases": [
+        "CV"
+      ],
+      "description": "AI for interpreting visual data.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Critical Thinking",
+      "category": "Analytical",
+      "subcategory": "Analytical",
+      "aliases": [
+        "Logical reasoning",
+        "Analytical thinking",
+        "Deductive reasoning"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Objective analysis and evaluation of issues.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Business Analysis",
+      "category": "Analytical",
+      "subcategory": "Analytical",
+      "aliases": [
+        "Requirements gathering",
+        "Business requirements"
+      ],
+      "ambiguous_aliases": [
+        "BA"
+      ],
+      "description": "Analysing business processes and requirements.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Requirements Analysis",
+      "category": "Analytical",
+      "subcategory": "Analytical",
+      "aliases": [
+        "Requirements engineering",
+        "System requirements"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Gathering and documenting system requirements.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Risk Analysis",
+      "category": "Analytical",
+      "subcategory": "Analytical",
+      "aliases": [
+        "Risk assessment",
+        "Risk management"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Identifying and evaluating potential risks.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Data Modelling",
+      "category": "Analytical",
+      "subcategory": "Analytical",
+      "aliases": [
+        "ER diagram",
+        "Database modelling",
+        "Schema design"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Designing data structures and relationships.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Systems Thinking",
+      "category": "Analytical",
+      "subcategory": "Analytical",
+      "aliases": [
+        "Systems analysis",
+        "Holistic thinking"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Understanding how components interact in a system.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "A/B Testing",
+      "category": "Analytical",
+      "subcategory": "Analytical",
+      "aliases": [
+        "Split testing",
+        "Experimentation"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Comparing two versions to determine which performs better.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Financial Analysis",
+      "category": "Analytical",
+      "subcategory": "Analytical",
+      "aliases": [
+        "Financial modelling",
+        "Budgeting",
+        "Cost analysis"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Evaluating financial data to support decisions.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Adaptability",
+      "category": "Soft",
+      "subcategory": "Soft",
+      "aliases": [
+        "Agility",
+        "Adaptable"
+      ],
+      "ambiguous_aliases": [
+        "Resilience",
+        "Flexibility"
+      ],
+      "description": "Adjusting to new conditions and challenges.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Presentation Skills",
+      "category": "Soft",
+      "subcategory": "Soft",
+      "aliases": [
+        "Public speaking",
+        "Presenting",
+        "Slide presentation"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Delivering clear and engaging presentations.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Project Management",
+      "category": "Soft",
+      "subcategory": "Soft",
+      "aliases": [
+        "Project planning",
+        "Project coordination"
+      ],
+      "ambiguous_aliases": [
+        "PM"
+      ],
+      "description": "Planning and executing projects on time.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Attention to Detail",
+      "category": "Soft",
+      "subcategory": "Soft",
+      "aliases": [
+        "Detail-oriented",
+        "Thoroughness"
+      ],
+      "ambiguous_aliases": [
+        "Accuracy"
+      ],
+      "description": "Carefully checking work for accuracy.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Self-Motivation",
+      "category": "Soft",
+      "subcategory": "Soft",
+      "aliases": [
+        "Self-driven",
+        "Initiative",
+        "Proactive"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Taking initiative without external prompting.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Interpersonal Skills",
+      "category": "Soft",
+      "subcategory": "Soft",
+      "aliases": [
+        "People skills",
+        "Relationship building",
+        "Stakeholder management"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Building and maintaining professional relationships.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Documentation",
+      "category": "Soft",
+      "subcategory": "Soft",
+      "aliases": [
+        "Technical writing",
+        "Report writing",
+        "Technical documentation"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Creating clear written records and guides.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "TypeScript",
+      "category": "Technical",
+      "subcategory": "Programming Language",
+      "aliases": [
+        "TypeScript programming"
+      ],
+      "ambiguous_aliases": [
+        "TS"
+      ],
+      "description": "Typed superset of JavaScript used for large-scale web applications.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "HTML",
+      "category": "Technical",
+      "subcategory": "Web Development",
+      "aliases": [
+        "HTML5",
+        "HyperText Markup Language"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Markup language for structuring web pages.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "CSS",
+      "category": "Technical",
+      "subcategory": "Web Development",
+      "aliases": [
+        "CSS3",
+        "Cascading Style Sheets",
+        "Tailwind CSS",
+        "Sass"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Style sheet language for the layout and design of web pages.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "REST API",
+      "category": "Technical",
+      "subcategory": "Web Development",
+      "aliases": [
+        "RESTful API",
+        "RESTful services",
+        "Web API",
+        "API development"
+      ],
+      "ambiguous_aliases": [
+        "REST"
+      ],
+      "description": "Designing and consuming HTTP APIs that follow REST principles.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "GraphQL",
+      "category": "Technical",
+      "subcategory": "Web Development",
+      "aliases": [
+        "GraphQL API",
+        "Apollo GraphQL"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Query language and runtime for flexible client-driven APIs.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Express.js",
+      "category": "Technical",
+      "subcategory": "Web Framework",
+      "aliases": [
+        "ExpressJS",
+        "Express framework"
+      ],
+      "ambiguous_aliases": [
+        "Express"
+      ],
+      "description": "Minimal Node.js web framework for building APIs and web servers.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Object-Oriented Programming",
+      "category": "Technical",
+      "subcategory": "Software Engineering",
+      "aliases": [
+        "OOP",
+        "Object oriented design",
+        "OOD"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Designing software around objects, classes, inheritance and encapsulation.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Data Structures & Algorithms",
+      "category": "Technical",
+      "subcategory": "Software Engineering",
+      "aliases": [
+        "Data structures",
+        "Algorithms",
+        "DSA"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Core computer-science structures and algorithms for efficient problem solving.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Unit Testing",
+      "category": "Technical",
+      "subcategory": "Software Engineering",
+      "aliases": [
+        "Unit tests",
+        "Automated testing",
+        "pytest",
+        "JUnit",
+        "Jest",
+        "Test-driven development",
+        "TDD"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Writing automated tests that verify individual units of code.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Microservices",
+      "category": "Technical",
+      "subcategory": "Software Engineering",
+      "aliases": [
+        "Microservice architecture",
+        "Microservices architecture"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Architecting applications as small, independently deployable services.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Agile / Scrum",
+      "category": "Soft",
+      "subcategory": "Soft",
+      "aliases": [
+        "Agile",
+        "Scrum",
+        "Kanban",
+        "Sprint planning",
+        "Agile methodology",
+        "Scrum methodology"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Working in iterative Agile teams using practices such as Scrum and Kanban.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "UI/UX Design",
+      "category": "Technical",
+      "subcategory": "Design",
+      "aliases": [
+        "UI design",
+        "UX design",
+        "User experience",
+        "User interface design",
+        "Wireframing"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Designing usable and accessible user interfaces and experiences.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Figma",
+      "category": "Technical",
+      "subcategory": "Design",
+      "aliases": [
+        "Figma design"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Collaborative interface design and prototyping tool.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "PostgreSQL",
+      "category": "Technical",
+      "subcategory": "Database",
+      "aliases": [
+        "Postgres",
+        "PostgresSQL",
+        "psql"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Advanced open-source relational database.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Data Cleaning",
+      "category": "Analytical",
+      "subcategory": "Data & BI",
+      "aliases": [
+        "Data cleansing",
+        "Data wrangling",
+        "Data preprocessing",
+        "Data preparation"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Detecting and correcting errors and inconsistencies in datasets.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "ETL",
+      "category": "Technical",
+      "subcategory": "Data & BI",
+      "aliases": [
+        "Extract Transform Load",
+        "ELT",
+        "Data pipelines",
+        "Data pipeline"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Extracting, transforming and loading data between systems.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Data Warehousing",
+      "category": "Technical",
+      "subcategory": "Data & BI",
+      "aliases": [
+        "Data warehouse",
+        "Snowflake",
+        "Amazon Redshift",
+        "Dimensional modelling"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Designing and managing central repositories for analytical data.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Looker",
+      "category": "Technical",
+      "subcategory": "Data & BI",
+      "aliases": [
+        "Looker Studio",
+        "Google Data Studio"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Google business intelligence and dashboarding platform.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Google Analytics",
+      "category": "Technical",
+      "subcategory": "Data & BI",
+      "aliases": [
+        "GA4",
+        "Web analytics"
+      ],
+      "ambiguous_aliases": [
+        "GA"
+      ],
+      "description": "Web analytics service for tracking and reporting website traffic.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Jupyter",
+      "category": "Technical",
+      "subcategory": "Data & BI",
+      "aliases": [
+        "Jupyter Notebook",
+        "JupyterLab",
+        "Google Colab"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Interactive notebook environment for data analysis and ML.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Serverless",
+      "category": "AI_Digital",
+      "subcategory": "Cloud",
+      "aliases": [
+        "Serverless computing",
+        "AWS Lambda",
+        "Azure Functions",
+        "Cloud Functions"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Running code on managed cloud functions without managing servers.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Monitoring & Observability",
+      "category": "Technical",
+      "subcategory": "DevOps",
+      "aliases": [
+        "Monitoring",
+        "Observability",
+        "Prometheus",
+        "Grafana",
+        "Datadog",
+        "CloudWatch"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Collecting metrics, logs and traces to monitor system health.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Networking",
+      "category": "Technical",
+      "subcategory": "Infrastructure",
+      "aliases": [
+        "Computer networking",
+        "TCP/IP",
+        "DNS",
+        "DHCP",
+        "Routing and switching",
+        "LAN/WAN",
+        "OSI model"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Fundamentals of computer networks, protocols and network configuration.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Identity & Access Management",
+      "category": "Technical",
+      "subcategory": "Security Practice",
+      "aliases": [
+        "IAM",
+        "Access control",
+        "Active Directory",
+        "Single sign-on",
+        "SSO",
+        "RBAC"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Managing digital identities, authentication and access permissions.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Windows Server",
+      "category": "Technical",
+      "subcategory": "Infrastructure",
+      "aliases": [
+        "Windows Server administration",
+        "Windows administration"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Administering Microsoft Windows Server environments.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "OWASP Top 10",
+      "category": "Technical",
+      "subcategory": "Security Practice",
+      "aliases": [
+        "OWASP",
+        "Web application security",
+        "Secure coding"
+      ],
+      "ambiguous_aliases": [],
+      "description": "The most critical web application security risks and their mitigations.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Security Operations (SOC)",
+      "category": "Technical",
+      "subcategory": "Security Practice",
+      "aliases": [
+        "Security Operations Centre",
+        "Security Operations Center",
+        "SOC analyst",
+        "Security monitoring"
+      ],
+      "ambiguous_aliases": [
+        "SOC"
+      ],
+      "description": "Continuous monitoring, triage and response in a security operations centre.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Threat Intelligence",
+      "category": "Technical",
+      "subcategory": "Security Practice",
+      "aliases": [
+        "Cyber threat intelligence",
+        "CTI",
+        "Threat hunting",
+        "MITRE ATT&CK"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Collecting and analysing information about current and emerging threats.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Security Frameworks",
+      "category": "Technical",
+      "subcategory": "Security Practice",
+      "aliases": [
+        "NIST",
+        "NIST CSF",
+        "ISO 27001",
+        "ISO/IEC 27001",
+        "CIS Controls",
+        "Security compliance"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Applying standard security frameworks and compliance controls.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Malware Analysis",
+      "category": "Technical",
+      "subcategory": "Security Practice",
+      "aliases": [
+        "Reverse engineering malware",
+        "Malware reverse engineering"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Examining malicious software to understand its behaviour and impact.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Log Analysis",
+      "category": "Technical",
+      "subcategory": "Security Practice",
+      "aliases": [
+        "Log management",
+        "Log monitoring",
+        "Event log analysis"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Reviewing system and security logs to detect anomalies and incidents.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Prompt Engineering",
+      "category": "AI_Digital",
+      "subcategory": "ML/AI",
+      "aliases": [
+        "Prompt design",
+        "LLM prompting"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Designing effective prompts to steer large language models.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Responsible AI",
+      "category": "AI_Digital",
+      "subcategory": "ML/AI",
+      "aliases": [
+        "Data ethics",
+        "AI ethics",
+        "Ethical AI",
+        "AI governance"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Designing and using AI and data fairly, transparently and accountably.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Data Mining",
+      "category": "Analytical",
+      "subcategory": "Analytical",
+      "aliases": [
+        "Pattern mining",
+        "Knowledge discovery"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Discovering patterns and relationships in large datasets.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Stakeholder Communication",
+      "category": "Soft",
+      "subcategory": "Soft",
+      "aliases": [
+        "Stakeholder engagement",
+        "Client communication",
+        "Business communication"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Communicating requirements, progress and results to stakeholders.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Decision Making",
+      "category": "Analytical",
+      "subcategory": "Analytical",
+      "aliases": [
+        "Data-driven decision making",
+        "Decision-making"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Evaluating options and evidence to make sound decisions.",
+      "source": "v2"
+    },
+    {
+      "skill_name": "Customer Focus",
+      "category": "Soft",
+      "subcategory": "Soft",
+      "aliases": [
+        "Customer service",
+        "Customer orientation",
+        "Client focus"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Understanding and prioritising the needs of customers and users.",
+      "source": "v2"
+    }
+  ]
+}

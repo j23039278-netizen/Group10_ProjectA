@@ -1,0 +1,125 @@
+jd_ref,role_code,title,company,location,seniority,source,source_url,source_license,collected_date,raw_text
+JD-CE-0001,CLOUD_ENGINEER,Junior DevOps Engineer,Anonymised,Kuala Lumpur,junior,kaggle:seagas/fictional-sample,,Fictional test data (no licence needed),2026-09-29,"[COMPANY] is hiring a Junior DevOps Engineer .
+- Automate deployments with Jenkins and GitHub Actions
+- Run containers on Kubernetes and Docker
+- Manage Linux servers and write Bash scripts
+- Provision cloud resources on Azure with Terraform
+Requirements: degree in IT, knowledge of networking and cloud computing, good teamwork. Experience with monitoring tools such as Datadog is a plus. Contact [EMAIL] or [PHONE]."
+JD-CE-0002,CLOUD_ENGINEER,Associate Cloud Engineer,Anonymised,Remote (Malaysia),junior,sample,sample:fictional-example,Copied manually for non-commercial academic research,2026-09-29,"We help e-commerce companies run reliable platforms on AWS. As an Associate Cloud Engineer you will build and operate cloud infrastructure together with our DevOps team.
+
+Responsibilities:
+- Provision AWS infrastructure with Terraform (infrastructure as code).
+- Build and maintain CI/CD pipelines using GitHub Actions.
+- Deploy containerised services with Docker and Kubernetes.
+- Configure networking (VPC, subnets, DNS) and IAM roles following least privilege.
+- Set up monitoring and alerting with Prometheus and Grafana.
+
+Requirements:
+- Degree in Computer Science, IT or a related field.
+- Hands-on experience with Linux and shell scripting in Bash.
+- Understanding of cloud computing concepts on AWS, Azure or GCP.
+- Familiarity with Git.
+
+Nice to have:
+- AWS Certified Cloud Practitioner or Solutions Architect Associate.
+- Experience with serverless (AWS Lambda) or Ansible.
+- Python or Go scripting."
+JD-CY-0001,CYBER_ANALYST,Junior SOC Analyst,Anonymised,Kuala Lumpur,junior,sample,sample:fictional-example,Copied manually for non-commercial academic research,2026-09-29,"Join our 24x7 Security Operations Centre protecting banking and insurance clients. You will monitor alerts, investigate suspicious activity and help respond to security incidents.
+
+Key responsibilities:
+- Monitor and triage alerts in our SIEM (Splunk and QRadar).
+- Perform log analysis across firewalls, endpoints and cloud services.
+- Support incident response and write clear incident reports.
+- Run vulnerability scans with Nessus and track remediation.
+- Keep up to date with threat intelligence and the MITRE ATT&CK framework.
+
+Requirements:
+- Degree in Cybersecurity, Computer Science or Information Technology.
+- Good understanding of networking (TCP/IP, DNS) and network security concepts.
+- Working knowledge of Linux and Windows Server.
+- CompTIA Security+ or equivalent is preferred.
+
+Advantageous:
+- Scripting in Python or Bash.
+- Familiarity with ISO 27001 or NIST CSF.
+- Experience with Wireshark or penetration testing in a lab or CTF."
+JD-DA-0001,DATA_ANALYST,Graduate Data Analyst,Anonymised,"Kuala Lumpur, Malaysia",entry,api:greenhouse:example-board,https://boards.greenhouse.io/example-board/jobs/1001,Fictional test data in Greenhouse Job Board API format (no licence needed),2026-09-29,"[COMPANY] is hiring a Graduate Data Analyst to support our risk and growth teams.
+- Query transaction data with SQL and BigQuery
+- Clean data and automate reports in Python
+- Build Looker Studio and Tableau dashboards
+- Run A/B testing analysis for product experiments
+Requirements: degree in Statistics, Economics or Computer Science; strong Excel and SQL skills; good communication and stakeholder engagement. Knowledge of ETL tools is a plus."
+JD-DA-0002,DATA_ANALYST,Junior Data Analyst,Anonymised,Kuala Lumpur,junior,sample,sample:fictional-example,Copied manually for non-commercial academic research,2026-09-29,"About the role
+[COMPANY] is looking for a Junior Data Analyst to join our commercial insights team. You will turn sales and customer data into clear reports that help store managers make better decisions.
+
+Responsibilities:
+- Write SQL queries to extract and combine data from our sales database.
+- Clean and prepare data in Python (Pandas) and Excel before analysis.
+- Build and maintain Power BI dashboards for weekly and monthly KPIs.
+- Perform statistical analysis to explain changes in sales performance.
+- Present findings to business stakeholders in a clear, simple way.
+
+Requirements:
+- Degree in Computer Science, Statistics, or a related field.
+- Good knowledge of SQL and Microsoft Excel.
+- Experience with Python for data analysis.
+- Strong attention to detail and communication skills.
+
+Nice to have:
+- Experience with Tableau or Looker Studio.
+- Basic understanding of machine learning.
+
+To apply, email [EMAIL] or call +60 [PHONE]."
+JD-DS-0001,DATA_SCIENTIST,Graduate Data Scientist,Anonymised,Petaling Jaya,entry,sample,sample:fictional-example,Copied manually for non-commercial academic research,2026-09-29,"We are a fintech start-up building credit-risk models for small businesses. As a Graduate Data Scientist you will work with senior scientists to design, train and evaluate machine learning models.
+
+What you will do:
+- Explore and clean large transaction datasets using Python, Pandas and NumPy.
+- Engineer features and train models with Scikit-learn.
+- Evaluate models using precision, recall, F1 and ROC AUC and explain the trade-offs.
+- Share results in Jupyter notebooks and short presentations.
+
+What we are looking for:
+- Degree in Data Science, Computer Science, Mathematics or Statistics.
+- Solid foundation in statistics and machine learning.
+- Proficient in Python and SQL.
+- Curious, self-driven and able to work in a team.
+
+Preferred:
+- Exposure to deep learning with PyTorch or TensorFlow.
+- Experience with Apache Spark or cloud platforms is a plus."
+JD-SD-0001,SOFTWARE_DEV,Software Engineer (Fresh Graduate),Anonymised,Cyberjaya,entry,sample,sample:fictional-example,Copied manually for non-commercial academic research,2026-09-29,"Our product team builds logistics software used by hundreds of warehouses in the region. We are hiring fresh graduates who enjoy solving problems with clean, well-tested code.
+
+Responsibilities:
+- Design and build backend services in Java (Spring Boot) and Python.
+- Build and consume RESTful APIs.
+- Write unit tests and take part in code reviews.
+- Work in an Agile team with two-week sprints.
+- Use Git and our CI/CD pipeline to ship changes safely.
+
+Requirements:
+- Degree in Computer Science or Software Engineering.
+- Good understanding of object-oriented programming and data structures and algorithms.
+- Knowledge of SQL and relational databases such as PostgreSQL or MySQL.
+- Good problem-solving and communication skills.
+
+Nice to have:
+- Experience with Docker, Linux or microservices.
+- Knowledge of TypeScript or React."
+JD-WD-0001,WEB_DEV,Junior Full Stack Web Developer,Anonymised,Penang,junior,sample,sample:fictional-example,Copied manually for non-commercial academic research,2026-09-29,"We are a digital agency building websites and web apps for local brands. We are looking for a junior full stack developer who cares about good user experience.
+
+What you will do:
+- Build responsive front-ends with HTML, CSS, JavaScript and React.
+- Develop REST APIs with Node.js and Express.
+- Work with PostgreSQL and MongoDB databases.
+- Turn Figma designs into pixel-perfect pages.
+- Use Git for version control and take part in code reviews.
+
+Requirements:
+- Diploma or degree in Computer Science or IT.
+- Good knowledge of JavaScript and TypeScript.
+- Understanding of UI/UX design principles.
+- Good teamwork and communication skills.
+
+Bonus points:
+- Experience with Vue.js or GraphQL.
+- Basic knowledge of Docker."

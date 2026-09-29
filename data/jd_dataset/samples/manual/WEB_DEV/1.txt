@@ -1,0 +1,22 @@
+sample:fictional-example 2026-09-29
+Title: Junior Full Stack Web Developer
+Location: Penang
+
+We are a digital agency building websites and web apps for local brands. We are looking for a junior full stack developer who cares about good user experience.
+
+What you will do:
+- Build responsive front-ends with HTML, CSS, JavaScript and React.
+- Develop REST APIs with Node.js and Express.
+- Work with PostgreSQL and MongoDB databases.
+- Turn Figma designs into pixel-perfect pages.
+- Use Git for version control and take part in code reviews.
+
+Requirements:
+- Diploma or degree in Computer Science or IT.
+- Good knowledge of JavaScript and TypeScript.
+- Understanding of UI/UX design principles.
+- Good teamwork and communication skills.
+
+Bonus points:
+- Experience with Vue.js or GraphQL.
+- Basic knowledge of Docker.

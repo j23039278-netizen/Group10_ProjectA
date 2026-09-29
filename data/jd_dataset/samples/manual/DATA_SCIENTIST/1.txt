@@ -1,0 +1,21 @@
+sample:fictional-example 2026-09-29
+Title: Graduate Data Scientist
+Location: Petaling Jaya
+
+We are a fintech start-up building credit-risk models for small businesses. As a Graduate Data Scientist you will work with senior scientists to design, train and evaluate machine learning models.
+
+What you will do:
+- Explore and clean large transaction datasets using Python, Pandas and NumPy.
+- Engineer features and train models with Scikit-learn.
+- Evaluate models using precision, recall, F1 and ROC AUC and explain the trade-offs.
+- Share results in Jupyter notebooks and short presentations.
+
+What we are looking for:
+- Degree in Data Science, Computer Science, Mathematics or Statistics.
+- Solid foundation in statistics and machine learning.
+- Proficient in Python and SQL.
+- Curious, self-driven and able to work in a team.
+
+Preferred:
+- Exposure to deep learning with PyTorch or TensorFlow.
+- Experience with Apache Spark or cloud platforms is a plus.
