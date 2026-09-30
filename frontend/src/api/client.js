@@ -15,11 +15,13 @@ API.interceptors.request.use(config => {
   return config;
 });
 
-// Auto-handle 401 (token expired)
+// Auto-handle 401 (token expired).
+// A failed login also returns 401 — skip the redirect there so the Login page can show its error.
 API.interceptors.response.use(
   response => response,
   error => {
-    if (error.response?.status === 401) {
+    const isLoginRequest = error.config?.url?.includes('/auth/login')
+    if (error.response?.status === 401 && !isLoginRequest) {
       localStorage.removeItem('token');
       localStorage.removeItem('role');
       window.location.href = '/';
