@@ -2,7 +2,7 @@
 // Everything here is a visual preview with sample data; the real assessment lives behind /login.
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import LogoMark from './home/LogoMark'
+import { BrandLogo, BrandEmblem } from './home/BrandLogo'
 import Hero from './home/Hero'
 import HowItWorks from './home/HowItWorks'
 import MatchDemo from './home/MatchDemo'
@@ -143,11 +143,7 @@ function HomeContent() {
       <header className={`hp-nav ${scrolled || menuOpen ? 'is-scrolled' : ''}`}>
         <div className="hp-nav-inner">
           <button type="button" className="hp-logo hp-enter" style={{ '--d': '0ms' }} onClick={() => onNav('top')} aria-label="SEAGAS, back to top">
-            <LogoMark dark className="hp-logo-mark" />
-            <span className="hp-logo-text">
-              <span className="hp-logo-name">SEAGAS</span>
-              <span className="hp-logo-tag">FROM CAMPUS TO CAREER</span>
-            </span>
+            <BrandLogo className="hp-logo-img" />
           </button>
 
           <nav className="hp-nav-links hp-enter" style={{ '--d': '80ms' }} aria-label="Home page sections">
@@ -280,7 +276,7 @@ function HomeContent() {
       <footer className="hp-footer">
         <div className="hp-container hp-footer-inner">
           <span className="hp-footer-brand">
-            <LogoMark dark className="hp-footer-logo" />
+            <BrandEmblem className="hp-footer-logo" />
             © 2026 SEAGAS · From campus to career · Group 10
           </span>
           <span>COS40005 Computing Technology Project A · Swinburne University / INTI International College Subang</span>

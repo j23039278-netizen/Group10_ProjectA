@@ -56,7 +56,7 @@
   color: #fff;
   text-decoration: none;
 }
-.au-logo-mark { width: 44px; height: auto; }
+.au-logo-img { display: block; height: 52px; width: auto; }
 .au-heading {
   margin-bottom: 26px;
   font-size: clamp(26px, 3vw, 34px);

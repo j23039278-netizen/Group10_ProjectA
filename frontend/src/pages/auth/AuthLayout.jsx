@@ -2,7 +2,7 @@
 // One centred column: logo, a short heading, then the form card.
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import LogoMark from '../home/LogoMark'
+import { BrandLogo } from '../home/BrandLogo'
 import Icon from '../home/Icon'
 import { useCanvasColor } from '../home/hooks'
 import '../Home.css'
@@ -24,11 +24,7 @@ export default function AuthLayout({ heading, title, subtitle, children }) {
 
       <main className="au-center">
         <Link to="/" className="au-logo hp-enter" aria-label="SEAGAS home">
-          <LogoMark dark className="au-logo-mark" />
-          <span className="hp-logo-text">
-            <span className="hp-logo-name">SEAGAS</span>
-            <span className="hp-logo-tag">FROM CAMPUS TO CAREER</span>
-          </span>
+          <BrandLogo className="au-logo-img" />
         </Link>
 
         <h1 className="au-heading hp-enter" style={{ '--d': '100ms' }}>{heading}</h1>
