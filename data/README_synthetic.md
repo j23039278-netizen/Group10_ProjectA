@@ -90,6 +90,7 @@ Use `--n 500` for a quick demo set.
 - **Noise:** 0–2 random off-role skills are added per student. They are
   drawn from the whole skills library.
 - **Names:** romanised Malaysian names (Chinese, Malay and Indian) plus a few
-  international names.
+  international names. All 5,000 names are unique (ignoring case and extra
+  spaces), so students are easy to tell apart in the Advisor Dashboard.
 - **Emails:** all use `synthetic.example.com`, a domain reserved for examples (RFC 2606). It passes Pydantic `EmailStr` validation, and no real address can be
   hit.

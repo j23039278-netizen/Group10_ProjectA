@@ -1,5 +1,5 @@
 SEAGAS Synthetic Dataset — Summary Statistics
-Generated: 2026-09-29 22:06   seed=42
+Generated: 2026-10-01 08:18   seed=42
 ============================================================
 Students:              5000
 Student skill entries: 78327  (mean 15.7 per student, min 1, max 36)

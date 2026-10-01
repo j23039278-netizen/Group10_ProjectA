@@ -42,7 +42,7 @@ The generator (`data/generate_synthetic_data.py`) creates **5,000 students** wit
 - **skills**, sampled from the role template. *Core* skills are the role's `required` skills in `job_role_skills`, and *secondary* skills are its `preferred` and `bonus` skills. The generator reads these lists directly from the role-mapping seed, so the synthetic ground truth cannot drift from the templates used for scoring. Each student also gets up to two random off-role skills from the whole library as noise;
 - **consistent evidence**. Skills used in a generated project are tagged `project`, and skills covered by a certification are tagged `certification`. The certifications are 25 real industry certificates, such as CompTIA Security+, CCNA, AWS Solutions Architect – Associate and Google Data Analytics. Profile counters (`project_count`, `certification_count`, `internship_count`) equal the rows in the detail tables;
 - a **proficiency** level, which depends on archetype, year of study and whether the skill has evidence beyond coursework;
-- **romanised Malaysian names** (Chinese, Malay and Indian, plus a few international names), and e-mail addresses under the reserved `example.com` domain [2]. All accounts share one demo password, stored as a bcrypt hash [3].
+- **romanised Malaysian names** (Chinese, Malay and Indian, plus a few international names; all 5,000 names are unique), and e-mail addresses under the reserved `example.com` domain [2]. All accounts share one demo password, stored as a bcrypt hash [3].
 
 ### 2.3 Resulting distribution
 

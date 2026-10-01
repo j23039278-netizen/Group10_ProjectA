@@ -37,6 +37,9 @@ Design notes (for the Dataset section of the report):
     the detail tables.
   * All emails use the reserved example domain @synthetic.example.com so synthetic data
     can be identified and removed with one DELETE.
+  * Every full name is unique (ignoring case and extra spaces), so students can be
+    told apart in the Advisor Dashboard. Repeated names are redrawn after
+    generation with a separate RNG, so no other field changes.
   * No real personal data is used. Fixed random seed => reproducible dataset.
 """
 
@@ -292,7 +295,11 @@ PROJECTS = {
 
 PROJECT_TYPES = ["academic", "academic", "academic", "personal", "competition"]
 
-# Romanised Malaysian names (Faker has no Malaysian locale)
+# Romanised Malaysian names (Faker has no Malaysian locale).
+# make_name() draws from these original small pools. Keep them exactly as they
+# are: a different list length changes how many numbers rng.choice() consumes,
+# which would shift every later skill, GPA and project. Repeated names are
+# redrawn afterwards from the larger *_POOL lists below (see unique_names).
 CHINESE_SURNAMES = ["Tan", "Lim", "Lee", "Ng", "Wong", "Chan", "Ong", "Teh", "Goh", "Chong",
                     "Yap", "Low", "Koh", "Soh", "Tee", "Chin", "Liew", "Yeoh", "Khoo", "Foo"]
 CHINESE_GIVEN = ["Wei Jie", "Jia Hui", "Zi Xuan", "Kai Wen", "Yi Ting", "Jun Hao", "Mei Ling",
@@ -304,6 +311,46 @@ MALAY_FEMALE = ["Nur Aisyah", "Siti Nurhaliza", "Nurul Izzah", "Aina Sofea", "Fa
                 "Alya Maisarah", "Nur Iman", "Balqis Humaira", "Hannah Zulaikha", "Syazwani Ain"]
 MALAY_FATHER = ["Ahmad", "Ismail", "Rahman", "Hassan", "Abdullah", "Yusof", "Ibrahim",
                 "Zainal", "Kamarudin", "Osman"]
+
+# Larger pools, used only to redraw repeated names. Each pool has at least 10x
+# as many combinations as its group has students at n=5000:
+#   Chinese      50 surnames x ~47*46 syllable pairs     = 112,424  (~2,750 students)
+#   Malay male   16 x 22 names x 46 fathers              =  16,192  (~730)
+#   Malay female 16 x 22 names x 46 fathers              =  16,192  (~760)
+CHINESE_SURNAME_POOL = CHINESE_SURNAMES + [
+    "Ang", "Cheah", "Chew", "Choo", "Chua", "Gan", "Heng", "Ho", "Hong", "Kang",
+    "Khor", "Kok", "Lai", "Lau", "Leong", "Loh", "Lum", "Mah", "Ooi", "Phang",
+    "Poh", "Quah", "See", "Seow", "Sim", "Tay", "Teoh", "Toh", "Wee", "Yong"]
+# given name = two different syllables, e.g. "Zi" + "Xuan" -> "Zi Xuan"
+CHINESE_SYLLABLE_POOL = [
+    "Wei", "Jie", "Jia", "Hui", "Zi", "Xuan", "Kai", "Wen", "Yi", "Ting", "Jun", "Hao",
+    "Mei", "Ling", "Chee", "Keong", "Xin", "Min", "Yong", "Sheng", "Pei", "Shan", "Zhi",
+    "Shu", "Ming", "Li", "Ying", "Jing", "Kok", "Leong", "En", "Qi", "Yu", "Han", "Xiang",
+    "Rui", "Yan", "Wai", "Siew", "Boon", "Seng", "Choon", "Kar", "Mun", "Hong", "Kean",
+    "Chun", "Yee"]
+# Malay given name = first part + second part (the two lists do not overlap)
+MALAY_MALE_FIRST_POOL = [
+    "Muhammad", "Ahmad", "Mohd", "Amirul", "Faris", "Adam", "Irfan", "Syafiq", "Luqman",
+    "Arif", "Haziq", "Danish", "Izzat", "Nabil", "Firdaus", "Aidil"]
+MALAY_MALE_SECOND_POOL = [
+    "Aiman", "Danial", "Hafiz", "Hakim", "Iskandar", "Haikal", "Zikri", "Rahman", "Imran",
+    "Afiq", "Amsyar", "Aqil", "Azim", "Fikri", "Harith", "Ikhwan", "Naim", "Rayyan",
+    "Syahmi", "Zaim", "Hazim", "Hakimi"]
+MALAY_FEMALE_FIRST_POOL = [
+    "Nur", "Siti", "Nurul", "Aina", "Farah", "Alya", "Balqis", "Hannah", "Syazwani",
+    "Puteri", "Nor", "Amira", "Wan", "Dayang", "Fatin", "Intan"]
+MALAY_FEMALE_SECOND_POOL = [
+    "Aisyah", "Izzah", "Sofea", "Nabila", "Maisarah", "Iman", "Humaira", "Zulaikha", "Ain",
+    "Syahirah", "Batrisyia", "Qistina", "Damia", "Insyirah", "Adlina", "Najwa", "Afiqah",
+    "Husna", "Liyana", "Amani", "Hidayah", "Athirah"]
+MALAY_FATHER_POOL = MALAY_FATHER + [
+    "Aziz", "Hamid", "Rashid", "Salleh", "Sulaiman", "Mohamad", "Musa", "Omar", "Othman",
+    "Rahim", "Ramli", "Roslan", "Shafie", "Sharif", "Yaakob", "Zakaria", "Halim", "Hashim",
+    "Idris", "Jamil", "Kassim", "Latif", "Mansor", "Mokhtar", "Nordin", "Rosli", "Azman",
+    "Bakar", "Daud", "Fauzi", "Ghazali", "Hussin", "Jaafar", "Karim", "Mustafa", "Saad"]
+# Full names of real public figures that the pools above can produce; never used
+BLOCKED_NAMES = ["Tan Kok Wai", "Wong Shu Qi", "Chan Ming Kai", "Lim Hui Ying"]
+MAX_NAME_TRIES = 1000
 
 
 # ── Helpers ────────────────────────────────────────────────────────────────
@@ -356,17 +403,67 @@ def load_role_skills(path=ROLE_SKILLS_SEED_PATH):
 
 
 def make_name(rng, fk_in, fk_intl):
-    """~55% Chinese, ~30% Malay, ~10% Indian, ~5% international students."""
+    """~55% Chinese, ~30% Malay, ~10% Indian, ~5% international students.
+
+    Returns (name, ethnicity, gender); gender is only set for Malay names.
+    """
     r = rng.random()
     if r < 0.55:
-        return f"{rng.choice(CHINESE_SURNAMES)} {rng.choice(CHINESE_GIVEN)}"
+        return f"{rng.choice(CHINESE_SURNAMES)} {rng.choice(CHINESE_GIVEN)}", "chinese", None
     if r < 0.85:
         if rng.random() < 0.5:
-            return f"{rng.choice(MALAY_MALE)} bin {rng.choice(MALAY_FATHER)}"
-        return f"{rng.choice(MALAY_FEMALE)} binti {rng.choice(MALAY_FATHER)}"
+            return f"{rng.choice(MALAY_MALE)} bin {rng.choice(MALAY_FATHER)}", "malay", "male"
+        return f"{rng.choice(MALAY_FEMALE)} binti {rng.choice(MALAY_FATHER)}", "malay", "female"
     if r < 0.95:
-        return fk_in.name()
-    return fk_intl.name()
+        return fk_in.name(), "indian", None
+    return fk_intl.name(), "international", None
+
+
+def name_key(name):
+    """Names that differ only in case or spacing count as the same name."""
+    return " ".join(name.split()).lower()
+
+
+def redraw_name(name_rng, fakers, ethnicity, gender):
+    """A new name from the larger pool of the same ethnicity (and gender)."""
+    if ethnicity == "chinese":
+        surname = name_rng.choice(CHINESE_SURNAME_POOL)
+        # no "Leong Leong Rui": the given name never repeats the surname
+        a, b = name_rng.sample([s for s in CHINESE_SYLLABLE_POOL if s != surname], 2)
+        return f"{surname} {a} {b}"
+    if ethnicity == "malay":
+        if gender == "male":
+            given = f"{name_rng.choice(MALAY_MALE_FIRST_POOL)} {name_rng.choice(MALAY_MALE_SECOND_POOL)}"
+            return f"{given} bin {name_rng.choice(MALAY_FATHER_POOL)}"
+        given = f"{name_rng.choice(MALAY_FEMALE_FIRST_POOL)} {name_rng.choice(MALAY_FEMALE_SECOND_POOL)}"
+        return f"{given} binti {name_rng.choice(MALAY_FATHER_POOL)}"
+    return fakers[ethnicity].name()
+
+
+def unique_names(users, origins, seed):
+    """Give every student a different name, in student-number order.
+
+    A student whose name is already taken by an earlier student (including by
+    an earlier redraw) or is in BLOCKED_NAMES gets a new one from the larger
+    pool of their ethnicity (and gender), drawn until it is free. This
+    uses its own RNG and its own Faker instances, never rng / fk / fk_in, so
+    every other field of the dataset stays exactly the same.
+    """
+    name_rng = random.Random(f"names-{seed}")
+    fakers = {"indian": Faker("en_IN"), "international": Faker("en_US")}
+    for f in fakers.values():
+        f.seed_instance(f"names-{seed}")
+    seen = {name_key(n) for n in BLOCKED_NAMES}
+    for u, (ethnicity, gender) in zip(users, origins):
+        name = u["full_name"]
+        tries = 0
+        while name_key(name) in seen:
+            tries += 1
+            if tries > MAX_NAME_TRIES:
+                raise SystemExit(f"Could not find a unique {ethnicity} name for {u['email']}")
+            name = redraw_name(name_rng, fakers, ethnicity, gender)
+        seen.add(name_key(name))
+        u["full_name"] = name
 
 
 def clamp(x, lo, hi):
@@ -448,6 +545,7 @@ def generate(n, seed):
     arch_w = [ARCHETYPES[a][0] for a in arch_names]
 
     users, profiles, skills_rows, projects_rows, certs_rows, meta = [], [], [], [], [], []
+    name_origins = []  # (ethnicity, gender) per student, for unique_names
     base_time = datetime(2026, 7, 1, 9, 0, 0)
 
     for i in range(1, n + 1):
@@ -457,7 +555,8 @@ def generate(n, seed):
         spec = ROLES[role]
 
         user_id, profile_id = str(uuid.UUID(int=rng.getrandbits(128))), str(uuid.UUID(int=rng.getrandbits(128)))
-        full_name = make_name(rng, fk_in, fk)
+        full_name, ethnicity, gender = make_name(rng, fk_in, fk)
+        name_origins.append((ethnicity, gender))
         email = f"student{i:04d}@{EMAIL_DOMAIN}"
         created = base_time + timedelta(days=rng.randint(0, 80), minutes=rng.randint(0, 1440))
 
@@ -591,6 +690,11 @@ def generate(n, seed):
             "core_skills_covered": core_have, "core_skills_total": len(spec["core"]),
             "core_coverage_pct": round(core_have / len(spec["core"]) * 100, 1),
         })
+
+    unique_names(users, name_origins, seed)
+    repeated = [k for k, c in Counter(name_key(u["full_name"]) for u in users).items() if c > 1]
+    if repeated:
+        raise SystemExit(f"{len(repeated)} student names are not unique, e.g. {repeated[:5]}")
 
     return users, profiles, skills_rows, projects_rows, certs_rows, meta
 
