@@ -1456,6 +1456,10 @@
     radial-gradient(ellipse 60% 50% at 50% 50%, rgba(25, 195, 177, .10), transparent 70%),
     linear-gradient(180deg, #030E1A 0%, #051729 55%, var(--hp-navy) 100%);
   transition: transform .85s cubic-bezier(.76, 0, .24, 1);
+  /* Rapid taps speed the splash up; don't select text or flash a tap highlight */
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 /* Teal edge that trails the splash as it slides up */
 .hp-preloader::after {
@@ -1496,21 +1500,90 @@
 }
 .hp-preloader.is-leaving .hp-preloader-brand { opacity: 0; transform: scale(.94) translateY(-10px); }
 
-/* Emblem swoops in along the comet's direction, then breathes */
+/* Emblem: the ring spins in, the arrow shoots in from off-screen bottom-left and locks in, then it breathes */
 .hp-preloader-mark { animation: hp-pre-breathe 2.4s ease-in-out 1.4s infinite; }
 @keyframes hp-pre-breathe {
   0%, 100% { transform: scale(1);    filter: drop-shadow(0 0 0 rgba(57, 214, 197, 0)); }
   50%      { transform: scale(1.05); filter: drop-shadow(0 0 22px rgba(57, 214, 197, .55)); }
 }
 .hp-preloader-emblem {
-  display: block;
+  position: relative;
   width: clamp(120px, 14vw, 170px);
-  height: auto;
-  animation: hp-pre-emblem 1s var(--hp-ease) .1s both;
+  aspect-ratio: 512 / 384;
 }
-@keyframes hp-pre-emblem {
-  from { opacity: 0; transform: translate(-48px, 40px) scale(.7) rotate(-10deg); filter: blur(8px); }
+.hp-preloader-emblem img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.hp-pre-ring {
+  animation:
+    hp-pre-ring .6s var(--hp-ease) .05s both,
+    hp-pre-jolt .45s ease-out .68s;
+}
+@keyframes hp-pre-ring {
+  from { opacity: 0; transform: scale(.82) rotate(-30deg); filter: blur(6px); }
   to   { opacity: 1; transform: none; filter: blur(0); }
+}
+/* Ring gives a little when the arrow hits */
+@keyframes hp-pre-jolt {
+  0%   { transform: none; }
+  30%  { transform: translate(2px, -1.5px) scale(1.035); }
+  100% { transform: none; }
+}
+
+/* The arrow travels along its own axis (slope ≈ 0.69) */
+.hp-pre-arrow {
+  position: absolute;
+  inset: 0;
+  animation: hp-pre-arrow .5s cubic-bezier(.15, .7, .3, 1) .3s both;
+}
+@keyframes hp-pre-arrow {
+  0%   { transform: translate(-90vw, 62vw); filter: blur(2px); }
+  80%  { transform: translate(7px, -5px);   filter: blur(0); }
+  100% { transform: none; }
+}
+/* Light trail behind the arrow's tail, fades once it has landed */
+.hp-pre-arrow::before {
+  content: '';
+  position: absolute;
+  top: 93%;
+  right: 98.6%;
+  width: 70vw;
+  height: 3px;
+  margin-top: -1.5px;
+  border-radius: 3px;
+  background: linear-gradient(90deg, transparent, rgba(57, 214, 197, .25) 55%, rgba(57, 214, 197, .9));
+  box-shadow: 0 0 12px rgba(57, 214, 197, .4);
+  transform-origin: right center;
+  transform: rotate(-34.6deg);
+  animation: hp-pre-trail .55s ease-out .3s both;
+}
+@keyframes hp-pre-trail {
+  0%, 50% { opacity: 1; }
+  100%    { opacity: 0; }
+}
+/* Shockwave from the point of impact */
+.hp-pre-impact {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 2px solid rgba(57, 214, 197, .8);
+  box-shadow: 0 0 24px rgba(57, 214, 197, .5), inset 0 0 18px rgba(79, 124, 255, .35);
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(.5);
+  animation: hp-pre-impact .7s ease-out .68s both;
+}
+@keyframes hp-pre-impact {
+  0%   { opacity: 0;   transform: translate(-50%, -50%) scale(.5); }
+  12%  { opacity: .9; }
+  100% { opacity: 0;   transform: translate(-50%, -50%) scale(1.7); }
 }
 
 /* Wordmark wipes in from left to right */

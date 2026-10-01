@@ -1,6 +1,6 @@
 // SEAGAS — Home (landing) page shown to visitors before login.
 // Everything here is a visual preview with sample data; the real assessment lives behind /login.
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { BrandLogo, BrandEmblem } from './home/BrandLogo'
 import Hero from './home/Hero'
@@ -40,6 +40,9 @@ function scrollToSection(id) {
 const PRELOAD_MIN_MS = 2200
 const PRELOAD_MAX_MS = 3000
 const PRELOAD_LEAVE_MS = 850
+// Each tap/click on the splash makes it play this much faster, up to MAX_SPEED
+const PRELOAD_TAP_SPEEDUP = 1.6
+const PRELOAD_MAX_SPEED = 6
 
 // Plays once per page load; navigating back to Home inside the app (e.g. from /login) skips it
 let preloaderShown = false
@@ -61,34 +64,43 @@ export default function Home() {
 
   useCanvasColor('#071D33')
 
+  // Tapping the splash speeds it up: the splash clock and its CSS animations run at this rate
+  const speedRef = useRef(1)
+
   useEffect(() => {
     if (stage !== 'loading') return
     preloaderShown = true
     const reduced = prefersReducedMotion()
     const minMs = reduced ? 400 : PRELOAD_MIN_MS
-    const start = performance.now()
-    let finished = false
-    const timers = []
+    const maxMs = reduced ? minMs : PRELOAD_MAX_MS
+    let loaded = document.readyState === 'complete'
+    const onLoaded = () => { loaded = true }
+    if (!loaded) window.addEventListener('load', onLoaded, { once: true })
 
-    const finish = () => {
-      if (finished) return
-      finished = true
-      setStage('leaving')
-    }
-    const onLoaded = () => {
-      const wait = Math.max(minMs - (performance.now() - start), 0)
-      timers.push(setTimeout(finish, wait))
-    }
-
-    if (document.readyState === 'complete') onLoaded()
-    else window.addEventListener('load', onLoaded, { once: true })
-    timers.push(setTimeout(finish, reduced ? minMs : PRELOAD_MAX_MS))
+    // Splash clock advances faster while sped up
+    let elapsed = 0
+    let last = performance.now()
+    const tick = setInterval(() => {
+      const now = performance.now()
+      elapsed += (now - last) * speedRef.current
+      last = now
+      if ((loaded && elapsed >= minMs) || elapsed >= maxMs) {
+        clearInterval(tick)
+        setStage('leaving')
+      }
+    }, 40)
 
     return () => {
       window.removeEventListener('load', onLoaded)
-      timers.forEach(clearTimeout)
+      clearInterval(tick)
     }
   }, [stage])
+
+  const speedUp = () => {
+    if (stage !== 'loading') return 1
+    speedRef.current = Math.min(speedRef.current * PRELOAD_TAP_SPEEDUP, PRELOAD_MAX_SPEED)
+    return speedRef.current
+  }
 
   // Remove the splash once its exit animation has finished
   useEffect(() => {
@@ -99,7 +111,7 @@ export default function Home() {
 
   return (
     <div className="hp">
-      {stage !== 'done' && <Preloader leaving={stage === 'leaving'} />}
+      {stage !== 'done' && <Preloader leaving={stage === 'leaving'} onSpeedUp={speedUp} />}
       {stage !== 'loading' && <HomeContent />}
     </div>
   )
