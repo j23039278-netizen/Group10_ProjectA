@@ -6,6 +6,7 @@ REM   1. create seagas_db if missing
 REM   2. run database\schema.sql if tables are missing,
 REM      then seed_skills_library_v2.sql and seed_job_role_skills.sql
 REM   3. load 5000 synthetic students if none are loaded
+REM      (old data with repeated student names is replaced)
 REM   4. install Python packages, load the JD dataset (if present), start FastAPI
 REM Requires: PostgreSQL 17 (postgres password = postgres123), Python 3.10+
 REM ============================================================
@@ -85,6 +86,15 @@ for /f "usebackq delims=" %%i in (`psql -d seagas_db -tAc "SELECT count(*) FROM 
 echo [3/4] Checking synthetic students ...
 set "SYN=0"
 for /f "usebackq delims=" %%i in (`psql -d seagas_db -tAc "SELECT count(*) FROM users WHERE email LIKE '%%@synthetic.example.com'"`) do set "SYN=%%i"
+REM Students loaded before the unique-names fix have repeated names: replace them
+set "DUPNAMES=0"
+for /f "usebackq delims=" %%i in (`psql -d seagas_db -tAc "SELECT count(*) - count(DISTINCT full_name) FROM users WHERE email LIKE '%%@synthetic.example.com'"`) do set "DUPNAMES=%%i"
+if not "%DUPNAMES%"=="0" (
+    echo       old synthetic data found ^(%DUPNAMES% repeated names^), replacing it ...
+    psql -d seagas_db -q -v ON_ERROR_STOP=1 -f "..\data\delete_synthetic_data.sql"
+    if errorlevel 1 goto :fail
+    set "SYN=0"
+)
 if "%SYN%"=="0" (
     echo       loading 5000 students, please wait ...
     psql -d seagas_db -q -v ON_ERROR_STOP=1 -f "..\data\output\seed_synthetic_students.sql"
