@@ -1,0 +1,112 @@
+role_code,skill_name,role_jd_total,pct_of_jds,current_importance,suggested_importance
+CLOUD_ENGINEER,Ansible,2,50.0,preferred,required
+CLOUD_ENGINEER,Azure,2,100.0,preferred,required
+CLOUD_ENGINEER,Bash,2,100.0,preferred,required
+CLOUD_ENGINEER,Documentation,2,0.0,bonus,(drop / below 10%)
+CLOUD_ENGINEER,GCP,2,50.0,preferred,required
+CLOUD_ENGINEER,Go,2,0.0,bonus,(drop / below 10%)
+CLOUD_ENGINEER,Microservices,2,0.0,bonus,(drop / below 10%)
+CLOUD_ENGINEER,Monitoring & Observability,2,100.0,preferred,required
+CLOUD_ENGINEER,Network Security,2,0.0,bonus,(drop / below 10%)
+CLOUD_ENGINEER,PowerShell,2,0.0,bonus,(drop / below 10%)
+CLOUD_ENGINEER,Problem Solving,2,0.0,preferred,(drop / below 10%)
+CLOUD_ENGINEER,Python,2,50.0,preferred,required
+CLOUD_ENGINEER,SQL,2,0.0,bonus,(drop / below 10%)
+CLOUD_ENGINEER,Serverless,2,50.0,preferred,required
+CLOUD_ENGINEER,Teamwork,2,50.0,preferred,required
+CYBER_ANALYST,AWS,1,0.0,preferred,(drop / below 10%)
+CYBER_ANALYST,Bash,1,100.0,bonus,required
+CYBER_ANALYST,Cloud Computing,1,100.0,preferred,required
+CYBER_ANALYST,Communication,1,0.0,preferred,(drop / below 10%)
+CYBER_ANALYST,Cryptography,1,0.0,bonus,(drop / below 10%)
+CYBER_ANALYST,Digital Forensics,1,0.0,bonus,(drop / below 10%)
+CYBER_ANALYST,Ethical Hacking,1,100.0,bonus,required
+CYBER_ANALYST,Firewall Management,1,0.0,preferred,(drop / below 10%)
+CYBER_ANALYST,Identity & Access Management,1,0.0,preferred,(drop / below 10%)
+CYBER_ANALYST,Kali Linux,1,0.0,bonus,(drop / below 10%)
+CYBER_ANALYST,Nessus,1,100.0,(not mapped),required
+CYBER_ANALYST,Nmap,1,0.0,bonus,(drop / below 10%)
+CYBER_ANALYST,Problem Solving,1,0.0,required,(drop / below 10%)
+CYBER_ANALYST,Python,1,100.0,preferred,required
+CYBER_ANALYST,Risk Analysis,1,0.0,bonus,(drop / below 10%)
+CYBER_ANALYST,Security Frameworks,1,100.0,preferred,required
+CYBER_ANALYST,Splunk,1,100.0,bonus,required
+CYBER_ANALYST,Threat Intelligence,1,100.0,preferred,required
+CYBER_ANALYST,Vulnerability Assessment,1,0.0,required,(drop / below 10%)
+CYBER_ANALYST,Windows Server,1,100.0,preferred,required
+CYBER_ANALYST,Wireshark,1,100.0,preferred,required
+DATA_ANALYST,A/B Testing,2,50.0,bonus,required
+DATA_ANALYST,Attention to Detail,2,50.0,preferred,required
+DATA_ANALYST,Communication,2,100.0,preferred,required
+DATA_ANALYST,Critical Thinking,2,0.0,preferred,(drop / below 10%)
+DATA_ANALYST,Data Cleaning,2,0.0,required,(drop / below 10%)
+DATA_ANALYST,Data Visualisation,2,0.0,required,(drop / below 10%)
+DATA_ANALYST,Data Warehousing,2,0.0,bonus,(drop / below 10%)
+DATA_ANALYST,ETL,2,50.0,preferred,required
+DATA_ANALYST,GCP,2,50.0,(not mapped),required
+DATA_ANALYST,Git,2,0.0,bonus,(drop / below 10%)
+DATA_ANALYST,Google Analytics,2,0.0,bonus,(drop / below 10%)
+DATA_ANALYST,Looker,2,100.0,bonus,required
+DATA_ANALYST,Machine Learning,2,50.0,bonus,required
+DATA_ANALYST,Presentation Skills,2,0.0,preferred,(drop / below 10%)
+DATA_ANALYST,Problem Solving,2,0.0,preferred,(drop / below 10%)
+DATA_ANALYST,R,2,0.0,bonus,(drop / below 10%)
+DATA_ANALYST,Stakeholder Communication,2,50.0,preferred,required
+DATA_ANALYST,Tableau,2,100.0,preferred,required
+DATA_SCIENTIST,Apache Spark,1,100.0,bonus,required
+DATA_SCIENTIST,Cloud Computing,1,100.0,bonus,required
+DATA_SCIENTIST,Communication,1,0.0,preferred,(drop / below 10%)
+DATA_SCIENTIST,Data Analysis,1,0.0,required,(drop / below 10%)
+DATA_SCIENTIST,Data Cleaning,1,0.0,preferred,(drop / below 10%)
+DATA_SCIENTIST,Data Visualisation,1,0.0,preferred,(drop / below 10%)
+DATA_SCIENTIST,Deep Learning,1,100.0,preferred,required
+DATA_SCIENTIST,Feature Engineering,1,0.0,required,(drop / below 10%)
+DATA_SCIENTIST,Generative AI,1,0.0,bonus,(drop / below 10%)
+DATA_SCIENTIST,Git,1,0.0,preferred,(drop / below 10%)
+DATA_SCIENTIST,Jupyter,1,100.0,preferred,required
+DATA_SCIENTIST,MLOps,1,0.0,bonus,(drop / below 10%)
+DATA_SCIENTIST,Natural Language Processing,1,0.0,preferred,(drop / below 10%)
+DATA_SCIENTIST,NumPy,1,100.0,preferred,required
+DATA_SCIENTIST,Problem Solving,1,0.0,preferred,(drop / below 10%)
+DATA_SCIENTIST,PyTorch,1,100.0,bonus,required
+DATA_SCIENTIST,R,1,0.0,bonus,(drop / below 10%)
+DATA_SCIENTIST,Research Skills,1,0.0,bonus,(drop / below 10%)
+DATA_SCIENTIST,Self-Motivation,1,100.0,(not mapped),required
+DATA_SCIENTIST,TensorFlow,1,100.0,bonus,required
+SOFTWARE_DEV,Agile / Scrum,1,100.0,preferred,required
+SOFTWARE_DEV,C#,1,0.0,preferred,(drop / below 10%)
+SOFTWARE_DEV,C++,1,0.0,bonus,(drop / below 10%)
+SOFTWARE_DEV,CI/CD,1,100.0,preferred,required
+SOFTWARE_DEV,Cloud Computing,1,0.0,bonus,(drop / below 10%)
+SOFTWARE_DEV,Communication,1,100.0,preferred,required
+SOFTWARE_DEV,Docker,1,100.0,preferred,required
+SOFTWARE_DEV,FastAPI,1,0.0,bonus,(drop / below 10%)
+SOFTWARE_DEV,JavaScript,1,0.0,required,(drop / below 10%)
+SOFTWARE_DEV,Linux,1,100.0,preferred,required
+SOFTWARE_DEV,Microservices,1,100.0,bonus,required
+SOFTWARE_DEV,MySQL,1,100.0,(not mapped),required
+SOFTWARE_DEV,Node.js,1,0.0,bonus,(drop / below 10%)
+SOFTWARE_DEV,PostgreSQL,1,100.0,(not mapped),required
+SOFTWARE_DEV,Problem Solving,1,0.0,required,(drop / below 10%)
+SOFTWARE_DEV,REST API,1,0.0,required,(drop / below 10%)
+SOFTWARE_DEV,React,1,100.0,bonus,required
+SOFTWARE_DEV,Spring Boot,1,100.0,preferred,required
+SOFTWARE_DEV,Teamwork,1,0.0,preferred,(drop / below 10%)
+SOFTWARE_DEV,TypeScript,1,100.0,bonus,required
+WEB_DEV,Agile / Scrum,1,0.0,preferred,(drop / below 10%)
+WEB_DEV,Communication,1,100.0,preferred,required
+WEB_DEV,Docker,1,100.0,bonus,required
+WEB_DEV,Express.js,1,0.0,preferred,(drop / below 10%)
+WEB_DEV,Figma,1,100.0,bonus,required
+WEB_DEV,GraphQL,1,100.0,bonus,required
+WEB_DEV,MongoDB,1,100.0,bonus,required
+WEB_DEV,PHP,1,0.0,bonus,(drop / below 10%)
+WEB_DEV,PostgreSQL,1,100.0,preferred,required
+WEB_DEV,Problem Solving,1,0.0,preferred,(drop / below 10%)
+WEB_DEV,Python,1,0.0,bonus,(drop / below 10%)
+WEB_DEV,REST API,1,0.0,required,(drop / below 10%)
+WEB_DEV,SQL,1,0.0,required,(drop / below 10%)
+WEB_DEV,Teamwork,1,100.0,preferred,required
+WEB_DEV,UI/UX Design,1,100.0,preferred,required
+WEB_DEV,Unit Testing,1,0.0,preferred,(drop / below 10%)
+WEB_DEV,Vue.js,1,100.0,bonus,required

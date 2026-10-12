@@ -1,0 +1,23 @@
+sample:fictional-example 2026-09-29
+Title: Junior SOC Analyst
+Location: Kuala Lumpur
+
+Join our 24x7 Security Operations Centre protecting banking and insurance clients. You will monitor alerts, investigate suspicious activity and help respond to security incidents.
+
+Key responsibilities:
+- Monitor and triage alerts in our SIEM (Splunk and QRadar).
+- Perform log analysis across firewalls, endpoints and cloud services.
+- Support incident response and write clear incident reports.
+- Run vulnerability scans with Nessus and track remediation.
+- Keep up to date with threat intelligence and the MITRE ATT&CK framework.
+
+Requirements:
+- Degree in Cybersecurity, Computer Science or Information Technology.
+- Good understanding of networking (TCP/IP, DNS) and network security concepts.
+- Working knowledge of Linux and Windows Server.
+- CompTIA Security+ or equivalent is preferred.
+
+Advantageous:
+- Scripting in Python or Bash.
+- Familiarity with ISO 27001 or NIST CSF.
+- Experience with Wireshark or penetration testing in a lab or CTF.

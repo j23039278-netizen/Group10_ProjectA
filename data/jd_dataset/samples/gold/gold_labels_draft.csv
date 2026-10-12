@@ -1,0 +1,118 @@
+jd_ref,skill_name,importance,evidence_text
+JD-CE-0001,CI/CD,required,- Automate deployments with Jenkins and GitHub Actions
+JD-CE-0001,Kubernetes,required,- Run containers on Kubernetes and Docker
+JD-CE-0001,Docker,required,- Run containers on Kubernetes and Docker
+JD-CE-0001,Linux,required,- Manage Linux servers and write Bash scripts
+JD-CE-0001,Bash,required,- Manage Linux servers and write Bash scripts
+JD-CE-0001,Azure,required,- Provision cloud resources on Azure with Terraform
+JD-CE-0001,Terraform,required,- Provision cloud resources on Azure with Terraform
+JD-CE-0001,Networking,required,"Requirements: degree in IT, knowledge of networking and cloud computing, good teamwork"
+JD-CE-0001,Cloud Computing,required,"Requirements: degree in IT, knowledge of networking and cloud computing, good teamwork"
+JD-CE-0001,Teamwork,required,"Requirements: degree in IT, knowledge of networking and cloud computing, good teamwork"
+JD-CE-0001,Monitoring & Observability,bonus,Experience with monitoring tools such as Datadog is a plus
+JD-CE-0002,AWS,required,We help e-commerce companies run reliable platforms on AWS
+JD-CE-0002,Cloud Computing,required,As an Associate Cloud Engineer you will build and operate cloud infrastructure together with our DevOps team
+JD-CE-0002,Terraform,required,- Provision AWS infrastructure with Terraform (infrastructure as code)
+JD-CE-0002,CI/CD,required,- Build and maintain CI/CD pipelines using GitHub Actions
+JD-CE-0002,Docker,required,- Deploy containerised services with Docker and Kubernetes
+JD-CE-0002,Kubernetes,required,- Deploy containerised services with Docker and Kubernetes
+JD-CE-0002,Networking,required,"- Configure networking (VPC, subnets, DNS) and IAM roles following least privilege"
+JD-CE-0002,Identity & Access Management,required,"- Configure networking (VPC, subnets, DNS) and IAM roles following least privilege"
+JD-CE-0002,Monitoring & Observability,required,- Set up monitoring and alerting with Prometheus and Grafana
+JD-CE-0002,Linux,required,- Hands-on experience with Linux and shell scripting in Bash
+JD-CE-0002,Bash,required,- Hands-on experience with Linux and shell scripting in Bash
+JD-CE-0002,Azure,required,"- Understanding of cloud computing concepts on AWS, Azure or GCP"
+JD-CE-0002,GCP,required,"- Understanding of cloud computing concepts on AWS, Azure or GCP"
+JD-CE-0002,Git,preferred,- Familiarity with Git
+JD-CE-0002,Serverless,bonus,- Experience with serverless (AWS Lambda) or Ansible
+JD-CE-0002,Ansible,bonus,- Experience with serverless (AWS Lambda) or Ansible
+JD-CE-0002,Python,bonus,- Python or Go scripting
+JD-CY-0001,Security Operations (SOC),required,Join our 24x7 Security Operations Centre protecting banking and insurance clients
+JD-CY-0001,SIEM,required,- Monitor and triage alerts in our SIEM (Splunk and QRadar)
+JD-CY-0001,Splunk,required,- Monitor and triage alerts in our SIEM (Splunk and QRadar)
+JD-CY-0001,Log Analysis,required,"- Perform log analysis across firewalls, endpoints and cloud services"
+JD-CY-0001,Cloud Computing,required,"- Perform log analysis across firewalls, endpoints and cloud services"
+JD-CY-0001,Incident Response,required,- Support incident response and write clear incident reports
+JD-CY-0001,Nessus,required,- Run vulnerability scans with Nessus and track remediation
+JD-CY-0001,Threat Intelligence,required,- Keep up to date with threat intelligence and the MITRE ATT&CK framework
+JD-CY-0001,Cybersecurity,required,"- Degree in Cybersecurity, Computer Science or Information Technology"
+JD-CY-0001,Networking,required,"- Good understanding of networking (TCP/IP, DNS) and network security concepts"
+JD-CY-0001,Network Security,required,"- Good understanding of networking (TCP/IP, DNS) and network security concepts"
+JD-CY-0001,Linux,required,- Working knowledge of Linux and Windows Server
+JD-CY-0001,Windows Server,required,- Working knowledge of Linux and Windows Server
+JD-CY-0001,Python,bonus,- Scripting in Python or Bash
+JD-CY-0001,Bash,bonus,- Scripting in Python or Bash
+JD-CY-0001,Security Frameworks,bonus,- Familiarity with ISO 27001 or NIST CSF
+JD-CY-0001,Wireshark,bonus,- Experience with Wireshark or penetration testing in a lab or CTF
+JD-CY-0001,Ethical Hacking,bonus,- Experience with Wireshark or penetration testing in a lab or CTF
+JD-DA-0001,SQL,required,- Query transaction data with SQL and BigQuery
+JD-DA-0001,GCP,required,- Query transaction data with SQL and BigQuery
+JD-DA-0001,Python,required,- Clean data and automate reports in Python
+JD-DA-0001,Looker,required,- Build Looker Studio and Tableau dashboards
+JD-DA-0001,Tableau,required,- Build Looker Studio and Tableau dashboards
+JD-DA-0001,A/B Testing,required,- Run A/B testing analysis for product experiments
+JD-DA-0001,Statistical Analysis,required,"Requirements: degree in Statistics, Economics or Computer Science"
+JD-DA-0001,Communication,required,good communication and stakeholder engagement
+JD-DA-0001,Stakeholder Communication,required,good communication and stakeholder engagement
+JD-DA-0001,ETL,bonus,Knowledge of ETL tools is a plus
+JD-DA-0002,SQL,required,- Write SQL queries to extract and combine data from our sales database
+JD-DA-0002,Python,required,- Clean and prepare data in Python (Pandas) and Excel before analysis
+JD-DA-0002,Pandas,required,- Clean and prepare data in Python (Pandas) and Excel before analysis
+JD-DA-0002,Power BI,required,- Build and maintain Power BI dashboards for weekly and monthly KPIs
+JD-DA-0002,Statistical Analysis,required,- Perform statistical analysis to explain changes in sales performance
+JD-DA-0002,Excel,required,- Good knowledge of SQL and Microsoft Excel
+JD-DA-0002,Data Analysis,required,- Experience with Python for data analysis
+JD-DA-0002,Attention to Detail,required,- Strong attention to detail and communication skills
+JD-DA-0002,Communication,required,- Strong attention to detail and communication skills
+JD-DA-0002,Tableau,bonus,- Experience with Tableau or Looker Studio
+JD-DA-0002,Looker,bonus,- Experience with Tableau or Looker Studio
+JD-DA-0002,Machine Learning,bonus,- Basic understanding of machine learning
+JD-DS-0001,Machine Learning,required,"As a Graduate Data Scientist you will work with senior scientists to design, train and evaluate machine learning models"
+JD-DS-0001,Python,required,"- Explore and clean large transaction datasets using Python, Pandas and NumPy"
+JD-DS-0001,Pandas,required,"- Explore and clean large transaction datasets using Python, Pandas and NumPy"
+JD-DS-0001,NumPy,required,"- Explore and clean large transaction datasets using Python, Pandas and NumPy"
+JD-DS-0001,Scikit-learn,required,- Engineer features and train models with Scikit-learn
+JD-DS-0001,Model Evaluation,required,"- Evaluate models using precision, recall, F1 and ROC AUC and explain the trade-offs"
+JD-DS-0001,Jupyter,required,- Share results in Jupyter notebooks and short presentations
+JD-DS-0001,Statistical Analysis,required,"- Degree in Data Science, Computer Science, Mathematics or Statistics"
+JD-DS-0001,SQL,required,- Proficient in Python and SQL
+JD-DS-0001,Self-Motivation,required,"- Curious, self-driven and able to work in a team"
+JD-DS-0001,Deep Learning,preferred,- Exposure to deep learning with PyTorch or TensorFlow
+JD-DS-0001,PyTorch,preferred,- Exposure to deep learning with PyTorch or TensorFlow
+JD-DS-0001,TensorFlow,preferred,- Exposure to deep learning with PyTorch or TensorFlow
+JD-DS-0001,Apache Spark,bonus,- Experience with Apache Spark or cloud platforms is a plus
+JD-DS-0001,Cloud Computing,bonus,- Experience with Apache Spark or cloud platforms is a plus
+JD-SD-0001,Java,required,- Design and build backend services in Java (Spring Boot) and Python
+JD-SD-0001,Spring Boot,required,- Design and build backend services in Java (Spring Boot) and Python
+JD-SD-0001,Python,required,- Design and build backend services in Java (Spring Boot) and Python
+JD-SD-0001,Unit Testing,required,- Write unit tests and take part in code reviews
+JD-SD-0001,Agile / Scrum,required,- Work in an Agile team with two-week sprints
+JD-SD-0001,Git,required,- Use Git and our CI/CD pipeline to ship changes safely
+JD-SD-0001,CI/CD,required,- Use Git and our CI/CD pipeline to ship changes safely
+JD-SD-0001,Object-Oriented Programming,required,- Good understanding of object-oriented programming and data structures and algorithms
+JD-SD-0001,Data Structures & Algorithms,required,- Good understanding of object-oriented programming and data structures and algorithms
+JD-SD-0001,SQL,required,- Knowledge of SQL and relational databases such as PostgreSQL or MySQL
+JD-SD-0001,PostgreSQL,required,- Knowledge of SQL and relational databases such as PostgreSQL or MySQL
+JD-SD-0001,MySQL,required,- Knowledge of SQL and relational databases such as PostgreSQL or MySQL
+JD-SD-0001,Communication,required,- Good problem-solving and communication skills
+JD-SD-0001,Docker,bonus,"- Experience with Docker, Linux or microservices"
+JD-SD-0001,Linux,bonus,"- Experience with Docker, Linux or microservices"
+JD-SD-0001,Microservices,bonus,"- Experience with Docker, Linux or microservices"
+JD-SD-0001,TypeScript,bonus,- Knowledge of TypeScript or React
+JD-SD-0001,React,bonus,- Knowledge of TypeScript or React
+JD-WD-0001,UI/UX Design,required,We are looking for a junior full stack developer who cares about good user experience
+JD-WD-0001,HTML,required,"- Build responsive front-ends with HTML, CSS, JavaScript and React"
+JD-WD-0001,CSS,required,"- Build responsive front-ends with HTML, CSS, JavaScript and React"
+JD-WD-0001,JavaScript,required,"- Build responsive front-ends with HTML, CSS, JavaScript and React"
+JD-WD-0001,React,required,"- Build responsive front-ends with HTML, CSS, JavaScript and React"
+JD-WD-0001,Node.js,required,- Develop REST APIs with Node.js and Express
+JD-WD-0001,PostgreSQL,required,- Work with PostgreSQL and MongoDB databases
+JD-WD-0001,MongoDB,required,- Work with PostgreSQL and MongoDB databases
+JD-WD-0001,Figma,required,- Turn Figma designs into pixel-perfect pages
+JD-WD-0001,Git,required,- Use Git for version control and take part in code reviews
+JD-WD-0001,TypeScript,required,- Good knowledge of JavaScript and TypeScript
+JD-WD-0001,Teamwork,required,- Good teamwork and communication skills
+JD-WD-0001,Communication,required,- Good teamwork and communication skills
+JD-WD-0001,Vue.js,bonus,- Experience with Vue.js or GraphQL
+JD-WD-0001,GraphQL,bonus,js or GraphQL
+JD-WD-0001,Docker,bonus,- Basic knowledge of Docker

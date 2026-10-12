@@ -14,7 +14,8 @@ Outputs (in data/output/):
 
 Usage:
     pip install faker bcrypt
-    python generate_synthetic_data.py                 # 500 students, seed 42
+    python generate_synthetic_data.py                 # 5000 students, seed 42
+    python generate_synthetic_data.py --n 500         # smaller demo set
     python generate_synthetic_data.py --n 300 --seed 7
 
 Design notes (for the Dataset section of the report):
@@ -23,7 +24,11 @@ Design notes (for the Dataset section of the report):
     have. This gives a realistic spread of readiness scores instead of every
     student scoring the same.
   * Skills are sampled per role: core skills are likely, secondary skills less
-    likely, plus a few random off-role skills (noise).
+    likely, plus a few random off-role skills (noise). Core / secondary skills
+    are read from database/seed_job_role_skills.sql (required -> core,
+    preferred + bonus -> secondary) so they always match job_role_skills.
+  * Skill names are validated against data/skills/skills_library.csv
+    (the skills library v2 single source of truth).
   * Proficiency depends on year of study and archetype.
   * Evidence (project / certification / internship / coursework) is derived from
     the student's actual generated projects, certifications and internships,
@@ -32,6 +37,9 @@ Design notes (for the Dataset section of the report):
     the detail tables.
   * All emails use the reserved example domain @synthetic.example.com so synthetic data
     can be identified and removed with one DELETE.
+  * Every full name is unique (ignoring case and extra spaces), so students can be
+    told apart in the Advisor Dashboard. Repeated names are redrawn after
+    generation with a separate RNG, so no other field changes.
   * No real personal data is used. Fixed random seed => reproducible dataset.
 """
 
@@ -62,61 +70,53 @@ CURRENT_YEAR = 2026
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT_DIR = os.path.join(HERE, "output")
 SCHEMA_PATH = os.path.join(HERE, "..", "database", "schema.sql")
+SKILLS_CSV_PATH = os.path.join(HERE, "skills", "skills_library.csv")
+ROLE_SKILLS_SEED_PATH = os.path.join(HERE, "..", "database", "seed_job_role_skills.sql")
 
 # ── Reference data ─────────────────────────────────────────────────────────
-# Skill names MUST exactly match skills_library.skill_name in schema.sql.
-# When the skills library is expanded to 100–150 skills, add them here too.
+# Skill names MUST exactly match skill_name in data/skills/skills_library.csv.
+# "core" / "secondary" are filled in from seed_job_role_skills.sql at start-up
+# (see load_role_skills), so edit role skills there, not here.
+
+ROLE_CODES = {
+    "DATA_ANALYST": "Data Analyst",
+    "DATA_SCIENTIST": "Data Scientist",
+    "SOFTWARE_DEV": "Software Developer",
+    "CYBER_ANALYST": "Cybersecurity Analyst",
+    "CLOUD_ENGINEER": "Cloud Engineer",
+    "WEB_DEV": "Web Developer",
+}
 
 ROLES = {
     "Data Analyst": {
-        "core": ["Python", "SQL", "Excel", "Power BI", "Data Analysis",
-                 "Data Visualisation", "Statistical Analysis"],
-        "secondary": ["Tableau", "R", "Communication", "Problem Solving",
-                      "Machine Learning", "Git"],
         "programmes": ["Bachelor of Computer Science (Data Science)",
                        "Bachelor of Information Technology (Business Analytics)",
                        "Bachelor of Computer Science (Artificial Intelligence)"],
         "interests": ["Data Analytics", "Business Intelligence", "Data Science"],
     },
     "Data Scientist": {
-        "core": ["Python", "Machine Learning", "Statistical Analysis", "SQL",
-                 "Data Analysis", "Deep Learning"],
-        "secondary": ["R", "Natural Language Processing", "Data Visualisation",
-                      "Git", "Research Skills", "Cloud Computing", "AI Literacy"],
         "programmes": ["Bachelor of Computer Science (Data Science)",
                        "Bachelor of Computer Science (Artificial Intelligence)"],
         "interests": ["Data Science", "Machine Learning", "Artificial Intelligence"],
     },
     "Software Developer": {
-        "core": ["Java", "Python", "Git", "SQL", "Problem Solving", "JavaScript"],
-        "secondary": ["C++", "Docker", "Linux", "Teamwork", "FastAPI", "Flask",
-                      "Node.js", "React"],
         "programmes": ["Bachelor of Computer Science (Software Development)",
                        "Bachelor of Software Engineering",
                        "Bachelor of Information Technology"],
         "interests": ["Software Engineering", "Backend Development", "Mobile Development"],
     },
     "Cybersecurity Analyst": {
-        "core": ["Linux", "Problem Solving", "Python", "Cloud Computing"],
-        "secondary": ["SQL", "AWS", "Azure", "Git", "Communication", "Research Skills",
-                      "Docker", "C++"],
         "programmes": ["Bachelor of Computer Science (Cybersecurity)",
                        "Bachelor of Information Technology (Network Security)"],
         "interests": ["Cybersecurity", "Network Security", "Digital Forensics"],
     },
     "Cloud Engineer": {
-        "core": ["Cloud Computing", "AWS", "Linux", "Docker", "Git"],
-        "secondary": ["Azure", "Python", "SQL", "Node.js", "Problem Solving",
-                      "Teamwork"],
         "programmes": ["Bachelor of Computer Science (Cloud Computing)",
                        "Bachelor of Information Technology (Network Security)",
                        "Bachelor of Information Technology"],
         "interests": ["Cloud Computing", "DevOps", "Infrastructure"],
     },
     "Web Developer": {
-        "core": ["JavaScript", "React", "Node.js", "Git", "SQL"],
-        "secondary": ["Python", "Flask", "FastAPI", "Docker", "Teamwork",
-                      "Communication", "Data Visualisation"],
         "programmes": ["Bachelor of Computer Science (Software Development)",
                        "Bachelor of Information Technology",
                        "Bachelor of Software Engineering"],
@@ -135,48 +135,83 @@ SOFT_SKILLS = ["Communication", "Teamwork", "Time Management", "Leadership",
 
 # archetype -> (share, P(core), P(secondary), gpa_mean)
 ARCHETYPES = {
-    "strong":  (0.25, 0.75, 0.40, 3.45),
-    "average": (0.50, 0.45, 0.20, 3.00),
-    "weak":    (0.25, 0.18, 0.08, 2.55),
+    "strong":  (0.25, 0.75, 0.30, 3.45),
+    "average": (0.50, 0.55, 0.15, 3.00),
+    "weak":    (0.25, 0.28, 0.06, 2.55),
 }
 
 # cert name, issuer, skills it evidences, credential URL
 CERTIFICATIONS = [
+    # ── Cloud / DevOps ──
     ("AWS Certified Cloud Practitioner", "Amazon Web Services", ["AWS", "Cloud Computing"],
      "https://aws.amazon.com/certification/certified-cloud-practitioner/"),
+    ("AWS Certified Solutions Architect – Associate", "Amazon Web Services",
+     ["AWS", "Cloud Computing", "Networking", "Identity & Access Management"],
+     "https://aws.amazon.com/certification/certified-solutions-architect-associate/"),
     ("Microsoft Certified: Azure Fundamentals (AZ-900)", "Microsoft", ["Azure", "Cloud Computing"],
      "https://learn.microsoft.com/en-us/credentials/certifications/azure-fundamentals/"),
-    ("Microsoft Certified: Power BI Data Analyst Associate (PL-300)", "Microsoft",
-     ["Power BI", "Data Visualisation"],
-     "https://learn.microsoft.com/en-us/credentials/certifications/data-analyst-associate/"),
-    ("Google Data Analytics Professional Certificate", "Google / Coursera",
-     ["Data Analysis", "SQL", "Tableau", "R"],
-     "https://www.coursera.org/professional-certificates/google-data-analytics"),
-    ("Machine Learning Specialization", "DeepLearning.AI / Coursera",
-     ["Machine Learning", "Python"],
-     "https://www.coursera.org/specializations/machine-learning-introduction"),
-    ("Deep Learning Specialization", "DeepLearning.AI / Coursera", ["Deep Learning"],
-     "https://www.coursera.org/specializations/deep-learning"),
-    ("Oracle Certified Associate, Java SE Programmer", "Oracle", ["Java"],
-     "https://education.oracle.com/"),
-    ("PCEP – Certified Entry-Level Python Programmer", "Python Institute", ["Python"],
-     "https://pythoninstitute.org/pcep"),
-    ("CompTIA Security+", "CompTIA", ["Linux", "Problem Solving"],
-     "https://www.comptia.org/certifications/security"),
-    ("Cisco Certified Network Associate (CCNA)", "Cisco", ["Linux"],
-     "https://www.cisco.com/site/us/en/learn/training-certifications/certifications/enterprise/ccna/index.html"),
+    ("Google Cloud Digital Leader", "Google Cloud", ["GCP", "Cloud Computing"],
+     "https://cloud.google.com/learn/certification/cloud-digital-leader"),
+    ("Certified Kubernetes Administrator (CKA)", "CNCF / Linux Foundation", ["Kubernetes", "Docker", "Linux"],
+     "https://training.linuxfoundation.org/certification/certified-kubernetes-administrator-cka/"),
+    ("HashiCorp Certified: Terraform Associate", "HashiCorp", ["Terraform", "Cloud Computing"],
+     "https://developer.hashicorp.com/certifications/infrastructure-automation"),
     ("Docker Certified Associate", "Docker / Mirantis", ["Docker"],
      "https://training.mirantis.com/"),
-    ("Meta Front-End Developer Professional Certificate", "Meta / Coursera",
-     ["JavaScript", "React"],
-     "https://www.coursera.org/professional-certificates/meta-front-end-developer"),
+    # ── Data ──
+    ("Microsoft Certified: Power BI Data Analyst Associate (PL-300)", "Microsoft",
+     ["Power BI", "Data Visualisation", "Data Cleaning"],
+     "https://learn.microsoft.com/en-us/credentials/certifications/data-analyst-associate/"),
+    ("Google Data Analytics Professional Certificate", "Google / Coursera",
+     ["Data Analysis", "SQL", "Tableau", "R", "Data Cleaning"],
+     "https://www.coursera.org/professional-certificates/google-data-analytics"),
+    ("IBM Data Science Professional Certificate", "IBM / Coursera",
+     ["Python", "Pandas", "Scikit-learn", "Jupyter"],
+     "https://www.coursera.org/professional-certificates/ibm-data-science"),
     ("Microsoft Office Specialist: Excel Associate", "Microsoft", ["Excel"],
      "https://learn.microsoft.com/en-us/credentials/"),
     ("Tableau Desktop Specialist", "Tableau / Salesforce", ["Tableau", "Data Visualisation"],
      "https://www.tableau.com/learn/certification"),
+    # ── AI / ML ──
+    ("Machine Learning Specialization", "DeepLearning.AI / Coursera",
+     ["Machine Learning", "Python", "Scikit-learn"],
+     "https://www.coursera.org/specializations/machine-learning-introduction"),
+    ("Deep Learning Specialization", "DeepLearning.AI / Coursera", ["Deep Learning", "TensorFlow"],
+     "https://www.coursera.org/specializations/deep-learning"),
     ("Elements of AI", "University of Helsinki", ["AI Literacy"],
      "https://www.elementsofai.com/"),
+    # ── Software / Web ──
+    ("Oracle Certified Associate, Java SE Programmer", "Oracle", ["Java", "Object-Oriented Programming"],
+     "https://education.oracle.com/"),
+    ("PCEP – Certified Entry-Level Python Programmer", "Python Institute", ["Python"],
+     "https://pythoninstitute.org/pcep"),
+    ("Meta Front-End Developer Professional Certificate", "Meta / Coursera",
+     ["JavaScript", "React", "HTML", "CSS"],
+     "https://www.coursera.org/professional-certificates/meta-front-end-developer"),
+    ("Meta Back-End Developer Professional Certificate", "Meta / Coursera",
+     ["Python", "Django", "REST API", "SQL"],
+     "https://www.coursera.org/professional-certificates/meta-back-end-developer"),
+    ("freeCodeCamp Responsive Web Design", "freeCodeCamp", ["HTML", "CSS"],
+     "https://www.freecodecamp.org/learn/2022/responsive-web-design/"),
+    # ── Cybersecurity / Networking ──
+    ("CompTIA Security+", "CompTIA",
+     ["Cybersecurity", "Network Security", "Incident Response", "Cryptography"],
+     "https://www.comptia.org/certifications/security"),
+    ("Certified Ethical Hacker (CEH)", "EC-Council",
+     ["Ethical Hacking", "Vulnerability Assessment", "Nmap"],
+     "https://www.eccouncil.org/train-certify/certified-ethical-hacker-ceh/"),
+    ("Cisco Certified Network Associate (CCNA)", "Cisco", ["Networking", "Network Security"],
+     "https://www.cisco.com/site/us/en/learn/training-certifications/certifications/enterprise/ccna/index.html"),
+    ("Google Cybersecurity Professional Certificate", "Google / Coursera",
+     ["Cybersecurity", "SIEM", "Linux", "Security Operations (SOC)"],
+     "https://www.coursera.org/professional-certificates/google-cybersecurity"),
+    ("Splunk Core Certified User", "Splunk", ["Splunk", "Log Analysis"],
+     "https://www.splunk.com/en_us/training/certification-track/splunk-core-certified-user.html"),
 ]
+
+# Issuers whose certifications expire (about 3 years after issue)
+EXPIRING_ISSUERS = {"Amazon Web Services", "CompTIA", "Cisco", "EC-Council",
+                    "CNCF / Linux Foundation", "HashiCorp", "Google Cloud"}
 
 # project templates per role: (title template, description, skills used)
 PROJECTS = {
@@ -184,67 +219,87 @@ PROJECTS = {
         ("{c} Sales Dashboard", "Built an interactive dashboard to track monthly sales KPIs.",
          ["Power BI", "Excel", "Data Visualisation"]),
         ("Customer Churn Analysis", "Cleaned and analysed telco customer data to identify churn drivers.",
-         ["Python", "Data Analysis", "Statistical Analysis"]),
+         ["Python", "Pandas", "Data Cleaning", "Data Analysis", "Statistical Analysis"]),
         ("Covid-19 Malaysia Data Explorer", "Exploratory analysis of public MOH datasets with SQL and charts.",
          ["SQL", "Python", "Data Visualisation"]),
         ("Retail Inventory Report Automation", "Automated weekly inventory reporting from a SQL database.",
-         ["SQL", "Excel"]),
+         ["SQL", "Excel", "ETL"]),
+        ("E-commerce Website Traffic Report", "Analysed web traffic and ran an A/B test on a landing page.",
+         ["Google Analytics", "A/B Testing", "Tableau"]),
     ],
     "Data Scientist": [
         ("House Price Prediction", "Trained regression models to predict Klang Valley property prices.",
-         ["Python", "Machine Learning", "Statistical Analysis"]),
+         ["Python", "Scikit-learn", "Feature Engineering", "Model Evaluation"]),
         ("Sentiment Analysis of Product Reviews", "Classified Shopee product reviews using NLP techniques.",
-         ["Python", "Natural Language Processing", "Machine Learning"]),
+         ["Python", "Natural Language Processing", "Machine Learning", "Hugging Face"]),
         ("Plant Disease Image Classifier", "CNN model to detect leaf diseases from photos.",
-         ["Deep Learning", "Python"]),
+         ["Deep Learning", "Computer Vision", "TensorFlow", "Python"]),
         ("Student Performance Predictor", "Predicted at-risk students from academic records.",
-         ["Machine Learning", "Data Analysis", "R"]),
+         ["Machine Learning", "Data Analysis", "Pandas", "Jupyter"]),
+        ("Credit Card Fraud Detection", "Handled class imbalance and compared classifiers on transaction data.",
+         ["Scikit-learn", "Model Evaluation", "Statistical Analysis", "NumPy"]),
     ],
     "Software Developer": [
         ("Library Management System", "Desktop system for book loans and returns with a relational database.",
-         ["Java", "SQL"]),
+         ["Java", "Object-Oriented Programming", "SQL"]),
         ("Campus Event Booking API", "REST API for booking campus events with authentication.",
-         ["Python", "FastAPI", "SQL", "Git"]),
+         ["Python", "FastAPI", "REST API", "SQL", "Git"]),
         ("Inventory Tracker CLI", "Command-line tool for small-business stock tracking.",
-         ["C++", "Git"]),
+         ["C++", "Data Structures & Algorithms", "Git"]),
         ("Food Delivery Backend", "Microservice backend for order handling, containerised with Docker.",
-         ["Node.js", "Docker", "SQL"]),
+         ["Node.js", "Microservices", "Docker", "SQL"]),
+        ("Tested Banking Kata", "Test-driven implementation of a banking kata with CI checks.",
+         ["Java", "Unit Testing", "CI/CD", "Git"]),
     ],
     "Cybersecurity Analyst": [
         ("Home Network Vulnerability Scan", "Scanned and hardened a home lab network; documented findings.",
-         ["Linux", "Research Skills"]),
+         ["Nmap", "Nessus", "Vulnerability Assessment", "Linux"]),
         ("Phishing Email Detector", "Rule-based and ML approach to flag phishing emails.",
-         ["Python", "Machine Learning"]),
+         ["Python", "Machine Learning", "Cybersecurity"]),
         ("Secure Login Module", "Implemented hashing, rate limiting and MFA for a web login.",
-         ["Python", "Flask", "SQL"]),
+         ["Python", "OWASP Top 10", "Cryptography", "Identity & Access Management"]),
         ("CTF Team Participation", "Solved web and forensics challenges in a university CTF.",
-         ["Linux", "Problem Solving", "Teamwork"]),
+         ["Kali Linux", "Ethical Hacking", "Digital Forensics", "Teamwork"]),
+        ("Mini SOC Home Lab", "Built a SIEM lab, forwarded logs and wrote detection rules for common attacks.",
+         ["SIEM", "Splunk", "Log Analysis", "Security Operations (SOC)", "Incident Response"]),
+        ("Network Traffic Analysis", "Captured and analysed lab traffic to detect port scans and suspicious flows.",
+         ["Wireshark", "Networking", "Network Security"]),
     ],
     "Cloud Engineer": [
         ("Serverless Image Resizer", "Built an event-driven image pipeline on AWS Lambda and S3.",
-         ["AWS", "Cloud Computing", "Python"]),
+         ["AWS", "Serverless", "Python"]),
         ("CI/CD Pipeline for Web App", "Automated build, test and deploy with GitHub Actions and Docker.",
-         ["Docker", "Git", "Linux"]),
+         ["CI/CD", "Docker", "Git"]),
         ("Azure-hosted Student Portal", "Deployed a web portal to Azure App Service with a managed database.",
          ["Azure", "Cloud Computing", "SQL"]),
-        ("Linux Server Monitoring Scripts", "Bash scripts to monitor CPU, memory and disk usage.",
-         ["Linux"]),
+        ("Linux Server Monitoring Scripts", "Bash scripts and Grafana dashboards to monitor CPU, memory and disk.",
+         ["Linux", "Bash", "Monitoring & Observability"]),
+        ("Infrastructure as Code Lab", "Provisioned a VPC, subnets and IAM roles on AWS with Terraform.",
+         ["Terraform", "AWS", "Networking", "Identity & Access Management"]),
+        ("Kubernetes Microservice Deployment", "Deployed a multi-service app to a Kubernetes cluster with Helm.",
+         ["Kubernetes", "Docker", "Microservices"]),
     ],
     "Web Developer": [
         ("Personal Portfolio Website", "Responsive portfolio site built with React.",
-         ["React", "JavaScript"]),
+         ["React", "HTML", "CSS", "JavaScript"]),
         ("E-commerce Store", "Full-stack store with cart, checkout and admin dashboard.",
-         ["React", "Node.js", "SQL"]),
+         ["React", "Node.js", "Express.js", "PostgreSQL"]),
         ("Club Management Web App", "Web app for a student club to manage members and events.",
-         ["JavaScript", "Flask", "SQL", "Teamwork"]),
+         ["TypeScript", "REST API", "SQL", "Teamwork"]),
         ("Weather Dashboard", "Front-end app consuming a public weather API with charts.",
-         ["JavaScript", "Data Visualisation"]),
+         ["JavaScript", "REST API", "CSS"]),
+        ("Campus Food Ordering UI", "Designed in Figma and built a mobile-first ordering interface.",
+         ["Figma", "UI/UX Design", "Vue.js", "HTML"]),
     ],
 }
 
 PROJECT_TYPES = ["academic", "academic", "academic", "personal", "competition"]
 
-# Romanised Malaysian names (Faker has no Malaysian locale)
+# Romanised Malaysian names (Faker has no Malaysian locale).
+# make_name() draws from these original small pools. Keep them exactly as they
+# are: a different list length changes how many numbers rng.choice() consumes,
+# which would shift every later skill, GPA and project. Repeated names are
+# redrawn afterwards from the larger *_POOL lists below (see unique_names).
 CHINESE_SURNAMES = ["Tan", "Lim", "Lee", "Ng", "Wong", "Chan", "Ong", "Teh", "Goh", "Chong",
                     "Yap", "Low", "Koh", "Soh", "Tee", "Chin", "Liew", "Yeoh", "Khoo", "Foo"]
 CHINESE_GIVEN = ["Wei Jie", "Jia Hui", "Zi Xuan", "Kai Wen", "Yi Ting", "Jun Hao", "Mei Ling",
@@ -257,10 +312,62 @@ MALAY_FEMALE = ["Nur Aisyah", "Siti Nurhaliza", "Nurul Izzah", "Aina Sofea", "Fa
 MALAY_FATHER = ["Ahmad", "Ismail", "Rahman", "Hassan", "Abdullah", "Yusof", "Ibrahim",
                 "Zainal", "Kamarudin", "Osman"]
 
+# Larger pools, used only to redraw repeated names. Each pool has at least 10x
+# as many combinations as its group has students at n=5000:
+#   Chinese      50 surnames x ~47*46 syllable pairs     = 112,424  (~2,750 students)
+#   Malay male   16 x 22 names x 46 fathers              =  16,192  (~730)
+#   Malay female 16 x 22 names x 46 fathers              =  16,192  (~760)
+CHINESE_SURNAME_POOL = CHINESE_SURNAMES + [
+    "Ang", "Cheah", "Chew", "Choo", "Chua", "Gan", "Heng", "Ho", "Hong", "Kang",
+    "Khor", "Kok", "Lai", "Lau", "Leong", "Loh", "Lum", "Mah", "Ooi", "Phang",
+    "Poh", "Quah", "See", "Seow", "Sim", "Tay", "Teoh", "Toh", "Wee", "Yong"]
+# given name = two different syllables, e.g. "Zi" + "Xuan" -> "Zi Xuan"
+CHINESE_SYLLABLE_POOL = [
+    "Wei", "Jie", "Jia", "Hui", "Zi", "Xuan", "Kai", "Wen", "Yi", "Ting", "Jun", "Hao",
+    "Mei", "Ling", "Chee", "Keong", "Xin", "Min", "Yong", "Sheng", "Pei", "Shan", "Zhi",
+    "Shu", "Ming", "Li", "Ying", "Jing", "Kok", "Leong", "En", "Qi", "Yu", "Han", "Xiang",
+    "Rui", "Yan", "Wai", "Siew", "Boon", "Seng", "Choon", "Kar", "Mun", "Hong", "Kean",
+    "Chun", "Yee"]
+# Malay given name = first part + second part (the two lists do not overlap)
+MALAY_MALE_FIRST_POOL = [
+    "Muhammad", "Ahmad", "Mohd", "Amirul", "Faris", "Adam", "Irfan", "Syafiq", "Luqman",
+    "Arif", "Haziq", "Danish", "Izzat", "Nabil", "Firdaus", "Aidil"]
+MALAY_MALE_SECOND_POOL = [
+    "Aiman", "Danial", "Hafiz", "Hakim", "Iskandar", "Haikal", "Zikri", "Rahman", "Imran",
+    "Afiq", "Amsyar", "Aqil", "Azim", "Fikri", "Harith", "Ikhwan", "Naim", "Rayyan",
+    "Syahmi", "Zaim", "Hazim", "Hakimi"]
+MALAY_FEMALE_FIRST_POOL = [
+    "Nur", "Siti", "Nurul", "Aina", "Farah", "Alya", "Balqis", "Hannah", "Syazwani",
+    "Puteri", "Nor", "Amira", "Wan", "Dayang", "Fatin", "Intan"]
+MALAY_FEMALE_SECOND_POOL = [
+    "Aisyah", "Izzah", "Sofea", "Nabila", "Maisarah", "Iman", "Humaira", "Zulaikha", "Ain",
+    "Syahirah", "Batrisyia", "Qistina", "Damia", "Insyirah", "Adlina", "Najwa", "Afiqah",
+    "Husna", "Liyana", "Amani", "Hidayah", "Athirah"]
+MALAY_FATHER_POOL = MALAY_FATHER + [
+    "Aziz", "Hamid", "Rashid", "Salleh", "Sulaiman", "Mohamad", "Musa", "Omar", "Othman",
+    "Rahim", "Ramli", "Roslan", "Shafie", "Sharif", "Yaakob", "Zakaria", "Halim", "Hashim",
+    "Idris", "Jamil", "Kassim", "Latif", "Mansor", "Mokhtar", "Nordin", "Rosli", "Azman",
+    "Bakar", "Daud", "Fauzi", "Ghazali", "Hussin", "Jaafar", "Karim", "Mustafa", "Saad"]
+# Full names of real public figures that the pools above can produce; never used
+BLOCKED_NAMES = ["Tan Kok Wai", "Wong Shu Qi", "Chan Ming Kai", "Lim Hui Ying"]
+MAX_NAME_TRIES = 1000
+
 
 # ── Helpers ────────────────────────────────────────────────────────────────
+def load_library_skills(csv_path=SKILLS_CSV_PATH, schema_path=SCHEMA_PATH):
+    """Return the set of skill names in the skills library (for validation).
+
+    Reads data/skills/skills_library.csv (skills library v2). Falls back to the
+    32 v1 skills seeded in schema.sql if the CSV does not exist.
+    """
+    if os.path.exists(csv_path):
+        with open(csv_path, newline="", encoding="utf-8") as f:
+            return {r["skill_name"].strip() for r in csv.DictReader(f)}
+    return load_schema_skills(schema_path)
+
+
 def load_schema_skills(path):
-    """Return the set of skill names seeded in schema.sql (for validation)."""
+    """Return the set of skill names seeded in schema.sql (fallback only)."""
     if not os.path.exists(path):
         return None
     with open(path, encoding="utf-8") as f:
@@ -272,18 +379,91 @@ def load_schema_skills(path):
     return set(re.findall(r"^\s*\('([^']+)'", body, flags=re.M))
 
 
+def load_role_skills(path=ROLE_SKILLS_SEED_PATH):
+    """Fill ROLES[role]["core"/"secondary"] from seed_job_role_skills.sql.
+
+    required -> core; preferred + bonus -> secondary. Keeps the generator and
+    job_role_skills in sync so readiness scores line up with the ground truth.
+    """
+    with open(path, encoding="utf-8") as f:
+        sql = f.read()
+    rows = re.findall(r"^\s*\('([A-Z_]+)',\s*'((?:[^']|'')+)',\s*'(required|preferred|bonus)'\)", sql, flags=re.M)
+    if not rows:
+        raise SystemExit(f"No role skills found in {path}")
+    for spec in ROLES.values():
+        spec["core"], spec["secondary"] = [], []
+    for code, skill, importance in rows:
+        if code not in ROLE_CODES:
+            raise SystemExit(f"Unknown role_code {code!r} in {path}")
+        spec = ROLES[ROLE_CODES[code]]
+        spec["core" if importance == "required" else "secondary"].append(skill.replace("''", "'"))
+    for role, spec in ROLES.items():
+        if not spec["core"]:
+            raise SystemExit(f"Role {role!r} has no required skills in {path}")
+
+
 def make_name(rng, fk_in, fk_intl):
-    """~55% Chinese, ~30% Malay, ~10% Indian, ~5% international students."""
+    """~55% Chinese, ~30% Malay, ~10% Indian, ~5% international students.
+
+    Returns (name, ethnicity, gender); gender is only set for Malay names.
+    """
     r = rng.random()
     if r < 0.55:
-        return f"{rng.choice(CHINESE_SURNAMES)} {rng.choice(CHINESE_GIVEN)}"
+        return f"{rng.choice(CHINESE_SURNAMES)} {rng.choice(CHINESE_GIVEN)}", "chinese", None
     if r < 0.85:
         if rng.random() < 0.5:
-            return f"{rng.choice(MALAY_MALE)} bin {rng.choice(MALAY_FATHER)}"
-        return f"{rng.choice(MALAY_FEMALE)} binti {rng.choice(MALAY_FATHER)}"
+            return f"{rng.choice(MALAY_MALE)} bin {rng.choice(MALAY_FATHER)}", "malay", "male"
+        return f"{rng.choice(MALAY_FEMALE)} binti {rng.choice(MALAY_FATHER)}", "malay", "female"
     if r < 0.95:
-        return fk_in.name()
-    return fk_intl.name()
+        return fk_in.name(), "indian", None
+    return fk_intl.name(), "international", None
+
+
+def name_key(name):
+    """Names that differ only in case or spacing count as the same name."""
+    return " ".join(name.split()).lower()
+
+
+def redraw_name(name_rng, fakers, ethnicity, gender):
+    """A new name from the larger pool of the same ethnicity (and gender)."""
+    if ethnicity == "chinese":
+        surname = name_rng.choice(CHINESE_SURNAME_POOL)
+        # no "Leong Leong Rui": the given name never repeats the surname
+        a, b = name_rng.sample([s for s in CHINESE_SYLLABLE_POOL if s != surname], 2)
+        return f"{surname} {a} {b}"
+    if ethnicity == "malay":
+        if gender == "male":
+            given = f"{name_rng.choice(MALAY_MALE_FIRST_POOL)} {name_rng.choice(MALAY_MALE_SECOND_POOL)}"
+            return f"{given} bin {name_rng.choice(MALAY_FATHER_POOL)}"
+        given = f"{name_rng.choice(MALAY_FEMALE_FIRST_POOL)} {name_rng.choice(MALAY_FEMALE_SECOND_POOL)}"
+        return f"{given} binti {name_rng.choice(MALAY_FATHER_POOL)}"
+    return fakers[ethnicity].name()
+
+
+def unique_names(users, origins, seed):
+    """Give every student a different name, in student-number order.
+
+    A student whose name is already taken by an earlier student (including by
+    an earlier redraw) or is in BLOCKED_NAMES gets a new one from the larger
+    pool of their ethnicity (and gender), drawn until it is free. This
+    uses its own RNG and its own Faker instances, never rng / fk / fk_in, so
+    every other field of the dataset stays exactly the same.
+    """
+    name_rng = random.Random(f"names-{seed}")
+    fakers = {"indian": Faker("en_IN"), "international": Faker("en_US")}
+    for f in fakers.values():
+        f.seed_instance(f"names-{seed}")
+    seen = {name_key(n) for n in BLOCKED_NAMES}
+    for u, (ethnicity, gender) in zip(users, origins):
+        name = u["full_name"]
+        tries = 0
+        while name_key(name) in seen:
+            tries += 1
+            if tries > MAX_NAME_TRIES:
+                raise SystemExit(f"Could not find a unique {ethnicity} name for {u['email']}")
+            name = redraw_name(name_rng, fakers, ethnicity, gender)
+        seen.add(name_key(name))
+        u["full_name"] = name
 
 
 def clamp(x, lo, hi):
@@ -331,19 +511,30 @@ def generate(n, seed):
     fk = Faker("en_US")
     fk_in = Faker("en_IN")
 
-    all_skills = sorted({s for r in ROLES.values() for s in r["core"] + r["secondary"]}
-                        | set(SOFT_SKILLS)
-                        | {s for c in CERTIFICATIONS for s in c[2]}
-                        | {s for p in PROJECTS.values() for t in p for s in t[2]})
+    load_role_skills()
+    used_skills = ({s for r in ROLES.values() for s in r["core"] + r["secondary"]}
+                   | set(SOFT_SKILLS)
+                   | {s for c in CERTIFICATIONS for s in c[2]}
+                   | {s for p in PROJECTS.values() for t in p for s in t[2]})
 
-    known = load_schema_skills(SCHEMA_PATH)
+    known = load_library_skills()
     if known is not None:
-        missing = sorted(set(all_skills) - known)
+        missing = sorted(used_skills - known)
         if missing:
-            raise SystemExit(f"These skills are not in skills_library (schema.sql): {missing}")
+            raise SystemExit(f"These skills are not in the skills library "
+                             f"(data/skills/skills_library.csv): {missing}")
+    # off-role noise is drawn from the whole library
+    all_skills = sorted(known if known is not None else used_skills)
 
     if bcrypt:
-        pw_hash = bcrypt.hashpw(DEMO_PASSWORD.encode(), bcrypt.gensalt(rounds=10)).decode()
+        # salt derived from the seed (own RNG, so the main sequence is unchanged)
+        # => identical password_hash on every run with the same seed
+        salt_rng = random.Random(f"bcrypt-salt-{seed}")
+        alphabet = "./ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+        # 22 salt chars; the last one only carries 2 bits, so it must be one of ".Oeu"
+        salt = ("$2b$10$" + "".join(salt_rng.choice(alphabet) for _ in range(21))
+                + salt_rng.choice(".Oeu")).encode()
+        pw_hash = bcrypt.hashpw(DEMO_PASSWORD.encode(), salt).decode()
     else:
         pw_hash = "REPLACE_WITH_BCRYPT_HASH"
         print("WARNING: bcrypt not installed — password_hash is a placeholder, logins will fail.")
@@ -354,6 +545,7 @@ def generate(n, seed):
     arch_w = [ARCHETYPES[a][0] for a in arch_names]
 
     users, profiles, skills_rows, projects_rows, certs_rows, meta = [], [], [], [], [], []
+    name_origins = []  # (ethnicity, gender) per student, for unique_names
     base_time = datetime(2026, 7, 1, 9, 0, 0)
 
     for i in range(1, n + 1):
@@ -363,7 +555,8 @@ def generate(n, seed):
         spec = ROLES[role]
 
         user_id, profile_id = str(uuid.UUID(int=rng.getrandbits(128))), str(uuid.UUID(int=rng.getrandbits(128)))
-        full_name = make_name(rng, fk_in, fk)
+        full_name, ethnicity, gender = make_name(rng, fk_in, fk)
+        name_origins.append((ethnicity, gender))
         email = f"student{i:04d}@{EMAIL_DOMAIN}"
         created = base_time + timedelta(days=rng.randint(0, 80), minutes=rng.randint(0, 1440))
 
@@ -426,7 +619,7 @@ def generate(n, seed):
                 continue
             seen_cert.add(c[0])
             issue = date(CURRENT_YEAR, 9, 1) - timedelta(days=rng.randint(30, 365 * min(year, 3)))
-            expiry = issue + timedelta(days=365 * 3) if c[1] in ("Amazon Web Services", "CompTIA", "Cisco") else None
+            expiry = issue + timedelta(days=365 * 3) if c[1] in EXPIRING_ISSUERS else None
             certs_rows.append({
                 "cert_id": str(uuid.UUID(int=rng.getrandbits(128))),
                 "profile_id": profile_id,
@@ -497,6 +690,11 @@ def generate(n, seed):
             "core_skills_covered": core_have, "core_skills_total": len(spec["core"]),
             "core_coverage_pct": round(core_have / len(spec["core"]) * 100, 1),
         })
+
+    unique_names(users, name_origins, seed)
+    repeated = [k for k, c in Counter(name_key(u["full_name"]) for u in users).items() if c > 1]
+    if repeated:
+        raise SystemExit(f"{len(repeated)} student names are not unique, e.g. {repeated[:5]}")
 
     return users, profiles, skills_rows, projects_rows, certs_rows, meta
 
@@ -616,7 +814,7 @@ def write_summary(path, users, profiles, skills, projects, certs, meta, n, seed)
 
 def main():
     ap = argparse.ArgumentParser(description="Generate SEAGAS synthetic student profiles")
-    ap.add_argument("--n", type=int, default=DEFAULT_N, help="number of students (default 500)")
+    ap.add_argument("--n", type=int, default=DEFAULT_N, help="number of students (default 5000)")
     ap.add_argument("--seed", type=int, default=DEFAULT_SEED, help="random seed (default 42)")
     args = ap.parse_args()
 

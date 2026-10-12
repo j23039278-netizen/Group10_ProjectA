@@ -471,6 +471,26 @@ JOIN student_profiles sp ON sp.profile_id = sr.profile_id
 JOIN users u             ON u.user_id     = sp.user_id
 GROUP BY sp.user_id, u.full_name;
 
+-- ── Student Resource Progress (FR-11: Development Tracking) ──
+CREATE TABLE IF NOT EXISTS student_resource_progress (
+    progress_id   UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    profile_id    UUID NOT NULL REFERENCES student_profiles(profile_id) ON DELETE CASCADE,
+    resource_id   UUID NOT NULL REFERENCES recommendations_library(resource_id) ON DELETE CASCADE,
+    assessment_id UUID REFERENCES assessments(assessment_id) ON DELETE SET NULL,
+    skill_id      UUID REFERENCES skills_library(skill_id) ON DELETE SET NULL,
+    status        VARCHAR(20) NOT NULL DEFAULT 'saved'
+                  CHECK (status IN ('saved', 'in_progress', 'completed')),
+    started_at    TIMESTAMP,
+    completed_at  TIMESTAMP,
+    skill_added   BOOLEAN DEFAULT FALSE,
+    created_at    TIMESTAMP DEFAULT NOW(),
+    updated_at    TIMESTAMP DEFAULT NOW(),
+    UNIQUE(profile_id, resource_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_srp_profile ON student_resource_progress(profile_id);
+CREATE INDEX IF NOT EXISTS idx_srp_status  ON student_resource_progress(profile_id, status);
+
 -- ============================================================
 -- END OF SCHEMA
 -- ============================================================

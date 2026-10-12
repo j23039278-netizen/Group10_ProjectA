@@ -1,0 +1,23 @@
+sample:fictional-example 2026-09-29
+Title: Associate Cloud Engineer
+Location: Remote (Malaysia)
+
+We help e-commerce companies run reliable platforms on AWS. As an Associate Cloud Engineer you will build and operate cloud infrastructure together with our DevOps team.
+
+Responsibilities:
+- Provision AWS infrastructure with Terraform (infrastructure as code).
+- Build and maintain CI/CD pipelines using GitHub Actions.
+- Deploy containerised services with Docker and Kubernetes.
+- Configure networking (VPC, subnets, DNS) and IAM roles following least privilege.
+- Set up monitoring and alerting with Prometheus and Grafana.
+
+Requirements:
+- Degree in Computer Science, IT or a related field.
+- Hands-on experience with Linux and shell scripting in Bash.
+- Understanding of cloud computing concepts on AWS, Azure or GCP.
+- Familiarity with Git.
+
+Nice to have:
+- AWS Certified Cloud Practitioner or Solutions Architect Associate.
+- Experience with serverless (AWS Lambda) or Ansible.
+- Python or Go scripting.

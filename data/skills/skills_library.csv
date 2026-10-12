@@ -1,0 +1,139 @@
+skill_name,category,subcategory,aliases,ambiguous_aliases,description,source
+Python,Technical,Programming Language,Python 3|Python programming,,General-purpose programming language widely used in data science and backend development.,v1
+SQL,Technical,Programming Language,Structured Query Language|SQL queries|T-SQL|PL/SQL,,Database query language for relational databases.,v1
+JavaScript,Technical,Programming Language,JS|ES6|ECMAScript,,Core web programming language for frontend and backend (Node.js) development.,v1
+React,Technical,Web Framework,React.js|ReactJS,,JavaScript library for building user interfaces.,v1
+Java,Technical,Programming Language,Java SE|Java EE,,Object-oriented programming language used in enterprise applications.,v1
+C++,Technical,Programming Language,CPP|C Plus Plus,,Systems programming language used in performance-critical applications.,v1
+R,Technical,Programming Language,R programming|R language,R,Statistical programming language used in data analysis.,v1
+Power BI,Technical,Data & BI,PowerBI|Microsoft Power BI,,Business intelligence and data visualisation tool by Microsoft.,v1
+Tableau,Technical,Data & BI,Tableau Desktop|Tableau Public,,Data visualisation platform for creating interactive dashboards.,v1
+Excel,Technical,Data & BI,Microsoft Excel|MS Excel|Spreadsheet,Excel,Spreadsheet tool used for data analysis and reporting.,v1
+FastAPI,Technical,Web Framework,Fast API,,Modern Python web framework for building APIs.,v1
+Flask,Technical,Web Framework,Flask Python,,Lightweight Python web framework.,v1
+Node.js,Technical,Web Framework,NodeJS,Node,JavaScript runtime for backend development.,v1
+Docker,Technical,DevOps,Docker container|Containerisation,,Platform for building and running containerised applications.,v1
+Git,Technical,DevOps,GitHub|GitLab|Version control,,Version control system for tracking code changes.,v1
+Linux,Technical,Infrastructure,Ubuntu|Linux administration|Unix|Red Hat|RHEL,,Operating system widely used in server and cloud environments.,v1
+Machine Learning,AI_Digital,ML/AI,ML|Supervised learning|Unsupervised learning,,Building models that learn patterns from data.,v1
+Deep Learning,AI_Digital,ML/AI,Neural networks|CNN|RNN,DL,Subset of machine learning using multi-layer neural networks.,v1
+Natural Language Processing,AI_Digital,ML/AI,NLP|Text processing|Text mining,,AI techniques for processing and understanding human language.,v1
+Data Visualisation,AI_Digital,Data & BI,Data viz|Dashboard creation|Creating interactive dashboards|Charts and graphs,,"Representing data visually through charts, graphs, and dashboards.",v1
+Cloud Computing,AI_Digital,Cloud,Cloud platforms|Cloud infrastructure|Cloud services,,Delivering computing services over the internet.,v1
+AWS,AI_Digital,Cloud,Amazon Web Services|AWS Cloud|Amazon Cloud,,Amazon cloud computing platform.,v1
+Azure,AI_Digital,Cloud,Microsoft Azure|Azure Cloud,,Microsoft cloud computing platform.,v1
+AI Literacy,AI_Digital,ML/AI,Artificial Intelligence|AI concepts|AI fundamentals,,"Understanding of AI concepts, applications, and ethical considerations.",v1
+Statistical Analysis,Analytical,Analytical,Statistics|Statistical modelling|Quantitative analysis|Hypothesis testing,,Applying statistical methods to interpret data.,v1
+Data Analysis,Analytical,Analytical,Data analytics|Exploratory data analysis|EDA,,Inspecting and modelling data to discover insights.,v1
+Problem Solving,Analytical,Analytical,Analytical problem solving|Troubleshooting,,Identifying and resolving complex challenges systematically.,v1
+Research Skills,Analytical,Analytical,Literature review|Academic research,,"Ability to investigate, evaluate, and synthesise information.",v1
+Communication,Soft,Soft,Verbal communication|Written communication|Communication skills,,Conveying information clearly to technical and non-technical audiences.,v1
+Teamwork,Soft,Soft,Collaboration|Team player|Cooperative work,,Working effectively with others toward shared goals.,v1
+Time Management,Soft,Soft,Prioritisation|Meeting deadlines,Organisation,Managing tasks and deadlines efficiently.,v1
+Leadership,Soft,Soft,Team leadership|Project leadership,,Guiding and motivating a team toward objectives.,v1
+C#,Technical,Programming Language,CSharp|C Sharp|.NET C#,,Microsoft language for enterprise and game development.,v2
+Go,Technical,Programming Language,Golang|Go language,Go,Fast compiled language for cloud and backend systems.,v2
+Rust,Technical,Programming Language,Rust lang,,Systems language focused on safety and performance.,v2
+PHP,Technical,Programming Language,PHP 8|Laravel PHP,,Server-side scripting language for web development.,v2
+Swift,Technical,Programming Language,Swift iOS|Apple Swift,Swift,Apple language for iOS and macOS development.,v2
+Kotlin,Technical,Programming Language,Kotlin Android,,Modern JVM language for Android development.,v2
+Bash,Technical,Programming Language,Shell scripting|Bash scripting,Shell,Unix shell scripting for automation.,v2
+PowerShell,Technical,Programming Language,PS scripting|Windows scripting,,Windows automation and task scripting.,v2
+Vue.js,Technical,Web Framework,Vue|VueJS,,Progressive JavaScript framework for UIs.,v2
+Angular,Technical,Web Framework,AngularJS|Angular 2+,,Google TypeScript-based web framework.,v2
+Django,Technical,Web Framework,Django Python|Django REST,,Full-featured Python web framework.,v2
+Spring Boot,Technical,Web Framework,Spring Framework|SpringBoot,Spring,Java framework for enterprise applications.,v2
+MongoDB,Technical,Database,Mongo|MongoDB Atlas,,NoSQL document database.,v2
+Redis,Technical,Database,Redis cache,,In-memory data structure store for caching.,v2
+MySQL,Technical,Database,MySQL DB,,Popular open-source relational database.,v2
+SQLite,Technical,Database,SQLite DB,,Lightweight embedded relational database.,v2
+Kubernetes,Technical,DevOps,K8s|Kube,K8,Container orchestration platform.,v2
+CI/CD,Technical,DevOps,Continuous Integration|GitHub Actions|Jenkins|CircleCI,,"Automated build, test and deployment pipelines.",v2
+Terraform,Technical,DevOps,Infrastructure as Code|IaC|Terraform HCL,,Infrastructure-as-code tool for cloud provisioning.,v2
+Ansible,Technical,DevOps,Ansible automation,,IT automation and configuration management tool.,v2
+Pandas,Technical,Data & BI,Python Pandas,pd,Python library for data manipulation.,v2
+NumPy,Technical,Data & BI,Python NumPy,np,Python library for numerical computing.,v2
+Matplotlib,Technical,Data & BI,Matplotlib Python|pyplot,,Python plotting library.,v2
+Seaborn,Technical,Data & BI,Seaborn Python,,Statistical data visualisation library.,v2
+Apache Spark,Technical,Data & BI,Spark|PySpark|Spark SQL,,Large-scale data processing engine.,v2
+Hadoop,Technical,Data & BI,Apache Hadoop|HDFS|MapReduce,,Distributed storage and processing framework.,v2
+Wireshark,Technical,Security Tool,Packet analysis|Wireshark tool,,Network protocol analyser for traffic inspection.,v2
+Nmap,Technical,Security Tool,Network mapper|nmap scan,,Network scanning and discovery tool.,v2
+Metasploit,Technical,Security Tool,Metasploit Framework,MSF,Penetration testing framework.,v2
+Burp Suite,Technical,Security Tool,BurpSuite,Burp,Web application security testing tool.,v2
+Splunk,Technical,Security Tool,Splunk SIEM,,Security information and event management platform.,v2
+SIEM,Technical,Security Tool,Security Information Event Management|QRadar|ArcSight,,Security monitoring and log analysis.,v2
+Nessus,Technical,Security Tool,Nessus scanner|Tenable,,Vulnerability scanning tool.,v2
+Kali Linux,Technical,Security Tool,Kali|Kali OS,,Linux distribution for penetration testing.,v2
+Snort,Technical,Security Tool,Snort IDS,,Open-source intrusion detection system.,v2
+Firewall Management,Technical,Security Tool,Firewall config|Network firewall|pfSense,,Configuring and managing network firewalls.,v2
+VPN,Technical,Security Tool,Virtual Private Network|OpenVPN|VPN setup,,Secure encrypted network tunnelling.,v2
+GCP,AI_Digital,Cloud,Google Cloud|Google Cloud Platform|BigQuery,,Google cloud computing platform.,v2
+MLOps,AI_Digital,ML/AI,ML Operations|Model deployment|ML pipeline,,Deploying and managing ML models in production.,v2
+Generative AI,AI_Digital,ML/AI,GenAI|LLM|Large Language Models|GPT,,"AI systems that generate text, images or code.",v2
+Feature Engineering,AI_Digital,ML/AI,Feature selection|Feature extraction,,Creating and selecting input features for ML models.,v2
+Model Evaluation,AI_Digital,ML/AI,Model assessment|Precision recall F1|ROC AUC,,Measuring and comparing ML model performance.,v2
+TensorFlow,AI_Digital,ML/AI,TensorFlow Keras,TF,Open-source ML framework by Google.,v2
+PyTorch,AI_Digital,ML/AI,PyTorch ML,Torch,Open-source ML framework by Meta.,v2
+Scikit-learn,AI_Digital,ML/AI,sklearn|scikit learn,,Python ML library for classical algorithms.,v2
+Hugging Face,AI_Digital,ML/AI,HuggingFace|Transformers library,,Platform and library for NLP transformer models.,v2
+Cybersecurity,Technical,Security Practice,Information security|InfoSec|Cyber defence,,Protecting systems and networks from digital attacks.,v2
+Network Security,Technical,Security Practice,Network defence|Network protection,,Securing computer networks from threats.,v2
+Cryptography,Technical,Security Practice,Encryption|Decryption|PKI,Crypto,Techniques for securing information through encoding.,v2
+Ethical Hacking,Technical,Security Practice,Penetration testing|Pen testing|White hat,,Authorised testing of systems for vulnerabilities.,v2
+Digital Forensics,Technical,Security Practice,Cyber forensics|Computer forensics|Forensic investigation,,Investigating digital evidence from cyber incidents.,v2
+Incident Response,Technical,Security Practice,Cyber incident response|CSIRT,IR,Responding to and managing cybersecurity incidents.,v2
+Vulnerability Assessment,Technical,Security Practice,Vulnerability scanning,VA,Identifying and evaluating security weaknesses.,v2
+Computer Vision,AI_Digital,ML/AI,Image recognition|Object detection,CV,AI for interpreting visual data.,v2
+Critical Thinking,Analytical,Analytical,Logical reasoning|Analytical thinking|Deductive reasoning,,Objective analysis and evaluation of issues.,v2
+Business Analysis,Analytical,Analytical,Requirements gathering|Business requirements,BA,Analysing business processes and requirements.,v2
+Requirements Analysis,Analytical,Analytical,Requirements engineering|System requirements,,Gathering and documenting system requirements.,v2
+Risk Analysis,Analytical,Analytical,Risk assessment|Risk management,,Identifying and evaluating potential risks.,v2
+Data Modelling,Analytical,Analytical,ER diagram|Database modelling|Schema design,,Designing data structures and relationships.,v2
+Systems Thinking,Analytical,Analytical,Systems analysis|Holistic thinking,,Understanding how components interact in a system.,v2
+A/B Testing,Analytical,Analytical,Split testing|Experimentation,,Comparing two versions to determine which performs better.,v2
+Financial Analysis,Analytical,Analytical,Financial modelling|Budgeting|Cost analysis,,Evaluating financial data to support decisions.,v2
+Adaptability,Soft,Soft,Agility|Adaptable,Resilience|Flexibility,Adjusting to new conditions and challenges.,v2
+Presentation Skills,Soft,Soft,Public speaking|Presenting|Slide presentation,,Delivering clear and engaging presentations.,v2
+Project Management,Soft,Soft,Project planning|Project coordination,PM,Planning and executing projects on time.,v2
+Attention to Detail,Soft,Soft,Detail-oriented|Thoroughness,Accuracy,Carefully checking work for accuracy.,v2
+Self-Motivation,Soft,Soft,Self-driven|Initiative|Proactive,,Taking initiative without external prompting.,v2
+Interpersonal Skills,Soft,Soft,People skills|Relationship building|Stakeholder management,,Building and maintaining professional relationships.,v2
+Documentation,Soft,Soft,Technical writing|Report writing|Technical documentation,,Creating clear written records and guides.,v2
+TypeScript,Technical,Programming Language,TypeScript programming,TS,Typed superset of JavaScript used for large-scale web applications.,v2
+HTML,Technical,Web Development,HTML5|HyperText Markup Language,,Markup language for structuring web pages.,v2
+CSS,Technical,Web Development,CSS3|Cascading Style Sheets|Tailwind CSS|Sass,,Style sheet language for the layout and design of web pages.,v2
+REST API,Technical,Web Development,RESTful API|RESTful services|Web API|API development,REST,Designing and consuming HTTP APIs that follow REST principles.,v2
+GraphQL,Technical,Web Development,GraphQL API|Apollo GraphQL,,Query language and runtime for flexible client-driven APIs.,v2
+Express.js,Technical,Web Framework,ExpressJS|Express framework,Express,Minimal Node.js web framework for building APIs and web servers.,v2
+Object-Oriented Programming,Technical,Software Engineering,OOP|Object oriented design|OOD,,"Designing software around objects, classes, inheritance and encapsulation.",v2
+Data Structures & Algorithms,Technical,Software Engineering,Data structures|Algorithms|DSA,,Core computer-science structures and algorithms for efficient problem solving.,v2
+Unit Testing,Technical,Software Engineering,Unit tests|Automated testing|pytest|JUnit|Jest|Test-driven development|TDD,,Writing automated tests that verify individual units of code.,v2
+Microservices,Technical,Software Engineering,Microservice architecture|Microservices architecture,,"Architecting applications as small, independently deployable services.",v2
+Agile / Scrum,Soft,Soft,Agile|Scrum|Kanban|Sprint planning|Agile methodology|Scrum methodology,,Working in iterative Agile teams using practices such as Scrum and Kanban.,v2
+UI/UX Design,Technical,Design,UI design|UX design|User experience|User interface design|Wireframing,,Designing usable and accessible user interfaces and experiences.,v2
+Figma,Technical,Design,Figma design,,Collaborative interface design and prototyping tool.,v2
+PostgreSQL,Technical,Database,Postgres|PostgresSQL|psql,,Advanced open-source relational database.,v2
+Data Cleaning,Analytical,Data & BI,Data cleansing|Data wrangling|Data preprocessing|Data preparation,,Detecting and correcting errors and inconsistencies in datasets.,v2
+ETL,Technical,Data & BI,Extract Transform Load|ELT|Data pipelines|Data pipeline,,"Extracting, transforming and loading data between systems.",v2
+Data Warehousing,Technical,Data & BI,Data warehouse|Snowflake|Amazon Redshift|Dimensional modelling,,Designing and managing central repositories for analytical data.,v2
+Looker,Technical,Data & BI,Looker Studio|Google Data Studio,,Google business intelligence and dashboarding platform.,v2
+Google Analytics,Technical,Data & BI,GA4|Web analytics,GA,Web analytics service for tracking and reporting website traffic.,v2
+Jupyter,Technical,Data & BI,Jupyter Notebook|JupyterLab|Google Colab,,Interactive notebook environment for data analysis and ML.,v2
+Serverless,AI_Digital,Cloud,Serverless computing|AWS Lambda|Azure Functions|Cloud Functions,,Running code on managed cloud functions without managing servers.,v2
+Monitoring & Observability,Technical,DevOps,Monitoring|Observability|Prometheus|Grafana|Datadog|CloudWatch,,"Collecting metrics, logs and traces to monitor system health.",v2
+Networking,Technical,Infrastructure,Computer networking|TCP/IP|DNS|DHCP|Routing and switching|LAN/WAN|OSI model,,"Fundamentals of computer networks, protocols and network configuration.",v2
+Identity & Access Management,Technical,Security Practice,IAM|Access control|Active Directory|Single sign-on|SSO|RBAC,,"Managing digital identities, authentication and access permissions.",v2
+Windows Server,Technical,Infrastructure,Windows Server administration|Windows administration,,Administering Microsoft Windows Server environments.,v2
+OWASP Top 10,Technical,Security Practice,OWASP|Web application security|Secure coding,,The most critical web application security risks and their mitigations.,v2
+Security Operations (SOC),Technical,Security Practice,Security Operations Centre|Security Operations Center|SOC analyst|Security monitoring,SOC,"Continuous monitoring, triage and response in a security operations centre.",v2
+Threat Intelligence,Technical,Security Practice,Cyber threat intelligence|CTI|Threat hunting|MITRE ATT&CK,,Collecting and analysing information about current and emerging threats.,v2
+Security Frameworks,Technical,Security Practice,NIST|NIST CSF|ISO 27001|ISO/IEC 27001|CIS Controls|Security compliance,,Applying standard security frameworks and compliance controls.,v2
+Malware Analysis,Technical,Security Practice,Reverse engineering malware|Malware reverse engineering,,Examining malicious software to understand its behaviour and impact.,v2
+Log Analysis,Technical,Security Practice,Log management|Log monitoring|Event log analysis,,Reviewing system and security logs to detect anomalies and incidents.,v2
+Prompt Engineering,AI_Digital,ML/AI,Prompt design|LLM prompting,,Designing effective prompts to steer large language models.,v2
+Responsible AI,AI_Digital,ML/AI,Data ethics|AI ethics|Ethical AI|AI governance,,"Designing and using AI and data fairly, transparently and accountably.",v2
+Data Mining,Analytical,Analytical,Pattern mining|Knowledge discovery,,Discovering patterns and relationships in large datasets.,v2
+Stakeholder Communication,Soft,Soft,Stakeholder engagement|Client communication|Business communication,,"Communicating requirements, progress and results to stakeholders.",v2
+Decision Making,Analytical,Analytical,Data-driven decision making|Decision-making,,Evaluating options and evidence to make sound decisions.,v2
+Customer Focus,Soft,Soft,Customer service|Customer orientation|Client focus,,Understanding and prioritising the needs of customers and users.,v2
