@@ -32,7 +32,9 @@ class RegisterRequest(BaseModel):
     email: EmailStr
     password: str
     full_name: str
-    role: str = "student"  # student | advisor | admin
+    # Public sign-up is for students only. Advisor and admin accounts are
+    # created by an admin through POST /api/admin/users.
+    role: str = "student"
 
 
 class Token(BaseModel):
@@ -85,7 +87,8 @@ def get_current_user(
         {"uid": user_id}
     ).fetchone()
 
-    if result is None:
+    # A deactivated account must not keep using a token issued before
+    if result is None or not result.is_active:
         raise credentials_exception
     return result
 
@@ -94,6 +97,13 @@ def get_current_user(
 @router.post("/register", status_code=201)
 def register(req: RegisterRequest, db: Session = Depends(get_db)):
     from sqlalchemy import text
+
+    if req.role != "student":
+        raise HTTPException(
+            status_code=403,
+            detail="Only student accounts can be registered. "
+                   "Advisor and admin accounts are created by an administrator."
+        )
 
     # Check if email exists
     existing = db.execute(
@@ -104,17 +114,14 @@ def register(req: RegisterRequest, db: Session = Depends(get_db)):
     if existing:
         raise HTTPException(status_code=400, detail="Email already registered")
 
-    if req.role not in ("student", "advisor", "admin"):
-        raise HTTPException(status_code=400, detail="Invalid role")
-
     hashed = hash_password(req.password)
 
     db.execute(
         text("""
             INSERT INTO users (email, password_hash, role, full_name)
-            VALUES (:email, :pw, :role, :name)
+            VALUES (:email, :pw, 'student', :name)
         """),
-        {"email": req.email, "pw": hashed, "role": req.role, "name": req.full_name}
+        {"email": req.email, "pw": hashed, "name": req.full_name}
     )
     db.commit()
     return {"message": "User registered successfully"}

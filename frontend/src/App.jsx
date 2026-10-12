@@ -10,6 +10,8 @@ import JobAnalysis from './pages/JobAnalysis'
 import SkillGap from './pages/SkillGap'
 import Recommendations from './pages/Recommendations'
 import AdvisorDashboard from './pages/AdvisorDashboard'
+import AdminUsers from './pages/AdminUsers'
+import AdminLibrary from './pages/AdminLibrary'
 import Sidebar from './components/Sidebar'
 import './App.css'
 
@@ -57,7 +59,13 @@ function App() {
     <BrowserRouter>
       <AppLayout>
         <Routes>
-          {role === 'advisor' ? (
+          {role === 'admin' ? (
+            <>
+              <Route path="/"        element={<AdminUsers />} />
+              <Route path="/library" element={<AdminLibrary />} />
+              <Route path="*"        element={<Navigate to="/" />} />
+            </>
+          ) : role === 'advisor' ? (
             <>
               <Route path="/" element={<AdvisorDashboard onLogout={handleLogout} />} />
               <Route path="*" element={<Navigate to="/" />} />

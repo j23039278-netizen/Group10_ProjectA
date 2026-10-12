@@ -7,7 +7,7 @@ Author: Soh Way Miin (Carl) — Backend Developer
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
  
-from routers import auth, students, jobs, assessments, advisor
+from routers import auth, students, jobs, assessments, advisor, admin
 from routers.progress import router as progress_router
  
 app = FastAPI(
@@ -32,6 +32,7 @@ app.include_router(jobs.router,        prefix="/api/jobs",        tags=["Jobs"])
 app.include_router(assessments.router, prefix="/api/assessments", tags=["Assessments"])
 app.include_router(advisor.router,     prefix="/api/advisor",     tags=["Advisor"])
 app.include_router(progress_router,    prefix="/api/progress",    tags=["Progress"])
+app.include_router(admin.router,       prefix="/api/admin",       tags=["Admin"])
  
  
 @app.get("/")

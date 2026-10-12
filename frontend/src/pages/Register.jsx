@@ -1,15 +1,10 @@
 // SEAGAS — Register Page
-// Creates an account via POST /api/auth/register, then signs the new user straight in.
+// Creates a student account via POST /api/auth/register, then signs the new user straight in.
+// Only students can sign up here; advisor and admin accounts are created by an admin.
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { authAPI } from '../api/client'
 import AuthLayout, { Field, PasswordInput, FormAlert } from './auth/AuthLayout'
-
-// Admin accounts are not offered for public sign-up
-const ROLES = [
-  { id: 'student', label: 'Student', hint: 'Check my readiness and skill gaps' },
-  { id: 'advisor', label: 'Advisor', hint: 'Track my students and cohort' },
-]
 
 const PASSWORD_MIN = 8
 const PASSWORD_CHECKS = [
@@ -31,7 +26,6 @@ function errorMessage(err) {
 
 export default function Register({ onLogin }) {
   const navigate = useNavigate()
-  const [role,     setRole]     = useState('student')
   const [fullName, setFullName] = useState('')
   const [email,    setEmail]    = useState('')
   const [password, setPassword] = useState('')
@@ -60,7 +54,7 @@ export default function Register({ onLogin }) {
 
     setLoading(true)
     try {
-      await authAPI.register({ email: email.trim(), password, full_name: fullName.trim(), role })
+      await authAPI.register({ email: email.trim(), password, full_name: fullName.trim(), role: 'student' })
     } catch (err) {
       setError(errorMessage(err))
       setLoading(false)
@@ -84,23 +78,8 @@ export default function Register({ onLogin }) {
     <AuthLayout
       heading={<>Start your <span className="au-accent">journey</span></>}
       title="Create your account"
-      subtitle="It only takes a minute."
+      subtitle="Student sign-up. Advisor accounts are created by your SEAGAS administrator."
     >
-      <div className="au-roles au-roles-2" role="radiogroup" aria-label="I am registering as">
-        {ROLES.map(r => (
-          <button
-            key={r.id}
-            type="button"
-            role="radio"
-            aria-checked={role === r.id}
-            className={`au-role au-role-card ${role === r.id ? 'is-active' : ''}`}
-            onClick={() => setRole(r.id)}
-          >
-            <span className="au-role-name">{r.label}</span>
-            <span className="au-role-hint">{r.hint}</span>
-          </button>
-        ))}
-      </div>
 
       <form onSubmit={handleRegister} noValidate>
         <Field id="reg-name" label="Full name" icon="profile" error={fieldErrors.fullName}>
@@ -121,7 +100,7 @@ export default function Register({ onLogin }) {
             className="au-input"
             type="email" required
             autoComplete="email"
-            placeholder={role === 'student' ? 'you@student.edu.my' : 'you@uni.edu.my'}
+            placeholder="you@student.edu.my"
             value={email} onChange={e => setEmail(e.target.value)}
             aria-invalid={!!fieldErrors.email || undefined}
           />

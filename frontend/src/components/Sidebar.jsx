@@ -19,7 +19,12 @@ export default function Sidebar({ onLogout }) {
     { path: '/', label: 'Cohort Overview', icon: '📊' },
   ]
 
-  const navItems = role === 'advisor' ? advisorNav : studentNav
+  const adminNav = [
+    { path: '/',        label: 'User Management', icon: '👥' },
+    { path: '/library', label: 'Skills & Roles',  icon: '📚' },
+  ]
+
+  const navItems = role === 'admin' ? adminNav : role === 'advisor' ? advisorNav : studentNav
 
   const isActive = (path) => location.pathname === path
 
@@ -60,7 +65,7 @@ export default function Sidebar({ onLogout }) {
       {/* Nav Items */}
       <nav style={{ padding: '12px 0', flex: 1 }}>
         <div style={{ fontSize: '10px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '1px', color: 'rgba(255,255,255,0.3)', padding: '12px 20px 6px' }}>
-          {role === 'advisor' ? 'Overview' : 'Menu'}
+          {role === 'advisor' ? 'Overview' : role === 'admin' ? 'Administration' : 'Menu'}
         </div>
         {navItems.map(item => (
           <div

@@ -22,6 +22,12 @@ export default function Login({ onLogin }) {
     try {
       const res  = await authAPI.login(email, password)
       const data = res.data
+      // The account's role comes from the database; the tab only says which one the user expects
+      if (data.role !== role) {
+        const label = roles.find(r => r.id === data.role)?.label || data.role
+        setError(`This is a ${label} account. Please choose the ${label} tab to sign in.`)
+        return
+      }
       localStorage.setItem('token',    data.access_token)
       localStorage.setItem('role',     data.role)
       localStorage.setItem('fullName', data.full_name)
@@ -75,7 +81,7 @@ export default function Login({ onLogin }) {
             className="au-input"
             type="email" required
             autoComplete="email"
-            placeholder={role === 'student' ? 'student@synthetic.example.com' : 'advisor@uni.edu.my'}
+            placeholder={role === 'student' ? 'student@synthetic.example.com' : 'name@uni.edu.my'}
             value={email} onChange={e => setEmail(e.target.value)}
           />
         </Field>
@@ -96,14 +102,20 @@ export default function Login({ onLogin }) {
         </button>
       </form>
 
-      <p className="au-switch">
-        Don&apos;t have an account? <Link to="/register">Create one</Link>
-      </p>
+      {role === 'student' ? (
+        <p className="au-switch">
+          Don&apos;t have an account? <Link to="/register">Create one</Link>
+        </p>
+      ) : (
+        <p className="au-switch">
+          {role === 'advisor' ? 'Advisor' : 'Admin'} accounts are created by your SEAGAS administrator.
+        </p>
+      )}
 
-      {/* Test account hint */}
-      <div className="au-hint">
+      {/* Test account hint (synthetic student data only) */}
+      {role === 'student' && <div className="au-hint">
         Test: student0001@synthetic.example.com / Seagas@2026
-      </div>
+      </div>}
     </AuthLayout>
   )
 }

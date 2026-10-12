@@ -111,6 +111,19 @@ echo [4/4] Installing Python packages ...
 %PY% -m pip install -q -r requirements.txt "psycopg[binary]" "pydantic[email]" python-multipart
 if errorlevel 1 goto :fail
 
+REM Advisor accounts are created by an admin, so the first admin has to exist.
+REM create_admin.py asks for the email and password; nothing is hard-coded.
+echo [4a/4] Checking admin account ...
+set "ADMINS="
+for /f "usebackq delims=" %%i in (`psql -d seagas_db -tAc "SELECT count(*) FROM users WHERE role='admin' AND is_active"`) do set "ADMINS=%%i"
+if "%ADMINS%"=="0" (
+    echo       no admin account yet - admins create advisor accounts.
+    choice /C YN /M "      Create an admin account now"
+    if not errorlevel 2 %PY% create_admin.py
+) else (
+    echo       %ADMINS% admin account^(s^)
+)
+
 echo [4b/4] Checking JD dataset ...
 if exist "..\data\jd_dataset\jd_dataset.csv" (
     %PY% "..\data\jd_dataset\load_jds.py"
