@@ -2,7 +2,7 @@
 // The library is maintained in data/skills/skills_library.csv and loaded by the seed files,
 // so this page shows what is in the database rather than editing it.
 import { useState, useEffect } from 'react'
-import { adminAPI } from '../api/client'
+import { adminAPI } from '../api/admin'
 
 const C = { ink: '#1a1f2e', body: '#4a5168', muted: '#8b92a8', line: '#e4e6ef' }
 const card  = { background: '#fff', border: `1px solid ${C.line}`, borderRadius: '12px', padding: '20px 24px' }

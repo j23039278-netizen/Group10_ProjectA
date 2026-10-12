@@ -199,8 +199,6 @@
 .au-switch { margin-top: 22px; font-size: 14px; text-align: center; color: var(--hp-text-2); }
 .au-switch a { font-weight: 700; color: var(--hp-teal-2); text-decoration: none; }
 .au-switch a:hover { text-decoration: underline; }
-.au-switch-staff { margin-top: 10px; font-size: 13px; }
-.au-alert a { color: inherit; font-weight: 700; text-decoration: underline; }
 .au-hint {
   margin-top: 18px;
   padding-top: 16px;

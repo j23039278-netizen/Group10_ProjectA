@@ -1,30 +1,12 @@
 // SEAGAS — Sidebar Navigation
 import { useNavigate, useLocation } from 'react-router-dom'
 
-export default function Sidebar({ onLogout }) {
+// The portal passes its own menu, so this file holds no student, advisor or admin pages.
+export default function Sidebar({ user, navTitle, navItems, onLogout }) {
   const navigate  = useNavigate()
   const location  = useLocation()
-  const role      = localStorage.getItem('role')
-  const userName  = localStorage.getItem('fullName') || 'User'
-
-  const studentNav = [
-    { path: '/',                label: 'Dashboard',       icon: '📊' },
-    { path: '/profile',         label: 'My Profile',      icon: '👤' },
-    { path: '/job-analysis',    label: 'Job Analysis',    icon: '📄' },
-    { path: '/skill-gap',       label: 'Skill Gap',       icon: '🎯' },
-    { path: '/recommendations', label: 'Recommendations', icon: '💡' },
-  ]
-
-  const advisorNav = [
-    { path: '/', label: 'Cohort Overview', icon: '📊' },
-  ]
-
-  const adminNav = [
-    { path: '/',        label: 'User Management', icon: '👥' },
-    { path: '/library', label: 'Skills & Roles',  icon: '📚' },
-  ]
-
-  const navItems = role === 'admin' ? adminNav : role === 'advisor' ? advisorNav : studentNav
+  const role      = user?.role || ''
+  const userName  = user?.full_name || 'User'
 
   const isActive = (path) => location.pathname === path
 
@@ -65,7 +47,7 @@ export default function Sidebar({ onLogout }) {
       {/* Nav Items */}
       <nav style={{ padding: '12px 0', flex: 1 }}>
         <div style={{ fontSize: '10px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '1px', color: 'rgba(255,255,255,0.3)', padding: '12px 20px 6px' }}>
-          {role === 'advisor' ? 'Overview' : role === 'admin' ? 'Administration' : 'Menu'}
+          {navTitle}
         </div>
         {navItems.map(item => (
           <div
@@ -89,12 +71,7 @@ export default function Sidebar({ onLogout }) {
       {/* Logout */}
       <div style={{ padding: '16px 20px', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
         <button
-          onClick={() => {
-            localStorage.removeItem('token')
-            localStorage.removeItem('role')
-            localStorage.removeItem('fullName')
-            window.location.href = '/'
-          }}
+          onClick={onLogout}
           style={{
             width: '100%', padding: '8px',
             background: 'rgba(255,255,255,0.06)',

@@ -2,7 +2,8 @@
 // Admins create advisor/admin accounts, activate or deactivate accounts and reset passwords.
 // Students are not created here: they register themselves on the Register page.
 import { useState, useEffect, useCallback } from 'react'
-import { adminAPI, authAPI } from '../api/client'
+import { authAPI } from '../api/client'
+import { adminAPI } from '../api/admin'
 
 const PAGE_SIZE = 50
 const PASSWORD_MIN = 8
@@ -116,7 +117,7 @@ function AddUserModal({ onClose, onCreated }) {
           <input id="nu-confirm" type="password" style={input} value={form.confirm} onChange={set('confirm')} autoComplete="new-password" />
         </div>
         <div style={{ fontSize: '12px', color: C.muted, marginBottom: '18px' }}>
-          Share the password with the user privately. They sign in at {form.role === 'admin' ? '/admin/login' : '/advisor/login'}.
+          Share the password with the user privately. They sign in on the normal SEAGAS login page and are taken to the {form.role} pages.
         </div>
         <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
           <button type="button" style={btn('secondary')} onClick={onClose}>Cancel</button>

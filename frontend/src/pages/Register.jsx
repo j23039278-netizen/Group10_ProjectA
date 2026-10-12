@@ -64,11 +64,8 @@ export default function Register({ onLogin }) {
     // Account created: sign in straight away (same steps as the Login page)
     try {
       const res  = await authAPI.login(email.trim(), password)
-      const data = res.data
-      localStorage.setItem('token',    data.access_token)
-      localStorage.setItem('role',     data.role)
-      localStorage.setItem('fullName', data.full_name)
-      onLogin(data.role)
+      localStorage.setItem('token', res.data.access_token)
+      onLogin(res.data)
     } catch {
       navigate('/login', { state: { registeredEmail: email.trim() } })
     }
