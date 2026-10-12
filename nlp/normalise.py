@@ -79,6 +79,8 @@ _KEEP_WORDS = {
 }
 # Endings that are almost never a plain plural "-s".
 _KEEP_ENDINGS = ("ss", "us", "is", "ics", "js", "os", "ops")
+# Acronym plurals that look like one of the endings above ("APIs" is not "-is").
+_ACRONYM_PLURALS = {"apis": "api", "kpis": "kpi", "guis": "gui"}
 
 
 def singularise(word):
@@ -93,6 +95,8 @@ def singularise(word):
     """
     if len(word) <= 3 or word in _KEEP_WORDS or not word.endswith("s"):
         return word
+    if word in _ACRONYM_PLURALS:
+        return _ACRONYM_PLURALS[word]
     if word.endswith("ies") and len(word) > 4:
         return word[:-3] + "y"
     if word.endswith(("sses", "shes", "ches", "xes")):
