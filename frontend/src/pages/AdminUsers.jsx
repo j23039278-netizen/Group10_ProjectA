@@ -116,7 +116,7 @@ function AddUserModal({ onClose, onCreated }) {
           <input id="nu-confirm" type="password" style={input} value={form.confirm} onChange={set('confirm')} autoComplete="new-password" />
         </div>
         <div style={{ fontSize: '12px', color: C.muted, marginBottom: '18px' }}>
-          Share the password with the user privately. They sign in on the Login page using the {form.role === 'admin' ? 'Admin' : 'Advisor'} tab.
+          Share the password with the user privately. They sign in at {form.role === 'admin' ? '/admin/login' : '/advisor/login'}.
         </div>
         <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
           <button type="button" style={btn('secondary')} onClick={onClose}>Cancel</button>

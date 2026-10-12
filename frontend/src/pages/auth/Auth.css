@@ -88,51 +88,6 @@
 .au-title { font-size: 30px; font-weight: 800; letter-spacing: -.6px; margin-bottom: 6px; }
 .au-subtitle { font-size: 14.5px; color: var(--hp-text-2); margin-bottom: 26px; }
 
-/* Role picker */
-.au-roles {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 6px;
-  padding: 5px;
-  margin-bottom: 22px;
-  border-radius: 13px;
-  background: rgba(255, 255, 255, .04);
-  border: 1px solid var(--hp-line);
-}
-.au-roles-2 { grid-template-columns: 1fr 1fr; gap: 10px; padding: 0; background: none; border: none; }
-.hp .au-role {
-  min-height: 40px;
-  padding: 9px 10px;
-  border-radius: 9px;
-  font-size: 13.5px;
-  font-weight: 600;
-  text-align: center;
-  color: var(--hp-text-2);
-  transition: color .25s, background .25s, box-shadow .25s, border-color .25s;
-}
-.hp .au-role:hover { color: var(--hp-white); background: rgba(255, 255, 255, .05); }
-.hp .au-role.is-active {
-  color: var(--hp-navy);
-  background: linear-gradient(135deg, var(--hp-teal-2), var(--hp-teal));
-  box-shadow: 0 6px 18px rgba(25, 195, 177, .3);
-}
-.hp .au-role-card {
-  display: grid;
-  gap: 3px;
-  padding: 13px 14px;
-  text-align: left;
-  border: 1px solid var(--hp-line-2);
-  background: rgba(255, 255, 255, .03);
-}
-.hp .au-role-card.is-active {
-  color: var(--hp-white);
-  background: rgba(25, 195, 177, .1);
-  border-color: rgba(57, 214, 197, .7);
-  box-shadow: 0 0 0 3px rgba(25, 195, 177, .12);
-}
-.au-role-name { font-size: 14.5px; font-weight: 700; }
-.au-role-hint { font-size: 12px; font-weight: 500; color: var(--hp-text-2); }
-
 /* Fields */
 .au-field { margin-bottom: 16px; }
 .au-label { display: block; margin-bottom: 7px; font-size: 13px; font-weight: 600; color: rgba(248, 250, 252, .85); }
@@ -244,6 +199,8 @@
 .au-switch { margin-top: 22px; font-size: 14px; text-align: center; color: var(--hp-text-2); }
 .au-switch a { font-weight: 700; color: var(--hp-teal-2); text-decoration: none; }
 .au-switch a:hover { text-decoration: underline; }
+.au-switch-staff { margin-top: 10px; font-size: 13px; }
+.au-alert a { color: inherit; font-weight: 700; text-decoration: underline; }
 .au-hint {
   margin-top: 18px;
   padding-top: 16px;

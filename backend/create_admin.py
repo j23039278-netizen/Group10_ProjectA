@@ -62,7 +62,7 @@ def main():
             {"email": email, "pw": hash_password(password), "name": full_name}
         )
         db.commit()
-        print(f"Admin account created for {email}. Sign in on the Login page with the Admin tab.")
+        print(f"Admin account created for {email}. Sign in at http://localhost:5173/admin/login")
         return 0
     except (KeyboardInterrupt, EOFError):
         print("\nCancelled. No account was created.")

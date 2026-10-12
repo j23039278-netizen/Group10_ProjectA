@@ -47,7 +47,9 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/"      element={<Home />} />
-          <Route path="/login" element={<Login onLogin={handleLogin} />} />
+          <Route path="/login"         element={<Login key="student" role="student" onLogin={handleLogin} />} />
+          <Route path="/advisor/login" element={<Login key="advisor" role="advisor" onLogin={handleLogin} />} />
+          <Route path="/admin/login"   element={<Login key="admin"   role="admin"   onLogin={handleLogin} />} />
           <Route path="/register" element={<Register onLogin={handleLogin} />} />
           <Route path="*"      element={<Navigate to="/" />} />
         </Routes>

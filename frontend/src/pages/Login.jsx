@@ -1,31 +1,62 @@
-// SEAGAS — Login Page
+// SEAGAS — Login Pages
+// One component, three pages: /login (students), /advisor/login and /admin/login.
+// The route decides the role, so users never pick one. The account's real role
+// comes from the database, and a page only signs in accounts of its own role.
 import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { authAPI } from '../api/client'
 import AuthLayout, { Field, PasswordInput, FormAlert } from './auth/AuthLayout'
 
-export default function Login({ onLogin }) {
+const LOGIN_PAGES = {
+  student: {
+    path: '/login',
+    label: 'Student',
+    heading: <>Welcome <span className="au-accent">back</span></>,
+    title: 'Student sign in',
+    subtitle: 'Use the email and password for your SEAGAS student account.',
+    placeholder: 'student@synthetic.example.com',
+  },
+  advisor: {
+    path: '/advisor/login',
+    label: 'Advisor',
+    heading: <>Advisor <span className="au-accent">portal</span></>,
+    title: 'Advisor sign in',
+    subtitle: 'Sign in to view your cohort’s readiness and skill gaps.',
+    placeholder: 'name@uni.edu.my',
+  },
+  admin: {
+    path: '/admin/login',
+    label: 'Admin',
+    heading: <>SEAGAS <span className="au-accent">admin</span></>,
+    title: 'Admin sign in',
+    subtitle: 'Manage advisor and admin accounts and the skills library.',
+    placeholder: 'name@uni.edu.my',
+  },
+}
+
+export default function Login({ role = 'student', onLogin }) {
+  const page = LOGIN_PAGES[role]
   const location = useLocation()
   // Register sends people here with their email if the automatic sign-in didn't work
   const registeredEmail = location.state?.registeredEmail || ''
 
-  const [role,     setRole]     = useState('student')
-  const [email,    setEmail]    = useState(registeredEmail)
-  const [password, setPassword] = useState('')
-  const [error,    setError]    = useState('')
-  const [loading,  setLoading]  = useState(false)
+  const [email,     setEmail]     = useState(registeredEmail)
+  const [password,  setPassword]  = useState('')
+  const [error,     setError]     = useState('')
+  const [wrongPage, setWrongPage] = useState(null)
+  const [loading,   setLoading]   = useState(false)
 
   const handleLogin = async (e) => {
     e.preventDefault()
     setError('')
+    setWrongPage(null)
     setLoading(true)
     try {
       const res  = await authAPI.login(email, password)
       const data = res.data
-      // The account's role comes from the database; the tab only says which one the user expects
       if (data.role !== role) {
-        const label = roles.find(r => r.id === data.role)?.label || data.role
-        setError(`This is a ${label} account. Please choose the ${label} tab to sign in.`)
+        // Right password, wrong page: don't sign in here, point to the account's own page
+        setWrongPage(LOGIN_PAGES[data.role] || null)
         return
       }
       localStorage.setItem('token',    data.access_token)
@@ -41,39 +72,12 @@ export default function Login({ onLogin }) {
     }
   }
 
-  const roles = [
-    { id: 'student', label: 'Student' },
-    { id: 'advisor', label: 'Advisor' },
-    { id: 'admin',   label: 'Admin' },
-  ]
-
   return (
-    <AuthLayout
-      heading={<>Welcome <span className="au-accent">back</span></>}
-      title="Sign in"
-      subtitle="Use the email and password for your SEAGAS account."
-    >
-      {registeredEmail && (
+    <AuthLayout heading={page.heading} title={page.title} subtitle={page.subtitle}>
+      {registeredEmail && role === 'student' && (
         <FormAlert type="success">Account created. Please sign in to continue.</FormAlert>
       )}
 
-      {/* Role Selector */}
-      <div className="au-roles" role="radiogroup" aria-label="I am signing in as">
-        {roles.map(r => (
-          <button
-            key={r.id}
-            type="button"
-            role="radio"
-            aria-checked={role === r.id}
-            className={`au-role ${role === r.id ? 'is-active' : ''}`}
-            onClick={() => setRole(r.id)}
-          >
-            {r.label}
-          </button>
-        ))}
-      </div>
-
-      {/* Form */}
       <form onSubmit={handleLogin}>
         <Field id="login-email" label="Email" icon="mail">
           <input
@@ -81,7 +85,7 @@ export default function Login({ onLogin }) {
             className="au-input"
             type="email" required
             autoComplete="email"
-            placeholder={role === 'student' ? 'student@synthetic.example.com' : 'name@uni.edu.my'}
+            placeholder={page.placeholder}
             value={email} onChange={e => setEmail(e.target.value)}
           />
         </Field>
@@ -96,6 +100,12 @@ export default function Login({ onLogin }) {
         </Field>
 
         {error && <FormAlert>{error}</FormAlert>}
+        {wrongPage && (
+          <FormAlert>
+            This is {/^[aeiou]/i.test(wrongPage.label) ? 'an' : 'a'} {wrongPage.label.toLowerCase()} account.
+            Please use the <Link to={wrongPage.path}>{wrongPage.label} sign-in page</Link>.
+          </FormAlert>
+        )}
 
         <button type="submit" disabled={loading} className="hp-btn hp-btn-primary au-submit">
           {loading ? <><span className="hp-spinner au-btn-spinner" aria-hidden="true" />Signing in...</> : <>Sign in <span className="hp-arrow" aria-hidden="true">→</span></>}
@@ -103,19 +113,30 @@ export default function Login({ onLogin }) {
       </form>
 
       {role === 'student' ? (
-        <p className="au-switch">
-          Don&apos;t have an account? <Link to="/register">Create one</Link>
-        </p>
+        <>
+          <p className="au-switch">
+            Don&apos;t have an account? <Link to="/register">Create one</Link>
+          </p>
+          <p className="au-switch au-switch-staff">
+            Are you an advisor? <Link to={LOGIN_PAGES.advisor.path}>Advisor sign in</Link>
+          </p>
+          {/* Test account hint (synthetic student data only) */}
+          <div className="au-hint">
+            Test: student0001@synthetic.example.com / Seagas@2026
+          </div>
+        </>
       ) : (
-        <p className="au-switch">
-          {role === 'advisor' ? 'Advisor' : 'Admin'} accounts are created by your SEAGAS administrator.
-        </p>
+        <>
+          <p className="au-switch">
+            {page.label} accounts are created by your SEAGAS administrator.
+          </p>
+          <p className="au-switch au-switch-staff">
+            <Link to={LOGIN_PAGES.student.path}>Student sign in</Link>
+            {role === 'advisor' && <> · <Link to={LOGIN_PAGES.admin.path}>Admin sign in</Link></>}
+            {role === 'admin' && <> · <Link to={LOGIN_PAGES.advisor.path}>Advisor sign in</Link></>}
+          </p>
+        </>
       )}
-
-      {/* Test account hint (synthetic student data only) */}
-      {role === 'student' && <div className="au-hint">
-        Test: student0001@synthetic.example.com / Seagas@2026
-      </div>}
     </AuthLayout>
   )
 }
