@@ -50,7 +50,7 @@ export default function Login({ onLogin }) {
             className="au-input"
             type="email" required
             autoComplete="email"
-            placeholder="you@example.com"
+            placeholder="you@student.newinti.edu.my"
             value={email} onChange={e => setEmail(e.target.value)}
           />
         </Field>

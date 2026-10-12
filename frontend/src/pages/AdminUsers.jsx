@@ -8,6 +8,8 @@ import { adminAPI } from '../api/admin'
 const PAGE_SIZE = 50
 const PASSWORD_MIN = 8
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+// Must match ROLE_EMAIL_DOMAINS in backend/routers/auth.py
+const EMAIL_DOMAINS = { advisor: 'advisor.newinti.edu.my', admin: 'admin.newinti.edu.my' }
 
 const C = {
   ink: '#1a1f2e', body: '#4a5168', muted: '#8b92a8', line: '#e4e6ef',
@@ -74,6 +76,8 @@ function AddUserModal({ onClose, onCreated }) {
     e.preventDefault()
     if (!form.full_name.trim())            return setError('Please enter the full name.')
     if (!EMAIL_RE.test(form.email.trim())) return setError('Please enter a valid email address.')
+    if (!form.email.trim().toLowerCase().endsWith(`@${EMAIL_DOMAINS[form.role]}`))
+      return setError(`${form.role === 'admin' ? 'Admin' : 'Advisor'} emails must end with @${EMAIL_DOMAINS[form.role]}.`)
     if (form.password.length < PASSWORD_MIN) return setError(`Password must be at least ${PASSWORD_MIN} characters.`)
     if (form.password !== form.confirm)    return setError('Passwords do not match.')
     setSaving(true)
@@ -106,7 +110,7 @@ function AddUserModal({ onClose, onCreated }) {
         </div>
         <div style={{ marginBottom: '12px' }}>
           <label style={label} htmlFor="nu-email">Email</label>
-          <input id="nu-email" type="email" style={input} value={form.email} onChange={set('email')} placeholder="name@uni.edu.my" autoComplete="off" />
+          <input id="nu-email" type="email" style={input} value={form.email} onChange={set('email')} placeholder={`name@${EMAIL_DOMAINS[form.role]}`} autoComplete="off" />
         </div>
         <div style={{ marginBottom: '12px' }}>
           <label style={label} htmlFor="nu-pw">Temporary password</label>

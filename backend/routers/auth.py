@@ -26,6 +26,15 @@ SECRET_KEY = os.getenv("SECRET_KEY", "fallback_secret")
 ALGORITHM = os.getenv("ALGORITHM", "HS256")
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", 30))
 
+# Every new account must use its role's NewInti email domain, so an account's
+# email always matches its role. The role itself still comes from users.role.
+# Accounts created before this rule (e.g. synthetic test students) still sign in.
+ROLE_EMAIL_DOMAINS = {
+    "student": "student.newinti.edu.my",
+    "advisor": "advisor.newinti.edu.my",
+    "admin":   "admin.newinti.edu.my",
+}
+
 
 # ── Pydantic Schemas ──────────────────────────────────────────
 class RegisterRequest(BaseModel):
@@ -51,6 +60,20 @@ def hash_password(password: str) -> str:
 
 def verify_password(password: str, hashed: str) -> bool:
     return bcrypt.checkpw(password.encode(), hashed.encode())
+
+
+def email_domain_error(email: str, role: str):
+    """Message to show if email is not on the role's domain, otherwise None"""
+    domain = ROLE_EMAIL_DOMAINS[role]
+    if email.strip().lower().rsplit("@", 1)[-1] != domain:
+        return f"{role.capitalize()} accounts must use an @{domain} email address."
+    return None
+
+
+def check_email_domain(email: str, role: str):
+    error = email_domain_error(email, role)
+    if error:
+        raise HTTPException(status_code=400, detail=error)
 
 
 def create_access_token(data: dict) -> str:
@@ -105,10 +128,13 @@ def register(req: RegisterRequest, db: Session = Depends(get_db)):
                    "Advisor and admin accounts are created by an administrator."
         )
 
+    email = req.email.strip().lower()
+    check_email_domain(email, "student")
+
     # Check if email exists
     existing = db.execute(
-        text("SELECT user_id FROM users WHERE email = :email"),
-        {"email": req.email}
+        text("SELECT user_id FROM users WHERE lower(email) = :email"),
+        {"email": email}
     ).fetchone()
 
     if existing:
@@ -121,7 +147,7 @@ def register(req: RegisterRequest, db: Session = Depends(get_db)):
             INSERT INTO users (email, password_hash, role, full_name)
             VALUES (:email, :pw, 'student', :name)
         """),
-        {"email": req.email, "pw": hashed, "name": req.full_name}
+        {"email": email, "pw": hashed, "name": req.full_name}
     )
     db.commit()
     return {"message": "User registered successfully"}
@@ -135,8 +161,8 @@ def login(
     from sqlalchemy import text
 
     user = db.execute(
-        text("SELECT * FROM users WHERE email = :email"),
-        {"email": form_data.username}
+        text("SELECT * FROM users WHERE lower(email) = :email"),
+        {"email": form_data.username.strip().lower()}
     ).fetchone()
 
     if not user or not verify_password(form_data.password, user.password_hash):

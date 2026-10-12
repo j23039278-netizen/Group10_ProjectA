@@ -17,7 +17,7 @@ import sys
 from sqlalchemy import text
 
 from database import SessionLocal
-from routers.auth import hash_password
+from routers.auth import ROLE_EMAIL_DOMAINS, email_domain_error, hash_password
 
 PASSWORD_MIN = 8
 EMAIL_RE = re.compile(r"^[^\s@]+@[^\s@]+\.[^\s@]+$")
@@ -47,8 +47,11 @@ def main():
     db = SessionLocal()
     try:
         print("Create a SEAGAS admin account")
-        email = ask("Email: ", lambda v: EMAIL_RE.match(v), "Please enter a valid email address.")
-        if db.execute(text("SELECT 1 FROM users WHERE email = :e"), {"e": email}).fetchone():
+        domain = ROLE_EMAIL_DOMAINS["admin"]
+        email = ask(f"Email (must end with @{domain}): ",
+                    lambda v: EMAIL_RE.match(v) and not email_domain_error(v, "admin"),
+                    f"Please enter a valid @{domain} email address.").lower()
+        if db.execute(text("SELECT 1 FROM users WHERE lower(email) = :e"), {"e": email}).fetchone():
             print(f"An account with {email} already exists. Nothing was changed.")
             return 1
         full_name = ask("Full name: ", bool, "Full name is required.")

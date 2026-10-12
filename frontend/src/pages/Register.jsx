@@ -15,6 +15,8 @@ const PASSWORD_CHECKS = [
 ]
 const STRENGTH = ['Too weak', 'Weak', 'Fair', 'Good', 'Strong']
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+// Must match ROLE_EMAIL_DOMAINS['student'] in backend/routers/auth.py
+const STUDENT_DOMAIN = 'student.newinti.edu.my'
 
 function errorMessage(err) {
   if (!err.response) return 'Cannot reach the server. Please make sure the backend is running.'
@@ -38,10 +40,12 @@ export default function Register({ onLogin }) {
   const passwordTooShort = password.length < PASSWORD_MIN
   const mismatch = confirm.length > 0 && confirm !== password
   const emailInvalid = !EMAIL_RE.test(email.trim())
+  const emailWrongDomain = !emailInvalid && !email.trim().toLowerCase().endsWith(`@${STUDENT_DOMAIN}`)
 
   const fieldErrors = touched ? {
     fullName: !fullName.trim() ? 'Please enter your full name.' : '',
-    email:    emailInvalid ? 'Please enter a valid email address.' : '',
+    email:    emailInvalid ? 'Please enter a valid email address.'
+            : emailWrongDomain ? `Please use your student email (@${STUDENT_DOMAIN}).` : '',
     password: passwordTooShort ? `Password must be at least ${PASSWORD_MIN} characters.` : '',
     confirm:  confirm !== password ? 'Passwords do not match.' : '',
   } : { fullName: '', email: '', password: '', confirm: mismatch ? 'Passwords do not match.' : '' }
@@ -50,7 +54,7 @@ export default function Register({ onLogin }) {
     e.preventDefault()
     setTouched(true)
     setError('')
-    if (!fullName.trim() || emailInvalid || passwordTooShort || confirm !== password) return
+    if (!fullName.trim() || emailInvalid || emailWrongDomain || passwordTooShort || confirm !== password) return
 
     setLoading(true)
     try {
@@ -97,7 +101,7 @@ export default function Register({ onLogin }) {
             className="au-input"
             type="email" required
             autoComplete="email"
-            placeholder="you@student.edu.my"
+            placeholder={`you@${STUDENT_DOMAIN}`}
             value={email} onChange={e => setEmail(e.target.value)}
             aria-invalid={!!fieldErrors.email || undefined}
           />

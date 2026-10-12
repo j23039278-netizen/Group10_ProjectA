@@ -16,7 +16,7 @@ from sqlalchemy import text
 from sqlalchemy.orm import Session
 
 from database import get_db
-from routers.auth import get_current_user, hash_password
+from routers.auth import check_email_domain, get_current_user, hash_password
 
 router = APIRouter()
 
@@ -127,8 +127,9 @@ def create_user(req: UserCreate, current_user=Depends(get_current_user), db: Ses
         raise HTTPException(status_code=400, detail="Full name is required.")
     check_password(req.password)
 
-    email = req.email.strip()
-    if db.execute(text("SELECT 1 FROM users WHERE email = :e"), {"e": email}).fetchone():
+    email = req.email.strip().lower()
+    check_email_domain(email, req.role)
+    if db.execute(text("SELECT 1 FROM users WHERE lower(email) = :e"), {"e": email}).fetchone():
         raise HTTPException(status_code=400, detail="Email already registered")
 
     user = db.execute(
