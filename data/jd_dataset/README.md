@@ -22,7 +22,7 @@ This folder holds real IT job descriptions for 6 target roles. We use them to (a
 
 `data/raw/` is listed in `.gitignore`. Never commit raw files. Only the cleaned, anonymised `jd_dataset.csv` is committed.
 
-**Target:** at least 30 JDs per role (180 in total). The ideal is 50–100 per role.
+**Target:** 60 JDs in total (10 per role, matching NFR-09 in the project proposal). The ideal is 30 or more per role.
 
 ## Pipeline
 
