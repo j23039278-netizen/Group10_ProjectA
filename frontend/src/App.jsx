@@ -1,79 +1,79 @@
 // SEAGAS — Main App with routing
-import { useState, useEffect } from 'react'
+// Everyone signs in on the same /login page. The backend says which role the
+// account has, and only that role's portal is loaded: each portal is a separate
+// download, so a student's browser never receives advisor or admin pages.
+import { useState, useEffect, lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { authAPI } from './api/client'
 import Home from './pages/Home'
 import Login from './pages/Login'
 import Register from './pages/Register'
-import Dashboard from './pages/Dashboard'
-import Profile from './pages/Profile'
-import JobAnalysis from './pages/JobAnalysis'
-import SkillGap from './pages/SkillGap'
-import Recommendations from './pages/Recommendations'
-import AdvisorDashboard from './pages/AdvisorDashboard'
-import Sidebar from './components/Sidebar'
 import './App.css'
 
-function AppLayout({ children }) {
-  return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: '#f5f6fa' }}>
-      <Sidebar />
-      <div style={{ marginLeft: '220px', flex: 1, display: 'flex', flexDirection: 'column' }}>
-        {children}
-      </div>
-    </div>
-  )
+const PORTALS = {
+  student: lazy(() => import('./portals/StudentPortal')),
+  advisor: lazy(() => import('./portals/AdvisorPortal')),
+  admin:   lazy(() => import('./portals/AdminPortal')),
+}
+
+const Loading = () => <div style={{ padding: '40px', color: '#8b92a8' }}>Loading...</div>
+
+function clearSession() {
+  localStorage.removeItem('token')
+  // Older builds also kept these; the role now always comes from the backend
+  localStorage.removeItem('role')
+  localStorage.removeItem('fullName')
 }
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('token'))
-  const [role, setRole] = useState(localStorage.getItem('role') || '')
+  // user = { role, full_name } as reported by the backend, never read from the browser
+  const [user, setUser]       = useState(null)
+  const [checking, setChecking] = useState(!!localStorage.getItem('token'))
 
-  const handleLogin = (userRole) => {
-    setIsLoggedIn(true)
-    setRole(userRole)
+  // Returning visitor with a saved token: ask the backend who this is
+  useEffect(() => {
+    if (!checking) return
+    authAPI.me()
+      .then(res => acceptUser(res.data))
+      .catch(() => clearSession())
+      .finally(() => setChecking(false))
+  }, [checking])
+
+  // Only roles that have a portal can sign in to the app
+  const acceptUser = (data) => {
+    if (PORTALS[data.role]) setUser({ role: data.role, full_name: data.full_name })
+    else clearSession()
   }
+
+  const handleLogin = acceptUser
 
   const handleLogout = () => {
-    localStorage.removeItem('token')
-    localStorage.removeItem('role')
-    setIsLoggedIn(false)
-    setRole('')
+    clearSession()
+    window.location.href = '/'
   }
 
-  if (!isLoggedIn) {
+  if (checking) return <Loading />
+
+  if (!user) {
     return (
       <BrowserRouter>
         <Routes>
-          <Route path="/"      element={<Home />} />
-          <Route path="/login" element={<Login onLogin={handleLogin} />} />
+          <Route path="/"         element={<Home />} />
+          <Route path="/login"    element={<Login onLogin={handleLogin} />} />
           <Route path="/register" element={<Register onLogin={handleLogin} />} />
-          <Route path="*"      element={<Navigate to="/" />} />
+          <Route path="*"         element={<Navigate to="/" />} />
         </Routes>
       </BrowserRouter>
     )
   }
 
+  const Portal = PORTALS[user.role]
+
   return (
     <BrowserRouter>
-      <AppLayout>
-        <Routes>
-          {role === 'advisor' ? (
-            <>
-              <Route path="/" element={<AdvisorDashboard onLogout={handleLogout} />} />
-              <Route path="*" element={<Navigate to="/" />} />
-            </>
-          ) : (
-            <>
-              <Route path="/"               element={<Dashboard onLogout={handleLogout} />} />
-              <Route path="/profile"        element={<Profile />} />
-              <Route path="/job-analysis"   element={<JobAnalysis />} />
-              <Route path="/skill-gap"      element={<SkillGap />} />
-              <Route path="/recommendations"element={<Recommendations />} />
-              <Route path="*"               element={<Navigate to="/" />} />
-            </>
-          )}
-        </Routes>
-      </AppLayout>
+      <Suspense fallback={<Loading />}>
+        <Portal user={user} onLogout={handleLogout} />
+      </Suspense>
     </BrowserRouter>
   )
 }

@@ -10,7 +10,7 @@
 |---|-------|------|----|
 | 1 | `users` | 所有用户账号（student/advisor/admin）+ 认证 | NFR-04 |
 | 2 | `student_profiles` | 学生基本信息、GPA、目标职位 | FR-01 |
-| 3 | `skills_library` | 100–150 个 IT 技能库（下拉菜单来源） | FR-02 |
+| 3 | `skills_library` | 138 个 IT 技能库（下拉菜单来源），含 `subcategory` 和 `source`（v1/v2） | FR-02 |
 | 4 | `student_skills` | 学生拥有的技能（profile × skill） | FR-01, FR-02 |
 | 5 | `job_roles` | 6 个 IT 职位模板 | FR-03 |
 | 5b | `job_role_skills` | 每个职位需要的技能 | FR-03 |
@@ -19,9 +19,10 @@
 | 7 | `assessments` | 每次评估的总分 + 7个维度分数 | FR-07, FR-08 |
 | 7b | `skill_match_results` | 每个技能的匹配结果（strong/developing/gap） | FR-09 |
 | 8 | `recommendations_library` | 推荐资源库（课程、认证、项目） | FR-10 |
-| 9 | `student_recommendations` | 学生收到的推荐 + 完成状态追踪 | FR-10, FR-11 |
+| 9 | `student_recommendations` | 每次评估推荐给学生的资源（目前后端还没有写入） | FR-10 |
 | 10 | `student_projects` | 学生的项目记录 | FR-01 |
 | 11 | `student_certifications` | 学生的认证记录 | FR-01 |
+| 12 | `student_resource_progress` | 学生对推荐资源的 Start / Complete 进度（`progress.py` 写入，`v_student_progress` 读取） | FR-11 |
 
 ---
 
@@ -88,7 +89,13 @@ psql -U postgres -d seagas_db -f schema.sql
 ```bash
 psql -U postgres -d seagas_db -c "\dt"
 ```
-你应该看到 11 张表 + 3 个 view
+你应该看到 15 张表 + 3 个 view
+
+### 5. 已有旧数据库？
+`schema.sql` 只在新数据库上运行。旧数据库请运行（`start_backend.bat` 每次启动会自动运行）：
+```bash
+psql -U postgres -d seagas_db -f migrate_existing_db.sql
+```
 
 ---
 

@@ -1,6 +1,6 @@
 // SEAGAS — Advisor Dashboard
 import { useState, useEffect } from 'react'
-import { advisorAPI } from '../api/client'
+import { advisorAPI } from '../api/advisor'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 
 export default function AdvisorDashboard() {

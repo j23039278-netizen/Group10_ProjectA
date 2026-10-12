@@ -1,15 +1,10 @@
 // SEAGAS — Register Page
-// Creates an account via POST /api/auth/register, then signs the new user straight in.
+// Creates a student account via POST /api/auth/register, then signs the new user straight in.
+// Only students can sign up here; advisor and admin accounts are created by an admin.
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { authAPI } from '../api/client'
 import AuthLayout, { Field, PasswordInput, FormAlert } from './auth/AuthLayout'
-
-// Admin accounts are not offered for public sign-up
-const ROLES = [
-  { id: 'student', label: 'Student', hint: 'Check my readiness and skill gaps' },
-  { id: 'advisor', label: 'Advisor', hint: 'Track my students and cohort' },
-]
 
 const PASSWORD_MIN = 8
 const PASSWORD_CHECKS = [
@@ -20,6 +15,8 @@ const PASSWORD_CHECKS = [
 ]
 const STRENGTH = ['Too weak', 'Weak', 'Fair', 'Good', 'Strong']
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+// Must match ROLE_EMAIL_DOMAINS['student'] in backend/routers/auth.py
+const STUDENT_DOMAIN = 'student.newinti.edu.my'
 
 function errorMessage(err) {
   if (!err.response) return 'Cannot reach the server. Please make sure the backend is running.'
@@ -31,7 +28,6 @@ function errorMessage(err) {
 
 export default function Register({ onLogin }) {
   const navigate = useNavigate()
-  const [role,     setRole]     = useState('student')
   const [fullName, setFullName] = useState('')
   const [email,    setEmail]    = useState('')
   const [password, setPassword] = useState('')
@@ -44,10 +40,12 @@ export default function Register({ onLogin }) {
   const passwordTooShort = password.length < PASSWORD_MIN
   const mismatch = confirm.length > 0 && confirm !== password
   const emailInvalid = !EMAIL_RE.test(email.trim())
+  const emailWrongDomain = !emailInvalid && !email.trim().toLowerCase().endsWith(`@${STUDENT_DOMAIN}`)
 
   const fieldErrors = touched ? {
     fullName: !fullName.trim() ? 'Please enter your full name.' : '',
-    email:    emailInvalid ? 'Please enter a valid email address.' : '',
+    email:    emailInvalid ? 'Please enter a valid email address.'
+            : emailWrongDomain ? `Please use your student email (@${STUDENT_DOMAIN}).` : '',
     password: passwordTooShort ? `Password must be at least ${PASSWORD_MIN} characters.` : '',
     confirm:  confirm !== password ? 'Passwords do not match.' : '',
   } : { fullName: '', email: '', password: '', confirm: mismatch ? 'Passwords do not match.' : '' }
@@ -56,11 +54,11 @@ export default function Register({ onLogin }) {
     e.preventDefault()
     setTouched(true)
     setError('')
-    if (!fullName.trim() || emailInvalid || passwordTooShort || confirm !== password) return
+    if (!fullName.trim() || emailInvalid || emailWrongDomain || passwordTooShort || confirm !== password) return
 
     setLoading(true)
     try {
-      await authAPI.register({ email: email.trim(), password, full_name: fullName.trim(), role })
+      await authAPI.register({ email: email.trim(), password, full_name: fullName.trim(), role: 'student' })
     } catch (err) {
       setError(errorMessage(err))
       setLoading(false)
@@ -70,11 +68,8 @@ export default function Register({ onLogin }) {
     // Account created: sign in straight away (same steps as the Login page)
     try {
       const res  = await authAPI.login(email.trim(), password)
-      const data = res.data
-      localStorage.setItem('token',    data.access_token)
-      localStorage.setItem('role',     data.role)
-      localStorage.setItem('fullName', data.full_name)
-      onLogin(data.role)
+      localStorage.setItem('token', res.data.access_token)
+      onLogin(res.data)
     } catch {
       navigate('/login', { state: { registeredEmail: email.trim() } })
     }
@@ -84,23 +79,8 @@ export default function Register({ onLogin }) {
     <AuthLayout
       heading={<>Start your <span className="au-accent">journey</span></>}
       title="Create your account"
-      subtitle="It only takes a minute."
+      subtitle="Student sign-up. Advisor accounts are created by your SEAGAS administrator."
     >
-      <div className="au-roles au-roles-2" role="radiogroup" aria-label="I am registering as">
-        {ROLES.map(r => (
-          <button
-            key={r.id}
-            type="button"
-            role="radio"
-            aria-checked={role === r.id}
-            className={`au-role au-role-card ${role === r.id ? 'is-active' : ''}`}
-            onClick={() => setRole(r.id)}
-          >
-            <span className="au-role-name">{r.label}</span>
-            <span className="au-role-hint">{r.hint}</span>
-          </button>
-        ))}
-      </div>
 
       <form onSubmit={handleRegister} noValidate>
         <Field id="reg-name" label="Full name" icon="profile" error={fieldErrors.fullName}>
@@ -121,7 +101,7 @@ export default function Register({ onLogin }) {
             className="au-input"
             type="email" required
             autoComplete="email"
-            placeholder={role === 'student' ? 'you@student.edu.my' : 'you@uni.edu.my'}
+            placeholder={`you@${STUDENT_DOMAIN}`}
             value={email} onChange={e => setEmail(e.target.value)}
             aria-invalid={!!fieldErrors.email || undefined}
           />

@@ -4,7 +4,8 @@
  
 import axios from 'axios';
  
-const API = axios.create({
+// Shared by the role-specific clients (api/advisor.js, api/admin.js)
+export const API = axios.create({
   baseURL: 'http://127.0.0.1:8000/api',
 });
  
@@ -104,11 +105,3 @@ export const progressAPI = {
     API.get('/progress/my/summary'),
 };
  
-// ── Advisor ───────────────────────────────────────────────────
-export const advisorAPI = {
-  overview:  ()    => API.get('/advisor/cohort/overview'),
-  skillGaps: ()    => API.get('/advisor/cohort/skill-gaps'),
-  students:  ()    => API.get('/advisor/students'),
-  getStudent:(id)  => API.get(`/advisor/students/${id}`),
-  progress:  ()    => API.get('/advisor/cohort/progress'),
-};

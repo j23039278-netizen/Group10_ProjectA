@@ -1,4 +1,7 @@
 // SEAGAS — Login Page
+// One sign-in page for everyone. The backend returns the account's role from the
+// database, and App.jsx opens that role's portal: students, advisors and admins
+// never choose a role themselves.
 import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { authAPI } from '../api/client'
@@ -20,16 +23,12 @@ export default function Login({ onLogin }) {
     setLoading(true)
     try {
       const res  = await authAPI.login(email, password)
-      const data = res.data
-      localStorage.setItem('token',    data.access_token)
-      localStorage.setItem('role',     data.role)
-      localStorage.setItem('fullName', data.full_name)
-      onLogin(data.role)
+      localStorage.setItem('token', res.data.access_token)
+      onLogin(res.data)
     } catch (err) {
       setError(err.response
         ? 'Invalid email or password. Please try again.'
         : 'Cannot reach the server. Please make sure the backend is running.')
-    } finally {
       setLoading(false)
     }
   }
@@ -44,7 +43,6 @@ export default function Login({ onLogin }) {
         <FormAlert type="success">Account created. Please sign in to continue.</FormAlert>
       )}
 
-      {/* Form — the account's role comes back from the server, so no role picker is needed */}
       <form onSubmit={handleLogin}>
         <Field id="login-email" label="Email" icon="mail">
           <input
@@ -52,7 +50,7 @@ export default function Login({ onLogin }) {
             className="au-input"
             type="email" required
             autoComplete="email"
-            placeholder="you@example.com"
+            placeholder="you@student.newinti.edu.my"
             value={email} onChange={e => setEmail(e.target.value)}
           />
         </Field>
@@ -74,10 +72,10 @@ export default function Login({ onLogin }) {
       </form>
 
       <p className="au-switch">
-        Don&apos;t have an account? <Link to="/register">Create one</Link>
+        New student? <Link to="/register">Create an account</Link>
       </p>
 
-      {/* Test account hint */}
+      {/* Test account hint (synthetic student data only) */}
       <div className="au-hint">
         Test: student0001@synthetic.example.com / Seagas@2026
       </div>

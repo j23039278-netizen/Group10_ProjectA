@@ -82,8 +82,10 @@ CREATE TABLE skills_library (
                         'Analytical',
                         'Soft'
                     )),
+    subcategory     VARCHAR(50),                     -- e.g. "Programming Language", "Security Tool"
     aliases         TEXT[],                          -- e.g. ["JS", "JavaScript ES6"]
     description     TEXT,                            -- brief description for display
+    source          VARCHAR(10),                     -- library version the skill was added in: 'v1' | 'v2'
     is_active       BOOLEAN      NOT NULL DEFAULT TRUE,
     created_at      TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
@@ -290,7 +292,10 @@ CREATE TABLE recommendations_library (
                     CHECK (difficulty IN ('beginner', 'intermediate', 'advanced')),
     description     TEXT,
     is_active       BOOLEAN      NOT NULL DEFAULT TRUE,
-    created_at      TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP
+    created_at      TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    -- seed_recommendations_library_final.sql relies on this for ON CONFLICT DO NOTHING
+    CONSTRAINT uq_resource_skill UNIQUE (skill_id, resource_title)
 );
 
 CREATE INDEX idx_recommendations_library_skill_id      ON recommendations_library(skill_id);
@@ -457,21 +462,10 @@ JOIN skills_library sl ON sl.skill_id = smr.skill_id
 GROUP BY sl.skill_id, sl.skill_name, sl.category
 ORDER BY gap_percentage DESC;
 
--- View: student development progress
-CREATE VIEW v_student_progress AS
-SELECT
-    sp.user_id,
-    u.full_name,
-    COUNT(*) FILTER (WHERE sr.status = 'completed')   AS completed_tasks,
-    COUNT(*) FILTER (WHERE sr.status = 'in_progress') AS in_progress_tasks,
-    COUNT(*) FILTER (WHERE sr.status = 'not_started') AS pending_tasks,
-    COUNT(*)                                           AS total_tasks
-FROM student_recommendations sr
-JOIN student_profiles sp ON sp.profile_id = sr.profile_id
-JOIN users u             ON u.user_id     = sp.user_id
-GROUP BY sp.user_id, u.full_name;
-
 -- ── Student Resource Progress (FR-11: Development Tracking) ──
+-- Written by backend/routers/progress.py when a student saves / starts /
+-- completes a recommended resource. This is the table the app actually uses
+-- for development tracking; v_student_progress below reads from it.
 CREATE TABLE IF NOT EXISTS student_resource_progress (
     progress_id   UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     profile_id    UUID NOT NULL REFERENCES student_profiles(profile_id) ON DELETE CASCADE,
@@ -490,6 +484,21 @@ CREATE TABLE IF NOT EXISTS student_resource_progress (
 
 CREATE INDEX IF NOT EXISTS idx_srp_profile ON student_resource_progress(profile_id);
 CREATE INDEX IF NOT EXISTS idx_srp_status  ON student_resource_progress(profile_id, status);
+
+-- View: student development progress (used by Advisor cohort progress — FR-11, FR-13)
+-- 'saved' resources count as pending: the student has not started them yet.
+CREATE VIEW v_student_progress AS
+SELECT
+    sp.user_id,
+    u.full_name,
+    COUNT(*) FILTER (WHERE srp.status = 'completed')   AS completed_tasks,
+    COUNT(*) FILTER (WHERE srp.status = 'in_progress') AS in_progress_tasks,
+    COUNT(*) FILTER (WHERE srp.status = 'saved')       AS pending_tasks,
+    COUNT(*)                                            AS total_tasks
+FROM student_resource_progress srp
+JOIN student_profiles sp ON sp.profile_id = srp.profile_id
+JOIN users u             ON u.user_id     = sp.user_id
+GROUP BY sp.user_id, u.full_name;
 
 -- ============================================================
 -- END OF SCHEMA
