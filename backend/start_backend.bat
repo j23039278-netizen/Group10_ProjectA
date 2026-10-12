@@ -70,6 +70,9 @@ if "%HASTABLES%"=="t" (
     if errorlevel 1 goto :fail
     echo       schema.sql loaded
 )
+REM Brings databases created from an older schema.sql up to date (idempotent).
+psql -d seagas_db -q -v ON_ERROR_STOP=1 -f "..\database\migrate_existing_db.sql"
+if errorlevel 1 goto :fail
 
 REM Both seeds are idempotent (upsert), so they always run: this also brings
 REM older local databases up to the latest skills library v2 and role mappings.

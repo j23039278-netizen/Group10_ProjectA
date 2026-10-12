@@ -88,8 +88,10 @@ class SkillLibrary(Base):
     skill_id    = Column(UUID(as_uuid=True), primary_key=True, default=new_uuid)
     skill_name  = Column(String(100), nullable=False, unique=True, index=True)
     category    = Column(String(30),  nullable=False, index=True)
+    subcategory = Column(String(50))
     aliases     = Column(ARRAY(Text))
     description = Column(Text)
+    source      = Column(String(10))
     is_active   = Column(Boolean, nullable=False, default=True)
     created_at  = Column(DateTime, nullable=False, default=datetime.utcnow)
 
@@ -389,3 +391,33 @@ class StudentCertification(Base):
     created_at     = Column(DateTime, nullable=False, default=datetime.utcnow)
 
     profile = relationship("StudentProfile", back_populates="certifications")
+
+
+# ── TABLE 12: student_resource_progress ──────────────────────
+# Development tracking (FR-11): written by backend/routers/progress.py
+class StudentResourceProgress(Base):
+    __tablename__ = "student_resource_progress"
+
+    progress_id   = Column(UUID(as_uuid=True), primary_key=True, default=new_uuid)
+    profile_id    = Column(UUID(as_uuid=True), ForeignKey("student_profiles.profile_id", ondelete="CASCADE"),
+                           nullable=False, index=True)
+    resource_id   = Column(UUID(as_uuid=True), ForeignKey("recommendations_library.resource_id", ondelete="CASCADE"),
+                           nullable=False)
+    assessment_id = Column(UUID(as_uuid=True), ForeignKey("assessments.assessment_id", ondelete="SET NULL"))
+    skill_id      = Column(UUID(as_uuid=True), ForeignKey("skills_library.skill_id", ondelete="SET NULL"))
+    status        = Column(String(20), nullable=False, default="saved")
+    started_at    = Column(DateTime)
+    completed_at  = Column(DateTime)
+    skill_added   = Column(Boolean, default=False)
+    created_at    = Column(DateTime, default=datetime.utcnow)
+    updated_at    = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    __table_args__ = (
+        UniqueConstraint("profile_id", "resource_id", name="uq_progress_profile_resource"),
+        CheckConstraint("status IN ('saved','in_progress','completed')", name="chk_progress_status"),
+    )
+
+    profile    = relationship("StudentProfile")
+    resource   = relationship("RecommendationLibrary")
+    assessment = relationship("Assessment")
+    skill      = relationship("SkillLibrary")

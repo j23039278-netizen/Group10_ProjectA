@@ -41,7 +41,9 @@ def build_sql(rows, generated_at):
 -- Generated at : {generated_at}
 --
 -- Run AFTER schema.sql. Idempotent: ON CONFLICT (skill_name) DO UPDATE, so
--- alias / category / description fixes to the 32 v1 skills also take effect.
+-- alias / category / subcategory / description fixes to the 32 v1 skills
+-- also take effect. Needs the subcategory and source columns, which
+-- schema.sql (new databases) or migrate_existing_db.sql (older ones) add.
 -- Any error aborts the whole transaction.
 -- ============================================================
 
@@ -49,17 +51,20 @@ def build_sql(rows, generated_at):
 
 BEGIN;
 
-INSERT INTO skills_library (skill_name, category, aliases, description) VALUES
+INSERT INTO skills_library (skill_name, category, subcategory, aliases, description, source) VALUES
 """
     values = []
     for r in rows:
-        values.append(f"({q(r['skill_name'])}, {q(r['category'])}, {sql_array(r['aliases'])}, {q(r['description'])})")
+        values.append(f"({q(r['skill_name'])}, {q(r['category'])}, {q(r['subcategory'])}, "
+                      f"{sql_array(r['aliases'])}, {q(r['description'])}, {q(r['source'])})")
     body = ",\n".join(values)
     footer = """
 ON CONFLICT (skill_name) DO UPDATE SET
     category    = EXCLUDED.category,
+    subcategory = EXCLUDED.subcategory,
     aliases     = EXCLUDED.aliases,
-    description = EXCLUDED.description;
+    description = EXCLUDED.description,
+    source      = EXCLUDED.source;
 
 COMMIT;
 
