@@ -2,7 +2,8 @@
 
 > Draft for the SEAGAS final report, Sprint 2. Author: Ng Yong Hin.
 > All figures come from generated files: `data/skills/skills_library.csv`,
-> `data/output/summary_stats.txt` and `data/output/students_meta.csv` (seed 42, generated 2026-09-29).
+> `data/output/summary_stats.txt` and `data/output/students_meta.csv` (seed 42, generated 2026-09-29),
+> and `data/jd_dataset/jd_dataset.csv` (built 2026-10-12).
 > Re-check the figures if these files are regenerated.
 
 SEAGAS uses three datasets: (1) a curated **skills library** that serves as the controlled vocabulary for all matching, (2) a **synthetic student dataset** for development, testing and the Advisor Dashboard, and (3) a **job-description (JD) dataset** for validating role templates and evaluating skill extraction. No real student data is used at any stage.
@@ -79,9 +80,23 @@ The JD dataset has three uses: (a) validating each role template against market 
 
 Automated scraping of job portals is excluded because it breaches their terms of service.
 
-The target is 60 JDs in total (10 per role, matching NFR-09 in the project proposal), and ideally 30 or more per role.
+The target for Sprint 2 is 60 JDs in total (10 per role, matching NFR-09 in the project proposal). Collecting 30 or more per role through public APIs is planned for Sprint 3.
 
-> **[TO COMPLETE once raw data is collected]** Final counts per role and per source, the licence of each Kaggle dataset, the collection period, and the share of entry / junior / mid postings.
+The Sprint 2 dataset has **65 JDs**, and every role meets the target (Table 3). All of them were copied by hand from JobStreet Malaysia [6] (49) and Indeed Malaysia [7] (16) on 12 October 2026, for non-commercial academic research. Each JD keeps its original posting URL. No Kaggle dataset was used in Sprint 2, so no third-party dataset licence applies yet. None of the 65 postings was removed by the filters in Section 3.2: no title fell outside the six roles, none was senior, none was shorter than 300 characters and none was a duplicate. Postings were chosen by hand for graduate roles, so seniority is mostly entry level (33, 51%) or junior (28, 43%), with 4 mid-level postings (6%). 29 of the 65 titles are internships. By location, 32 postings are in Kuala Lumpur, 25 in Selangor, 6 in Penang and 2 in Johor. Full figures are in `data/jd_dataset/DATASET_SUMMARY.md`.
+
+**Table 3. JD dataset by role, source and seniority (collected 12 October 2026)**
+
+| Role | JDs | JobStreet | Indeed | Entry | Junior | Mid |
+|---|---:|---:|---:|---:|---:|---:|
+| Data Analyst | 11 | 10 | 1 | 4 | 6 | 1 |
+| Data Scientist | 10 | 5 | 5 | 7 | 3 | 0 |
+| Software Developer | 13 | 12 | 1 | 7 | 6 | 0 |
+| Cybersecurity Analyst | 10 | 6 | 4 | 5 | 4 | 1 |
+| Cloud Engineer | 10 | 6 | 4 | 6 | 3 | 1 |
+| Web Developer | 11 | 10 | 1 | 4 | 6 | 1 |
+| **Total** | **65** | **49** | **16** | **33** | **28** | **4** |
+
+The sample has some possible biases. All postings are Malaysian and come from only two job boards, and 57 of the 65 are in the Klang Valley. All were collected on a single day, so they show one moment of the market and miss seasonal hiring such as internship intakes. The postings were chosen by hand and include only entry, junior and a few mid-level roles. This matches the graduate focus of SEAGAS, but skill frequencies may differ from those of the wider IT job market. With 10 to 13 JDs per role, one posting changes a skill's share by 8 to 10 percentage points. The importance levels suggested in Section 3.3 are therefore indicative only, and they will be re-checked after the larger Sprint 3 collection.
 
 ### 3.2 Cleaning and anonymisation
 
@@ -89,8 +104,8 @@ The target is 60 JDs in total (10 per role, matching NFR-09 in the project propo
 
 1. Map the title to one of the six roles using ordered keyword rules. Titles that match none of the roles are dropped.
 2. Drop senior and management postings, since SEAGAS targets graduates.
-3. Strip HTML.
-4. Replace e-mail addresses, URLs, phone numbers and company names with placeholders. Company names include every name seen in the batch and any "… Sdn Bhd / Berhad / Pte Ltd" pattern.
+3. Strip HTML, and remove the employer's "About the company" section, which describes the company rather than the job.
+4. Replace e-mail addresses, URLs, phone numbers and company names with placeholders. Company names include every name seen in the batch, its short form without the legal suffix, a hand-maintained list of brand names and short forms, and any "… Sdn Bhd / Berhad / Pte Ltd" pattern.
 5. Collapse whitespace.
 6. Drop texts shorter than 300 characters.
 7. Remove duplicates using a hash of the normalised text.
@@ -123,3 +138,7 @@ For the Sprint 4 evaluation, 60 JDs (10 per role, fixed seed) are sampled for ma
 [4] Greenhouse Software, "Job Board API," Greenhouse Developer Documentation. [Online]. Available: https://developers.greenhouse.io/job-board.html
 
 [5] J. Cohen, "A coefficient of agreement for nominal scales," *Educational and Psychological Measurement*, vol. 20, no. 1, pp. 37–46, 1960.
+
+[6] SEEK Ltd., "JobStreet Malaysia." [Online]. Available: https://my.jobstreet.com (accessed Oct. 12, 2026).
+
+[7] Indeed, Inc., "Indeed Malaysia." [Online]. Available: https://malaysia.indeed.com (accessed Oct. 12, 2026).

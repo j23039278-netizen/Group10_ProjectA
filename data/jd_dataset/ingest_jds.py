@@ -16,10 +16,13 @@ Input (default --raw-dir data/raw, which is git-ignored):
         absolute_url / url / source_url. Optional top-level (or per-job) keys:
         "source" (e.g. "api:greenhouse:<board>", default "api:<source>"),
         "source_license" / "terms", "collected_date".
+  company_aliases.txt   optional: other names of the employers (short forms,
+        brands, parent groups), one per line, "#" for comments. They are
+        masked as [COMPANY] like the company field.
 
 Pipeline: map title -> one of the 6 role_codes (skip unknown and senior roles)
--> clean (strip HTML, remove emails / phone numbers / URLs / company name,
-collapse whitespace) -> drop texts < 300 chars -> de-duplicate by text hash
+-> clean (strip HTML, drop the "About the company" blurb, remove emails /
+phone numbers / URLs / company names and aliases, collapse whitespace) -> drop texts < 300 chars -> de-duplicate by text hash
 -> assign stable jd_refs (JD-DA-0001 ...) -> write CSV. Company is always
 written as "Anonymised".
 
@@ -38,7 +41,8 @@ from datetime import date, datetime
 from pathlib import Path
 
 from jd_common import (DATASET_FIELDS, DATASET_PATH, REPO_ROOT, ROLE_ABBR, classify_role,
-                       classify_seniority, clean_text, text_hash, write_csv)
+                       classify_seniority, clean_text, company_variants, mask_companies,
+                       text_hash, write_csv)
 
 MIN_CHARS = 300
 csv.field_size_limit(min(sys.maxsize, 2**31 - 1))
@@ -163,6 +167,14 @@ def read_api(raw_dir):
     return out
 
 
+def read_aliases(raw_dir):
+    path = raw_dir / "company_aliases.txt"
+    if not path.exists():
+        return set()
+    lines = path.read_text(encoding="utf-8").splitlines()
+    return {ln.split("#", 1)[0].strip() for ln in lines} - {""}
+
+
 def main():
     ap = argparse.ArgumentParser(description="Ingest raw JDs into jd_dataset.csv")
     ap.add_argument("--raw-dir", default=str(REPO_ROOT / "data" / "raw"))
@@ -171,7 +183,8 @@ def main():
     raw_dir = Path(args.raw_dir)
 
     raw = read_kaggle(raw_dir) + read_manual(raw_dir) + read_api(raw_dir)
-    companies = {r["company"] for r in raw if r["company"]}
+    companies = {v for r in raw if r["company"] for v in company_variants(r["company"])}
+    companies |= read_aliases(raw_dir)
     stats = Counter()
     kept, seen = [], set()
     for r in raw:
@@ -194,7 +207,7 @@ def main():
             continue
         seen.add(h)
         kept.append({
-            "role_code": role, "title": r["title"] or "(untitled)", "company": "Anonymised",
+            "role_code": role, "title": mask_companies(r["title"], companies) or "(untitled)", "company": "Anonymised",
             "location": r["location"], "seniority": seniority, "source": r["source"],
             "source_url": r["source_url"],
             "source_license": r["source_license"], "collected_date": r["collected_date"],
@@ -214,7 +227,8 @@ def main():
     for k, v in stats.items():
         print(f"  {k:<40} {v}")
     for code in ROLE_ABBR:
-        flag = "" if per_role[code] >= 30 else "   (< 30, target not met)"
+        flag = ("   (< 10, Sprint 2 target not met)" if per_role[code] < 10
+                else "" if per_role[code] >= 30 else "   (< 30, Sprint 3 target)")
         print(f"  {code:<16} {per_role[code]:>5}{flag}")
 
 
