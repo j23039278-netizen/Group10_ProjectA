@@ -79,7 +79,7 @@ The JD dataset has three uses: (a) validating each role template against market 
 
 Automated scraping of job portals is excluded because it breaches their terms of service.
 
-The target is at least 30 JDs per role (180 in total), and ideally 50–100 per role.
+The target is 60 JDs in total (10 per role, matching NFR-09 in the project proposal), and ideally 30 or more per role.
 
 > **[TO COMPLETE once raw data is collected]** Final counts per role and per source, the licence of each Kaggle dataset, the collection period, and the share of entry / junior / mid postings.
 
