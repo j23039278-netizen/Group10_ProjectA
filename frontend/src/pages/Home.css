@@ -355,6 +355,9 @@
   border-bottom: 1px solid var(--hp-line);
 }
 .hp-mobile-menu .hp-btn { margin-top: 10px; }
+.hp-mobile-menu .hp-btn + .hp-btn { margin-top: 4px; }
+.hp-nav-actions { display: flex; align-items: center; gap: 10px; margin-left: 4px; }
+.hp .hp-nav-actions .hp-btn { min-height: 40px; }
 
 /* ============ Hero ============ */
 

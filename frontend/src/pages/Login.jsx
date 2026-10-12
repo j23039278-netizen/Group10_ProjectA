@@ -9,7 +9,6 @@ export default function Login({ onLogin }) {
   // Register sends people here with their email if the automatic sign-in didn't work
   const registeredEmail = location.state?.registeredEmail || ''
 
-  const [role,     setRole]     = useState('student')
   const [email,    setEmail]    = useState(registeredEmail)
   const [password, setPassword] = useState('')
   const [error,    setError]    = useState('')
@@ -35,12 +34,6 @@ export default function Login({ onLogin }) {
     }
   }
 
-  const roles = [
-    { id: 'student', label: 'Student' },
-    { id: 'advisor', label: 'Advisor' },
-    { id: 'admin',   label: 'Admin' },
-  ]
-
   return (
     <AuthLayout
       heading={<>Welcome <span className="au-accent">back</span></>}
@@ -51,23 +44,7 @@ export default function Login({ onLogin }) {
         <FormAlert type="success">Account created. Please sign in to continue.</FormAlert>
       )}
 
-      {/* Role Selector */}
-      <div className="au-roles" role="radiogroup" aria-label="I am signing in as">
-        {roles.map(r => (
-          <button
-            key={r.id}
-            type="button"
-            role="radio"
-            aria-checked={role === r.id}
-            className={`au-role ${role === r.id ? 'is-active' : ''}`}
-            onClick={() => setRole(r.id)}
-          >
-            {r.label}
-          </button>
-        ))}
-      </div>
-
-      {/* Form */}
+      {/* Form — the account's role comes back from the server, so no role picker is needed */}
       <form onSubmit={handleLogin}>
         <Field id="login-email" label="Email" icon="mail">
           <input
@@ -75,7 +52,7 @@ export default function Login({ onLogin }) {
             className="au-input"
             type="email" required
             autoComplete="email"
-            placeholder={role === 'student' ? 'student@synthetic.example.com' : 'advisor@uni.edu.my'}
+            placeholder="you@example.com"
             value={email} onChange={e => setEmail(e.target.value)}
           />
         </Field>
