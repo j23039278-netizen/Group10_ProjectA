@@ -40,6 +40,43 @@ CREATE TABLE IF NOT EXISTS student_resource_progress (
 CREATE INDEX IF NOT EXISTS idx_srp_profile ON student_resource_progress(profile_id);
 CREATE INDEX IF NOT EXISTS idx_srp_status  ON student_resource_progress(profile_id, status);
 
+-- recommendations_library: one row per (skill, resource title), so the
+-- recommendations seed can run on every start without adding duplicates.
+-- Older databases may already hold duplicates from running the seed twice;
+-- keep the oldest copy and move any progress/recommendation rows onto it.
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'uq_resource_skill') THEN
+        CREATE TEMP TABLE rl_dupes ON COMMIT DROP AS
+        SELECT resource_id AS dupe_id, keep_id
+        FROM (
+            SELECT resource_id,
+                   FIRST_VALUE(resource_id) OVER w AS keep_id,
+                   ROW_NUMBER()             OVER w AS rn
+            FROM recommendations_library
+            WINDOW w AS (PARTITION BY skill_id, resource_title ORDER BY created_at, resource_id)
+        ) ranked
+        WHERE rn > 1;
+
+        -- Move references to the kept copy, unless the student already has it
+        UPDATE student_resource_progress srp SET resource_id = d.keep_id
+        FROM rl_dupes d
+        WHERE srp.resource_id = d.dupe_id
+          AND NOT EXISTS (SELECT 1 FROM student_resource_progress x
+                          WHERE x.profile_id = srp.profile_id AND x.resource_id = d.keep_id);
+        UPDATE student_recommendations sr SET resource_id = d.keep_id
+        FROM rl_dupes d
+        WHERE sr.resource_id = d.dupe_id
+          AND NOT EXISTS (SELECT 1 FROM student_recommendations x
+                          WHERE x.assessment_id = sr.assessment_id AND x.resource_id = d.keep_id);
+        DELETE FROM student_recommendations WHERE resource_id IN (SELECT dupe_id FROM rl_dupes);
+
+        DELETE FROM recommendations_library WHERE resource_id IN (SELECT dupe_id FROM rl_dupes);
+        ALTER TABLE recommendations_library
+            ADD CONSTRAINT uq_resource_skill UNIQUE (skill_id, resource_title);
+    END IF;
+END $$;
+
 -- v_student_progress: read from student_resource_progress, which the app
 -- writes to. It used to read student_recommendations, which nothing writes,
 -- so the advisor cohort progress endpoint always returned an empty list.

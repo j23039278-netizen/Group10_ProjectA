@@ -4,10 +4,12 @@ REM SEAGAS - one-click local setup + start backend (Windows)
 REM Double-click this file. Safe to run again: every step checks first.
 REM   1. create seagas_db if missing
 REM   2. run database\schema.sql if tables are missing,
-REM      then seed_skills_library_v2.sql and seed_job_role_skills.sql
+REM      then migrate_existing_db.sql, seed_skills_library_v2.sql,
+REM      seed_job_role_skills.sql and seed_recommendations_library_final.sql
 REM   3. load 5000 synthetic students if none are loaded
 REM      (old data with repeated student names is replaced)
-REM   4. install Python packages, load the JD dataset (if present), start FastAPI
+REM   4. install Python packages, load the JD dataset (if present), offer to create
+REM      the first admin, start FastAPI
 REM Requires: PostgreSQL 17 (postgres password = postgres123), Python 3.10+
 REM ============================================================
 setlocal
@@ -85,6 +87,13 @@ echo [2c/4] Loading job role skills ...
 psql -d seagas_db -q -v ON_ERROR_STOP=1 -f "..\database\seed_job_role_skills.sql"
 if errorlevel 1 goto :fail
 for /f "usebackq delims=" %%i in (`psql -d seagas_db -tAc "SELECT count(*) FROM job_role_skills"`) do echo       job_role_skills: %%i entries
+
+REM Needs the skills library above. ON CONFLICT DO NOTHING on uq_resource_skill,
+REM so running it on every start never adds duplicates.
+echo [2d/4] Loading recommendations library ...
+psql -d seagas_db -q -v ON_ERROR_STOP=1 -o NUL -f "..\database\seed_recommendations_library_final.sql"
+if errorlevel 1 goto :fail
+for /f "usebackq delims=" %%i in (`psql -d seagas_db -tAc "SELECT count(*) FROM recommendations_library"`) do echo       recommendations_library: %%i resources
 
 echo [3/4] Checking synthetic students ...
 set "SYN=0"

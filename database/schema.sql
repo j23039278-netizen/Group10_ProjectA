@@ -292,7 +292,10 @@ CREATE TABLE recommendations_library (
                     CHECK (difficulty IN ('beginner', 'intermediate', 'advanced')),
     description     TEXT,
     is_active       BOOLEAN      NOT NULL DEFAULT TRUE,
-    created_at      TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP
+    created_at      TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    -- seed_recommendations_library_final.sql relies on this for ON CONFLICT DO NOTHING
+    CONSTRAINT uq_resource_skill UNIQUE (skill_id, resource_title)
 );
 
 CREATE INDEX idx_recommendations_library_skill_id      ON recommendations_library(skill_id);
