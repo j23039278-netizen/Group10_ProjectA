@@ -34,12 +34,21 @@ def test_invalid_method_raises_value_error(bad):
         match_skills(STUDENT, REQUIRED, method=bad)
 
 
-@pytest.mark.parametrize("method", VALID_METHODS)
-def test_valid_methods_reach_the_stub(method):
+@pytest.mark.parametrize("method", ["semantic", "hybrid"])
+def test_unimplemented_extraction_methods_reach_the_stub(method):
     with pytest.raises(NotImplementedError):
         extract_skills(JD, method=method)
+
+
+@pytest.mark.parametrize("method", VALID_METHODS)
+def test_matching_methods_reach_the_stub(method):
     with pytest.raises(NotImplementedError):
         match_skills(STUDENT, REQUIRED, method=method)
+
+
+def test_keyword_extraction_is_wired():
+    names = [s["skill_name"] for s in extract_skills(JD, method="keyword")]
+    assert names == ["SQL", "Power BI", "Python", "Docker"]
 
 
 def test_default_method_is_hybrid():
@@ -232,6 +241,7 @@ def test_uk_spelling(us, uk):
     ("business", "business"),
     ("aws", "aws"),
     ("analysis", "analysis"),
+    ("apis", "api"),
 ])
 def test_singularise(word, expected):
     assert singularise(word) == expected

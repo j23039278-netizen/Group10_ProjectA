@@ -1,10 +1,11 @@
 # SEAGAS NLP Interface (contract for backend integration)
 
 **Owner:** Ng Yong Hin (AI / NLP Engineer) | **Consumer:** Soh Way Miin (Carl), backend
-**Status:** interface only. Types, validation and the skill catalogue work now;
-`extract_skills()` and `match_skills()` raise `NotImplementedError` until the
-extraction / matching branches are merged. The signatures and fields below will
-not change without a note in this file.
+**Status:** types, validation, the skill catalogue and Level 1 keyword
+extraction (`extract_skills(..., method="keyword")`, `nlp/extractor.py`) work now.
+`method="semantic"` / `"hybrid"` extraction and `match_skills()` raise
+`NotImplementedError` until their branches are merged. The signatures and fields
+below will not change without a note in this file.
 
 ---
 
@@ -31,8 +32,10 @@ from nlp.types import ExtractedSkill, StudentSkill, RequiredSkill, MatchResult
 | `method` | `str` | `"keyword"`, `"semantic"` or `"hybrid"` (default). |
 | `skills` | `list[dict] \| None` | Rows from `skills_library` (`skill_id`, `skill_name`, `category`, `aliases`, `description`, optional `is_active`). Pass them so results carry real UUIDs. `None` uses `nlp/resources/skills_taxonomy.json`, and then `skill_id` is `None`. SQLAlchemy `Row` objects are accepted too. |
 
-Returns one `ExtractedSkill` per **distinct** skill found (its best occurrence),
-ordered by `start_char`. Blank text returns `[]`.
+Returns one `ExtractedSkill` per **distinct** skill found, ordered by
+`start_char`. `raw_skill_text` and the offsets come from the skill's first
+occurrence; `confidence_score` is the best over all occurrences. Blank text
+returns `[]`.
 
 ### `match_skills(student_skills, required_skills, method="hybrid") -> list[MatchResult]`
 
@@ -232,7 +235,10 @@ for s in extracted:
            "method": s["method"], "conf": round(s["confidence_score"], 3)})
 ```
 
-Wrap it so any other exception sets `nlp_status = 'failed'` instead of `'complete'`.
+Until semantic extraction is merged, `method="keyword"` already works and
+needs no `NotImplementedError` fallback; switch to `"hybrid"` later without other
+changes. Wrap it so any other exception sets `nlp_status = 'failed'` instead of
+`'complete'`.
 
 `backend/routers/assessments.py`, `run_assessment()`, replacing the Level 1
 matching loop (around lines 115–160):
