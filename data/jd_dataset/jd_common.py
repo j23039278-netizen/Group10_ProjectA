@@ -79,10 +79,43 @@ PHONE_RE = re.compile(r"(?<!\w)(?:\+?\d{1,3}[\s-]?)?(?:\(?\d{2,4}\)?[\s-]?){2,4}
 # "<Capitalised words> Sdn Bhd / Berhad / Pte Ltd / Ltd / Inc / Corp"
 COMPANY_SUFFIX_RE = re.compile(
     r"\b(?:[A-Z][\w&.'-]*\s+){1,5}(?:Sdn\.?\s*Bhd\.?|Berhad|Bhd\.?|Pte\.?\s*Ltd\.?|Ltd\.?|Inc\.?|Corp(?:oration)?\.?)(?!\w)")
+LEGAL_SUFFIX_RE = re.compile(
+    r"[\s,]*\b(?:Sdn\.?\s*Bhd\.?|Berhad|Bhd\.?|P[ty][ey]\.?\s*Ltd\.?|Ltd\.?|Inc\.?|Corp(?:oration)?\.?|LLC|PLC)\s*$", re.I)
+
+# Employer blurb ("About the company" / "About us"), usually the last section of
+# JobStreet postings. It names the employer and lists no job requirements, so it
+# is removed up to the next "Perks and benefits:" / "Key Highlights" line or the end.
+ABOUT_COMPANY_RE = re.compile(
+    r"(?ims)^[ \t]*about (?:the company|our company|us)[ \t]*:?[ \t]*\r?\n"
+    r".*?(?=^[ \t]*(?:perks and benefits:|key highlights\b)|\Z)")
+
+
+def company_variants(name):
+    """The name plus its core form, e.g. "DXC Technology Malaysia Sdn Bhd." ->
+    {"DXC Technology Malaysia Sdn Bhd.", "DXC Technology Malaysia", "DXC Technology"}."""
+    name = (name or "").strip()
+    core = re.sub(r"\([^)]*\)", " ", name)  # "(M)", "(Malaysia)", "(Gen Digital Inc.)"
+    prev = None
+    while prev != core:
+        prev = core
+        core = LEGAL_SUFFIX_RE.sub("", core).strip(" ,.")
+    core = re.sub(r"\s+", " ", core)
+    short = re.sub(r"\s+(?:Malaysia|Group)$", "", core, flags=re.I)
+    return {v for v in (name, core, short) if len(v) >= 3}
+
+
+def mask_companies(text, companies=()):
+    """Replace every known company name (longest first) with [COMPANY]."""
+    t = text
+    for company in sorted({c.strip() for c in companies if c and len(c.strip()) >= 3}, key=len, reverse=True):
+        if company.lower() != "anonymised":
+            t = re.sub(r"(?<!\w)" + re.escape(company) + r"(?!\w)", "[COMPANY]", t, flags=re.I)
+    return t
 
 
 def clean_text(text, companies=()):
-    """Strip HTML and remove emails, URLs, phone numbers and company names.
+    """Strip HTML, drop the employer blurb and remove emails, URLs, phone numbers
+    and company names.
 
     `companies` is every company name known in the batch, so a company named in
     one posting is also removed from its re-posts that lack the company field.
@@ -91,12 +124,11 @@ def clean_text(text, companies=()):
     t = re.sub(r"(?i)<\s*(br|/p|/li|/div|/h\d)\s*/?>", "\n", t)
     t = re.sub(r"(?i)<\s*li[^>]*>", "\n- ", t)
     t = re.sub(r"<[^>]+>", " ", t)
+    t = ABOUT_COMPANY_RE.sub("", t)
     t = EMAIL_RE.sub("[EMAIL]", t)
     t = URL_RE.sub("[URL]", t)
     t = PHONE_RE.sub(lambda m: "[PHONE]" if sum(c.isdigit() for c in m.group()) >= 8 else m.group(), t)
-    for company in sorted({c.strip() for c in companies if c and len(c.strip()) >= 3}, key=len, reverse=True):
-        if company.lower() != "anonymised":
-            t = re.sub(r"(?<!\w)" + re.escape(company) + r"(?!\w)", "[COMPANY]", t, flags=re.I)
+    t = mask_companies(t, companies)
     t = COMPANY_SUFFIX_RE.sub("[COMPANY]", t)
     t = t.replace("\r", "")
     t = re.sub(r"[ \t ]+", " ", t)

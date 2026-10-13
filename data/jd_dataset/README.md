@@ -4,7 +4,7 @@
 
 This folder holds real IT job descriptions for 6 target roles. We use them to (a) check the skill lists in `job_role_skills` against the market (FR-03), (b) find skills that are missing from the library (FR-02), and (c) evaluate the L1 and L2 extractors in Sprint 4 (FR-04, FR-14).
 
-> **Status (Sprint 2):** the pipeline and formats are ready and have been tested end-to-end on the fictional examples in `samples/`. **We are still waiting for the raw JD data**, so `jd_dataset.csv` and `gold/gold_sample.csv` have not been created yet.
+> **Status (Sprint 2):** `jd_dataset.csv` holds 65 real JDs (10–13 per role, copied by hand from JobStreet and Indeed on 2026-10-12), so the Sprint 2 target of 60 JDs (10 per role) is met. `gold/gold_sample.csv` has been drawn, and its labels are still to be made by hand. Collecting 30 or more per role through public APIs is planned for Sprint 3. See [DATASET_SUMMARY.md](DATASET_SUMMARY.md) for counts, sources and filters.
 
 ## Sources
 
@@ -22,7 +22,9 @@ This folder holds real IT job descriptions for 6 target roles. We use them to (a
 
 `data/raw/` is listed in `.gitignore`. Never commit raw files. Only the cleaned, anonymised `jd_dataset.csv` is committed.
 
-**Target:** 60 JDs in total (10 per role, matching NFR-09 in the project proposal). The ideal is 30 or more per role.
+**Target:** 60 JDs in total for Sprint 2 (10 per role, matching NFR-09 in the project proposal). 30 or more per role via public APIs is planned for Sprint 3.
+
+**Company aliases (optional):** `data/raw/company_aliases.txt` lists other names of the employers (short forms such as "DXC", brands, parent groups), one per line, with `#` for comments. They are masked like the `Company:` header. This file is git-ignored with the rest of `data/raw/`.
 
 ## Pipeline
 
@@ -39,7 +41,7 @@ To test with the examples, pass `--raw-dir data/jd_dataset/samples`, `--dataset 
 
 - **Role:** the title is matched against keyword rules (`jd_common.ROLE_TITLE_RULES`). For manual files, the folder name decides the role. Titles that match none of the 6 roles are skipped.
 - **Seniority:** `entry` (intern, graduate, trainee, fresh), `junior` (junior, associate) or `mid`. Titles with senior, lead, principal, manager, architect and similar words are **skipped**, because SEAGAS targets graduates.
-- **Text:** HTML is removed. Emails become `[EMAIL]`, URLs become `[URL]`, phone numbers become `[PHONE]`, and company names (every name seen in the batch, plus any "… Sdn Bhd / Berhad / Pte Ltd / Inc") become `[COMPANY]`. Runs of whitespace are collapsed.
+- **Text:** HTML is removed. The employer blurb ("About the company" / "About us") is removed up to the next "Perks and benefits:" or "Key Highlights" line, or to the end. Emails become `[EMAIL]`, URLs become `[URL]`, phone numbers become `[PHONE]`, and company names become `[COMPANY]` in the text and the title. Company names cover every name seen in the batch, its core form without the legal suffix or "(Malaysia)", the aliases in `company_aliases.txt`, and any "… Sdn Bhd / Berhad / Pte Ltd / Inc". Runs of whitespace are collapsed.
 - **Filters:** texts shorter than 300 characters are dropped. Duplicates are dropped by an MD5 hash of the normalised text.
 - `company` is always `Anonymised`.
 - `jd_ref` values (`JD-DA-0001`, and so on) are stable. They are assigned by sorting on role, source and text hash.

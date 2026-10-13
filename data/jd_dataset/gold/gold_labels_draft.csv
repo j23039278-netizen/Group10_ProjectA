@@ -1,0 +1,501 @@
+jd_ref,skill_name,importance,evidence_text
+JD-CE-0001,Monitoring & Observability,required,"This is an infrastructure support role assisting the Infrastructure team with IT infrastructure setup, configuration, monitoring and troubleshooting"
+JD-CE-0001,Problem Solving,required,"This is an infrastructure support role assisting the Infrastructure team with IT infrastructure setup, configuration, monitoring and troubleshooting"
+JD-CE-0001,Azure,required,"You will support Microsoft Azure infrastructure activities, including virtual machines, virtual networks, storage and resource monitoring, under the guidance of senior engineers"
+JD-CE-0001,Networking,required,"* Assist with network troubleshooting, including IP addressing, DNS, connectivity and basic routing concepts"
+JD-CE-0001,Windows Server,required,* Support Windows Server and/or Linux system administration tasks
+JD-CE-0001,Linux,required,* Support Windows Server and/or Linux system administration tasks
+JD-CE-0001,Documentation,required,"* Prepare and maintain technical documentation, configuration records and troubleshooting guides"
+JD-CE-0001,Identity & Access Management,required,"* Learn and follow IT security practices, access control procedures and infrastructure management standards"
+JD-CE-0001,Cloud Computing,required,"* Currently pursuing a Diploma or Bachelor's Degree in Information Technology, Computer Networking, Networking Technology, IT Infrastructure, Cloud Computing, Systems Administration or a related field"
+JD-CE-0001,PowerShell,bonus,"* Familiarity with PowerShell, Bash, scripting or infrastructure monitoring tools is a plus"
+JD-CE-0001,Bash,bonus,"* Familiarity with PowerShell, Bash, scripting or infrastructure monitoring tools is a plus"
+JD-CE-0001,Self-Motivation,required,"* Willingness to learn, take initiative and work collaboratively with the technical team"
+JD-CE-0001,Communication,required,* Good communication skills and attention to detail
+JD-CE-0001,Attention to Detail,required,* Good communication skills and attention to detail
+JD-CE-0002,UI/UX Design,required,"* Provide first-level technical support for hardware, software and network issues, ensuring prompt resolution and positive user experience"
+JD-CE-0002,Documentation,required,"* Maintain accurate and up-to-date documentation of IT systems, configurations, processes and procedures to support transparency and knowledge sharing"
+JD-CE-0002,Generative AI,required,"* Research, evaluate and introduce emerging technologies and solutions, including Generative AI, automation and robotics to drive organizational improvement"
+JD-CE-0002,Communication,required,* Strong communication and interpersonal abilities
+JD-CE-0002,Time Management,required,* Effective time management and problem-solving skills
+JD-CE-0002,Cloud Computing,bonus,"* Familiarity with public cloud platforms (AWS, Azure, GCP), UiPath (RPA) and programming or database technologies such as SQL is an advantage"
+JD-CE-0002,AWS,bonus,"* Familiarity with public cloud platforms (AWS, Azure, GCP), UiPath (RPA) and programming or database technologies such as SQL is an advantage"
+JD-CE-0002,Azure,bonus,"* Familiarity with public cloud platforms (AWS, Azure, GCP), UiPath (RPA) and programming or database technologies such as SQL is an advantage"
+JD-CE-0002,GCP,bonus,"* Familiarity with public cloud platforms (AWS, Azure, GCP), UiPath (RPA) and programming or database technologies such as SQL is an advantage"
+JD-CE-0002,SQL,bonus,"* Familiarity with public cloud platforms (AWS, Azure, GCP), UiPath (RPA) and programming or database technologies such as SQL is an advantage"
+JD-CE-0003,Cloud Computing,required,"* Build, deploy and maintain the cloud infrastructure that runs our own platforms and our clients’ hosted environments, working to designs set by senior engineers and architects"
+JD-CE-0003,Monitoring & Observability,required,"* Run day-to-day operations across cloud and on-premises environments — provisioning, patching, monitoring, backup and incident response"
+JD-CE-0003,Incident Response,required,"* Run day-to-day operations across cloud and on-premises environments — provisioning, patching, monitoring, backup and incident response"
+JD-CE-0003,Networking,required,"* Provision and configure compute, storage, networking and identity services on at least one major cloud platform (AWS, Azure or Google Cloud)"
+JD-CE-0003,AWS,required,"* Provision and configure compute, storage, networking and identity services on at least one major cloud platform (AWS, Azure or Google Cloud)"
+JD-CE-0003,Azure,required,"* Provision and configure compute, storage, networking and identity services on at least one major cloud platform (AWS, Azure or Google Cloud)"
+JD-CE-0003,GCP,required,"* Provision and configure compute, storage, networking and identity services on at least one major cloud platform (AWS, Azure or Google Cloud)"
+JD-CE-0003,VPN,required,* Support hybrid setups that link cloud environments to on-premises data centres over VPN or dedicated circuits
+JD-CE-0003,Docker,required,* Build and maintain container images and run workloads under Docker or a comparable runtime
+JD-CE-0003,Kubernetes,required,"* Deploy and support applications on Kubernetes or a managed equivalent (EKS, AKS, GKE) — deployments, services, ingress, config maps, secrets and persistent volumes"
+JD-CE-0003,CI/CD,required,"* Work with CI/CD pipelines to move builds through development, staging and production"
+JD-CE-0003,Linux,required,"* Administer Linux servers (RHEL, Rocky, Ubuntu or equivalent) — users and permissions, packages, services, storage, OS and kernel patching, and shell scripting"
+JD-CE-0003,Bash,required,"* Administer Linux servers (RHEL, Rocky, Ubuntu or equivalent) — users and permissions, packages, services, storage, OS and kernel patching, and shell scripting"
+JD-CE-0003,MySQL,required,"* Carry out routine MySQL tasks: user and privilege management, schema deployment, backup and restore, log checks and basic query troubleshooting"
+JD-CE-0003,Problem Solving,required,"* Carry out routine MySQL tasks: user and privilege management, schema deployment, backup and restore, log checks and basic query troubleshooting"
+JD-CE-0003,PHP,required,"* Deploy and support application services on web and application servers (Apache, Nginx, Tomcat or PHP-based stacks)"
+JD-CE-0003,Security Frameworks,required,* Work within our ISO/IEC 27001:2022 and PCI DSS v4
+JD-CE-0003,Identity & Access Management,required,"0 control environment — access control, change management, logging, patching and vulnerability remediation"
+JD-CE-0003,SQL,required,"* Basic MySQL — able to read and write SQL, run a backup and a restore, and explain what an index does"
+JD-CE-0003,Python,preferred,"* Scripting in Bash, and ideally Python, to automate routine work"
+JD-CE-0003,Git,required,* Familiar with Git and with working from tickets and change records
+JD-CE-0003,Documentation,required,"* Clear written English for documentation, and the confidence to speak to internal stakeholders and clients"
+JD-CE-0003,Terraform,required,"* Infrastructure as code — Terraform, CloudFormation or Ansible"
+JD-CE-0003,Ansible,required,"* Infrastructure as code — Terraform, CloudFormation or Ansible"
+JD-CE-0004,Linux,required,"Are you passionate about high-performance computing, digging deep into Linux systems, and working with cutting-edge infrastructure? Looking for a fast-paced environment where your skills directly support groundbreaking work across the globe?"
+JD-CE-0004,Bash,required,"If you enjoy diving into Linux internals, writing and running bash scripts, and supporting users who rely on you to keep things running smoothly, we want to hear from you"
+JD-CE-0004,Communication,required,* Excellent communication skills
+JD-CE-0004,Agile / Scrum,required,* The ability to multitask and be agile
+JD-CE-0005,Cybersecurity,required,* Interested to pursue internship opportunity in Cybersecurity or System Administraion field
+JD-CE-0006,Problem Solving,required,* Provide L1 technical support and basic troubleshooting for cloud-related issues
+JD-CE-0006,Customer Focus,required,"* Handle customer service requests, incidents and technical enquiries, with proper escalation when required"
+JD-CE-0006,Cloud Computing,required,"* Support multiple cloud platforms, including AWS, Azure, Alibaba Cloud and Tencent Cloud"
+JD-CE-0006,AWS,required,"* Support multiple cloud platforms, including AWS, Azure, Alibaba Cloud and Tencent Cloud"
+JD-CE-0006,Azure,required,"* Support multiple cloud platforms, including AWS, Azure, Alibaba Cloud and Tencent Cloud"
+JD-CE-0006,Networking,required,"* Basic understanding of cloud infrastructure, networking, virtual machines and cloud services"
+JD-CE-0006,Communication,required,"* Proficiency in Mandarin is mandatory, as the role requires direct communication with Mandarin-speaking clients"
+JD-CE-0007,Monitoring & Observability,required,* Perform site performance monitoring to determine system performance bottlenecks
+JD-CE-0007,CI/CD,required,* Support the application CI/CD pipeline for promoting software into higher environments
+JD-CE-0007,Self-Motivation,required,* Proactive learner with the ability to research and quickly utilize new technologies
+JD-CE-0007,Teamwork,required,* Good teamwork
+JD-CE-0007,Communication,required,* Good interpersonal and communication skills
+JD-CE-0008,Cloud Computing,required,"We are looking for a Cloud System Engineer who is well-versed in private and public cloud infrastructure, Linux server management, along with experience in on-premise to cloud migration"
+JD-CE-0008,Linux,required,"We are looking for a Cloud System Engineer who is well-versed in private and public cloud infrastructure, Linux server management, along with experience in on-premise to cloud migration"
+JD-CE-0008,Self-Motivation,required,* Proactive monitoring of supported cloud instances
+JD-CE-0008,Monitoring & Observability,required,* Proactive monitoring of supported cloud instances
+JD-CE-0008,Problem Solving,preferred,* Familiarity with virtualization technologies and troubleshooting virtual machine instances
+JD-CE-0008,Azure,required,* Cloud Computing - Non-Azure based cloud experience
+JD-CE-0008,Ansible,required,"* Automation - Salt, Ansible, Puppet, Chef"
+JD-CE-0008,AWS,required,* Cloud Computing - Both AWS/Azure/GCP and non-AWS/Azure/GCP cloud experience (ie
+JD-CE-0008,GCP,required,* Cloud Computing - Both AWS/Azure/GCP and non-AWS/Azure/GCP cloud experience (ie
+JD-CE-0008,Windows Server,required,"* Experience with Windows Server 2012, 2016, 2019, and Microsoft SQL"
+JD-CE-0008,SQL,required,"* Experience with Windows Server 2012, 2016, 2019, and Microsoft SQL"
+JD-CE-0008,Communication,required,* Excellent written and verbal communication skills (English)
+JD-CE-0009,Problem Solving,required,* Technical Support: Assist with troubleshooting procedures and deliver technical guidance whenever necessary
+JD-CE-0009,PHP,bonus,"* Technical Proficiency: Familiarity with a diverse range of programming languages and frameworks is an added advantage (PHP Laravel, Node"
+JD-CE-0009,Node.js,bonus,"* Technical Proficiency: Familiarity with a diverse range of programming languages and frameworks is an added advantage (PHP Laravel, Node.js, React"
+JD-CE-0009,React,required,"js, React"
+JD-CE-0009,JavaScript,required,"ks, JavaScript, HTML, CSS, Flutter)"
+JD-CE-0009,HTML,required,"ks, JavaScript, HTML, CSS, Flutter)"
+JD-CE-0009,CSS,required,"ks, JavaScript, HTML, CSS, Flutter)"
+JD-CE-0010,Identity & Access Management,required,"We are looking for passionate Interns to assist our Delivery team in resolving common day-to-day challenges in Enterprise Cloud and ITO Infrastructure (Active Directory, Servers, Storage, Backup, Database, Middleware, Networks etc) services"
+JD-CE-0010,Documentation,required,* Assist in research and documentation related to AI technologies and their applications in enterprise environments
+JD-CE-0010,Monitoring & Observability,required,"* Support infrastructure-related tasks such as monitoring systems, basic troubleshooting, and configuration under supervision"
+JD-CE-0010,Problem Solving,required,"* Support infrastructure-related tasks such as monitoring systems, basic troubleshooting, and configuration under supervision"
+JD-CE-0010,AI Literacy,required,* Basic understanding of AI concepts (e
+JD-CE-0010,Machine Learning,required,", machine learning, chatbots, automation)"
+JD-CE-0010,Linux,preferred,"* Familiarity with multiple OS platform (Windows, Unix, Linux, macOS, mobile platforms)"
+JD-CE-0010,Python,preferred,"* Exposure to scripting languages (Python, PowerShell) or interest in learning"
+JD-CE-0010,PowerShell,preferred,"* Exposure to scripting languages (Python, PowerShell) or interest in learning"
+JD-CE-0010,Cloud Computing,required,"* Awareness of cloud platforms (Azure, AWS, or GCP)"
+JD-CE-0010,Azure,required,"* Awareness of cloud platforms (Azure, AWS, or GCP)"
+JD-CE-0010,AWS,required,"* Awareness of cloud platforms (Azure, AWS, or GCP)"
+JD-CE-0010,GCP,required,"* Awareness of cloud platforms (Azure, AWS, or GCP)"
+JD-CE-0010,Cybersecurity,required,* Understanding of cybersecurity basics
+JD-CY-0001,Cybersecurity,required,* The candidate will be assigned to the technical support department and will be trained on providing technical support for the assigned cybersecurity products
+JD-CY-0001,Communication,required,* Improving communication and customer engagement skills through working with customers and users from different Asia Pacific countries and from different levels within a company
+JD-CY-0001,Networking,required,* Attended courses related to networking and security
+JD-CY-0001,Time Management,required,* Strong organizational and time management skills
+JD-CY-0002,Communication,required,i) Communication
+JD-CY-0002,Monitoring & Observability,required,ii) Monitoring
+JD-CY-0002,SIEM,required,"* General SIEM monitoring, analysis, content development, and maintenance"
+JD-CY-0002,React,required,"* React to security alerts and security events of interest from defense systems like IDS, endpoint protection and other security-related systems"
+JD-CY-0002,Documentation,required,including log retrieval and documentation
+JD-CY-0002,Incident Response,required,"* Assist in incident response activities such as host triage and retrieval, malware analysis, remote system analysis and remediation efforts"
+JD-CY-0002,Malware Analysis,required,"* Assist in incident response activities such as host triage and retrieval, malware analysis, remote system analysis and remediation efforts"
+JD-CY-0002,Cybersecurity,required,"* Analyze cybersecurity alerts and data for false positive/true positive outcomes while modifying, alerts as needed"
+JD-CY-0002,Security Operations (SOC),required,* Ensure the SOC analyst team is providing excellent customer service and support
+JD-CY-0002,Customer Focus,required,* Ensure the SOC analyst team is providing excellent customer service and support
+JD-CY-0002,Interpersonal Skills,required,* Excellent communication (written and oral) and interpersonal skills
+JD-CY-0003,Ethical Hacking,required,* Assist the Security Assessment team in conducting penetration testing and vulnerability assessments
+JD-CY-0003,Documentation,required,* Help prepare technical reports and documentation
+JD-CY-0003,Cybersecurity,required,"* Conduct research on vulnerabilities, exploits and cybersecurity tools"
+JD-CY-0003,Networking,required,"* Basic knowledge of networking, operating systems and cybersecurity concepts"
+JD-CY-0003,Vulnerability Assessment,required,"* Interest in penetration testing, ethical hacking and vulnerability assessment"
+JD-CY-0003,Kali Linux,bonus,"* Familiarity with tools such as Kali Linux, Burp Suite or Nmap is an advantage"
+JD-CY-0003,Burp Suite,bonus,"* Familiarity with tools such as Kali Linux, Burp Suite or Nmap is an advantage"
+JD-CY-0003,Nmap,bonus,"* Familiarity with tools such as Kali Linux, Burp Suite or Nmap is an advantage"
+JD-CY-0004,Incident Response,required,"We don't expect you to have seen everything yet — we expect you to be curious, coachable, and serious about building a career in incident response"
+JD-CY-0004,Linux,required,"* Acquire and triage forensic artifacts across Windows, Linux, macOS, and cloud environments under the guidance of more experienced team members"
+JD-CY-0004,Python,required,"* Use scripting (Python, Bash, or PowerShell) to assist with collection, parsing, and automation tasks where useful"
+JD-CY-0004,Bash,required,"* Use scripting (Python, Bash, or PowerShell) to assist with collection, parsing, and automation tasks where useful"
+JD-CY-0004,PowerShell,required,"* Use scripting (Python, Bash, or PowerShell) to assist with collection, parsing, and automation tasks where useful"
+JD-CY-0004,Cybersecurity,required,"* 1+ year of experience in cybersecurity, IT, or an adjacent technical field (e"
+JD-CY-0004,SIEM,preferred,"* Hands-on exposure to EDR, SIEM, or forensic tooling, even in a learning context"
+JD-CY-0005,SIEM,required,"* Monitor security alerts and logs from various security tools such as SIEM (Security Information and Event Management) systems, firewalls, antivirus, and intrusion detection/prevention systems"
+JD-CY-0005,Incident Response,required,* Investigate and analyze potential security incidents or breaches and escalate as necessary to senior analysts or incident response teams
+JD-CY-0005,Documentation,required,"* Assist in maintaining and updating security documentation, policies, and procedures"
+JD-CY-0005,Cybersecurity,required,"* Stay updated with the latest cybersecurity trends, threats, and technologies"
+JD-CY-0005,Communication,required,* Good communication skills for documenting incidents and collaborating with teams
+JD-CY-0006,Security Operations (SOC),required,Continuous Security Monitoring Execute 24/7
+JD-CY-0006,Monitoring & Observability,required,* Continuous monitoring of security events across enterprise infrastructure using SIEM platforms
+JD-CY-0006,SIEM,required,* Continuous monitoring of security events across enterprise infrastructure using SIEM platforms
+JD-CY-0006,Incident Response,required,"* Escalate complex or high-severity threats to L2 SOC Analysts, Incident Response, or Engineering units"
+JD-CY-0006,Threat Intelligence,required,* Utilize threat intelligence feeds and known Indicators of Compromise (IOCs) for targeted environment queries
+JD-CY-0007,SIEM,required,* Monitor security events and alerts from SIEM tools and other security platforms
+JD-CY-0007,Incident Response,required,* Escalate verified incidents to L2/L3 analysts or Incident Response team when necessary
+JD-CY-0007,Threat Intelligence,required,* Perform basic threat intelligence lookups and log analysis to support investigations
+JD-CY-0007,Log Analysis,required,* Perform basic threat intelligence lookups and log analysis to support investigations
+JD-CY-0007,Security Operations (SOC),required,* Support daily health checks on security monitoring tools and systems
+JD-CY-0007,Cybersecurity,required,* Maintain awareness of current cybersecurity threats and trends
+JD-CY-0007,Networking,required,"* Basic understanding of networking concepts (TCP/IP, DNS, firewalls, etc"
+JD-CY-0007,Splunk,required,", Splunk, QRadar, LogRhythm)"
+JD-CY-0007,Linux,required,* Basic knowledge of Windows and Linux operating systems
+JD-CY-0008,SIEM,required,(SIEM / endpoint related)
+JD-CY-0008,Monitoring & Observability,required,* Help out with daily monitoring of security solutions in the environment
+JD-CY-0009,Problem Solving,required,"The IT Intern will assist in software development, software testing, network administration, perform troubleshooting, and ensure systems' reliability and security"
+JD-CY-0009,Network Security,required,"Additionally, the intern will support network security initiatives and provide customer service by addressing IT-related inquiries and concerns"
+JD-CY-0009,Customer Focus,required,"Additionally, the intern will support network security initiatives and provide customer service by addressing IT-related inquiries and concerns"
+JD-CY-0009,PHP,preferred,"* Familiarity with PHP, Java, and Network Security practices to support secure system operations"
+JD-CY-0009,Java,preferred,"* Familiarity with PHP, Java, and Network Security practices to support secure system operations"
+JD-CY-0010,Cybersecurity,required,Passionate about cybersecurity and eager to learn? Here’s your chance to gain real-world experience and kickstart your career in tech with [COMPANY]!
+JD-CY-0010,Security Operations (SOC),required,We're looking for a highly motivated Cybersecurity Intern to join our Security Operations Center (SOC)
+JD-CY-0010,Monitoring & Observability,required,"* Assist in Security Event Monitoring – Work alongside SOC Analysts to track alerts, logs, and security incidents"
+JD-CY-0010,Vulnerability Assessment,required,"* Conduct Basic Security Assessments – Assist in vulnerability scanning, penetration testing, and compliance checks"
+JD-CY-0010,Ethical Hacking,required,"* Conduct Basic Security Assessments – Assist in vulnerability scanning, penetration testing, and compliance checks"
+JD-CY-0010,Security Frameworks,required,"* Participate in Cybersecurity Research & Training – Stay updated on emerging threats, attack vectors, and security frameworks"
+JD-CY-0010,Threat Intelligence,required,"* Passionate about cybersecurity – Interested in SOC operations, ethical hacking, or cyber threat intelligence"
+JD-CY-0010,Networking,required,"* Basic understanding of networking & security concepts – Familiar with firewalls, malware analysis, TCP/IP, and operating systems"
+JD-CY-0010,Malware Analysis,required,"* Basic understanding of networking & security concepts – Familiar with firewalls, malware analysis, TCP/IP, and operating systems"
+JD-CY-0010,Communication,required,* Strong communication & teamwork skills – Work effectively with SOC professionals and security engineers
+JD-CY-0010,Teamwork,required,* Strong communication & teamwork skills – Work effectively with SOC professionals and security engineers
+JD-DA-0001,Monitoring & Observability,required,"Build monitoring tools: dashboards and alerts that catch problems early, such as a clinic that stopped reordering, a product about to run out, or a sales territory falling behind target"
+JD-DA-0001,AI Literacy,required,"Use artificial intelligence (AI) to build: write SQL and Python with AI tools such as Claude, ChatGPT or Copilot, and turn an idea into a working tool in days, not months"
+JD-DA-0001,SQL,required,"Use artificial intelligence (AI) to build: write SQL and Python with AI tools such as Claude, ChatGPT or Copilot, and turn an idea into a working tool in days, not months"
+JD-DA-0001,Python,required,"Use artificial intelligence (AI) to build: write SQL and Python with AI tools such as Claude, ChatGPT or Copilot, and turn an idea into a working tool in days, not months"
+JD-DA-0001,Statistical Analysis,required,"Degree in Statistics, Mathematics, Actuarial Science, Data Science, Economics or a related field"
+JD-DA-0001,Power BI,bonus,Power BI is a plus
+JD-DA-0001,Machine Learning,required,"Room to grow into data science, machine learning and business strategy"
+JD-DA-0002,Customer Focus,required,Department: Customer Service & Logistics (CS&L) – Customer Engagement
+JD-DA-0002,Power BI,required,", using DOMO, PowerBI, or Tableau) to track customer service KPIs, order fulfillment rates, and logistics data"
+JD-DA-0002,Tableau,required,", using DOMO, PowerBI, or Tableau) to track customer service KPIs, order fulfillment rates, and logistics data"
+JD-DA-0002,AI Literacy,required,"* Currently pursuing a Bachelor’s Degree in Computer Science, Information Technology, Artificial Intelligence, Software Engineering, Data Science, or a related technical field"
+JD-DA-0002,Python,required,", Python, SQL, VBA) and automation platforms (e"
+JD-DA-0002,SQL,required,", Python, SQL, VBA) and automation platforms (e"
+JD-DA-0002,Communication,required,* Excellent communication skills—specifically the ability to explain technical concepts to non-technical business stakeholders
+JD-DA-0003,SQL,required,"If you know SQL, understand data, and have the curiosity to keep learning, we'll help you take the next step"
+JD-DA-0003,Data Warehousing,required,"* Data Extraction & Wrangling — write efficient SQL queries across our cloud data warehouse (Google BigQuery) to extract, validate, and transform multi-source business data"
+JD-DA-0003,GCP,required,"* Data Extraction & Wrangling — write efficient SQL queries across our cloud data warehouse (Google BigQuery) to extract, validate, and transform multi-source business data"
+JD-DA-0003,Teamwork,required,"* Stakeholder Collaboration — partner with cross-functional teams (Operations, Product & Tech, Finance) to establish clear metric definitions and maintain data integrity"
+JD-DA-0003,Python,required,* Workflow Automation & Tooling — leverage Python and modern developer tools to automate recurring analytical pipelines and data hygiene checks
+JD-DA-0003,Statistical Analysis,required,"* Minimum Diploma/Bachelor's degree in Data Science, Computer Science, Statistics, Mathematics, Physics, Engineering, Economics, or another quantitative discipline"
+JD-DA-0003,Pandas,preferred,* Foundational Python knowledge — familiarity with Python for data manipulation using tools such as pandas and NumPy
+JD-DA-0003,NumPy,preferred,* Foundational Python knowledge — familiarity with Python for data manipulation using tools such as pandas and NumPy
+JD-DA-0003,Data Analysis,required,"* Basic understanding of data analysis, statistics, and data visualisation"
+JD-DA-0003,Data Visualisation,required,"* Basic understanding of data analysis, statistics, and data visualisation"
+JD-DA-0003,Generative AI,preferred,"* Familiarity with AI tools and LLM-based assistants for coding, analysis, prototyping, or productivity"
+JD-DA-0003,Critical Thinking,required,* Strong problem-solving and analytical thinking
+JD-DA-0003,Attention to Detail,required,* High attention to detail and commitment to data accuracy
+JD-DA-0003,Communication,required,"* Good communication skills and the ability to explain technical findings in clear, simple language"
+JD-DA-0004,Data Analysis,required,"* Conduct exploratory data analysis to identify trends, patterns, and insights"
+JD-DA-0004,Statistical Analysis,required,"* Final year diploma or Bachelor's degree in Data Analyst, Statistics, Mathematics, Computer Science, or a related field"
+JD-DA-0004,Attention to Detail,required,* Strong analytical and problem-solving skills with a keen attention to detail
+JD-DA-0004,Communication,required,* Excellent communication and interpersonal skills
+JD-DA-0004,Interpersonal Skills,required,* Excellent communication and interpersonal skills
+JD-DA-0004,SQL,required,* Intermediate experience with SQL and data visualisation tools (e
+JD-DA-0004,Data Visualisation,required,* Intermediate experience with SQL and data visualisation tools (e
+JD-DA-0004,Looker,required,Looker Studio)
+JD-DA-0004,Python,bonus,", R, Python) is an advantage"
+JD-DA-0005,Statistical Analysis,required,* At least a Bachelor's Degree in Statistics / Mathematics / Computer Science / Actuarial Studies / Economics or equivalent
+JD-DA-0005,Python,required,* Proficient in Excel and programming languages like Python and SQL
+JD-DA-0005,SQL,required,* Proficient in Excel and programming languages like Python and SQL
+JD-DA-0005,Communication,required,* Good communication and interpersonal skills with attention to details and strong work ethic
+JD-DA-0005,Interpersonal Skills,required,* Good communication and interpersonal skills with attention to details and strong work ethic
+JD-DA-0006,Decision Making,required,"The position plays an important role in ensuring efficient workflows, supporting decision-making, and identifying opportunities for continuous operational improvement"
+JD-DA-0006,Data Structures & Algorithms,required,* Assist in maintaining data structures and documentation
+JD-DA-0006,Documentation,required,* Assist in maintaining data structures and documentation
+JD-DA-0006,Statistical Analysis,required,"* Minimum SPM or Diploma or Bachelor's Degree in Information Systems, Business Administration, Computer Science, Statistics, or related field"
+JD-DA-0006,Excel,preferred,"* Advanced Microsoft Excel skills (Pivot Tables, VLOOKUP/XLOOKUP, Power Query preferred)"
+JD-DA-0006,SQL,bonus,* Basic SQL knowledge is an advantage
+JD-DA-0006,Power BI,bonus,"* Familiarity with Power BI, Tableau, or reporting tools is a plus"
+JD-DA-0006,Tableau,bonus,"* Familiarity with Power BI, Tableau, or reporting tools is a plus"
+JD-DA-0006,Attention to Detail,required,* Strong attention to detail and accuracy
+JD-DA-0006,Time Management,required,* Excellent organizational and time management skills
+JD-DA-0006,Communication,required,* Good communication and documentation skills
+JD-DA-0007,Decision Making,required,"As a growing SME, we're looking to strengthen our operations and decision making with the power of data"
+JD-DA-0007,Power BI,required,"* Learn to use Excel, Power BI, and other tools to build basic dashboard"
+JD-DA-0007,Statistical Analysis,required,"* Pursuing a degree in Business Analytics, Information Technology (IT), or a related field, with coursework in Data Science, Statistics, and Decision Science"
+JD-DA-0008,Data Analysis,required,"Data Analysis: Review and analyze telecommunication data from various markets to identify trends, anomalies, and opportunities for improvement"
+JD-DA-0008,Data Mining,required,Data Mining: Extract and analyze large volumes of data to discover patterns and insights
+JD-DA-0008,Data Modelling,required,Data Modelling: Develop statistical models to understand and predict customer behavior or market trends
+JD-DA-0008,Statistical Analysis,required,Pursuing or completed a bachelor’s degree in Computer Science / Data Science / Mathematics / Statistics or a related field
+JD-DA-0008,Python,required,"Technical Skills: Proficiency in data analysis and visualization software (Python, SQL, Excel, Tableau) and basic knowledge of coding languages, machine learning, and software development"
+JD-DA-0008,SQL,required,"Technical Skills: Proficiency in data analysis and visualization software (Python, SQL, Excel, Tableau) and basic knowledge of coding languages, machine learning, and software development"
+JD-DA-0008,Tableau,required,"Technical Skills: Proficiency in data analysis and visualization software (Python, SQL, Excel, Tableau) and basic knowledge of coding languages, machine learning, and software development"
+JD-DA-0008,Machine Learning,required,"Technical Skills: Proficiency in data analysis and visualization software (Python, SQL, Excel, Tableau) and basic knowledge of coding languages, machine learning, and software development"
+JD-DA-0008,Communication,required,Communication Skills: Excellent written and verbal communication skills
+JD-DA-0008,Adaptability,required,Adaptability: Able to adapt to challenges and pressure in a fast-paced environment
+JD-DA-0010,Power BI,required,* Power BI Development - Assist in building and maintaining Power BI dashboards and reports
+JD-DA-0010,Data Modelling,required,"Support basic data modelling, DAX calculations, and data visualisation"
+JD-DA-0010,Data Visualisation,required,"Support basic data modelling, DAX calculations, and data visualisation"
+JD-DA-0010,Data Cleaning,required,"* Data Preparation & Analysis - Help with data extraction, cleansing, and transformation using Excel (e"
+JD-DA-0010,PowerShell,required,* Automation Support - Support simple automation tasks using PowerShell or scripts to improve reporting and data processes
+JD-DA-0010,Python,required,"* Programming & Integration - Use Python or other programming languages (where applicable) to support data analysis, basic automation, and API integrations"
+JD-DA-0010,Data Analysis,required,"* Programming & Integration - Use Python or other programming languages (where applicable) to support data analysis, basic automation, and API integrations"
+JD-DA-0010,Excel,required,"* Familiar with Microsoft Excel (Pivot Tables, formulas"
+JD-DA-0010,Attention to Detail,required,"* Willing to learn, detail-oriented, and able to work in a team"
+JD-DA-0011,Data Analysis,required,Manufacturing Data Analytics
+JD-DA-0011,SQL,required,"* Develop and maintain operational dashboards, reports and analytical tools using Excel, SQL, Power BI or similar technologies"
+JD-DA-0011,Power BI,required,"* Develop and maintain operational dashboards, reports and analytical tools using Excel, SQL, Power BI or similar technologies"
+JD-DA-0011,Data Structures & Algorithms,required,"* Develop a strong understanding of ERP manufacturing processes, data structures and business logic"
+JD-DA-0011,Decision Making,required,* Work with users to identify system or data issues affecting production visibility and operational decision-making
+JD-DA-0011,Statistical Analysis,required,* Statistics / Mathematics
+JD-DA-0011,Python,bonus,* Knowledge of Python or other analytical/programming tools
+JD-DS-0001,Statistical Analysis,required,"* Currently pursuing or recently completed a degree in Data Science, Computer Science, Statistics, Engineering, or a related quantitative field"
+JD-DS-0001,Python,required,"* Proficiency in Python for data work (pandas, numpy, and at least one ML library such as scikit-learn)"
+JD-DS-0001,Pandas,required,"* Proficiency in Python for data work (pandas, numpy, and at least one ML library such as scikit-learn)"
+JD-DS-0001,NumPy,required,"* Proficiency in Python for data work (pandas, numpy, and at least one ML library such as scikit-learn)"
+JD-DS-0001,Machine Learning,required,"* Proficiency in Python for data work (pandas, numpy, and at least one ML library such as scikit-learn)"
+JD-DS-0001,Scikit-learn,required,"* Proficiency in Python for data work (pandas, numpy, and at least one ML library such as scikit-learn)"
+JD-DS-0001,SQL,required,* Working knowledge of SQL
+JD-DS-0001,Data Cleaning,required,"* Experience with data cleaning, exploratory data analysis, and visualisation"
+JD-DS-0001,Data Analysis,required,"* Experience with data cleaning, exploratory data analysis, and visualisation"
+JD-DS-0001,Leadership,required,"* Strong written English, since findings get communicated to the team and leadership, not just left in a notebook"
+JD-DS-0002,Model Evaluation,required,"* Assist with data processing, chatbot evaluation, AI model evaluation, and building RPA pipelines"
+JD-DS-0002,Monitoring & Observability,required,* Building monitoring dashboards
+JD-DS-0002,Python,required,* Python coding
+JD-DS-0002,Cloud Computing,required,* Cloud infrastructure
+JD-DS-0002,SQL,required,* SQL querying
+JD-DS-0003,Computer Vision,required,"We are looking for passionate AI Interns who are eager to learn, explore emerging technologies, and contribute to real-world AI projects involving Computer Vision, Multimodal AI, and Retrieval-Augmented Generation (RAG)"
+JD-DS-0003,Business Analysis,required,* Collaborate with customers and internal stakeholders to understand business requirements and translate them into AI solutions
+JD-DS-0003,ETL,required,"* Build data pipelines, model evaluation workflows, and proof-of-concept demonstrations"
+JD-DS-0003,Model Evaluation,required,"* Build data pipelines, model evaluation workflows, and proof-of-concept demonstrations"
+JD-DS-0003,UI/UX Design,required,"* Fine-tune and optimize AI models to improve performance, accuracy, and user experience"
+JD-DS-0003,AI Literacy,required,* Artificial Intelligence
+JD-DS-0003,Generative AI,required,"* Strong interest in Generative AI, Computer Vision, and Multimodal AI"
+JD-DS-0003,Python,required,* Solid programming skills in Python
+JD-DS-0003,Machine Learning,preferred,* Familiarity with machine learning and deep learning fundamentals
+JD-DS-0003,Deep Learning,preferred,* Familiarity with machine learning and deep learning fundamentals
+JD-DS-0003,Prompt Engineering,required,"* Basic understanding of LLMs, RAG, vector databases, and prompt engineering"
+JD-DS-0003,PyTorch,preferred,* PyTorch
+JD-DS-0003,TensorFlow,preferred,* TensorFlow
+JD-DS-0003,Hugging Face,preferred,* Hugging Face
+JD-DS-0003,Self-Motivation,preferred,"* Self-motivated, proactive, and able to work effectively in a fast-paced environment"
+JD-DS-0003,Communication,preferred,* Good communication skills and the ability to collaborate within cross-functional teams
+JD-DS-0003,Cloud Computing,bonus,"* Experience with cloud platforms such as AWS, Azure, Google Cloud, or [COMPANY] AI platforms"
+JD-DS-0003,AWS,bonus,"* Experience with cloud platforms such as AWS, Azure, Google Cloud, or [COMPANY] AI platforms"
+JD-DS-0003,Azure,bonus,"* Experience with cloud platforms such as AWS, Azure, Google Cloud, or [COMPANY] AI platforms"
+JD-DS-0003,GCP,bonus,"* Experience with cloud platforms such as AWS, Azure, Google Cloud, or [COMPANY] AI platforms"
+JD-DS-0004,Model Evaluation,bonus,* Model Evaluation (Added Advantage)
+JD-DS-0004,Data Analysis,required,* Data Analysis
+JD-DS-0004,SQL,required,"* Proficiency in Excel, SQL, BI tools, and Python (e"
+JD-DS-0004,Python,required,"* Proficiency in Excel, SQL, BI tools, and Python (e"
+JD-DS-0004,Pandas,required,"pandas, scikit-learn)"
+JD-DS-0004,Scikit-learn,required,"pandas, scikit-learn)"
+JD-DS-0004,Communication,required,* Good communication skills with the ability to present data insights and recommendations to stakeholders
+JD-DS-0004,Machine Learning,bonus,"* Knowledge of forecasting, predictive modelling, or machine learning is an added advantage"
+JD-DS-0005,Machine Learning,required,* Assist with prototyping and exploring new machine learning initiatives in [COMPANY]
+JD-DS-0005,Python,required,"* Proficient in either R, Python, Matlab or other analytics/data mining packages"
+JD-DS-0005,Data Mining,required,"* Proficient in either R, Python, Matlab or other analytics/data mining packages"
+JD-DS-0005,Statistical Analysis,required,"* Experience in machine learning, predictive analytics and statistical modelling, in academic and/or industry settings"
+JD-DS-0005,Communication,required,"* Good written and verbal communication skills, with high attention to detail"
+JD-DS-0005,Attention to Detail,required,"* Good written and verbal communication skills, with high attention to detail"
+JD-DS-0006,Tableau,required,* Work closely with process team to understand their analytical needs for dashboard development (Tableau)
+JD-DS-0006,Business Analysis,required,"* Develop the dashboard (Tableau) according to the extraction, formulation and manipulation of data to address business requirements"
+JD-DS-0006,SQL,required,"* Strong knowledge - SQL, R, Python, Tableau, PowerBI, Hadoop, C++, C, C#, RStudio, Visual Studio, MS Office"
+JD-DS-0006,Python,required,"* Strong knowledge - SQL, R, Python, Tableau, PowerBI, Hadoop, C++, C, C#, RStudio, Visual Studio, MS Office"
+JD-DS-0006,Power BI,required,"* Strong knowledge - SQL, R, Python, Tableau, PowerBI, Hadoop, C++, C, C#, RStudio, Visual Studio, MS Office"
+JD-DS-0006,Hadoop,required,"* Strong knowledge - SQL, R, Python, Tableau, PowerBI, Hadoop, C++, C, C#, RStudio, Visual Studio, MS Office"
+JD-DS-0006,C++,required,"* Strong knowledge - SQL, R, Python, Tableau, PowerBI, Hadoop, C++, C, C#, RStudio, Visual Studio, MS Office"
+JD-DS-0006,C#,required,"* Strong knowledge - SQL, R, Python, Tableau, PowerBI, Hadoop, C++, C, C#, RStudio, Visual Studio, MS Office"
+JD-DS-0006,Problem Solving,required,"* Good hands-on skills, excellent analytical and problem solving capabilities"
+JD-DS-0007,Leadership,required,This role will provide a foundation for leadership opportunities in the rapidly evolving digital landscape
+JD-DS-0007,Project Management,required,"* Project Management: Support and manage digital technology projects from conception to execution, ensuring successful implementation within timelines and budgets"
+JD-DS-0007,Cloud Computing,required,"* Innovation & Strategy: Assist in the development and execution of digital transformation strategies, leveraging the latest technologies like AI, IoT, Blockchain, and Cloud Computing to drive business growth"
+JD-DS-0007,Data Analysis,required,* Data Analysis & Reporting: Analyze data and generate insights from digital platforms and systems to drive decisions and optimize digital performance
+JD-DS-0007,Teamwork,required,"* Collaboration: Work with cross-functional teams, including IT, Business Units, and external partners, to deliver technology solutions that meet business objectives"
+JD-DS-0007,Problem Solving,required,"* Problem-Solving: Contribute to identifying, troubleshooting, and solving digital and technical challenges faced by the organization"
+JD-DS-0007,Machine Learning,required,"* Proficient in digital tools and platforms such as cloud computing, databases, AI/ML, DevOps, and business intelligence"
+JD-DS-0007,Python,required,", Python, Java, SQL), and/or data analytics tools (e"
+JD-DS-0007,Java,required,", Python, Java, SQL), and/or data analytics tools (e"
+JD-DS-0007,SQL,required,", Python, Java, SQL), and/or data analytics tools (e"
+JD-DS-0007,Tableau,bonus,", Tableau, Power BI) is a plus"
+JD-DS-0007,Power BI,bonus,", Tableau, Power BI) is a plus"
+JD-DS-0007,Communication,required,* Excellent communication skills (verbal and written) to interact with technical and non-technical stakeholders
+JD-DS-0007,Adaptability,required,* Adaptable: Comfortable navigating fast-changing digital landscapes
+JD-DS-0007,Self-Motivation,required,* Leadership potential: Demonstrates initiative and leadership qualities with the ability to manage projects and teams in the future
+JD-DS-0008,Documentation,required,* Prepare basic documentation on the work completed
+JD-DS-0008,Python,required,", Python or R)"
+JD-DS-0008,Data Analysis,preferred,* Exposure to data analysis concepts through coursework or personal projects
+JD-DS-0008,SQL,required,* Some awareness of databases or SQL (even from coursework)
+JD-DS-0008,Excel,required,* Microsoft Excel (intermediate level)
+JD-DS-0008,Power BI,required,"* Willingness to learn visualization tools (Power BI, Tableau, etc"
+JD-DS-0008,Tableau,required,"* Willingness to learn visualization tools (Power BI, Tableau, etc"
+JD-DS-0008,Communication,required,* Good communication and teamwork
+JD-DS-0008,Teamwork,required,* Good communication and teamwork
+JD-DS-0008,Self-Motivation,required,* Eager to learn and take initiative
+JD-DS-0009,ETL,required,"You will work on real-world semiconductor manufacturing and supply-chain problems alongside experienced team members, developing data pipelines, analytical solutions and digital applications"
+JD-DS-0009,Python,required,"* Write and maintain Python and SQL code for data extraction, transformation, validation and analysis"
+JD-DS-0009,SQL,required,"* Write and maintain Python and SQL code for data extraction, transformation, validation and analysis"
+JD-DS-0009,Problem Solving,required,"* Perform data validation, reconciliation and troubleshooting"
+JD-DS-0009,Monitoring & Observability,required,"* Participate in the development, testing, deployment and monitoring of digital applications and planning-system capabilities"
+JD-DS-0009,Documentation,required,"* Prepare technical documentation, follow coding standards and collaborate with cross-functional teams across Penang and Singapore"
+JD-DS-0009,Communication,required,"* Strong analytical and problem-solving skills, with good communication, teamwork and a proactive, ownership-oriented attitude"
+JD-DS-0009,Teamwork,required,"* Strong analytical and problem-solving skills, with good communication, teamwork and a proactive, ownership-oriented attitude"
+JD-DS-0009,Self-Motivation,required,"* Strong analytical and problem-solving skills, with good communication, teamwork and a proactive, ownership-oriented attitude"
+JD-DS-0009,Data Analysis,bonus,"* Academic or personal projects involving Python, SQL, data analytics, APIs or cloud technologies, or exposure to Power BI, Tableau or Git, are advantageous"
+JD-DS-0009,Power BI,bonus,"* Academic or personal projects involving Python, SQL, data analytics, APIs or cloud technologies, or exposure to Power BI, Tableau or Git, are advantageous"
+JD-DS-0009,Tableau,bonus,"* Academic or personal projects involving Python, SQL, data analytics, APIs or cloud technologies, or exposure to Power BI, Tableau or Git, are advantageous"
+JD-DS-0009,Git,bonus,"* Academic or personal projects involving Python, SQL, data analytics, APIs or cloud technologies, or exposure to Power BI, Tableau or Git, are advantageous"
+JD-DS-0010,Data Analysis,required,"* To provide accurate, reliable test results or data analysis to strengthen the statistical back up in all relevant projects & department activities"
+JD-DS-0010,AI Literacy,preferred,* Degree (Artificial Intelligence/ Computer Science/Data Science) disciplines are preferred
+JD-DS-0010,Power BI,required,* Knowledge in Power BI is advantage
+JD-DS-0010,Communication,required,* Ability to work in a team and good communication skills
+JD-SD-0002,Documentation,required,* Prepare design documentation
+JD-SD-0002,React,required,* Have at least 2 years of working experience with React Native or in related fields
+JD-SD-0002,C#,required,"NET Core MVC C#, HTML5, CSS, Razor/React"
+JD-SD-0002,HTML,required,"NET Core MVC C#, HTML5, CSS, Razor/React"
+JD-SD-0002,CSS,required,"NET Core MVC C#, HTML5, CSS, Razor/React"
+JD-SD-0002,JavaScript,required,"js, Javascript and MSSQL"
+JD-SD-0002,Azure,bonus,* Experience in Azure will be an added advantage
+JD-SD-0003,HTML,required,"* Assisting Software Engineers to develop in HTML, CSS, Javascript, ASP"
+JD-SD-0003,CSS,required,"* Assisting Software Engineers to develop in HTML, CSS, Javascript, ASP"
+JD-SD-0003,JavaScript,required,"* Assisting Software Engineers to develop in HTML, CSS, Javascript, ASP"
+JD-SD-0003,C#,required,net & C#
+JD-SD-0003,Documentation,required,* Maintain good documentation and maintenance practice
+JD-SD-0005,Documentation,required,"* Software Development Life Cycle (SDLC) including Design, Programming, QC, Documentation and etc"
+JD-SD-0005,Data Mining,required,"0 Development (Machine Automation, AGV, Mobility, Data Mining, Dashboard and etc)"
+JD-SD-0005,Communication,required,"* Required skill(s): Communication, Adaptive, Teamwork"
+JD-SD-0005,Teamwork,required,"* Required skill(s): Communication, Adaptive, Teamwork"
+JD-SD-0006,Communication,required,"* Must have strong analytical, problem-solving, good communication and stakeholder management skills"
+JD-SD-0006,Interpersonal Skills,required,"* Must have strong analytical, problem-solving, good communication and stakeholder management skills"
+JD-SD-0006,C#,required,(C#/ Java/ Javascript or equivalent)
+JD-SD-0006,Java,required,(C#/ Java/ Javascript or equivalent)
+JD-SD-0006,JavaScript,required,(C#/ Java/ Javascript or equivalent)
+JD-SD-0006,SQL,required,* Must be proficient in SQL & Relational Database (MS SQL / MySQL or equivalent)
+JD-SD-0006,MySQL,required,* Must be proficient in SQL & Relational Database (MS SQL / MySQL or equivalent)
+JD-SD-0007,Business Analysis,required,"* Turn business requirements and UI/UX flows into clean, secure, production-ready features"
+JD-SD-0007,Linux,required,"* Linux, server, database and networking knowledge"
+JD-SD-0007,Networking,required,"* Linux, server, database and networking knowledge"
+JD-SD-0008,Self-Motivation,required,"* Technically competent, self-driven individual(s) with a proven track record in the software field"
+JD-SD-0008,Teamwork,required,* Independent contributor who is also a good team player
+JD-SD-0008,Monitoring & Observability,required,"0 applications usually involve systems to integrate with manufacturing equipment in semiconductor factories to collect data, provide analytics, and enable intelligent monitoring and control"
+JD-SD-0008,C#,required,"* Proven track record with some of the following technologies/ programming languages: C#,"
+JD-SD-0008,SQL,required,"NET, Web Services, MS SQL Server, VB, Python, Web Programming, Dashboards, SECS/GEM, Machine Learning"
+JD-SD-0008,Python,required,"NET, Web Services, MS SQL Server, VB, Python, Web Programming, Dashboards, SECS/GEM, Machine Learning"
+JD-SD-0008,Machine Learning,required,"NET, Web Services, MS SQL Server, VB, Python, Web Programming, Dashboards, SECS/GEM, Machine Learning"
+JD-SD-0009,Java,required,We are looking for a passionate and driven Java Developer Intern to join our growing engineering team
+JD-SD-0009,Agile / Scrum,required,"* Collaborate with cross-functional teams (PM, QA, DevOps) in an Agile environment"
+JD-SD-0009,CI/CD,required,* Learn and contribute to internal tooling and CI/CD pipelines
+JD-SD-0009,Spring Boot,preferred,* Familiarity with Spring Boot or willingness to learn quickly
+JD-SD-0009,SQL,required,* Basic understanding of SQL / relational databases
+JD-SD-0010,Problem Solving,required,"The Software Developer Intern supports the development of enterprise financial applications, assisting in coding, testing, and troubleshooting"
+JD-SD-0010,Teamwork,preferred,"The role provides hands-on System Development Life Cycle (SDLC) experience, exposure to modern technologies, and opportunities to build technical and teamwork skills"
+JD-SD-0010,Spring Boot,required,"Expose to different development framework and tools: Spring framework, Angular, React, Kubernetes, Gradle, Docker, Bootstrap, Ionic, Microservices etc"
+JD-SD-0010,Angular,required,"Expose to different development framework and tools: Spring framework, Angular, React, Kubernetes, Gradle, Docker, Bootstrap, Ionic, Microservices etc"
+JD-SD-0010,React,required,"Expose to different development framework and tools: Spring framework, Angular, React, Kubernetes, Gradle, Docker, Bootstrap, Ionic, Microservices etc"
+JD-SD-0010,Kubernetes,required,"Expose to different development framework and tools: Spring framework, Angular, React, Kubernetes, Gradle, Docker, Bootstrap, Ionic, Microservices etc"
+JD-SD-0010,Docker,required,"Expose to different development framework and tools: Spring framework, Angular, React, Kubernetes, Gradle, Docker, Bootstrap, Ionic, Microservices etc"
+JD-SD-0010,Microservices,required,"Expose to different development framework and tools: Spring framework, Angular, React, Kubernetes, Gradle, Docker, Bootstrap, Ionic, Microservices etc"
+JD-SD-0011,Communication,required,"* Good analytical, problem-solving, and communication skills"
+JD-SD-0012,Attention to Detail,required,We are looking for a motivated and detail-oriented Junior Software Engineer to join our growing engineering team
+JD-SD-0012,Business Analysis,required,* Support the implementation of new features and improvements based on product and business requirements
+JD-SD-0012,Documentation,required,"* Maintain clear and organized source code, technical documentation, and development records"
+JD-SD-0012,A/B Testing,required,* Assist the engineering team with AI-related product development and experimentation
+JD-SD-0012,UI/UX Design,required,* Explore and learn new AI technologies that may improve product performance and user experience
+JD-SD-0012,Problem Solving,required,"* Assist in product testing, troubleshooting, and technical issue investigation"
+JD-SD-0012,Self-Motivation,required,"* Self-motivated, proactive, and willing to take ownership of assigned tasks"
+JD-SD-0012,Communication,required,* Good communication skills and ability to work effectively within a multidisciplinary team
+JD-SD-0012,Python,required,"* Knowledge of Python, JavaScript / TypeScript, C / C++, or similar programming languages"
+JD-SD-0012,JavaScript,required,"* Knowledge of Python, JavaScript / TypeScript, C / C++, or similar programming languages"
+JD-SD-0012,TypeScript,required,"* Knowledge of Python, JavaScript / TypeScript, C / C++, or similar programming languages"
+JD-SD-0012,C++,required,"* Knowledge of Python, JavaScript / TypeScript, C / C++, or similar programming languages"
+JD-SD-0012,Machine Learning,preferred,* Exposure to AI or Machine Learning
+JD-SD-0012,Data Analysis,required,"* Experience with data processing, dataset preparation, or data analysis"
+JD-SD-0012,Git,required,* Experience with Git or other version control systems
+JD-WD-0001,Documentation,required,* Assist in preparing software and product documentation
+JD-WD-0001,Problem Solving,required,* Assist in troubleshooting and modifying existing applications when required
+JD-WD-0001,Java,required,* Basic knowledge in programming languages such as Java and JavaScript
+JD-WD-0001,JavaScript,required,* Basic knowledge in programming languages such as Java and JavaScript
+JD-WD-0001,Vue.js,required,* Basic knowledge in development frameworks such as Vue.js ecosystem and UI styling with Tailwind CSS
+JD-WD-0001,CSS,required,js ecosystem and UI styling with Tailwind CSS
+JD-WD-0001,Self-Motivation,required,* Self-Driven with strong analytical and problem-solving skills
+JD-WD-0002,PHP,required,"* PHP / Laravel, or another modern web framework"
+JD-WD-0002,Git,required,"* Git and GitHub (branches, pull requests, teamwork)"
+JD-WD-0002,Teamwork,required,"* Git and GitHub (branches, pull requests, teamwork)"
+JD-WD-0002,Self-Motivation,required,"* Takes initiative and delivers clear, practical solutions"
+JD-WD-0002,Vue.js,bonus,* Nice to have: Vue or React
+JD-WD-0002,React,bonus,* Nice to have: Vue or React
+JD-WD-0002,Docker,bonus,"* Nice to have: Docker, Linux or cloud hosting"
+JD-WD-0002,Linux,bonus,"* Nice to have: Docker, Linux or cloud hosting"
+JD-WD-0002,Networking,bonus,* Nice to have: Basic technical support skills and networking
+JD-WD-0003,React,required,You’ll be working on both frontend and backend development using React.js with Next
+JD-WD-0003,Node.js,required,"NET Core, and Node.js while managing databases in MS SQL and MySQL"
+JD-WD-0003,SQL,required,js while managing databases in MS SQL and MySQL
+JD-WD-0003,MySQL,required,js while managing databases in MS SQL and MySQL
+JD-WD-0003,C#,required,NET Core (C#) and Node
+JD-WD-0003,Documentation,required,* Contribute to system documentation and knowledge sharing
+JD-WD-0003,JavaScript,required,"js, JavaScript/TypeScript, and Next"
+JD-WD-0003,TypeScript,required,"js, JavaScript/TypeScript, and Next"
+JD-WD-0003,REST API,required,* Understanding of RESTful API design
+JD-WD-0003,Git,preferred,* Familiarity with Git and version control systems
+JD-WD-0003,Communication,required,* Good communication and teamwork skills
+JD-WD-0003,Teamwork,required,* Good communication and teamwork skills
+JD-WD-0003,Docker,required,* Experience with Docker and containerized environments
+JD-WD-0003,Agile / Scrum,preferred,* Exposure to Agile methodologies (Scrum/Kanban)
+JD-WD-0003,CI/CD,preferred,* Familiarity with basic DevOps practices or CI/CD tools
+JD-WD-0003,Unit Testing,required,* Knowledge of unit testing and code quality tools
+JD-WD-0004,Identity & Access Management,required,"* Work with the Supabase backend, including the database, authentication and access control"
+JD-WD-0004,Problem Solving,required,* Provide first-level troubleshooting for staff software and tools
+JD-WD-0004,JavaScript,bonus,* Basic coding in JavaScript/TypeScript (Python is a plus)
+JD-WD-0004,TypeScript,bonus,* Basic coding in JavaScript/TypeScript (Python is a plus)
+JD-WD-0004,Python,bonus,* Basic coding in JavaScript/TypeScript (Python is a plus)
+JD-WD-0004,React,required,* Some experience with React or Next
+JD-WD-0004,SQL,required,* Basic understanding of databases (SQL) and APIs
+JD-WD-0004,PostgreSQL,required,"* Experience with Flutter/Dart, Supabase or PostgreSQL"
+JD-WD-0004,Git,preferred,* Familiarity with Git and GitHub
+JD-WD-0005,React,required,We are looking for a passionate Frontend Developer who is equally comfortable building polished React interfaces and working with ClickHouse big data infrastructure
+JD-WD-0005,TypeScript,required,"* Develop and maintain responsive, scalable frontend applications using React 18+ and TypeScript"
+JD-WD-0005,CSS,required,* Build UI components using Tailwind CSS or Styled-components
+JD-WD-0005,SQL,required,"* Write and optimize complex SQL queries including aggregations, window functions, and partitioned queries"
+JD-WD-0005,JavaScript,required,"* Strong ES6+ JavaScript fundamentals (async/await, destructuring, modules)"
+JD-WD-0005,Documentation,required,* Storybook for component documentation
+JD-WD-0006,Vue.js,required,"* Develop, maintain, and optimize responsive web applications using Nuxt / VueJS"
+JD-WD-0006,React,required,* At least 1 year of experience in frontend development with frameworks like Vue / Svelte / React
+JD-WD-0006,HTML,required,"* Proficient in HTML5, CSS3, JavaScript (ES6+)"
+JD-WD-0006,CSS,required,"* Proficient in HTML5, CSS3, JavaScript (ES6+)"
+JD-WD-0006,JavaScript,required,"* Proficient in HTML5, CSS3, JavaScript (ES6+)"
+JD-WD-0006,Git,required,* Understanding of Git/GitHub and version control best practices
+JD-WD-0006,Self-Motivation,required,"* Self-motivated, proactive, and able to work in a fast-paced environment"
+JD-WD-0006,Communication,required,* Strong communication and interpersonal skills
+JD-WD-0006,Interpersonal Skills,required,* Strong communication and interpersonal skills
+JD-WD-0008,Self-Motivation,required,"You're proactive, communicative, and value both mentoring and learning from others"
+JD-WD-0008,Documentation,required,"* Contribute to a positive engineering culture through feedback, documentation, and shared learning"
+JD-WD-0008,HTML,required,"* At least 2 years in front-end development (HTML, CSS, JavaScript, and frameworks like Angular, React, or Vue) together with hands-on experience in backend technologies (e"
+JD-WD-0008,CSS,required,"* At least 2 years in front-end development (HTML, CSS, JavaScript, and frameworks like Angular, React, or Vue) together with hands-on experience in backend technologies (e"
+JD-WD-0008,JavaScript,required,"* At least 2 years in front-end development (HTML, CSS, JavaScript, and frameworks like Angular, React, or Vue) together with hands-on experience in backend technologies (e"
+JD-WD-0008,Angular,required,"* At least 2 years in front-end development (HTML, CSS, JavaScript, and frameworks like Angular, React, or Vue) together with hands-on experience in backend technologies (e"
+JD-WD-0008,React,required,"* At least 2 years in front-end development (HTML, CSS, JavaScript, and frameworks like Angular, React, or Vue) together with hands-on experience in backend technologies (e"
+JD-WD-0008,Vue.js,required,"* At least 2 years in front-end development (HTML, CSS, JavaScript, and frameworks like Angular, React, or Vue) together with hands-on experience in backend technologies (e"
+JD-WD-0008,Node.js,required,", Node.js,"
+JD-WD-0008,PostgreSQL,required,"* Solid understanding of relational (PostgreSQL, MySQL) or NoSQL (MongoDB) databases"
+JD-WD-0008,MySQL,required,"* Solid understanding of relational (PostgreSQL, MySQL) or NoSQL (MongoDB) databases"
+JD-WD-0008,MongoDB,required,"* Solid understanding of relational (PostgreSQL, MySQL) or NoSQL (MongoDB) databases"
+JD-WD-0008,Git,preferred,"* Familiarity with version control (Git), CI/CD workflows, and basic DevOps practices"
+JD-WD-0008,CI/CD,preferred,"* Familiarity with version control (Git), CI/CD workflows, and basic DevOps practices"
+JD-WD-0008,Docker,bonus,"* Bonus: Experience with containerization (Docker), cloud platforms (AWS, Azure), or testing frameworks (Jest, xUnit, etc"
+JD-WD-0008,Cloud Computing,bonus,"* Bonus: Experience with containerization (Docker), cloud platforms (AWS, Azure), or testing frameworks (Jest, xUnit, etc"
+JD-WD-0008,AWS,bonus,"* Bonus: Experience with containerization (Docker), cloud platforms (AWS, Azure), or testing frameworks (Jest, xUnit, etc"
+JD-WD-0008,Azure,bonus,"* Bonus: Experience with containerization (Docker), cloud platforms (AWS, Azure), or testing frameworks (Jest, xUnit, etc"
+JD-WD-0008,Unit Testing,bonus,"* Bonus: Experience with containerization (Docker), cloud platforms (AWS, Azure), or testing frameworks (Jest, xUnit, etc"
+JD-WD-0009,HTML,required,Build HTML EDMs for email campaigns
+JD-WD-0009,CSS,required,"* Write clean, responsive HTML, CSS, and JavaScript"
+JD-WD-0009,JavaScript,required,"* Write clean, responsive HTML, CSS, and JavaScript"
+JD-WD-0009,PHP,bonus,* Knowledge of PHP or other web technologies (nice-to-have)
+JD-WD-0009,Excel,bonus,* Familiarity with Microsoft Excel for data handling or content input (nice-to-have)
+JD-WD-0010,PHP,required,"* Knowing PHP, MYSQL, HTML, CSS, JAVASCRIPT"
+JD-WD-0010,MySQL,required,"* Knowing PHP, MYSQL, HTML, CSS, JAVASCRIPT"
+JD-WD-0010,HTML,required,"* Knowing PHP, MYSQL, HTML, CSS, JAVASCRIPT"
+JD-WD-0010,CSS,required,"* Knowing PHP, MYSQL, HTML, CSS, JAVASCRIPT"
+JD-WD-0010,JavaScript,required,"* Knowing PHP, MYSQL, HTML, CSS, JAVASCRIPT"
+JD-WD-0011,PHP,required,"* Build and maintain high-quality web applications using PHP, HTML, CSS, and JavaScript"
+JD-WD-0011,HTML,required,"* Build and maintain high-quality web applications using PHP, HTML, CSS, and JavaScript"
+JD-WD-0011,CSS,required,"* Build and maintain high-quality web applications using PHP, HTML, CSS, and JavaScript"
+JD-WD-0011,JavaScript,required,"* Build and maintain high-quality web applications using PHP, HTML, CSS, and JavaScript"
+JD-WD-0011,Communication,required,* Able to communicate in Mandarin for effective team communication with Mandarin-speaking clients
+JD-WD-0011,MySQL,required,* Database Knowledge: Experience with MySQL

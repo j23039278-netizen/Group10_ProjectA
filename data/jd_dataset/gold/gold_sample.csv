@@ -1,0 +1,1711 @@
+jd_ref,role_code,title,company,location,seniority,source,source_url,source_license,collected_date,raw_text
+JD-CE-0001,CLOUD_ENGINEER,IT Infra & Cloud Intern,Anonymised,"Petaling Jaya, Selangor",entry,manual,https://my.jobstreet.com/job/95170270,Copied manually for non-commercial academic research,2026-10-12,"About the role
+
+This is an infrastructure support role assisting the Infrastructure team with IT infrastructure setup, configuration, monitoring and troubleshooting. You will support Microsoft Azure infrastructure activities, including virtual machines, virtual networks, storage and resource monitoring, under the guidance of senior engineers.
+
+Key responsibilities
+
+* Assist the Infrastructure team with basic IT infrastructure setup, configuration, monitoring and troubleshooting
+* Support Microsoft Azure infrastructure activities, including virtual machines, virtual networks, storage and resource monitoring, under the guidance of senior engineers
+* Assist with network troubleshooting, including IP addressing, DNS, connectivity and basic routing concepts
+* Support Windows Server and/or Linux system administration tasks
+* Assist in monitoring infrastructure performance, reviewing alerts and documenting incidents
+* Prepare and maintain technical documentation, configuration records and troubleshooting guides
+* Assist with infrastructure deployment, testing, maintenance and operational improvement activities
+* Learn and follow IT security practices, access control procedures and infrastructure management standards
+* Perform other infrastructure-related tasks and assignments as required by the team
+
+About you
+
+* Currently pursuing a Diploma or Bachelor's Degree in Information Technology, Computer Networking, Networking Technology, IT Infrastructure, Cloud Computing, Systems Administration or a related field
+* Must be eligible for an industrial training placement with a minimum commitment of 3 months
+* Basic understanding of computer networking, operating systems and IT infrastructure concepts
+* Familiarity with Windows, Linux, virtual machines or networking technologies is an advantage
+* Basic knowledge of Microsoft Azure or other cloud platforms is an added advantage
+* Familiarity with PowerShell, Bash, scripting or infrastructure monitoring tools is a plus
+* Good analytical and problem-solving skills
+* Willingness to learn, take initiative and work collaboratively with the technical team
+* Good communication skills and attention to detail"
+JD-CE-0002,CLOUD_ENGINEER,Internship - Cloud Infrastructure End User Computing,Anonymised,"Shah Alam, Selangor",entry,manual,https://my.jobstreet.com/job/94700229,Copied manually for non-commercial academic research,2026-10-12,"Responsibilities
+
+* Provide first-level technical support for hardware, software and network issues, ensuring prompt resolution and positive user experience.
+* Diagnosing and resolving IT incidents in line with organizational standards and best practices.
+* Support daily operations through IT asset management, inventory tracking and administration of hardware, software and infrastructure components.
+* Maintain accurate and up-to-date documentation of IT systems, configurations, processes and procedures to support transparency and knowledge sharing.
+* Assist in designing, developing and implementing new or improved systems and workflows to enhance operational efficiency.
+* Process and track IT-related invoices, telecommunications bills, software subscriptions, maintenance contracts and supporting records.
+* Support the testing and validation of new systems, applications and technologies to ensure quality and business alignment.
+* Research, evaluate and introduce emerging technologies and solutions, including Generative AI, automation and robotics to drive organizational improvement.
+
+Requirements
+
+* Strong communication and interpersonal abilities.
+* Effective time management and problem-solving skills.
+* Enjoy collaborating with individuals from diverse backgrounds and disciplines
+* Self-motivated, able to work independently and capable of managing multiple priorities in a fast-paced environment.
+* Proficient in Microsoft technologies, including Microsoft 365, Microsoft Copilot, and Microsoft Power Automate.
+* Familiarity with public cloud platforms (AWS, Azure, GCP), UiPath (RPA) and programming or database technologies such as SQL is an advantage."
+JD-CE-0003,CLOUD_ENGINEER,Junior Cloud Engineer,Anonymised,"Bangsar South, Kuala Lumpur",junior,manual,https://malaysia.indeed.com/viewjob?jk=6c6d2246ed49a6d6,Copied manually for non-commercial academic research,2026-10-12,"Key Responsibilities
+
+* Build, deploy and maintain the cloud infrastructure that runs our own platforms and our clients’ hosted environments, working to designs set by senior engineers and architects.
+* Run day-to-day operations across cloud and on-premises environments — provisioning, patching, monitoring, backup and incident response.
+* Take part in migration and deployment projects, from environment build through UAT to go-live support.
+* Document what you build: configurations, runbooks, network diagrams and as-built records.
+* Learn the platform and the business behind it and grow into owning environments of your own.
+
+Cloud Infrastructure
+
+* Provision and configure compute, storage, networking and identity services on at least one major cloud platform (AWS, Azure or Google Cloud).
+* Apply and maintain infrastructure baselines — instance sizing, storage tiers, security groups, load balancers, auto-scaling and backup policies.
+* Support hybrid setups that link cloud environments to on-premises data centres over VPN or dedicated circuits.
+* Help build and test disaster recovery environments and take part in DR drills against agreed RTO and RPO targets.
+* Track cost and utilisation and raise it when resources are over-provisioned or idle.
+
+Containers and Orchestration
+
+* Build and maintain container images and run workloads under Docker or a comparable runtime.
+* Deploy and support applications on Kubernetes or a managed equivalent (EKS, AKS, GKE) — deployments, services, ingress, config maps, secrets and persistent volumes.
+* Work with CI/CD pipelines to move builds through development, staging and production.
+* Troubleshoot container and cluster problems: failing pods, resource limits, image pulls and service-to-service networking.
+
+Systems and Networking
+
+* Administer Linux servers (RHEL, Rocky, Ubuntu or equivalent) — users and permissions, packages, services, storage, OS and kernel patching, and shell scripting.
+* Configure and troubleshoot core network services: DNS, DHCP, NTP, routing, VLANs, NAT, VPN and firewall rules.
+* Diagnose connectivity and performance problems with standard tools — ping, traceroute, dig, tcpdump, ss, curl — and read the output correctly.
+* Maintain monitoring and alerting and respond to alerts within agreed service targets.
+
+Databases and Application Support
+
+* Carry out routine MySQL tasks: user and privilege management, schema deployment, backup and restore, log checks and basic query troubleshooting.
+* Deploy and support application services on web and application servers (Apache, Nginx, Tomcat or PHP-based stacks).
+* Support release deployments and post-release verification alongside the development and QA teams.
+
+Security and Compliance
+
+* Work within our ISO/IEC 27001:2022 and PCI DSS v4.0 control environment — access control, change management, logging, patching and vulnerability remediation.
+* Harden systems to the agreed baselines and close vulnerability scan and penetration test findings within target timeframes.
+* Produce evidence for internal and external audits when asked.
+
+Requirements
+
+* 1–3 years’ experience in cloud, infrastructure or systems engineering. Fresh graduates with solid hands-on project or lab experience are welcome to apply.
+* Hands-on experience implementing or supporting workloads on at least one major cloud platform — AWS, Azure or Google Cloud. Certification (AWS Solutions Architect or SysOps Associate, AZ-104, Google ACE) is an advantage, not a substitute for practical experience.
+* Proficient in Linux administration and comfortable working entirely from the command line.
+* Working knowledge of TCP/IP, subnetting, DNS, DHCP, VLANs, routing, NAT and firewall concepts.
+* Basic MySQL — able to read and write SQL, run a backup and a restore, and explain what an index does.
+* Scripting in Bash, and ideally Python, to automate routine work.
+* Familiar with Git and with working from tickets and change records.
+* Clear written English for documentation, and the confidence to speak to internal stakeholders and clients.
+* Strong analytical and troubleshooting skills, and the discipline to test before applying a change to production.
+* Degree or diploma in Computer Science, Information Technology, Engineering or a related field — or equivalent practical experience.
+
+Advantageous
+
+* Docker and Kubernetes in a production or near-production setting.
+* Infrastructure as code — Terraform, CloudFormation or Ansible.
+* Virtualisation platforms — VMware, Hyper-V or Proxmox.
+* Monitoring and observability tooling — Zabbix, Prometheus, Grafana, CloudWatch or Azure Monitor.
+* Exposure to regulated environments such as financial services or payments, and to audit or compliance work.
+* Experience in a managed services or client-facing technical role.
+
+Working Arrangements
+
+* Based at our Kuala Lumpur office, Vertical Bangsar South, on standard office hours.
+* Participation in an on-call rotation covering production incidents and scheduled maintenance windows, which fall outside office hours.
+* Occasional onsite work at data centres and client premises, including out-of-hours cutovers and DR drills."
+JD-CE-0004,CLOUD_ENGINEER,Junior System Administrator,Anonymised,"Jalan Tun Razak, Kuala Lumpur",junior,manual,https://malaysia.indeed.com/viewjob?jk=9a82daa6e0ce11dc,Copied manually for non-commercial academic research,2026-10-12,"Are you passionate about high-performance computing, digging deep into Linux systems, and working with cutting-edge infrastructure? Looking for a fast-paced environment where your skills directly support groundbreaking work across the globe?
+[COMPANY] is looking for a Junior System Administrator to join our global IT operations team. You'll be hands-on with our high-performance computing (HPC) infrastructure, working on everything from compute clusters to high-speed networks and large-scale storage systems. If you enjoy diving into Linux internals, writing and running bash scripts, and supporting users who rely on you to keep things running smoothly, we want to hear from you.
+
+Requirements
+
+* A Diploma/ Bachelor's in Computer Science, Computer Engineering, or equivalent.
+* Experience with Linux (any flavour!)
+* Hands-on homelab experience would be highly desirable
+* Excellent communication skills; fluent in written and spoken English.
+* The ability to multitask and be agile"
+JD-CE-0005,CLOUD_ENGINEER,Internship - IT (Cybersecurity & System Administration),Anonymised,"Bangsar South, Kuala Lumpur",entry,manual,https://my.jobstreet.com/job/95143306,Copied manually for non-commercial academic research,2026-10-12,"Requirements
+
+* Open to degree students pursuing studies in Computer Science, Information Technology, or any other relevant discipline
+* Interested to pursue internship opportunity in Cybersecurity or System Administraion field
+* For local students only
+* A minimum of 6 months placement is required
+* A good command of English
+
+Perks and benefits: Medical; Miscellaneous allowance; Loans; Dental; Vision; Employer EPF Contribution of 16%"
+JD-CE-0006,CLOUD_ENGINEER,Cloud Delivery Support Engineer,Anonymised,"Maluri, Kuala Lumpur (Hybrid)",entry,manual,https://my.jobstreet.com/job/95063387,Copied manually for non-commercial academic research,2026-10-12,"Cloud Delivery Support Engineer (Fresh graduate)
+
+Employment: 1-Year Contract, renewable annually; conversion to Permanent in the third year
+Work Mode: Hybrid, Shift-based
+Shift: 9:00 AM–6:00 PM / 5:00 PM–12:00 AM
+Rest Days: 2 rest days per week, scheduled based on roster and not fixed on Saturday or Sunday
+
+Responsibilities
+
+* Support cloud service delivery, including account provisioning, service activation, configuration and deployment.
+* Provide L1 technical support and basic troubleshooting for cloud-related issues.
+* Handle customer service requests, incidents and technical enquiries, with proper escalation when required.
+* Support multiple cloud platforms, including AWS, Azure, Alibaba Cloud and Tencent Cloud.
+* Monitor and follow up on incidents and service requests until resolution.
+* Maintain operational data and reports using Excel and Google Sheets.
+* Coordinate with Technical, Sales and Procurement teams to ensure timely service delivery.
+* Continuously develop cloud technical knowledge through training and quarterly assessments.
+
+Requirements
+
+* Experience in cloud support, technical support, IT operations, service delivery or related roles.
+* Welcome cloud related fresh graduate to apply.
+* Basic understanding of cloud infrastructure, networking, virtual machines and cloud services.
+* Strong troubleshooting, analytical and problem-solving skills.
+* Proficient in Excel and Google Sheets.
+* Able to manage multiple tasks in a fast-paced environment.
+* Proficiency in Mandarin is mandatory, as the role requires direct communication with Mandarin-speaking clients.
+* Able to communicate effectively in English.
+* Willing to work rotating shifts.
+* AWS, Azure, Alibaba Cloud or Tencent Cloud knowledge or certification is an advantage."
+JD-CE-0007,CLOUD_ENGINEER,Specialist - Junior DevOps Engineer,Anonymised,"Damansara Uptown, Kuala Lumpur",junior,manual,https://malaysia.indeed.com/viewjob?jk=5504a371efdac8d3,Copied manually for non-commercial academic research,2026-10-12,"Responsibilities of the Role
+
+We are looking for an enthusiastic DevOps Engineer who has the following qualities and responsibilities:
+
+Application support
+
+* Resolve issues
+* Perform site performance monitoring to determine system performance bottlenecks.
+* Manage operation day-to-day technical issues.
+
+DevOps tasks
+
+* Support the application CI/CD pipeline for promoting software into higher environments.
+* DevOps tools support
+* Infrastructure maintenance support
+* Proactive learner with the ability to research and quickly utilize new technologies.
+
+Requirements for the Role
+
+* Bachelor of Computer Science / Information Technology from a reputable university/college.
+* Fresh graduates eager to start their careers in IT are welcome to apply.
+* Passionate about technical IT work and adopting new technologies.
+* Critical thinker and problem-solving skills.
+* Good teamwork.
+* Good time-management skills.
+* Good interpersonal and communication skills.
+* Growth mindset, willing to pick up new skills.
+* Professional proficiency in English, both written and spoken.
+
+Perks and benefits: Performance related bonus for confirmed staff; Annual Leave 15 days; Medical Leave 14 days; Medical and hospitalization coverage"
+JD-CE-0008,CLOUD_ENGINEER,Cloud Systems Engineer,Anonymised,Kuala Lumpur (Remote),mid,manual,https://malaysia.indeed.com/viewjob?jk=ab3751716ae11cc1,Copied manually for non-commercial academic research,2026-10-12,"We are looking for a Cloud System Engineer who is well-versed in private and public cloud infrastructure, Linux server management, along with experience in on-premise to cloud migration.
+Responsibilities include implementation, configuration and support of our cloud server infrastructure across South East Asia, as well as planning and execution of migration of on-premise servers and applications to the cloud.
+Most tasks will be carried out remotely.
+
+What you will be doing
+
+* Operating and maintaining large scale cloud infrastructure and servers in global data centres
+* Working on various Linux server projects alongside multiple departments
+* Migrating clients on-premise servers to the cloud via replication or data backups
+* Assessing and resolving server and network-related issues escalated by internal and external users
+* Proactive monitoring of supported cloud instances
+
+Requirements
+
+* Solid experience with Linux and virtualization
+* Familiarity with virtualization technologies and troubleshooting virtual machine instances
+* Experience with monitoring systems and incident management
+* Experience with on-premise to cloud migration
+* Experience with configuration management and automation systems
+
+Technical requirements
+
+* Server Systems - Linux
+* Virtualization - KVM, Xen, or similar
+* Cloud Computing - Non-Azure based cloud experience
+* Cloud Migration - Veeam, Acronis, or similar
+* Monitoring - Prometheus, Grafana
+* Automation - Salt, Ansible, Puppet, Chef
+
+Nice-to-haves
+
+* Cloud Orchestration - Cloudstack, Openstack, Proxmox VE etc.
+* Cloud Computing - Both AWS/Azure/GCP and non-AWS/Azure/GCP cloud experience (ie. Rackspace, IBM Cloud, etc.)
+* Block Storage (iSCSI, SAN, NFS)
+* Experience with Windows Server 2012, 2016, 2019, and Microsoft SQL
+* Experience in Cisco IOS/NX-OS or Juniper Junos
+
+Who are we looking for
+
+* Excellent written and verbal communication skills (English)
+* Able to work autonomously as well as collaborate effectively with various stakeholders
+* Comfortable working in a fast paced environment
+* Able to work remotely. You will need to have your own laptop and a strong wifi connection
+* Willing to travel (e.g. to server locations for cloud migration)"
+JD-CE-0009,CLOUD_ENGINEER,IT Intern,Anonymised,"Bandar Puteri Puchong, Selangor",entry,manual,https://my.jobstreet.com/job/95135129,Copied manually for non-commercial academic research,2026-10-12,"Job Responsibilities
+
+* System Administration: Provide support in managing and overseeing the company’s ticketing platform in coordination with the Operations department
+* Technical Support: Assist with troubleshooting procedures and deliver technical guidance whenever necessary
+* Resource Management: Systematize, track, and maintain the organization’s IT assets and technical resources
+* Directives: Execute specific tasks and projects as designated by the Chief Technology Officer (CTO) or the Head of Department
+
+Job Requirements
+
+* Academic Credentials: Minimum of a Diploma, Advanced/Higher/Graduate Diploma, or a Bachelor’s Degree in Computer Science, Software Engineering, Information Technology, or a similar technical field
+* Technical Proficiency: Familiarity with a diverse range of programming languages and frameworks is an added advantage (PHP Laravel, Node.js, React.ks, JavaScript, HTML, CSS, Flutter)
+* Language Skills: A professional command of the English language is essential
+
+Perks and benefits: 5 working days a week (9:00 AM – 6:00 PM); 7-minute walk from Taman Perindustrian Puchong LRT station; Basement parking"
+JD-CE-0010,CLOUD_ENGINEER,Cloud and IT Operation Intern (2026 Intake),Anonymised,"Petaling, Selangor",entry,manual,https://my.jobstreet.com/job/92134486,Copied manually for non-commercial academic research,2026-10-12,"About the Role
+
+We are looking for passionate Interns to assist our Delivery team in resolving common day-to-day challenges in Enterprise Cloud and ITO Infrastructure (Active Directory, Servers, Storage, Backup, Database, Middleware, Networks etc) services. The Intern would need to be eager to explore new things including elements of AI in helping us improve our services delivery.
+
+Key Responsibilities
+
+* Assist in research and documentation related to AI technologies and their applications in enterprise environments.
+* Support infrastructure-related tasks such as monitoring systems, basic troubleshooting, and configuration under supervision.
+* Help with endpoint device management (Windows, macOS, mobile devices), including inventory checks and basic setup.
+* Participate in testing and validation of AI-driven tools and automation workflows.
+* Prepare reports and presentations on findings and progress.
+
+Required Skills & Knowledge
+
+* Basic understanding of AI concepts (e.g., machine learning, chatbots, automation).
+* Knowledge of IT infrastructure fundamentals (Servers, Database, Backups Networks, Middleware and cloud basics).
+* Familiarity with multiple OS platform (Windows, Unix, Linux, macOS, mobile platforms).
+* Proficiency in Microsoft Office tools (Excel, PowerPoint, Word).
+* Good analytical and problem-solving skills.
+* Ability to learn quickly and work in a team environment.
+
+Preferred (Nice-to-Have)
+
+* Exposure to scripting languages (Python, PowerShell) or interest in learning.
+* Awareness of cloud platforms (Azure, AWS, or GCP).
+* Understanding of cybersecurity basics.
+
+Eligibility
+
+* Currently pursuing a degree/diploma in Computer Science, IT, Engineering, or related fields.
+* Strong interest in AI and modern workplace technologies.
+* Eager to explore new technologies and improve the company delivery.
+* Intake: 2026 / 2027
+* Duration: 6 months
+* Malaysian citizens only"
+JD-CY-0001,CYBER_ANALYST,Internship - Technical Support Engineer,Anonymised,Selangor,entry,manual,https://my.jobstreet.com/job/95114417,Copied manually for non-commercial academic research,2026-10-12,"Job Description
+
+* The candidate will be assigned to the technical support department and will be trained on providing technical support for the assigned cybersecurity products.
+* Work closely with technical support team to learn the technical support operations and assist the team on case management.
+* Learn and use the case management tool and phone system to perform support operations.
+* Perform any other duties deemed relevant as assigned.
+
+Highlights
+
+* Exposure in cybersecurity products and technologies.
+* Learning on how to investigate and troubleshoot cybersecurity products issues.
+* Lab environment for hands-on training and simulations.
+* Improving communication and customer engagement skills through working with customers and users from different Asia Pacific countries and from different levels within a company.
+* Completion bonus when the intern completes the entire internship period.
+
+Requirements
+
+* Open for Malaysia nationality only.
+* Currently pursuing a bachelor’s or post-graduate degree in computer science or related disciplines.
+* Attended courses related to networking and security.
+* CGPA above 3.0 is preferred.
+* Good analytical and communication skill.
+* Confident, articulative and fluent in English.
+* Quick learner and always look for ways to improve own self.
+* Strong organizational and time management skills.
+* Internship duration is 6 months."
+JD-CY-0002,CYBER_ANALYST,Security Operations Center (SOC) Analyst,Anonymised,"Puchong, Selangor",mid,manual,https://malaysia.indeed.com/viewjob?jk=f81d14c383195d14,Copied manually for non-commercial academic research,2026-10-12,"Job Responsibility
+
+A passion for research, and uncovering the unknown about internet threats and threat actors.
+
+i) Communication
+
+* The first point of contact for security incident notifications from customers, service desks, IT engineers and administrator during emergencies
+* Develop a professional working relationship with fellow analysts.
+
+ii) Monitoring
+
+* General SIEM monitoring, analysis, content development, and maintenance.
+
+iii) Identifying
+
+* React to security alerts and security events of interest from defense systems like IDS, endpoint protection and other security-related systems
+* Research, analyze and respond to alerts; including log retrieval and documentation.
+* Conduct an analysis of network traffic and host activity across a wide array of technologies and platforms.
+* Analyze malicious campaigns and evaluate the effectiveness of security technologies.
+
+iv) Troubleshoot
+
+* Assist in the design, evaluation, and implementation of new security technologies.
+* Assist in incident response activities such as host triage and retrieval, malware analysis, remote system analysis and remediation efforts.
+* Lead response and investigation efforts into advanced/targeted attacks.
+* Perform Root Cause Analysis of security incidents for further enhancement of alert catalog.
+* Continuously improve processes for use across multiple detection sets for more efficient Security Operations.
+* Analyze cybersecurity alerts and data for false positive/true positive outcomes while modifying, alerts as needed.
+* Develop dashboards and reports to identify potential threats, suspicious/anomalous activity, malware, etc.
+* Escalate events to senior analysts and engineers as needed on a 24/7 rotating basis.
+
+v) Reporting
+
+* Compile detailed investigation and analysis reports for internal SOC consumption and delivery to management.
+* Ensure the SOC analyst team is providing excellent customer service and support.
+
+Requirements
+
+* Candidate must possess at least a Bachelor’s Degree, Post Graduate Diploma, Professional Degree, Computer Science/Information Technology, Engineering (Computer/Telecommunication) or equivalent.
+* At least some working experience in the related field is required for this position.
+* Ready to work in 24/7 shift timings.
+* Excellent communication (written and oral) and interpersonal skills"
+JD-CY-0003,CYBER_ANALYST,PENETRATING TESTING INTERN,Anonymised,Kuala Lumpur,entry,manual,https://my.jobstreet.com/job/95169930,Copied manually for non-commercial academic research,2026-10-12,"Key responsibilities
+
+* Assist the Security Assessment team in conducting penetration testing and vulnerability assessments
+* Assist with documenting security findings and preparing penetration testing reports
+* Support basic security testing of web applications, networks and systems
+* Assist in identifying, validating and documenting security vulnerabilities
+* Help prepare technical reports and documentation
+* Conduct research on vulnerabilities, exploits and cybersecurity tools
+* Support other technical tasks assigned by the team
+
+About you
+
+* Currently pursuing a Diploma or Degree in Cybersecurity, IT, Computer Science or a related field
+* Basic knowledge of networking, operating systems and cybersecurity concepts
+* Interest in penetration testing, ethical hacking and vulnerability assessment
+* Familiarity with tools such as Kali Linux, Burp Suite or Nmap is an advantage
+* Good analytical and problem-solving skills, with a willingness to learn
+
+Perks and benefits: Medical; Miscellaneous allowance; Education support; Dental; Parking; Vision"
+JD-CY-0004,CYBER_ANALYST,"Junior Incident Responder, Malaysia",Anonymised,Kuala Lumpur (Remote),junior,manual,https://malaysia.indeed.com/viewjob?jk=db253f439e37c8e5,Copied manually for non-commercial academic research,2026-10-12,"Your Mission: Junior Incident Responder
+
+As a Junior Incident Responder, you will work alongside senior responders on live engagements — helping clients contain, investigate, and recover from real cyber attacks. This is a delivery-focused role: your job is to do the work, learn the craft, and grow into a fully fledged responder under direct mentorship.
+We hire for attitude and aptitude. We don't expect you to have seen everything yet — we expect you to be curious, coachable, and serious about building a career in incident response. The right candidate can demonstrate a genuine interest in IR through their experience, side projects, study, or community involvement, and shows up ready to learn fast in a real-world environment.
+
+Core Responsibilities
+
+Delivery Alongside Senior Responders
+
+* Support senior consultants on active incidents — assisting with containment, evidence collection, forensic analysis, and reporting.
+* Acquire and triage forensic artifacts across Windows, Linux, macOS, and cloud environments under the guidance of more experienced team members.
+* Analyse logs, endpoint telemetry, network data, and malware artifacts, and contribute findings to investigation timelines.
+* Use scripting (Python, Bash, or PowerShell) to assist with collection, parsing, and automation tasks where useful.
+
+Client-Ready Professionalism
+
+* Document findings clearly and accurately, contributing sections to client deliverables under senior review.
+* Maintain a calm, professional posture in client-facing settings — even when the situation around you is anything but calm.
+* Follow operational procedures, chain-of-custody requirements, and quality standards as taught and reinforced through mentorship.
+
+Learning and Growth
+
+* Take ownership of your own development — ask questions, study actively, and apply feedback quickly.
+* Participate in instructor-led training, internal exercises, and on-the-job mentoring designed to accelerate your tradecraft.
+* Contribute observations, ideas, and improvements back to the team — innovation is welcomed regardless of seniority.
+
+Minimum Requirements
+
+* 1+ year of experience in cybersecurity, IT, or an adjacent technical field (e.g. SOC analysis, sysadmin, helpdesk, network engineering, software engineering).
+* Demonstrable, genuine interest in incident response — through study, side projects, CTFs, home labs, community involvement, or prior work.
+* Working comfort with at least one of Windows, Linux, or macOS, and a willingness to become competent across all three.
+* Basic scripting ability in Python, Bash, or PowerShell — enough to read and adapt scripts, with the appetite to grow further.
+* Clear written and verbal English; able to take notes, write up findings, and communicate professionally with teammates and clients.
+* Coachable, curious, and resilient — willing to be wrong, learn fast, and try again.
+* Calm under pressure, with a professional posture in client-facing settings.
+
+Preferred Qualifications
+
+* Started or completed a relevant certification (e.g. Security+, Network+, GCIH, GCFA, GFACT, CEH, BTL1) — in progress is just as welcome as completed.
+* Hands-on exposure to EDR, SIEM, or forensic tooling, even in a learning context.
+* Participation in CTFs, security communities, open-source projects, or personal labs.
+* Background in an adjacent field — IT operations, SOC, sysadmin, network engineering, software engineering, intelligence analysis — and a clear desire to move into IR.
+* Additional languages relevant to the regions [COMPANY] serves.
+
+Perks and benefits: Paired with senior responders from day one; Hands-on mentorship and structured instructor-led training program"
+JD-CY-0005,CYBER_ANALYST,L1 Security Analyst,Anonymised,Kuala Lumpur,junior,manual,https://my.jobstreet.com/job/95199184,Copied manually for non-commercial academic research,2026-10-12,"Key Responsibilities
+
+* Monitor security alerts and logs from various security tools such as SIEM (Security Information and Event Management) systems, firewalls, antivirus, and intrusion detection/prevention systems.
+* Investigate and analyze potential security incidents or breaches and escalate as necessary to senior analysts or incident response teams.
+* Perform routine security assessments and vulnerability scans to identify and report risks.
+* Assist in maintaining and updating security documentation, policies, and procedures.
+* Participate in security awareness training programs for employees.
+* Support compliance efforts with relevant regulations and standards (e.g., GDPR, HIPAA, PCI-DSS).
+* Collaborate with IT teams to implement security controls and mitigate identified risks.
+* Stay updated with the latest cybersecurity trends, threats, and technologies.
+
+Qualifications
+
+* Bachelor’s degree in Computer Science, Information Technology, Cybersecurity, or related field (or equivalent experience).
+* Basic understanding of network protocols, operating systems, and security concepts.
+* Familiarity with security tools like SIEM, firewalls, antivirus software, and vulnerability scanners.
+* Strong analytical and problem-solving skills.
+* Good communication skills for documenting incidents and collaborating with teams.
+* Relevant certifications (e.g., CompTIA Security+, CEH) are a plus but not required.
+
+Experience
+
+* 0-2 years of experience in IT or cybersecurity roles preferred but not mandatory. Entry-level candidates with a strong interest in cybersecurity are encouraged to apply.
+
+Perks and benefits: Medical; Miscellaneous allowance; Dental; Sports (e.g. Gym); Parking"
+JD-CY-0006,CYBER_ANALYST,Junior Cyber Security Analyst,Anonymised,Kuala Lumpur (Hybrid),junior,manual,https://malaysia.indeed.com/viewjob?jk=6234c4e36549960b,Copied manually for non-commercial academic research,2026-10-12,"Continuous Security Monitoring Execute 24/7
+
+* Continuous monitoring of security events across enterprise infrastructure using SIEM platforms.
+* Analyze correlated security alerts to identify active threats, suspicious behaviors, and false positives.
+* Maintain baseline awareness of system traffic patterns and flag anomalous volume or connection spikes.
+
+Incident Triage & Tier-2 Escalation Perform
+
+* Initial investigation and scope analysis for confirmed security events and policy violations.
+* Document comprehensive triage findings, context, and impact assessments within incident tracking tickets.
+* Escalate complex or high-severity threats to L2 SOC Analysts, Incident Response, or Engineering units.
+
+Threat Detection & Intelligence Utilization Detect
+
+* Anomalies across host processes, authentication streams, and enterprise network traffic.
+* Utilize threat intelligence feeds and known Indicators of Compromise (IOCs) for targeted environment queries.
+
+Log Lifecycle & Compliance Management
+
+* Collect, parse, and validate ingestion from multi-vendor sources (firewalls, EDR, identity providers).
+* Support compliance-mandated log retention requirements and assist with routine security audit reviews.
+
+Perks and benefits: Flexible schedule; Maternity leave"
+JD-CY-0007,CYBER_ANALYST,Security Analyst,Anonymised,Kuala Lumpur,junior,manual,https://malaysia.indeed.com/viewjob?jk=fd758f9b84deac8e,Copied manually for non-commercial academic research,2026-10-12,"Key Responsibilities
+
+* Monitor security events and alerts from SIEM tools and other security platforms.
+* Perform initial analysis and triage of security incidents based on standard operating procedures (SOPs).
+* Escalate verified incidents to L2/L3 analysts or Incident Response team when necessary.
+* Document alerts, investigations, and incident handling actions accurately in ticketing systems.
+* Perform basic threat intelligence lookups and log analysis to support investigations.
+* Follow defined playbooks and assist in fine-tuning alert rules and use cases.
+* Support daily health checks on security monitoring tools and systems.
+* Maintain awareness of current cybersecurity threats and trends.
+
+Requirements
+
+Education & Certification
+
+* Diploma or Degree in Cybersecurity, Information Technology, Computer Science, or a related field.
+* Relevant certifications (preferred but not mandatory): CompTIA Security+, EC-Council CEH, Microsoft SC-200, etc.
+
+Technical Skills
+
+* Basic understanding of networking concepts (TCP/IP, DNS, firewalls, etc.).
+* Familiarity with SIEM tools (e.g., Splunk, QRadar, LogRhythm).
+* Basic knowledge of Windows and Linux operating systems.
+* Understanding of cybersecurity fundamentals and common attack techniq"
+JD-CY-0008,CYBER_ANALYST,"Internship for Cyber Security Students - RM2,000 for Top Students",Anonymised,Kuala Lumpur,entry,manual,https://my.jobstreet.com/job/94831472,Copied manually for non-commercial academic research,2026-10-12,"You will join our [COMPANY] Security team in charge of the overall security posture of the company. As part of SecOps, we overlook the security and threat aspects of [COMPANY] and work hand in hand together with other departments. If you will like to experience how the security team work and consistently update your knowledge on all those new emerging threats, join us on our journey!
+
+Responsibilities
+
+* Testing and implementation of new security-related project. (SIEM / endpoint related)
+* Help out with daily monitoring of security solutions in the environment.
+* Enhance email phishing exercise for internal staffs.
+* Ad hoc assignment.
+
+Requirements
+
+* Candidate must possess or currently pursuing in Degree in computer Science/ IT security or equivalent.
+* Priority will be given to those who has good understanding in Security and Network related concept.
+* Able to work independently and fast learner.
+* Available for duration of 3-6 months."
+JD-CY-0009,CYBER_ANALYST,IT Intern,Anonymised,"Setia Alam, Selangor (Hybrid)",entry,manual,https://my.jobstreet.com/job/95203556,Copied manually for non-commercial academic research,2026-10-12,"About the role
+
+This is a full-time hybrid role for an IT Intern with a six-month duration, based in Setia Alam. The role offers a combination of on-site and remote work flexibility. The IT Intern will assist in software development, software testing, network administration, perform troubleshooting, and ensure systems' reliability and security. Additionally, the intern will support network security initiatives and provide customer service by addressing IT-related inquiries and concerns.
+
+Key responsibilities
+
+* Assist in software development
+* Perform software testing
+* Support network administration
+* Perform troubleshooting to resolve technical issues
+* Ensure systems' reliability and security
+* Support network security initiatives
+* Provide customer service by addressing IT-related inquiries and concerns
+
+About you
+
+* Proficiency in Software Development, Network Administration and knowledge of basic Information Technology concepts and systems
+* Strong Troubleshooting and problem-solving skills to resolve technical issues effectively
+* Familiarity with PHP, Java, and Network Security practices to support secure system operations
+* Strong Customer Service skills to communicate effectively, respond to inquiries, and resolve user issues
+* Ability to work both independently and collaboratively in a hybrid work environment
+* Currently pursuing or recently completed a degree/diploma in Information Technology, Computer Science, or related fields
+* Hands-on experience with IT systems and networks is a plus"
+JD-CY-0010,CYBER_ANALYST,Cybersecurity Trainee,Anonymised,"Puchong, Selangor",entry,manual,https://my.jobstreet.com/job/95156740,Copied manually for non-commercial academic research,2026-10-12,"Passionate about cybersecurity and eager to learn? Here’s your chance to gain real-world experience and kickstart your career in tech with [COMPANY]!
+We're looking for a highly motivated Cybersecurity Intern to join our Security Operations Center (SOC). This is your chance to work alongside industry experts, develop essential cybersecurity skills, and lay the foundation for a successful career in cybersecurity.
+
+What You’ll Do
+
+* Assist in Security Event Monitoring – Work alongside SOC Analysts to track alerts, logs, and security incidents.
+* Support Incident Investigations – Learn to analyze security threats, document findings, and escalate potential risks.
+* Conduct Basic Security Assessments – Assist in vulnerability scanning, penetration testing, and compliance checks.
+* Participate in Cybersecurity Research & Training – Stay updated on emerging threats, attack vectors, and security frameworks.
+* Contribute to SOC Operations & Security Awareness – Help develop security policies, training materials, and best practices.
+
+What We’re Looking For
+
+* Currently pursuing a Bachelor's degree in IT, Cybersecurity, Computer Science, or a related field.
+* Passionate about cybersecurity – Interested in SOC operations, ethical hacking, or cyber threat intelligence.
+* Basic understanding of networking & security concepts – Familiar with firewalls, malware analysis, TCP/IP, and operating systems.
+* Eager to learn & grow – Able to absorb knowledge and apply it in real-world cybersecurity scenarios.
+* Strong communication & teamwork skills – Work effectively with SOC professionals and security engineers.
+
+Perks and benefits: Work with real cybersecurity threats in a dynamic SOC environment; Potential career progression into a permanent SOC role; Hands-on experience with industry professionals and security tools"
+JD-DA-0001,DATA_ANALYST,Business Data Analyst – AI Tools & Growth,Anonymised,"Batu Caves, Selangor",junior,manual,https://my.jobstreet.com/job/94741828,Copied manually for non-commercial academic research,2026-10-12,"Most data analyst jobs mean making the same report every Monday. This one doesn't.
+We are a Malaysian healthcare products company. We supply medical, rehab and pet products to clinics and pharmacies across the country, and sell our own brands on Shopee, Lazada and TikTok Shop. Every order, invoice and delivery is already in our own systems, and we already build our own dashboards and tools with AI.
+We need a statistician who wants to use that data to decide where the company grows next, and then build the tools that make it happen.
+
+What you will do
+
+1. Find growth: which customers, products, areas and sales channels we should push next, proven with numbers before we spend money.
+2. Build monitoring tools: dashboards and alerts that catch problems early, such as a clinic that stopped reordering, a product about to run out, or a sales territory falling behind target.
+3. Track what works: measure every promotion, campaign and product launch, and tell us honestly whether it made money.
+4. Use artificial intelligence (AI) to build: write SQL and Python with AI tools such as Claude, ChatGPT or Copilot, and turn an idea into a working tool in days, not months.
+5. Work with people: sit with the sales team and management, understand how the business runs, and explain your findings in plain language that leads to a decision.
+
+Your first 90 days could look like
+
+* A daily list of customers whose buying is dropping, sent to their sales rep every morning
+* A forecast of which products will run short next month
+* A clear, numbers-backed answer to one growth question from management
+
+Who we are looking for
+
+1. Degree in Statistics, Mathematics, Actuarial Science, Data Science, Economics or a related field
+2. Fresh graduates up to 2 years of experience. Data analyst, research, actuarial or internship experience all count
+3. Good with Excel, and comfortable with at least one of SQL, Python or R. Power BI is a plus
+4. You have used AI tools to build something real (a script, dashboard, automation or model), not only to write essays
+5. Curious about how a business makes money, and not afraid to ask ""why""
+6. Able to explain numbers clearly in English and Bahasa Malaysia
+
+Perks and benefits: Direct access to management; Room to grow into data science, machine learning and business strategy; EPF, SOCSO, EIS"
+JD-DA-0002,DATA_ANALYST,Digital & Automation Intern,Anonymised,"Petaling Jaya, Selangor",entry,manual,https://my.jobstreet.com/job/95117774,Copied manually for non-commercial academic research,2026-10-12,"Department: Customer Service & Logistics (CS&L) – Customer Engagement
+Duration: 4 to 6 Months
+
+About the Role
+
+Are you passionate about using technology to solve real-world operational challenges? At [COMPANY], our Customer Service & Logistics (CS&L) department manages a massive, complex supply chain network.
+As a Digital & Automation Intern, you will be placed directly within the Customer Engagement function under the CS&L team. Your core mission will be helping the team digitalize and automate their daily tasks, manual workflows, and reporting processes. You won't just be maintaining systems; you will act as an internal ""Citizen Developer,"" identifying manual bottlenecks and building automated solutions that directly improve how efficiently we engage with our B2B customers and deliver our products globally.
+
+Key Responsibilities
+
+* Process Automation: Identify highly manual, repetitive tasks within the Customer Engagement workflow and develop automated solutions (using tools like Power Automate, VBA, or basic scripting) to increase efficiency and reduce manual data entry.
+* Digitalizing Workflows: Transform traditional paper-based or manual tracker processes into streamlined, digital workflows that the Customer Engagement team can easily adopt.
+* Data Visualization & Analytics: Design, build, and maintain dynamic BI dashboards (e.g., using DOMO, PowerBI, or Tableau) to track customer service KPIs, order fulfillment rates, and logistics data.
+* Digital Transformation Projects: Assist in the end-to-end rollout of new digitalization initiatives, from process mapping and data collection to user acceptance testing (UAT) and deployment.
+* Tech-to-Business Translation: Act as a bridge between technology and daily operations by training non-technical customer service and logistics coordinators on new digital tools and automated workflows.
+
+Requirements & Qualifications
+
+* Currently pursuing a Bachelor’s Degree in Computer Science, Information Technology, Artificial Intelligence, Software Engineering, Data Science, or a related technical field.
+* Familiarity with data visualization and Business Intelligence tools (e.g., PowerBI, Tableau, DOMO).
+* Basic knowledge of programming, scripting, or database querying (e.g., Python, SQL, VBA) and automation platforms (e.g., Microsoft Power Automate).
+* Proficient in Google Workspace (Google Sheets, Docs, Slides, Forms, etc.).
+* A strong problem-solving mindset with a passion for optimizing processes and figuring out ""how to make things work better.""
+* Excellent communication skills—specifically the ability to explain technical concepts to non-technical business stakeholders.
+* An interest in Supply Chain, Logistics, or FMCG operations is a strong plus.
+
+Perks and benefits: Build and deploy digital solutions used by a global FMCG company; Mentorship from experienced professionals; Dynamic, inclusive environment"
+JD-DA-0003,DATA_ANALYST,Data Analyst (Fresh Graduate),Anonymised,"Shah Alam, Selangor",junior,manual,https://my.jobstreet.com/job/95141055,Copied manually for non-commercial academic research,2026-10-12,"Graduate With a Degree. Leave With Real Data Experience.
+Your first job can be more than an entry-level title.
+Start your career working with real data, real business problems, modern AI tools, and experienced mentors — while building the technical skills companies actually look for in data professionals.
+Fresh graduates are welcome. No years of experience required. If you know SQL, understand data, and have the curiosity to keep learning, we'll help you take the next step.
+
+Key responsibilities
+
+* Data Extraction & Wrangling — write efficient SQL queries across our cloud data warehouse (Google BigQuery) to extract, validate, and transform multi-source business data.
+* Exploratory & Diagnostic Analysis — investigate operational workflows, transaction lifecycles, and unit economics to diagnose root causes and identify optimization opportunities.
+* Reporting & Visualisation — build and maintain clean data reports, performance tracking scorecards, and interactive dashboards to monitor key operational and financial metrics.
+* Stakeholder Collaboration — partner with cross-functional teams (Operations, Product & Tech, Finance) to establish clear metric definitions and maintain data integrity.
+* Workflow Automation & Tooling — leverage Python and modern developer tools to automate recurring analytical pipelines and data hygiene checks.
+
+Job Requirements
+
+* Minimum Diploma/Bachelor's degree in Data Science, Computer Science, Statistics, Mathematics, Physics, Engineering, Economics, or another quantitative discipline.
+* Fresh graduates and entry-level candidates are welcome if you have strong data, analytical, or quantitative training.
+* Strong SQL fundamentals — comfortable with queries, multi-table joins, aggregations, window functions, and data transformations.
+* Foundational Python knowledge — familiarity with Python for data manipulation using tools such as pandas and NumPy.
+* Basic understanding of data analysis, statistics, and data visualisation.
+* Familiarity with AI tools and LLM-based assistants for coding, analysis, prototyping, or productivity.
+* Strong problem-solving and analytical thinking.
+* High attention to detail and commitment to data accuracy.
+* Ability to validate assumptions and question data when something does not look right.
+* Good communication skills and the ability to explain technical findings in clear, simple language.
+
+Perks and benefits: Medical Coverage; Well-being Benefit; Group Insurance Coverage; Learning & Development"
+JD-DA-0004,DATA_ANALYST,Data Analyst Intern,Anonymised,"Kuala Lumpur City Centre, Kuala Lumpur",entry,manual,https://my.jobstreet.com/job/93350383,Copied manually for non-commercial academic research,2026-10-12,"What you'll do
+
+* Assist in collecting, cleaning, and organising data from various sources.
+* Conduct exploratory data analysis to identify trends, patterns, and insights.
+* Support the development and maintenance of dashboards and reports for internal stakeholders.
+* Collaborate with cross-functional teams to understand data needs and provide analytical solutions.
+* Perform data validation and quality checks to ensure accuracy and reliability of data.
+* Assist in developing and implementing data-driven strategies to improve business processes.
+* Participate in team meetings and contribute to discussions on data analysis and interpretation.
+
+What we expect of you
+
+* Final year diploma or Bachelor's degree in Data Analyst, Statistics, Mathematics, Computer Science, or a related field.
+* Strong analytical and problem-solving skills with a keen attention to detail.
+* Excellent communication and interpersonal skills.
+* Proficiency in Microsoft Office suite (Word, Excel, PowerPoint).
+* Intermediate experience with SQL and data visualisation tools (e.g. Looker Studio).
+* Experience with statistical analysis software (e.g., R, Python) is an advantage.
+* Ability to work both independently and collaboratively within a team.
+* Eagerness to learn and take on new challenges in a fast-paced environment.
+
+Perks and benefits: Young collaborative team; Well-stocked pantry"
+JD-DA-0005,DATA_ANALYST,Data Analyst,Anonymised,"Bandar Sunway, Selangor",mid,manual,https://my.jobstreet.com/job/94970695,Copied manually for non-commercial academic research,2026-10-12,"About [COMPANY]
+
+[COMPANY], an innovative solution designed to simplify and enhance your personal and business financial managements. Our platform curates a diverse range of offerings from approved fintech providers including cross-border transfer, supply chain financing, lending, insurance, and more – all in one place. With robust security and easy accessibility, we empower our users to take control of their financial future with ease.
+
+Key Duties & Responsibilities
+
+* Communicate with stakeholders and understand the entire data extraction requirement.
+* Clean input data, then perform bulk data extraction, and check the data integrity, and conduct analysis of the output data in a timely manner.
+* Conduct ad hoc analysis to support other departments i.e. sales, marketing, operations, and request from management.
+* Identify and rectify data integrity issues and liaise with members and respective data sources/owners.
+* Verify and investigate credit rating and score enquiry against the credit information, and provide useful advice to the enquirer for external and internal stakeholders.
+* Work closely with project and software team to improve end-to-end process.
+* Any other task assigned by management
+
+Job Requirements
+
+* At least a Bachelor's Degree in Statistics / Mathematics / Computer Science / Actuarial Studies / Economics or equivalent.
+* Proficient in Excel and programming languages like Python and SQL.
+* Capability to produce detailed and factually accurate and easily comprehensible reports.
+* Knowledge and experience in SQL and/or Statistic will be an added advantage.
+* Strong organizational skills and ability to work independently to meet deadlines
+* Good communication and interpersonal skills with attention to details and strong work ethic."
+JD-DA-0006,DATA_ANALYST,Data Management Assistant,Anonymised,"Bangsar, Kuala Lumpur (Hybrid)",junior,manual,https://my.jobstreet.com/job/94851661,Copied manually for non-commercial academic research,2026-10-12,"Job Summary
+
+The Data Administrator is responsible for maintaining the accuracy, integrity, and confidentiality of operational data across company systems. This role supports business operations through data entry, record maintenance, process coordination, reporting, and operational research activities. The position plays an important role in ensuring efficient workflows, supporting decision-making, and identifying opportunities for continuous operational improvement.
+
+Key Responsibilities
+
+Data Management & Maintenance
+
+* Enter, update, and maintain data in company systems and databases.
+* Ensure data accuracy, completeness, and consistency across multiple platforms.
+* Perform regular data audits, validation checks, and cleansing activities.
+* Identify and resolve data discrepancies, duplicates, and errors.
+
+Database Administration
+
+* Maintain and organize company databases, records, and master data files.
+* Support database updates, migrations, and data imports/exports.
+* Monitor database integrity and report issues to relevant stakeholders.
+* Assist in maintaining data structures and documentation.
+
+Reporting & Analysis Support
+
+* Generate scheduled operational reports and dashboards.
+* Prepare and compile data for management review and decision-making.
+* Support Data Analysts by providing clean, validated, and structured datasets.
+* Assist with basic trend analysis and data reconciliation tasks.
+
+Data Governance & Compliance
+
+* Ensure compliance with company data management policies and procedures.
+* Maintain confidentiality and security of sensitive information.
+* Support data retention, archival, and record management requirements.
+* Assist in developing and maintaining data standards and SOPs.
+
+Process Improvement
+
+* Recommend improvements to data collection and management processes.
+* Participate in system enhancement and data quality initiatives.
+* Collaborate with business users to improve data accuracy and workflow efficiency.
+
+Requirements
+
+Education
+
+* Minimum SPM or Diploma or Bachelor's Degree in Information Systems, Business Administration, Computer Science, Statistics, or related field.
+* Fresh graduates are encouraged to apply.
+
+Technical Skills
+
+* Advanced Microsoft Excel skills (Pivot Tables, VLOOKUP/XLOOKUP, Power Query preferred).
+* Familiarity with database systems and data management tools.
+* Basic SQL knowledge is an advantage.
+* Experience with ERP, CRM, or business information systems is preferred.
+* Familiarity with Power BI, Tableau, or reporting tools is a plus.
+
+Soft Skills
+
+* Strong attention to detail and accuracy.
+* Excellent organizational and time management skills.
+* Analytical and problem-solving mindset.
+* Ability to work independently and collaboratively.
+* Good communication and documentation skills."
+JD-DA-0007,DATA_ANALYST,DATA ANALYST (INTERNSHIP),Anonymised,"Bangsar South, Kuala Lumpur",entry,manual,https://malaysia.indeed.com/viewjob?jk=844b827185e67972,Copied manually for non-commercial academic research,2026-10-12,"About the role
+
+As a growing SME, we're looking to strengthen our operations and decision making with the power of data. We are hiring both Data Analyst (Internship) to support business optimization and strategy development.
+Whether you're just stepping into the field or bringing hands-on experience, we want your insights to help shape smarter operations.
+
+What you'll do
+
+* Assist in collecting and cleaning data across departments
+* Learn to use Excel, Power BI, and other tools to build basic dashboard
+* Support market research and performance tracking
+* Gain real-world experience working alongside business teams
+
+Requirements
+
+* Pursuing a degree in Business Analytics, Information Technology (IT), or a related field, with coursework in Data Science, Statistics, and Decision Science.
+* Proficient in Microsoft office familiarity with data tools is a plus
+* Curious, analytical, and ready to learn
+* Final year students or Mid-year students
+* Internship duration: 6 months
+
+Work location: In person"
+JD-DA-0008,DATA_ANALYST,Data Analyst (Fresh Graduate Opportunity),Anonymised,Kuala Lumpur,junior,manual,https://my.jobstreet.com/job/94989504,Copied manually for non-commercial academic research,2026-10-12,"Job Descriptions
+
+1. Data Analysis: Review and analyze telecommunication data from various markets to identify trends, anomalies, and opportunities for improvement.
+2. Data Mining: Extract and analyze large volumes of data to discover patterns and insights.
+3. Data Modelling: Develop statistical models to understand and predict customer behavior or market trends.
+4. Data Profiling: Assess the quality, structure, and integrity of data to ensure it is suitable for analysis or use in business decisions.
+5. Reporting: Create comprehensive reports and visualizations to communicate data-driven insights to internal stakeholders across different regions.
+6. Data Management: Collect, analyze, and store data in an organized manner for efficient retrieval and compliance with international data regulations.
+
+Requirements
+
+1. Pursuing or completed a bachelor’s degree in Computer Science / Data Science / Mathematics / Statistics or a related field. Candidates from other fields may also be considered on a case-by-case basis.
+2. Technical Skills: Proficiency in data analysis and visualization software (Python, SQL, Excel, Tableau) and basic knowledge of coding languages, machine learning, and software development.
+3. Analytical Skills: Strong analytical and problem-solving skills with the ability to derive insights from data.
+4. Communication Skills: Excellent written and verbal communication skills. Ability to communicate effectively with international teams.
+5. Statistical Knowledge: Understanding of basic statistics and mathematical concepts.
+6. Adaptability: Able to adapt to challenges and pressure in a fast-paced environment.
+
+Perks and benefits: Medical; Miscellaneous allowance; Insurance"
+JD-DA-0010,DATA_ANALYST,Business Intelligence (BI) Intern,Anonymised,"Kuala Lumpur City Centre, Kuala Lumpur (Hybrid)",entry,manual,https://my.jobstreet.com/job/94948583,Copied manually for non-commercial academic research,2026-10-12,"Key Responsibilities
+
+* Power BI Development - Assist in building and maintaining Power BI dashboards and reports. Support basic data modelling, DAX calculations, and data visualisation.
+* Data Preparation & Analysis - Help with data extraction, cleansing, and transformation using Excel (e.g. Power Query, Pivot Tables). Ensure data is accurate and ready for reporting.
+* Automation Support - Support simple automation tasks using PowerShell or scripts to improve reporting and data processes.
+* Programming & Integration - Use Python or other programming languages (where applicable) to support data analysis, basic automation, and API integrations.
+
+Requirements
+
+* Basic understanding of Power BI (Desktop preferred)
+* Familiar with Microsoft Excel (Pivot Tables, formulas; Power Query is a plus)
+* Interest in data analysis, reporting, and visualisation
+* Exposure to scripting or programming (e.g. Python) is an advantage
+* Willing to learn, detail-oriented, and able to work in a team
+* Basic knowledge of DAX or data modelling
+* Exposure to PowerShell or automation tools
+* Experience working with datasets, dashboards, or school projects
+
+Eligibility
+
+* Intake: November 2026 onwards
+* Internship Duration: Minimum 4 months to maximum 6 months
+* Eligibility: Malaysian citizens only, final-year students
+* Work arrangement: Hybrid (1-2 days on site), 8.30 am to 5.30 pm
+* Work location: Petaling Jaya, Selangor"
+JD-DA-0011,DATA_ANALYST,JUNIOR DATA ANALYST – MANUFACTURING SYSTEMS & PLANNING,Anonymised,"Senai, Johor",junior,manual,https://my.jobstreet.com/job/95100180,Copied manually for non-commercial academic research,2026-10-12,"Key Responsibilities
+
+Manufacturing Data Analytics
+
+* Extract, consolidate, validate and analyze data from ERP and other manufacturing systems.
+* Develop and maintain operational dashboards, reports and analytical tools using Excel, SQL, Power BI or similar technologies.
+* Analyze key manufacturing indicators including production output, WIP, machine utilization, capacity, lead time, order status, schedule adherence and delivery performance.
+* Identify trends, abnormalities, bottlenecks and potential risks through data analysis.
+* Improve the accuracy, consistency and reliability of operational and management reporting.
+
+ERP & Manufacturing Systems
+
+* Develop a strong understanding of ERP manufacturing processes, data structures and business logic.
+* Support analysis and improvement of manufacturing master data including products, machines, processes, routings, standard production times and capacity-related parameters.
+* Work with users to identify system or data issues affecting production visibility and operational decision-making.
+* Participate in ERP enhancement, system integration, automation and digitalization projects.
+* Support user requirement analysis, testing, implementation and continuous improvement of manufacturing-related systems.
+
+Production Planning Analytics
+
+* Support PPC and Production teams by analyzing customer orders, production requirements, available capacity, WIP status and delivery priorities.
+* Develop analytical models and reports to compare production demand against available capacity.
+* Analyze planned versus actual production performance and identify causes of schedule deviation.
+* Support analysis of production bottlenecks, machine loading, resource constraints and order prioritization.
+* Provide data-driven recommendations to improve production flow, schedule adherence and on-time delivery.
+* Assist in scenario analysis and simulation for changing production priorities, capacity constraints and delivery requirements.
+
+Business Process Improvement
+
+* Work closely with Production, PPC, Warehouse, Quality, Sales, Supply Chain and other departments to understand operational processes.
+* Investigate operational and production issues using data and root-cause analysis.
+* Recommend process, system and data improvements to improve manufacturing efficiency and decision-making.
+* Participate in continuous improvement and digital transformation initiatives.
+
+Qualification
+
+Bachelor's Degree or Diploma in one of the following or related fields:
+
+* Industrial Engineering
+* Manufacturing Engineering
+* Supply Chain / Operations Management
+* Operations Research
+* Business Analytics / Data Analytics
+* Information Systems
+* Statistics / Mathematics
+* Computer Science
+
+Added Advantage:
+
+* Experience with ERP, MRP, MES or manufacturing systems.
+* Knowledge of production planning, scheduling, inventory, WIP or capacity planning.
+* Knowledge of Python or other analytical/programming tools.
+* Exposure to APS or production scheduling software.
+* Experience in a manufacturing environment."
+JD-DS-0001,DATA_SCIENTIST,Data Science Intern,Anonymised,Kuala Lumpur,entry,manual,https://malaysia.indeed.com/viewjob?jk=f0f7692996ee1a8c,Copied manually for non-commercial academic research,2026-10-12,"About the Role
+
+[COMPANY] AI delivers end-to-end AI solutions, from strategy and model development to deployment, integration, and long-term optimisation. Our engineers build the systems that make AI actually work at scale: pipelines, APIs, integrations, and the infrastructure that keeps everything running. We work across a diverse range of clients and enterprises, in environments where reliability and performance are not optional.
+We are looking for a Data Science Intern who can support our engineering and delivery teams in preparing, exploring, and modelling the data that feeds our internal systems and tooling. During this internship, you'll be working with real datasets, real constraints, and real deliverables, alongside consultants and engineers who expect you to bring rigour, not just curiosity.
+
+Who You Are
+
+* Currently pursuing or recently completed a degree in Data Science, Computer Science, Statistics, Engineering, or a related quantitative field
+* Comfortable with ambiguity as client data can be messy, priorities shift, and you won't always get a clean brief
+* Genuinely interested in how AI systems behave in production
+* Able to explain your reasoning and your results to people who are not technical
+* Self-directed enough to move with minimal hand-holding, but knows when to flag a blocker early
+
+Must Haves
+
+* Proficiency in Python for data work (pandas, numpy, and at least one ML library such as scikit-learn)
+* Working knowledge of SQL
+* Solid grounding in core ML concepts like regression, classification, clustering, and how to evaluate a model honestly
+* Experience with data cleaning, exploratory data analysis, and visualisation
+* Strong written English, since findings get communicated to the team and leadership, not just left in a notebook
+
+What Success Looks Like
+
+* Within the first few weeks, you're pulling, cleaning, and validating datasets independently, with minimal supervision
+* You've contributed to at least one deliverable, a model, a dashboard, or a pipeline component
+* You can walk a non-technical internal stakeholder through your analysis and its limitations without oversimplifying or overselling it
+* You flag data quality or scope issues proactively, before they become someone else's problem"
+JD-DS-0002,DATA_SCIENTIST,Data Science & AI Internship,Anonymised,Kuala Lumpur,entry,manual,https://my.jobstreet.com/job/94077173,Copied manually for non-commercial academic research,2026-10-12,"Job Scope
+
+* Assist the team to develop and deploy AI use cases from business users.
+* Support the team in research and development (R&D) of features that are part of a larger AI system.
+* Assist with data processing, chatbot evaluation, AI model evaluation, and building RPA pipelines.
+* Support multiple concurrent tasks and use cases as required by the team.
+
+Contribute to company transformation initiatives through projects such as:
+
+* Building RPA solutions for agency teams.
+* Building monitoring dashboards.
+* Helping build labelled datasets for model evaluation.
+* Supporting the development and deployment of AI use cases
+
+Learning & Development Plan
+
+Support the team in completing use cases. Learn and gain exposure to:
+
+* Python coding
+* Cloud infrastructure
+* SQL querying
+* Data manipulation tasks
+
+Career Growth: Interns who demonstrate strong performance and potential throughout the internship may be considered for full-time opportunities upon graduation, subject to business needs and available headcount.
+
+Perks and benefits: Miscellaneous allowance; Monthly Incentive, Free Oversea Convention"
+JD-DS-0003,DATA_SCIENTIST,AI Intern – Computer Vision & Multimodal RAG,Anonymised,Kuala Lumpur,entry,manual,https://my.jobstreet.com/job/95065808,Copied manually for non-commercial academic research,2026-10-12,"About the Team
+
+The [COMPANY] IT AI Solutions & Innovation Team is responsible for delivering cutting-edge AI solutions to global customers and strategic partners. Our team works closely with world-class organizations and events such as FIFA, Formula 1 (F1), and other enterprise customers to design, develop, and deploy AI-powered applications that create real business value and enhance user experiences.
+We are looking for passionate AI Interns who are eager to learn, explore emerging technologies, and contribute to real-world AI projects involving Computer Vision, Multimodal AI, and Retrieval-Augmented Generation (RAG).
+
+Responsibilities
+
+As an AI Intern, you will work alongside experienced AI engineers and solution architects to support the development and delivery of customer-facing AI solutions. Key responsibilities include:
+
+* Participate in AI projects serving external customers, including sports and entertainment organizations such as FIFA, F1, and other global enterprises.
+* Collaborate with customers and internal stakeholders to understand business requirements and translate them into AI solutions.
+* Develop and test AI applications based on Computer Vision and Multimodal RAG technologies.
+* Build data pipelines, model evaluation workflows, and proof-of-concept demonstrations.
+* Fine-tune and optimize AI models to improve performance, accuracy, and user experience.
+* Support solution integration, testing, validation, and deployment activities.
+* Conduct research on the latest AI technologies, frameworks, and industry trends.
+* Document technical findings and present project progress to team members and stakeholders.
+* Complete assigned project tasks efficiently under the guidance of mentors and project leads.
+
+Required Qualifications
+
+* Currently pursuing a Bachelor’s degree in:
+* Computer Science
+* Artificial Intelligence
+* Data Science
+* Software Engineering
+* Electrical Engineering
+* Or related technical disciplines
+* Strong interest in Generative AI, Computer Vision, and Multimodal AI.
+* Solid programming skills in Python.
+* Familiarity with machine learning and deep learning fundamentals.
+* Basic understanding of LLMs, RAG, vector databases, and prompt engineering.
+* Familiarity with one or more AI frameworks, such as:
+* PyTorch
+* TensorFlow
+* Hugging Face
+* LangChain
+* LlamaIndex
+* Strong problem-solving and analytical skills.
+* Excellent learning ability with a demonstrated capability to quickly acquire new technologies and tools.
+* Self-motivated, proactive, and able to work effectively in a fast-paced environment.
+* Good communication skills and the ability to collaborate within cross-functional teams.
+
+Preferred Qualifications
+
+Experience in one or more of the following areas is a plus:
+
+* Computer Vision
+* Object Detection
+* Image Classification
+* Video Analytics
+* OCR
+* Visual Understanding
+* Multimodal AI
+* Vision-Language Models (VLM)
+* Image-to-Text Applications
+* Video Understanding
+* Retrieval-Augmented Generation (RAG)
+* Vector Databases
+* Knowledge Graphs
+* Semantic Search
+* Agentic AI Workflows
+* Experience with cloud platforms such as AWS, Azure, Google Cloud, or [COMPANY] AI platforms
+* Experience participating in AI competitions, research projects, or open-source contributions
+
+Internship Duration
+
+* Minimum internship duration: 3 months
+* Maximum duration: No maximum duration requirement
+* Longer-term internships are highly encouraged based on performance and project needs.
+
+Perks and benefits: Hands-on experience building enterprise-grade AI solutions; Exposure to global customer projects and large-scale events; Mentorship from experienced AI architects and engineers; Work with LLMs, Computer Vision, Multimodal AI and AI Agents"
+JD-DS-0004,DATA_SCIENTIST,Data Scientist Executive (Decision Intelligence),Anonymised,"Seri Kembangan, Selangor",junior,manual,https://malaysia.indeed.com/viewjob?jk=148747cf24380d65,Copied manually for non-commercial academic research,2026-10-12,"Key Responsibilities
+
+* What-if Simulation
+* Develop simulation models to evaluate business scenarios.
+* Assess impact of pricing, display, and stock changes.
+* Allocation Optimization
+* Design optimization models for inventory allocation across stores.
+* Balance constraints such as stock availability, demand, and capacity.
+* Dashboarding and Analytics
+* Create and maintain analytics that is impactful and able to drive business on various platform eg. dashboard.
+* Prediction and Forecast Models (Added Advantage)
+* Build and maintain forecasting models.
+* Model Evaluation (Added Advantage)
+* Evaluate model accuracy by using suitable metrics.
+* Data Analysis
+* Collects, cleans, and analyzes data to identify trends, patterns, and insights to improve procurement strategies.
+* Process Improvement (Added Advantage)
+* Identifies process gaps, proposing solutions and build the solution to improve work efficiency.
+* Any Other Tasks as Assigned
+
+Requirements
+
+* Bachelor’s Degree in Analytics, Data Science, Business, Economics, Engineering, Mathematics, or a related field.
+* 1–2 years of relevant experience in retail, supply chain, FMCG, procurement, analytics, or a related field is preferred.
+* Proficiency in Excel, SQL, BI tools, and Python (e.g. pandas, scikit-learn). Strong analytical, problem-solving, and structured-thinking skills.
+* Good communication skills with the ability to present data insights and recommendations to stakeholders.
+* Knowledge of forecasting, predictive modelling, or machine learning is an added advantage.
+* Able to think from a business perspective and translate business problems into data-driven solutions."
+JD-DS-0005,DATA_SCIENTIST,"Data Scientist, Intern - [COMPANY]",Anonymised,Kuala Lumpur,entry,manual,https://malaysia.indeed.com/viewjob?jk=fa46da800df9dadb,Copied manually for non-commercial academic research,2026-10-12,"About the Role
+
+The Kuala Lumpur office is the technology powerhouse of [COMPANY]. We pride ourselves on innovative initiatives and thrive in a fast paced and challenging environment.
+We are looking for a data science intern to join our multicultural team of visionaries and industry rebels in disrupting the traditional finance industry! This internship will be 6 months long, starting June 2026 to December 2026. Kindly note that this internship is only open to Malaysians, with final year students preferred.
+
+Key Responsibilities
+
+* Perform analyses to understand how our users interact with our products and how to improve our products.
+* Discover new insights and understanding of business performance based on data
+* Develop dashboards to track relevant metrics.
+* Assist with regular maintenance/BAU operations within the data science team.
+* Assist with prototyping and exploring new machine learning initiatives in [COMPANY].
+* Communicate findings to stakeholders in a clear and concise manner.
+
+About You
+
+* Currently pursuing a technical degree in a quantitative field, such as computer science, mathematics, or actuarial science.
+* Proficient in either R, Python, Matlab or other analytics/data mining packages.
+* Experience in machine learning, predictive analytics and statistical modelling, in academic and/or industry settings.
+* Fast learner with an ability to problem-solve independently.
+* Good written and verbal communication skills, with high attention to detail.
+
+Recruitment process
+
+* Online Technical Test
+* Take-Home Assessment
+* Interview & Discussion of Take-Home Assessment - Hiring Manager (Virtual or face-to-face)"
+JD-DS-0006,DATA_SCIENTIST,Internship for Computer/IT/Software/Data Science,Anonymised,"Bayan Lepas, Penang",entry,manual,https://malaysia.indeed.com/viewjob?jk=d508e632907c4539,Copied manually for non-commercial academic research,2026-10-12,"Job Description
+
+* Work closely with process team to understand their analytical needs for dashboard development (Tableau).
+* Develop the dashboard (Tableau) according to the extraction, formulation and manipulation of data to address business requirements.
+* Interpret analytical results and summarize key points.
+* Create user manual / dashboard application note upon dashboard completion.
+
+Qualifications
+
+* Degree in Computer Software/Science/Engineering/IT/Data Science, preferable 6 months and above availability for internship.
+* Strong knowledge - SQL, R, Python, Tableau, PowerBI, Hadoop, C++, C, C#, RStudio, Visual Studio, MS Office.
+* Good hands-on skills, excellent analytical and problem solving capabilities.
+* Able to work collaboratively with others.
+* Good personality, positive mindset and independent.
+* Fluent English skills (written and spoken)."
+JD-DS-0007,DATA_SCIENTIST,Technology Associate - Data Science,Anonymised,Kuala Lumpur,junior,manual,https://my.jobstreet.com/job/94885791,Copied manually for non-commercial academic research,2026-10-12,"Job Overview
+
+We are looking for a passionate, ambitious, and highly educated Technology Associate to join our Digital team. This position is designed for recent graduates with a strong academic record who are eager to gain hands-on experience across various facets of digital technologies. As a Technology Associate, you will participate in a dynamic job rotation program, gaining exposure to cutting-edge digital solutions, emerging technologies, and innovation-driven projects. This role will provide a foundation for leadership opportunities in the rapidly evolving digital landscape.
+
+Key Responsibilities
+
+* Job Rotation: Participate in a structured rotation across key areas of Digital Technologies, including but not limited to Software Development, Data Science, Data Engineer, Cloud Technologies, and Digital Transformation initiatives.
+* Project Management: Support and manage digital technology projects from conception to execution, ensuring successful implementation within timelines and budgets.
+* Innovation & Strategy: Assist in the development and execution of digital transformation strategies, leveraging the latest technologies like AI, IoT, Blockchain, and Cloud Computing to drive business growth.
+* Data Analysis & Reporting: Analyze data and generate insights from digital platforms and systems to drive decisions and optimize digital performance.
+* Collaboration: Work with cross-functional teams, including IT, Business Units, and external partners, to deliver technology solutions that meet business objectives.
+* Leadership Development: Receive mentorship and coaching from senior leadership in the digital space, preparing you for future leadership roles in technology-driven environments.
+* Continuous Learning: Stay ahead of the curve by learning about the latest trends in digital technologies and integrating them into business strategies.
+* Problem-Solving: Contribute to identifying, troubleshooting, and solving digital and technical challenges faced by the organization
+
+Qualifications
+
+Education
+
+* A recent graduate with a strong academic record, preferably with a Bachelor's or Master’s degree in Computer Science, Information Technology, Data Science, Digital Transformation, or a related field.
+* CGPA: A high CGPA (typically above 3.5/ 2nd Upper) is preferred.
+
+Skills
+
+* Strong analytical and technical problem-solving abilities.
+* Proficient in digital tools and platforms such as cloud computing, databases, AI/ML, DevOps, and business intelligence.
+* Familiarity with software development processes, programming languages (e.g., Python, Java, SQL), and/or data analytics tools (e.g., Tableau, Power BI) is a plus.
+* Excellent communication skills (verbal and written) to interact with technical and non-technical stakeholders.
+* Ability to quickly learn and adapt to new digital technologies.
+* Strong organizational and project management skills, with the ability to prioritize tasks in a fast-paced environment.
+
+Key Attributes
+
+* Tech-savvy: Passionate about emerging technologies and digital trends.
+* Innovative: Able to think creatively to solve complex problems with digital solutions.
+* Adaptable: Comfortable navigating fast-changing digital landscapes.
+* Collaborative: Works well within interdisciplinary teams to execute digital strategies.
+* Leadership potential: Demonstrates initiative and leadership qualities with the ability to manage projects and teams in the future.
+
+Perks and benefits: Comprehensive training in digital technologies with workshops, certifications and mentorship; Fast-track career growth into leadership positions"
+JD-DS-0008,DATA_SCIENTIST,Intern - Data Science,Anonymised,"Bayan Lepas, Penang",entry,manual,https://malaysia.indeed.com/viewjob?jk=81a42ba308e06328,Copied manually for non-commercial academic research,2026-10-12,"Job Summary
+
+[COMPANY]'s Manufacturing Engineering team is looking for an enthusiastic intern to assist in developing an automated Off-hold Tracking solution. The intern will support efforts to reduce manual data compilation in the Factory Quality Assurance Process (FQAP). This is a learning-focused role ideal for students eager to apply their academic knowledge in a real-world manufacturing setting.
+
+Essential Duties and Responsibilities
+
+* Assist in building a simple automated system to track Off-hold status and reduce manual compilation
+* Learn and apply basic data extraction and cleaning techniques on FQAP-related data
+* Help create simple reports or dashboards to display Off-hold tracking results
+* Work with team members to understand existing manual workflows
+* Support data validation by comparing automated outputs with current manual records
+* Prepare basic documentation on the work completed
+* Participate in team meetings and share progress updates
+
+Qualifications
+
+Required
+
+* Currently pursuing a Bachelor's degree in Data Science, Mathematics, Computer Science, or Information Technology (penultimate or final year)
+* Basic knowledge of at least one programming language (e.g., Python or R)
+* Willingness to learn new tools and technologies
+* Able to commit to the internship duration (3–6 months)
+* Good attitude, curiosity, and willingness to ask questions
+
+Preferred
+
+* Exposure to data analysis concepts through coursework or personal projects
+* Basic familiarity with Excel (formulas, pivot tables)
+* Some awareness of databases or SQL (even from coursework)
+* Interest in automation or process improvement
+
+Skills
+
+* Basic programming (Python, R, or VBA)
+* Fundamental data handling (sorting, filtering, basic analysis)
+* Microsoft Excel (intermediate level)
+* Willingness to learn visualization tools (Power BI, Tableau, etc.)
+* Good communication and teamwork
+* Eager to learn and take initiative"
+JD-DS-0009,DATA_SCIENTIST,"Associate Engineer, Data Science",Anonymised,Penang,junior,manual,https://my.jobstreet.com/job/95201142,Copied manually for non-commercial academic research,2026-10-12,"About the role
+
+This role builds strong technical foundations across data engineering, analytics, automation and digital transformation. You will work on real-world semiconductor manufacturing and supply-chain problems alongside experienced team members, developing data pipelines, analytical solutions and digital applications.
+
+Key responsibilities
+
+* Support the development and maintenance of data pipelines and data-processing workflows.
+* Write and maintain Python and SQL code for data extraction, transformation, validation and analysis.
+* Assist with integrating data from databases, APIs, files and enterprise systems.
+* Support the development of analytical datasets, dashboards and reports for supply-chain and manufacturing projects.
+* Perform data validation, reconciliation and troubleshooting.
+* Assist with automating repetitive operational and reporting processes.
+* Participate in the development, testing, deployment and monitoring of digital applications and planning-system capabilities.
+* Prepare technical documentation, follow coding standards and collaborate with cross-functional teams across Penang and Singapore.
+
+About you
+
+* Diploma or Bachelor's degree in Computer Science, Data Science, Software Engineering, Information Systems, Electrical/Electronic Engineering or a related discipline.
+* 0–1 year of relevant experience; candidates without prior work experience are welcome to apply.
+* Fundamental knowledge of Python, SQL, relational databases and programming concepts.
+* Strong analytical and problem-solving skills, with good communication, teamwork and a proactive, ownership-oriented attitude.
+* Academic or personal projects involving Python, SQL, data analytics, APIs or cloud technologies, or exposure to Power BI, Tableau or Git, are advantageous."
+JD-DS-0010,DATA_SCIENTIST,Degree Internship (Data Science/ IT),Anonymised,"Batu Kawan, Penang",entry,manual,https://my.jobstreet.com/job/95061566,Copied manually for non-commercial academic research,2026-10-12,"Data Science / IT Internship
+
+* To undertake specific projects as assigned
+* To provide accurate, reliable test results or data analysis to strengthen the statistical back up in all relevant projects & department activities.
+* Responsible to carry out all development works assigned by the supervisor.
+* Execute assignments given and report on progress.
+* Any other tasks assigned by supervisor
+
+Minimum Qualification
+
+* Degree (Artificial Intelligence/ Computer Science/Data Science) disciplines are preferred
+* Undergraduate (Degree) of local/ overseas institution with minimum cumulative CGPA 3.20 of current ongoing course.
+* Knowledge in Power BI is advantage
+* Ability to work in a team and good communication skills
+* Strong observation & analytical skills
+* Internship period from 3 to 6 Months
+
+Perks and benefits: Medical; Miscellaneous allowance; Dental and optical; Hybrid Work; Annual bonuses; On-site gym; Meal subsidy; International exposure"
+JD-SD-0002,SOFTWARE_DEV,Software Developer / Junior Software Developer,Anonymised,"Klang, Selangor",junior,manual,https://my.jobstreet.com/job/94870574,Copied manually for non-commercial academic research,2026-10-12,"We’re looking for passionate and versatile Software Developers to join our growing tech team! Your main role is to work closely with the other members in the Accounting Team.
+
+Responsibilities
+
+* Develop and implement new software programmes.
+* Maintain and improve the performance of existing software.
+* Test and maintain software products to ensure strong functionality and optimization.
+* Design and update software database.
+* Analyze user needs and software requirement to determine feasibility of design within time and cost constraints.
+* Troubleshoot and resolve issues in existing software.
+* Prepare design documentation.
+* Write and maintain technical documentation to describe programme development, logic, coding, testing, changes, and corrections.
+* Code and test software based upon software specifications and design.
+* Collaborate and communicate effectively with other team members throughout the Company.
+* Other tasks as may be assigned by the Team Lead or management from time to time.
+
+Requirements
+
+* Possess Diploma/Degree in Computer Science or IT related to experience in web application development.
+* Have at least 2 years of working experience with React Native or in related fields
+* Fresh Graduates with excellent programming skills are encouraged to apply
+* Proficient in ASP.NET Core MVC C#, HTML5, CSS, Razor/React.js, Javascript and MSSQL.
+* Experience with RESTful APIs and integration of backend services.
+* Knowledge of state management libraries such as Redux, MobX, or Context API.
+* Experience in Azure will be an added advantage.
+* Understanding of mobile UI/UX principles.
+
+Perks and benefits: 5 working days; Parking subsidy; Fully-stocked fridge and pantry; Medical, dental and optical benefits, hospitalization & surgical insurance and group personal scheme; Training and guidance provided; Smart casual attire; Festive and birthday celebrations; Sports activities (badminton & pickleball)"
+JD-SD-0003,SOFTWARE_DEV,Software Engineer (Internship),Anonymised,Penang,entry,manual,https://my.jobstreet.com/job/95211559,Copied manually for non-commercial academic research,2026-10-12,"We are hiring for our Internship Program! We are looking for enthusiastic problem-solver with an interest in software development to join us to build our next generation system. We only accept candidates who knows how to code.
+
+Job Responsibilities
+
+* Assisting Software Engineers to develop in HTML, CSS, Javascript, ASP.net & C#
+* Involve in whole Software Development Life Cycle (SDLC)
+* Maintain good documentation and maintenance practice
+
+Who we need
+
+* Current or Graduating student taking Computer Science or Computer Engineering.
+* Passion in software development!
+* Good logical thinking and
+* Open minded!!!
+
+As you will be involved in the real-life project, we need you to possess certain standard of programming & logical skill, and our senior is more than happy to guide you to another level.
+
+Perks and benefits: Highly competitive compensation; Skilled programmer as mentor; Opportunity to convert to full-time role; 5-day work week; Flexible work environment; Fully stocked refreshments"
+JD-SD-0005,SOFTWARE_DEV,Software Developer (Internship),Anonymised,Kuala Lumpur,entry,manual,https://my.jobstreet.com/job/95116559,Copied manually for non-commercial academic research,2026-10-12,"Responsibilities
+
+* Software Development Life Cycle (SDLC) including Design, Programming, QC, Documentation and etc.
+* To learn & involve in Enterprise Management Software (ERP), Industry 4.0 Development (Machine Automation, AGV, Mobility, Data Mining, Dashboard and etc).
+
+Requirements
+
+* Bachelor's Degree in Computer Science/ Information Technology, Science & Technology or equivalent.
+* Required skill(s): Communication, Adaptive, Teamwork.
+* Prefer Final Year Student and come with full 6 months internship period
+* 5 Internship position(s)."
+JD-SD-0006,SOFTWARE_DEV,Junior Software Engineer,Anonymised,"Kuala Lumpur City Centre, Kuala Lumpur (Hybrid)",junior,manual,https://my.jobstreet.com/job/94992465,Copied manually for non-commercial academic research,2026-10-12,"Responsibilities
+
+* Design, development, testing, and deployment of software & application to meet business objective under organization’s IT projects & initiatives.
+* Support & maintenance (2nd Level SLA) of software & application to ensure organization’s Business As Usual (BAU).
+* Upgrade of software & application to meet user’s & compliance requirements.
+* Research, design & planning for software & application to fulfil business requirement & organization objective.
+
+Requirements
+
+* Degree in Information Technology (IT)/ Computer Science/ Software Engineering or related field.
+* Minimum two (2) years’ working experience in Software Engineering or related field, with at least one (1) year of experience in IT-related projects.
+* Experience in fullstack development or data engineering is preferred.
+* Must have strong analytical, problem-solving, good communication and stakeholder management skills.
+* Must be proficient in at least one (1) programming language. (C#/ Java/ Javascript or equivalent)
+* Must be proficient in SQL & Relational Database (MS SQL / MySQL or equivalent)
+* Familiar with software development life cycle (SLDC) and software development tools (IDE, text editor, SQL management tool, source code control, etc.)
+* Familiar with web development technologies, standards & protocols.
+* Fresh graduates are encouraged to apply."
+JD-SD-0007,SOFTWARE_DEV,"Software Engineer (Full-Stack, AI-Assisted Development)",Anonymised,"Alam Damai, Kuala Lumpur",junior,manual,https://my.jobstreet.com/job/95194226,Copied manually for non-commercial academic research,2026-10-12,"The Role
+
+Join our KL engineering team to build and maintain web applications for real clients, covering frontend, backend, APIs, databases and integrations. You will work with tools like Claude, ChatGPT every day, and you must be able to spot when AI output is wrong, insecure or over-engineered, and fix it before release. We work spec-first: clear written requirements drive AI-assisted builds, and engineers own the quality of the result.
+
+What You'll Do
+
+* Turn business requirements and UI/UX flows into clean, secure, production-ready features
+* Write clear specs and give AI tools the right technical and business context, within our established project structure and conventions
+* Review AI-generated code for logic, security, performance and maintainability
+* Debug issues across frontend, backend, databases, servers and production
+* Own your features from development through deployment and support
+* Help improve our AI-assisted development workflows
+
+Requirements
+
+* Solid fundamentals in frontend, backend, APIs, databases and web architecture
+* Practical, hands-on experience using AI coding tools
+* Strong debugging and logical problem-solving skills
+* Able to understand business logic and translate it into reliable implementations
+* Able to learn unfamiliar code, APIs and tools quickly and independently
+* An eye for UI/UX detail: you notice when a screen is confusing or inconsistent
+* Honest about what you don't know, and comfortable saying ""I'm not sure, let me check""
+* Linux, server, database and networking knowledge
+* Able to work independently and take ownership
+* Full-time, office-based in Alam Damai, Kuala Lumpur; willing to respond to genuine production emergencies outside office hours
+
+Experience
+
+Fresh graduates are welcome. Experience helps, but we care more about how you think, how quickly you learn and how well you work with AI tools.
+
+Perks and benefits: Work for a US-headquartered company from Kuala Lumpur; Small team with visible impact; AI-first engineering workflow; Real ownership of features that go live"
+JD-SD-0008,SOFTWARE_DEV,Junior Software Developer/Engineer,Anonymised,Penang (Hybrid),junior,manual,https://my.jobstreet.com/job/94648297,Copied manually for non-commercial academic research,2026-10-12,"Ideal Candidate(s)
+
+* Technically competent, self-driven individual(s) with a proven track record in the software field.
+* Independent contributor who is also a good team player.
+* Possessing either strong design skills and/or good trouble-shooting acumen.
+
+Responsibilities
+
+* Define, develop, test, and support Industry 4.0 software applications for the semiconductor factories.
+* I4.0 applications usually involve systems to integrate with manufacturing equipment in semiconductor factories to collect data, provide analytics, and enable intelligent monitoring and control.
+* Occasional travel to local and overseas customer sites to provide product support and for project implementation.
+
+Requirements
+
+* Candidate must possess a good Bachelor's Degree in Engineering(Computer/Electronics/Telecommunication), Computer Science/IT or equivalent.
+* Proven track record with some of the following technologies/ programming languages: C#, .NET, Web Services, MS SQL Server, VB, Python, Web Programming, Dashboards, SECS/GEM, Machine Learning.
+* Familiar with the use of A.I. tools for software design, development, debugging, etc.
+* Preferably with at least 2-3 years of working experience in software development, although fresh graduates with good credentials are also encouraged to apply.
+* Able to work under min. supervision & independently. Good spoken and written English skills are necessary."
+JD-SD-0009,SOFTWARE_DEV,Java Developer Intern,Anonymised,"Kuala Lumpur City Centre, Kuala Lumpur",entry,manual,https://my.jobstreet.com/job/95158085,Copied manually for non-commercial academic research,2026-10-12,"About the Role
+
+We are looking for a passionate and driven Java Developer Intern to join our growing engineering team. This is a hands-on internship where you'll work alongside experienced developers on real-world projects.
+Whether you're a final-year student or a fresh graduate eager to kickstart your tech career in Southeast Asia's thriving tech ecosystem, we'd love to hear from you!
+
+Duration & Start Date
+
+* Duration: 4–8 months
+* Start Date: 2026 July
+* Commitment: Full-time (Mon–Fri)
+
+What You'll Do
+
+* Assist in designing, developing, and testing Java-based backend services and APIs
+* Participate in the full software development lifecycle
+* Write clean, maintainable, and well-documented code
+* Collaborate with cross-functional teams (PM, QA, DevOps) in an Agile environment
+* Debug and troubleshoot application issues
+* Learn and contribute to internal tooling and CI/CD pipelines
+
+What We're Looking For
+
+* Currently pursuing a Bachelor's degree in Computer Science, Software Engineering, or related field
+* Solid foundational knowledge of Java
+* Familiarity with Spring Boot or willingness to learn quickly
+* Basic understanding of SQL / relational databases
+* Good problem-solving mindset and willingness to learn
+* Able to communicate in Mandarin and English (serving Mandarin-speaking customers)
+
+Perks and benefits: Mentorship from senior engineers; Real project ownership with code shipped to production; Certificate of completion and potential full-time conversion upon graduation"
+JD-SD-0010,SOFTWARE_DEV,"Intern, Software Developer (JAVA)",Anonymised,"Damansara Utama, Selangor",entry,manual,https://my.jobstreet.com/job/95195060,Copied manually for non-commercial academic research,2026-10-12,"Why This Role Matters
+
+The Software Developer Intern supports the development of enterprise financial applications, assisting in coding, testing, and troubleshooting. The role provides hands-on System Development Life Cycle (SDLC) experience, exposure to modern technologies, and opportunities to build technical and teamwork skills.
+
+How You'll Make a Difference
+
+* Undertake project assignments together with the project team to deliver enterprise digital financial solution/application.
+* Get real experience in project implementation-System Development Life Cycle by assisting project team in:
+
+1. Delivery of accurate & efficient enterprise level application program according to specifications.
+2. Software Development: Object-oriented design & development.
+3. SIT and UAT Support. Troubleshooting issue and perform changes as needed to resolve issue.
+4. Assist Business team in preparing functional specification and user acceptance test script.
+5. Learn and gain knowledge about the clients' business, domain knowledge and process flow.
+6. Collaborate with team and across teams.
+7. Expose to different development framework and tools: Spring framework, Angular, React, Kubernetes, Gradle, Docker, Bootstrap, Ionic, Microservices etc.
+
+What You'll Bring
+
+* Currently pursuing or recently graduated with a Bachelor’s Degree in Computer Science, Software Engineering, Information Technology, or related fields, with a minimum CGPA of 3.20.
+* Willing and able to work on-site at Damansara Uptown, Selangor.
+* Open to travel as required.
+* Opportunity to enhance knowledge and skills in business, technical, and service management.
+* Gain better understanding of personal strengths and interests, while supporting personal and professional development.
+
+Perks and benefits: Medical; Miscellaneous allowance; Dental; Parking"
+JD-SD-0011,SOFTWARE_DEV,Junior Tester,Anonymised,Kuala Lumpur,junior,manual,https://malaysia.indeed.com/viewjob?jk=859b8705960d7755,Copied manually for non-commercial academic research,2026-10-12,"Duration: 1 year extendable contract
+Experience: 1+ years
+
+We are looking for a Junior Tester with hands-on experience in manual testing and a good understanding of software testing practices.
+
+Requirements
+
+* 1+ years of experience in Manual Testing.
+* Good understanding of STLC, test case preparation, test execution, and defect reporting.
+* Knowledge or exposure to Automation Testing will be an advantage.
+* Banking/Financial Services domain experience is highly preferred.
+* Good analytical, problem-solving, and communication skills.
+* Ability to work effectively within a team and meet project timelines."
+JD-SD-0012,SOFTWARE_DEV,Junior Software Engineer (Fresh graduates are welcome to apply),Anonymised,"Petaling Jaya, Selangor",junior,manual,https://my.jobstreet.com/job/94945787,Copied manually for non-commercial academic research,2026-10-12,"Job Summary
+
+We are looking for a motivated and detail-oriented Junior Software Engineer to join our growing engineering team. Your primary responsibility will be to maintain, troubleshoot, and improve our existing mobile applications and web platforms. You will also have the opportunity to gradually expand your skills into AI development, data processing, and embedded firmware development for our exoskeleton products.
+Fresh graduates are welcome to apply. Prior experience in AI or firmware development is not required. You will work closely with experienced engineers who will provide hands-on guidance and technical training.
+
+Key Responsibilities
+
+App & Web Development
+
+* Maintain, troubleshoot, and improve existing mobile applications and web platforms.
+* Identify and resolve software bugs, performance issues, and compatibility problems.
+* Support the implementation of new features and improvements based on product and business requirements.
+* Coordinate with external developers or vendors when required for system maintenance and development.
+* Maintain clear and organized source code, technical documentation, and development records.
+
+AI & Data Development
+
+* Assist the engineering team with AI-related product development and experimentation.
+* Support data collection, cleaning, organization, labelling, and preparation for AI development.
+* Assist in testing and evaluating AI models and AI-powered product features.
+* Work with experienced engineers to integrate AI-related functions into [COMPANY] products.
+* Explore and learn new AI technologies that may improve product performance and user experience.
+
+Firmware & Product Development
+
+* Assist with firmware development, testing, debugging, and maintenance for embedded systems.
+* Support software and firmware integration with sensors, electronics, and other hardware components.
+* Assist in product testing, troubleshooting, and technical issue investigation.
+* Work alongside experienced engineers and gradually take ownership of firmware development tasks.
+* Participate in the development and testing of real-world robotics products.
+
+Requirements
+
+* Bachelor's Degree in Computer Science, Software Engineering, Computer Engineering, Electrical/Electronic Engineering, or a related field.
+* Fresh graduates are welcome to apply.
+* Basic programming knowledge and a good understanding of software development fundamentals.
+* Familiarity with web or mobile application development through coursework, personal projects, internships, or work experience.
+* Strong interest in learning AI, embedded systems, firmware, robotics, and new technologies.
+* Good problem-solving and analytical skills.
+* Detail-oriented and careful when handling development, testing, and technical documentation.
+* Strong willingness to learn and continuously improve technical skills.
+* Self-motivated, proactive, and willing to take ownership of assigned tasks.
+* Able to learn unfamiliar technologies with guidance from experienced engineers.
+* Good communication skills and ability to work effectively within a multidisciplinary team.
+
+Good to Have
+
+* Experience with mobile application development (iOS, Android, or cross-platform frameworks).
+* Experience with front-end or back-end web development.
+* Knowledge of Python, JavaScript / TypeScript, C / C++, or similar programming languages.
+* Exposure to AI or Machine Learning.
+* Experience with data processing, dataset preparation, or data analysis.
+* Basic knowledge of embedded systems, microcontrollers, or firmware development.
+* Experience with Git or other version control systems.
+* Interest in robotics, wearable technology, IoT, embedded systems, or consumer electronics."
+JD-WD-0001,WEB_DEV,Interns - Software Developer,Anonymised,"Petaling Jaya, Selangor",entry,manual,https://my.jobstreet.com/job/95089594,Copied manually for non-commercial academic research,2026-10-12,"We welcome interns! Join [COMPANY] and gain practical skills and real-world experience in software development. We provide guidance and training to help you grow as a developer.
+
+What you'll learn
+
+You'll gain hands-on experience by working together with software development team to support ongoing projects:
+
+* Assist in the development and enhancement of software applications.
+* Assist in preparing software and product documentation.
+* Perform testing and debugging to identify and resolve software issues.
+* Assist in troubleshooting and modifying existing applications when required.
+
+What you'll need
+
+* Currently pursuing bachelor’s degree in computer science, information technology or equivalent.
+* Basic knowledge in programming languages such as Java and JavaScript
+* Basic knowledge in development frameworks such as Vue.js ecosystem and UI styling with Tailwind CSS.
+* Self-Driven with strong analytical and problem-solving skills
+* Strong learning aptitude
+* Internship duration of more than 3 months
+
+Perks and benefits: Hands-on experience with real projects; Mentorship from experienced developers; Opportunity to grow into a full-time role (based on performance)"
+JD-WD-0002,WEB_DEV,Junior IT Programmer / Interns,Anonymised,Kuala Lumpur,entry,manual,https://my.jobstreet.com/job/95129001,Copied manually for non-commercial academic research,2026-10-12,"About the role
+
+This is a Junior IT Personnel / Intern position where you will build and improve in-house web systems with the development team, use AI tools to work faster and smarter, test and fix bugs to keep systems running smoothly, help with day-to-day IT support, and join training sessions including emergency role-play scenarios.
+
+Key responsibilities
+
+* Build and improve in-house web systems with the dev team
+* Use AI tools (Claude, ChatGPT, Cursor) to work faster and smarter
+* Test, fix bugs and keep in-house systems running smoothly
+* Help with day-to-day IT support
+* Join training sessions, including emergency role-play scenarios
+
+About you
+
+* PHP / Laravel, or another modern web framework
+* Git and GitHub (branches, pull requests, teamwork)
+* Hands-on experience with AI tools, LLMs or automation
+* Takes initiative and delivers clear, practical solutions
+* Innovative mindset, always bringing fresh ideas to the table
+* Curious learner who explores new tech and challenges
+* Nice to have: Vue or React
+* Nice to have: Docker, Linux or cloud hosting
+* Nice to have: Basic technical support skills and networking
+* Nice to have: A portfolio or GitHub with projects you have built
+
+Perks and benefits: Chance of permanent role for interns; Working hours Monday - Friday 8:30am - 4:30pm"
+JD-WD-0003,WEB_DEV,Full Stack Developer - (Junior to Mid Level) (MY Based),Anonymised,"Petaling Jaya, Selangor (Hybrid)",mid,manual,https://my.jobstreet.com/job/94921685,Copied manually for non-commercial academic research,2026-10-12,"About the Role
+
+[COMPANY] is looking for a Mid-Level Full Stack Developer to join our growing application development team. You’ll be working on both frontend and backend development using React.js with Next.js, .NET Core, and Node.js while managing databases in MS SQL and MySQL.
+
+A day in life
+
+* Develop and maintain front-end components using React.js and Next.js.
+* Implement backend APIs using .NET Core (C#) and Node.js.
+* Work with databases (MS SQL & MySQL) to design and write efficient queries.
+* Collaborate with senior developers and follow coding standards and best practices.
+* Participate in code reviews, testing, and debugging.
+* Contribute to system documentation and knowledge sharing.
+
+What you need
+
+* Minimum of 2 solid years of experience in full stack development.
+* Proficient in React.js, JavaScript/TypeScript, and Next.js.
+* Experience in backend development using .NET Core (C#) and Node.js.
+* Familiar with relational databases (MS SQL, MySQL) and writing queries.
+* Understanding of RESTful API design.
+* Familiarity with Git and version control systems.
+* Good communication and teamwork skills.
+* Willingness to learn and take ownership of tasks.
+
+Nice to Have
+
+* Experience with Docker and containerized environments.
+* Exposure to Agile methodologies (Scrum/Kanban).
+* Familiarity with basic DevOps practices or CI/CD tools.
+* Knowledge of unit testing and code quality tools.
+
+Perks and benefits: Hybrid working arrangement; 18 days annual leave; 3 days family care leave; Honourable MC; Staff insurance (inpatient/outpatient/PA/life); Flexi-benefit; Free gym access"
+JD-WD-0004,WEB_DEV,Software & Tech Internship,Anonymised,"Johor Bahru, Johor",entry,manual,https://malaysia.indeed.com/viewjob?jk=47ea76f2406029a8,Copied manually for non-commercial academic research,2026-10-12,"About the Role
+
+We’re building Guard Ops, our own operations platform that runs guard scheduling, attendance, leave and site management for 300+ security officers across 65+ sites. We’re looking for a Tech Intern who enjoys solving problems and building software that real people use every day. You’ll work directly with management on a live product, and you’ll also support the company’s day-to-day tech operations.
+
+Key Responsibilities
+
+Guard Ops App Development
+
+* Build and improve features on the web dashboard (Next.js) and mobile attendance app (Flutter)
+* Work with the Supabase backend, including the database, authentication and access control
+* Fix bugs, test new features, and help with deployments
+* Collect feedback from managers, supervisors and guards, and turn it into improvements
+* Use AI coding tools to speed up development
+
+APIs & Integrations
+
+* Work with APIs and webhooks to connect Guard Ops with other business systems
+
+Website Support
+
+* Assist with website updates and keep forms and tracking working
+
+Google Workspace Admin
+
+* Manage users, groups and access rights
+* Set up shared drives and email configurations
+
+CRM & Email Marketing
+
+* Assist with CRM pipeline setup, campaigns and list management
+
+General Tech Support
+
+* Provide first-level troubleshooting for staff software and tools
+
+Skills Required
+
+* Currently studying Computer Science, Software Engineering, IT or a related field
+* Basic coding in JavaScript/TypeScript (Python is a plus)
+* Some experience with React or Next.js, or a strong willingness to learn quickly
+* Basic understanding of databases (SQL) and APIs
+* Comfortable using Google Workspace
+* Interest in AI tools for software development and automation
+
+Bonus
+
+* Experience with Flutter/Dart, Supabase or PostgreSQL
+* Familiarity with Git and GitHub
+* A GitHub profile or personal projects you can show us
+
+Perks and benefits: Real experience shipping a production app used daily; Mentorship in full-stack development, databases and AI-assisted coding; Exposure to SME operations; Portfolio-ready work; Opportunity to transition into a full-time role"
+JD-WD-0005,WEB_DEV,Frontend Developer,Anonymised,Kuala Lumpur,junior,manual,https://my.jobstreet.com/job/95206269,Copied manually for non-commercial academic research,2026-10-12,"Job Overview
+
+We are looking for a passionate Frontend Developer who is equally comfortable building polished React interfaces and working with ClickHouse big data infrastructure. You will collaborate with cross-functional teams to deliver data driven product features from design to deployment.
+
+Key Responsibilities
+
+* Develop and maintain responsive, scalable frontend applications using React 18+ and TypeScript
+* Manage application state with Redux Toolkit and implement client-side routing with React Router v6
+* Build UI components using Tailwind CSS or Styled-components
+* Integrate backend APIs securely using Axios with JWT authentication
+* Participate in ClickHouse database table design and data modeling
+* Write and optimize complex SQL queries including aggregations, window functions, and partitioned queries
+* Collaborate with backend developers and designers to deliver features end-to-end
+
+Requirements
+
+* Bachelor's Degree in Software Engineering, Computer Science, Information Technology or related field.
+* Fresh graduates or candidates with 1 - 2 years of experience are welcome.
+* Frontend Core Technologies
+* React 18+ with core Hooks (useEffect, useMemo, useCallback, useContext)
+* TypeScript (strict mode)
+* Redux Toolkit for state management
+* React Router v6
+* Strong ES6+ JavaScript fundamentals (async/await, destructuring, modules)
+* CSS Grid / Flexbox for responsive layouts
+* Tailwind CSS and/or Styled-components
+* Vite or Webpack basic configuration
+* Axios + JWT for API integration
+* Database
+* Data visualization experience (ECharts, Recharts, or similar)
+* Storybook for component documentation"
+JD-WD-0006,WEB_DEV,Junior Front End Developer,Anonymised,"Maluri, Kuala Lumpur (Onsite)",junior,manual,https://my.jobstreet.com/job/94887628,Copied manually for non-commercial academic research,2026-10-12,"Job Description
+
+We are seeking a skilled and motivated Frontend Web Developer to join our growing team. You will be responsible for building user-friendly, responsive, and visually appealing web applications while collaborating closely with designers, backend developers, and clients.
+
+Key Responsibilities
+
+* Develop, maintain, and optimize responsive web applications using Nuxt / VueJS.
+* Collaborate with backend developers to integrate RESTful APIs and WebSocket connections.
+* Ensure UI/UX designs are implemented accurately and are user-friendly.
+* Optimize frontend performance for speed and scalability.
+* Write clean, maintainable, and reusable code following best practices.
+* Participate in code reviews, testing, and debugging processes.
+* Projects include: Customer-facing portals, Admin dashboards, Real-time chat applications, and Third-party service integrations.
+* Ensure timely delivery and high quality of all project outputs.
+
+Requirements
+
+* Minimum Diploma in Computer Science, Software Engineering, or related field.
+* At least 1 year of experience in frontend development with frameworks like Vue / Svelte / React.
+* Proficient in HTML5, CSS3, JavaScript (ES6+).
+* Familiar with RESTful APIs integration.
+* Understanding of Git/GitHub and version control best practices.
+* Experience in browser testing and debugging.
+* Understanding of the entire web development lifecycle (design, development, deployment).
+* Good eye for design and understanding of layout aesthetics.
+* Strong problem-solving, analytical, and multitasking skills.
+* Passionate about R&D and continuous improvement.
+* Self-motivated, proactive, and able to work in a fast-paced environment.
+* Strong communication and interpersonal skills.
+* A portfolio of past work is an advantage.
+
+Optional but Advantageous
+
+* Experience with Tailwind CSS or other CSS frameworks.
+* Experience on WebSocket integration.
+* Knowledge of SSR (Server-Side Rendering) and SEO optimization in Nuxt.
+* Familiar with state management libraries (Vuex / Pinia).
+* Experience in integrating third-party services such as Firebase, OneSignal, or payment gateways.
+
+Perks and benefits: Office within walking distance from MRT; Monthly performance bonus; Sponsorship for training and workshops; Annual leave encashment; Monthly team bonding activities; Equipment and resources provided"
+JD-WD-0008,WEB_DEV,Junior Full Stack Developer,Anonymised,"Damansara Perdana, Selangor (Hybrid)",junior,manual,https://my.jobstreet.com/job/94721884,Copied manually for non-commercial academic research,2026-10-12,"We’re looking for a Junior Full-Stack Developer to join our team. You’ll play a key role in building scalable, high-quality applications that blend great design with robust architecture. You enjoy building full-stack solutions that balance usability, performance, and maintainability, thrive in collaborative, cross-functional teams, and take pride in seeing your work used globally. You're proactive, communicative, and value both mentoring and learning from others.
+
+Responsibilities
+
+* Design, develop, and maintain full-stack web applications using modern front-end and back-end frameworks.
+* Convert UI/UX designs into responsive, accessible user interfaces.
+* Build RESTful APIs and integrate with third-party services.
+* Manage data flow between front-end and backend systems, including database design and queries.
+* Write maintainable, reusable, and well-tested code.
+* Collaborate with designers, product managers, and engineers to deliver high-quality features.
+* Continuously explore and adopt new technologies and practices to improve the development process.
+* Contribute to a positive engineering culture through feedback, documentation, and shared learning.
+
+Requirements
+
+* Degree or diploma in Computer Science, Software Engineering, or a related field.
+* At least 2 years in front-end development (HTML, CSS, JavaScript, and frameworks like Angular, React, or Vue) together with hands-on experience in backend technologies (e.g., Node.js, .NET Core) and building RESTful APIs.
+* Solid understanding of relational (PostgreSQL, MySQL) or NoSQL (MongoDB) databases.
+* Familiarity with version control (Git), CI/CD workflows, and basic DevOps practices.
+* Bonus: Experience with containerization (Docker), cloud platforms (AWS, Azure), or testing frameworks (Jest, xUnit, etc.).
+* Willing to be based at client site
+
+Nice to Have
+
+* Portfolio or GitHub with relevant projects.
+* Contributions to open-source or engineering blogs.
+* Experience with performance optimization, security best practices, or accessibility."
+JD-WD-0009,WEB_DEV,Junior Web Developer,Anonymised,"Petaling Jaya, Selangor",junior,manual,https://my.jobstreet.com/job/94722691,Copied manually for non-commercial academic research,2026-10-12,"About the role
+
+Develop and maintain web applications. Build HTML EDMs for email campaigns. Create campaign microsites and landing pages. Support maintenance of the company website (minor CMS work).
+
+Key responsibilities
+
+* Write clean, responsive HTML, CSS, and JavaScript
+* Develop HTML-based email templates (EDMs)
+* Create and update marketing campaign microsites
+* Ensure cross-browser and mobile compatibility
+* Collaborate with marketing, design, and development teams
+
+About you
+
+* Proficient in HTML, CSS, JavaScript
+* Experience building EDMs and responsive web pages
+* Familiarity with web performance and browser testing
+* Basic understanding of web standards and accessibility
+* Knowledge of PHP or other web technologies (nice-to-have)
+* Familiarity with Microsoft Excel for data handling or content input (nice-to-have)"
+JD-WD-0010,WEB_DEV,"Intern, Fresh, Programmer, Personal Assistant (IT, Computer Sc)",Anonymised,"Puchong, Selangor",entry,manual,https://my.jobstreet.com/job/95194273,Copied manually for non-commercial academic research,2026-10-12,"Responsibilities
+
+* Meet customer with Senior / Project Manager.
+* Deploy, implement & maintain the system.
+* Meet customer with Project Manager.
+* Others will be based on the role of the internship.
+
+Requirements
+
+* Candidate must possess at least Higher Secondary/STPM/
+* Fresh Graduates & Undergraduates seeking for Internship are encouraged to apply.
+* Applicants must be willing to work in PUCHONG area.
+* No work experience required.
+* Minimum 4 Months and above Internship Period.
+* Knowing PHP, MYSQL, HTML, CSS, JAVASCRIPT
+
+Internship positions available
+
+* 2 x Programmer
+* 2 x Marketing
+* 2 x Sales
+* 1 x Personal Assistant (PA)
+
+Perks and benefits: Flexible working hours; Free snacks and drinks; Birthday celebrations, events, festival activities and movie events; Conversion to permanent if suitable after internship"
+JD-WD-0011,WEB_DEV,Junior PHP Web Developer,Anonymised,"Bandar Sri Damansara, Selangor (On-site, 8Trium Tower)",junior,manual,https://my.jobstreet.com/job/94650169,Copied manually for non-commercial academic research,2026-10-12,"Are you a passionate developer ready to make an impact? Join our team and help us create innovative web solutions!
+
+Key Responsibilities
+
+* Build and maintain high-quality web applications using PHP, HTML, CSS, and JavaScript.
+* Expand and enhance existing backend services to meet application needs.
+* Ensure web components are consistent and of high quality across all projects.
+* Manage multiple projects simultaneously and deliver projects within deadlines.
+
+Requirements
+
+* Diploma/Advanced/Higher Diploma in Computer Science or a related field.
+* 1–2 years of relevant working experience is a plus. Fresh graduates with the right skills are also welcome to apply.
+* Able to communicate in Mandarin for effective team communication with Mandarin-speaking clients.
+* Must Have: PHP, HTML, CSS, JavaScript.
+* Additional Skills: Familiarity with Sourcetree, Bootstrap, and CodeIgniter Framework.
+* Database Knowledge: Experience with MySQL.
+
+Perks and benefits: Exciting projects that enhance your skills; Supportive team where your ideas matter; Hands-on experience in a dynamic environment"
