@@ -7,12 +7,14 @@ The backend should only use the names exported here:
     from nlp import extract_skills, match_skills
 
 The contract (fields, DB mapping, errors, examples) is in docs/NLP_INTERFACE.md.
-Implemented so far: extract_skills(method="keyword") (Level 1, nlp/extractor.py).
-Semantic / hybrid extraction and match_skills() raise NotImplementedError
-until their branches are merged.
+Implemented so far: extract_skills(method="keyword") (Level 1) and
+extract_skills(method="semantic") (Level 2), both in nlp/extractor.py.
+Semantic extraction needs nlp/requirements.txt; keyword extraction needs only
+the standard library. Hybrid extraction and match_skills() raise
+NotImplementedError until their branches are merged.
 """
 
-from nlp.extractor import extract_keyword
+from nlp.extractor import extract_keyword, extract_semantic
 from nlp.skills import SkillCatalogue, load_catalogue
 from nlp.types import (
     VALID_METHODS,
@@ -61,9 +63,11 @@ def extract_skills(
         return []
     if method == "keyword":
         return extract_keyword(text, catalogue)
+    if method == "semantic":
+        return extract_semantic(text, catalogue)
     raise NotImplementedError(
         f"nlp.extract_skills(method={method!r}) is not implemented yet. "
-        "Use method=\"keyword\" until semantic extraction is merged."
+        "Use method=\"keyword\" or \"semantic\" until hybrid extraction is merged."
     )
 
 

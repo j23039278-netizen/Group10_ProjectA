@@ -34,7 +34,7 @@ def test_invalid_method_raises_value_error(bad):
         match_skills(STUDENT, REQUIRED, method=bad)
 
 
-@pytest.mark.parametrize("method", ["semantic", "hybrid"])
+@pytest.mark.parametrize("method", ["hybrid"])
 def test_unimplemented_extraction_methods_reach_the_stub(method):
     with pytest.raises(NotImplementedError):
         extract_skills(JD, method=method)

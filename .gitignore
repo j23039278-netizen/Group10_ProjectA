@@ -78,3 +78,9 @@ docker-compose.override.yml
 *.log
 logs/
 .pytest_cache/
+
+# ========================
+# NLP embedding cache (rebuilt from the skill catalogue)
+# ========================
+nlp/resources/skill_embeddings.npy
+nlp/resources/skill_embeddings.json
