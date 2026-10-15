@@ -1,9 +1,10 @@
 # SEAGAS NLP Interface (contract for backend integration)
 
 **Owner:** Ng Yong Hin (AI / NLP Engineer) | **Consumer:** Soh Way Miin (Carl), backend
-**Status:** types, validation, the skill catalogue and Level 1 keyword
-extraction (`extract_skills(..., method="keyword")`, `nlp/extractor.py`) work now.
-`method="semantic"` / `"hybrid"` extraction and `match_skills()` raise
+**Status:** types, validation, the skill catalogue, Level 1 keyword
+extraction (`method="keyword"`) and Level 2 semantic extraction
+(`method="semantic"`, both in `nlp/extractor.py`) work now.
+`method="hybrid"` extraction and `match_skills()` raise
 `NotImplementedError` until their branches are merged. The signatures and fields
 below will not change without a note in this file.
 
@@ -16,7 +17,10 @@ from nlp import extract_skills, match_skills, load_catalogue
 from nlp.types import ExtractedSkill, StudentSkill, RequiredSkill, MatchResult
 ```
 
-- `nlp/` uses only the Python standard library in this version.
+- Keyword extraction and the catalogue use only the Python standard library.
+  Semantic extraction needs the packages in `nlp/requirements.txt`
+  (spaCy + `en_core_web_sm`, sentence-transformers); they are imported only
+  when `method="semantic"` is used. See section 8.
 - The **repo root** must be on `sys.path` (not `nlp/` itself: `nlp/types.py`
   would then shadow Python's built-in `types` module).
 - Everything is plain `dict` / `list` / `str` / `float`, so results can be
@@ -55,7 +59,7 @@ stays in the backend.
 | Value | Extraction | Matching |
 |-------|------------|----------|
 | `keyword` | Exact / alias / normalised matching against the catalogue ("Power-BI" = "PowerBI" = "Power BI"). Ambiguous aliases (R, Go, Excel, CV, REST, ...) only count with supporting context. | Same skill by `skill_id`, name, alias or normalised name. |
-| `semantic` | Sentence-embedding similarity between JD phrases and skill names / descriptions. | Embedding similarity between required and student skills (e.g. MySQL vs PostgreSQL). |
+| `semantic` | spaCy noun chunks, short verb phrases and short sentences of the JD, embedded with `all-MiniLM-L6-v2`; a phrase counts as its most similar catalogue skill when cosine similarity ≥ `MATCH_THRESHOLD` (`nlp/config.py`). | Embedding similarity between required and student skills (e.g. MySQL vs PostgreSQL). |
 | `hybrid` | Both, merged; keyword wins when both find the same skill. | Keyword first; semantic only for required skills keyword could not match. |
 
 Any other value (including `"spacy_ner"`, `None`, wrong case) raises `ValueError`.
@@ -191,6 +195,7 @@ match_skills(
 | Skill rows with `is_active = FALSE` | Skipped |
 | An alias claimed by two different skills | Ignored for lookup (no guessing) |
 | Extraction / matching not merged yet | `NotImplementedError` → keep the current placeholder / Level 1 logic |
+| `method="semantic"` without `nlp/requirements.txt` installed | `ImportError` / `OSError` (spaCy model missing) → treat like any other failure |
 | Anything else unexpected | Propagates; set `job_descriptions.nlp_status = 'failed'` |
 
 ## 6. Backend changes needed (Carl)
@@ -298,3 +303,27 @@ cat.skill_id("T-SQL")             # UUID of SQL, or None
 
 Text helpers in `nlp/normalise.py`: `normalise_text()`, `uk_spelling()`
 (US → UK, the library uses UK spelling), `singularise()`, `skill_key()`.
+
+## 8. Semantic extraction (Level 2)
+
+- **Install:** `pip install -r nlp/requirements.txt` then
+  `python -m spacy download en_core_web_sm`.
+- **Model:** `config.MODEL_NAME` (`all-MiniLM-L6-v2`) is loaded once per
+  process on the first semantic call (`nlp/model.py`, thread-safe). The very
+  first run downloads ~90 MB into the Hugging Face cache (`HF_HOME`).
+- **Skill embeddings:** built once per catalogue and cached in memory and in
+  `nlp/resources/skill_embeddings.npy` (+ `.json` with the catalogue hash;
+  both git-ignored). A changed `skills_library` gives a new hash, so they are
+  rebuilt automatically.
+- **Thresholds:** `MATCH_THRESHOLD = 0.60`, `RELATED_THRESHOLD = 0.50`,
+  `SKILL_TEXT_MODE = "name_aliases"`. They live only in `nlp/config.py`; how
+  they were chosen is in `nlp/experiments/THRESHOLDS.md`.
+- **Use with keyword:** semantic extraction alone misses some exact names
+  (e.g. "SQL" scores 0.59). Keep `method="keyword"` until `"hybrid"` is merged;
+  `"semantic"` is for testing and evaluation.
+- **Speed (CPU):** about 0.26 s per JD after warm-up (keyword: about 1 ms).
+- **Output:** as section 3. `raw_skill_text` is the JD phrase that matched
+  (e.g. `"interactive dashboards"` → Data Visualisation), `confidence_score`
+  is the cosine similarity, `method` is `"semantic"`.
+- **Warm-up:** call `extract_skills("warm up", method="semantic")` once at
+  FastAPI start-up so the first real request does not pay the model load.

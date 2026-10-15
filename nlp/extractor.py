@@ -27,6 +27,7 @@ import weakref
 from functools import lru_cache
 from typing import NamedTuple
 
+from nlp import config
 from nlp.normalise import normalise_text, singularise, uk_spelling
 from nlp.types import ExtractedSkill
 
@@ -339,5 +340,180 @@ def extract_keyword(text, catalogue):
             confidence_score=conf,
             start_char=span.start,
             end_char=span.end,
+        ))
+    return results
+
+
+# ══════════════════════════════════════════════════════════════
+# Level 2: semantic extraction
+# ══════════════════════════════════════════════════════════════
+# Use it through `nlp.extract_skills(text, method="semantic")`. Needs the
+# packages in nlp/requirements.txt; they are imported only when this runs, so
+# keyword extraction stays standard-library only.
+#
+# How it works:
+#   1. The JD is split into lines (bullets end a phrase) and parsed with spaCy.
+#   2. Candidate phrases: noun chunks ("data visualisation dashboards"), short
+#      verb phrases ("clean and analyse data", "communicates well") and whole
+#      sentences of at most config.MAX_PHRASE_TOKENS tokens. Leading
+#      determiners / pronouns / numbers and trailing punctuation are trimmed.
+#   3. Junk is dropped: stop-word / pronoun / number-only phrases, phrases of
+#      generic words only ("experience"), years, degrees, benefits and company
+#      boilerplate, and bare ambiguous aliases
+#      ("CV", "Go": the keyword extractor decides those with context).
+#   4. Each distinct phrase is embedded; its best catalogue skill is kept when
+#      the cosine similarity >= config.MATCH_THRESHOLD.
+#   5. One ExtractedSkill per canonical skill, ordered by start_char:
+#      raw_skill_text / offsets from the first matching phrase,
+#      confidence_score = the best similarity over all its phrases.
+
+_LINE_RE = re.compile(r"[^\n]+")
+_BULLET_RE = re.compile(r"^[\s\-*•·▪●◦>]*(?:\(?\d{1,2}[.)]\s+)?")
+_YEAR_RE = re.compile(r"\b(?:19|20)\d\d\b")
+
+# Leading tokens dropped from a candidate ("a", "our", "3", "your").
+_TRIM_POS = {"DET", "PRON", "NUM", "PUNCT", "CCONJ", "SCONJ", "PART", "ADP", "SPACE", "SYM"}
+# Lemmas that mark a phrase as not being a skill.
+_JUNK_LEMMAS = {
+    # qualifications / experience
+    "degree", "diploma", "bachelor", "master", "phd", "cgpa", "gpa", "graduate",
+    "undergraduate", "year", "month", "semester", "qualification", "certificate",
+    # people / company boilerplate
+    "candidate", "applicant", "intern", "internship", "company", "organisation",
+    "organization", "employer", "office", "location", "opportunity", "role",
+    "position", "job", "vacancy", "career", "client", "industry", "department",
+    # benefits
+    "salary", "allowance", "benefit", "perk", "insurance", "leave", "bonus",
+    "commission", "remuneration", "package", "stipend",
+    # languages (not catalogue skills)
+    "english", "malay", "mandarin", "chinese", "bahasa", "cantonese", "tamil",
+}
+# Words that ask for no skill on their own. A phrase made only of these (and
+# stop words) is dropped: "experience", "good understanding", "daily tasks".
+# Next to a real term they stay: "user experience", "team player".
+_GENERIC_LEMMAS = {
+    "experience", "knowledge", "understanding", "ability", "skill", "familiarity",
+    "exposure", "proficiency", "background", "competency", "work", "task", "duty",
+    "responsibility", "requirement", "team", "member", "time", "day", "week",
+    "plus", "advantage", "basic", "good", "strong", "excellent", "solid",
+    "relevant", "related", "field", "area", "environment", "level", "other",
+}
+
+# Verb-phrase children that are kept: the object ("analyse data"); without
+# one, the first adverb / prepositional phrase ("communicates well",
+# "work with stakeholders").
+_VP_OBJ_DEPS = {"dobj", "obj", "acomp"}
+_VP_MOD_DEPS = {"advmod", "prep"}
+
+
+def _trim(span):
+    """Drop leading function words / numbers and trailing punctuation."""
+    start, end = span.start, span.end
+    while start < end and (span.doc[start].pos_ in _TRIM_POS or span.doc[start].is_stop):
+        start += 1
+    while end > start and span.doc[end - 1].pos_ in {"PUNCT", "SPACE", "CCONJ", "DET", "ADP"}:
+        end -= 1
+    return span.doc[start:end]
+
+
+def _verb_phrases(doc):
+    """Short verb phrases: verb (+ coordinated verb before it) + object / adverb."""
+    for tok in doc:
+        if tok.pos_ != "VERB":
+            continue
+        kids = [c for c in tok.children if c.dep_ in _VP_OBJ_DEPS and c.i > tok.i]
+        if not kids:
+            kids = [c for c in tok.children if c.dep_ in _VP_MOD_DEPS and c.i > tok.i][:1]
+        if not kids:
+            continue
+        start = tok.i
+        if tok.dep_ == "conj" and tok.head.pos_ == "VERB" and tok.head.i < tok.i:
+            start = tok.head.i                 # "clean and analyse data"
+        end = max(c.right_edge.i for c in kids) + 1
+        yield doc[start:end]
+
+
+def _is_junk(span, catalogue):
+    if not span or len(span) > config.MAX_PHRASE_TOKENS:
+        return True
+    content = [t for t in span if not (t.is_stop or t.is_punct or t.is_space
+                                       or t.pos_ in {"PRON", "NUM", "DET", "SYM"})]
+    if not content or all(t.lemma_.lower() in _GENERIC_LEMMAS for t in content):
+        return True
+    if all(t.like_num for t in content) or _YEAR_RE.search(span.text):
+        return True
+    if any(t.lemma_.lower() in _JUNK_LEMMAS or t.lower_ in _JUNK_LEMMAS for t in span):
+        return True
+    return catalogue.is_ambiguous(span.text)
+
+
+def _semantic_candidates(text, catalogue):
+    """[(start_char, end_char, phrase)] candidate phrases in `text`."""
+    from nlp.model import get_spacy
+    nlp_pipe = get_spacy()
+
+    lines = []
+    for m in _LINE_RE.finditer(text):
+        offset = m.start() + _BULLET_RE.match(m.group()).end()
+        if text[offset:m.end()].strip():
+            lines.append((offset, text[offset:m.end()]))
+
+    found = {}
+    for (offset, _), doc in zip(lines, nlp_pipe.pipe(line for _, line in lines)):
+        spans = list(doc.noun_chunks)
+        spans.extend(_verb_phrases(doc))
+        spans.extend(doc.sents)
+        for span in spans:
+            span = _trim(span)
+            if _is_junk(span, catalogue):
+                continue
+            start = offset + span.start_char
+            end = offset + span.end_char
+            found[(start, end)] = _SPACES_RE.sub(" ", text[start:end])
+    return [(s, e, phrase) for (s, e), phrase in sorted(found.items())]
+
+
+def extract_semantic(text, catalogue):
+    """Level 2 extraction: catalogue skills semantically similar to JD phrases.
+
+    Returns one ExtractedSkill per canonical skill, ordered by start_char, with
+    method="semantic" and confidence_score = cosine similarity (best over all
+    phrases). raw_skill_text / offsets come from the first matching phrase.
+    """
+    if not text or not text.strip() or not len(catalogue):
+        return []
+    from nlp.model import encode, skill_embeddings
+
+    candidates = _semantic_candidates(text, catalogue)
+    if not candidates:
+        return []
+
+    skills = skill_embeddings(catalogue)
+    phrases = sorted({p.lower() for _, _, p in candidates})
+    sims = skills.similarity(encode(phrases))
+    best_idx = sims.argmax(axis=1)
+    best_of = {p: (skills.names[i], float(sims[k, i]))
+               for k, (p, i) in enumerate(zip(phrases, best_idx))}
+
+    best = {}   # skill_name -> [start, end, score]
+    for start, end, phrase in candidates:
+        name, score = best_of[phrase.lower()]
+        if score < config.MATCH_THRESHOLD:
+            continue
+        if name not in best:
+            best[name] = [start, end, score]
+        else:
+            best[name][2] = max(best[name][2], score)
+
+    results = []
+    for name, (start, end, score) in sorted(best.items(), key=lambda kv: kv[1][0]):
+        results.append(ExtractedSkill(
+            skill_id=catalogue.get(name)["skill_id"],
+            skill_name=name,
+            raw_skill_text=text[start:end],
+            method="semantic",
+            confidence_score=min(1.0, max(0.0, score)),
+            start_char=start,
+            end_char=end,
         ))
     return results

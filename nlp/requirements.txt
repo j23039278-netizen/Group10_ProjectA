@@ -1,0 +1,25 @@
+# SEAGAS nlp/ — Level 2 (semantic) extraction.
+# Keyword extraction (method="keyword") needs none of these.
+#
+#   pip install -r nlp/requirements.txt
+#
+# en_core_web_sm is not on PyPI; the pinned wheel below installs it. If that
+# URL is blocked, install the rest and run instead:
+#   python -m spacy download en_core_web_sm
+#
+# torch comes in through sentence-transformers. On Windows/macOS the PyPI wheel
+# is CPU-only; on Linux, a CPU-only build is smaller:
+#   pip install torch==2.14.1 --index-url https://download.pytorch.org/whl/cpu
+#
+# Tested with Python 3.13.5 on Windows 11 (CPU).
+
+spacy==3.8.16
+en_core_web_sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl
+sentence-transformers==6.1.0
+transformers==5.19.0
+torch==2.14.1
+numpy==2.4.4
+scikit-learn==1.8.0
+
+# experiments only (nlp/experiments/threshold_sweep.py plot)
+matplotlib==3.10.8

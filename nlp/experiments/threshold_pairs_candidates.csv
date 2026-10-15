@@ -1,0 +1,61 @@
+phrase,skill_name,label,jd_ref
+Strong interest,Self-Motivation,,JD-CE-0010
+security findings,Vulnerability Assessment,,JD-CY-0003
+modern frontend,Linux,,JD-WD-0007
+multicultural team,Leadership,,JD-DS-0005
+"e.g., Splunk",Splunk,,JD-CY-0007
+Team Collaboration,Teamwork,,JD-SD-0013
+React or similar frameworks,React,,JD-WD-0007
+transparency,Communication,,JD-CE-0002
+database design,Data Modelling,,JD-WD-0008
+visualization software,Data Visualisation,,JD-DA-0008
+integration,CI/CD,,JD-DS-0001
+"backend, APIs",REST API,,JD-SD-0007
+Support solution integration,MLOps,,JD-DS-0003
+running bash scripts,Bash,,JD-CE-0004
+Docker and containerized environments,Docker,,JD-WD-0003
+cybersecurity basics,Cybersecurity,,JD-CE-0010
+services delivery,Microservices,,JD-CE-0010
+entire data extraction requirement,ETL,,JD-DA-0005
+Strong problem-solving and analytical thinking,Critical Thinking,,JD-DA-0003
+security platforms,Security Operations (SOC),,JD-CY-0007
+Microsoft Power Automate,Power BI,,JD-CE-0002
+JavaScript / TypeScript,TypeScript,,JD-SD-0012
+Understanding of cybersecurity fundamentals and common attack techniq,Cybersecurity,,JD-CY-0007
+Perform basic threat intelligence lookups,Threat Intelligence,,JD-CY-0007
+PowerShell or scripts,PowerShell,,JD-DA-0010
+enquirer,Communication,,JD-DA-0005
+Free gym access,VPN,,JD-WD-0003
+blend great design with robust architecture,Figma,,JD-WD-0008
+conducting penetration testing and vulnerability assessments,Vulnerability Assessment,,JD-CY-0003
+perform bulk data extraction,ETL,,JD-DA-0005
+business growth,Business Analysis,,JD-DS-0007
+Leadership potential,Leadership,,JD-DS-0007
+understand data,Data Analysis,,JD-DA-0003
+real cybersecurity threats,Cybersecurity,,JD-CY-0010
+Participate in the full software development lifecycle,Project Management,,JD-SD-0009
+Communicate with stakeholders,Stakeholder Communication,,JD-DA-0005
+community involvement,Teamwork,,JD-CY-0004
+Learning & Development Plan,Project Management,,JD-DS-0002
+understand business requirements,Business Analysis,,JD-DS-0003
+user acceptance test script,PowerShell,,JD-SD-0010
+PHP / Laravel,PHP,,JD-WD-0002
+logs,Splunk,,JD-CY-0005
+Scripting in Bash,Bash,,JD-CE-0003
+work independently,Teamwork,,JD-DA-0005
+ask questions,Research Skills,,JD-CY-0004
+Building monitoring dashboards,Monitoring & Observability,,JD-DS-0002
+private and public cloud infrastructure,AWS,,JD-CE-0008
+project leads,Leadership,,JD-DS-0003
+Git/version control and software development practices,Git,,JD-SD-0013
+building RESTful APIs,REST API,,JD-WD-0008
+Effective time management and problem-solving skills,Time Management,,JD-CE-0002
+vulnerability scanners,Vulnerability Assessment,,JD-CY-0005
+Continuous Security Monitoring Execute 24/7,Monitoring & Observability,,JD-CY-0006
+ethical hacking and vulnerability assessment,Ethical Hacking,,JD-CY-0003
+AI technologies,Responsible AI,,JD-CE-0010
+testing,Unit Testing,,JD-CE-0002
+vulnerability scans,Vulnerability Assessment,,JD-CY-0005
+building React-based web applications,React,,JD-WD-0007
+ownership,Interpersonal Skills,,JD-CY-0004
+Strong interpersonal & presentation skills,Presentation Skills,,JD-DA-0009
