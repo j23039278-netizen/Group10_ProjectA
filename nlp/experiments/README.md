@@ -28,6 +28,7 @@ python nlp/experiments/threshold_sweep.py
 |---|---|---|
 | `hybrid_list_items.py` | Evidence for `LIST_ITEM_TEXT_MODE` / `LIST_ITEM_THRESHOLD`: every coordinated-list item ("good **analytical** and problem-solving skills") in the 65 JDs and the brief example, with its nearest skills | `results/hybrid_list_items.csv` (reasoning in `THRESHOLDS.md`) |
 | `compare_with_current.py` | Before / after for S2-12-01 and S2-11-02: today's substring matching in `backend/routers/assessments.py` (reimplemented) against `match_skills(method="hybrid")`, 200 synthetic students (seed 42) × 6 roles | `results/compare_with_current.md`, `results/compare_with_current_scores.csv`, `results/compare_with_current_changes.csv` |
+| `compare_methods.py` | S2-02-02: keyword vs semantic vs hybrid extraction on the 65 real JDs: skills per JD, Jaccard overlap, runtime, every disagreement with context, 15 classified by hand; precision / recall / F1 only once `gold_labels.csv` has hand-made rows | `results/method_*.csv`, `results/method_comparison_summary.md`, `results/method_*.png`; write-up in `docs/report_drafts/method_comparison.md` |
 
 Both run from the repo root, e.g. `python nlp/experiments/compare_with_current.py`.
 
