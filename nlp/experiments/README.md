@@ -20,7 +20,16 @@ python nlp/experiments/threshold_sweep.py
    `results/threshold_sweep.csv`, `results/pair_scores.csv` and
    `results/threshold_sweep.png`. The decision goes in `THRESHOLDS.md`.
 
-`timing.py` measures time per JD for keyword and semantic extraction.
+`timing.py` measures time per JD for keyword, semantic and hybrid extraction.
+
+## Other scripts
+
+| Script | What it shows | Output |
+|---|---|---|
+| `hybrid_list_items.py` | Evidence for `LIST_ITEM_TEXT_MODE` / `LIST_ITEM_THRESHOLD`: every coordinated-list item ("good **analytical** and problem-solving skills") in the 65 JDs and the brief example, with its nearest skills | `results/hybrid_list_items.csv` (reasoning in `THRESHOLDS.md`) |
+| `compare_with_current.py` | Before / after for S2-12-01 and S2-11-02: today's substring matching in `backend/routers/assessments.py` (reimplemented) against `match_skills(method="hybrid")`, 200 synthetic students (seed 42) × 6 roles | `results/compare_with_current.md`, `results/compare_with_current_scores.csv`, `results/compare_with_current_changes.csv` |
+
+Both run from the repo root, e.g. `python nlp/experiments/compare_with_current.py`.
 
 ## Labelling rules (`label` column)
 

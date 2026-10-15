@@ -27,3 +27,18 @@ RELATED_THRESHOLD = 0.50
 
 # Candidate phrases longer than this (in tokens) are not embedded.
 MAX_PHRASE_TOKENS = 8
+
+# Hybrid extraction only: coordinated skill lists such as "good analytical,
+# communication and problem-solving skills". Items that keyword extraction did
+# not resolve are read with the shared head noun ("analytical skills") and
+# matched against the catalogue with LIST_ITEM_TEXT_MODE. The list context
+# already says these items are skills, so the mode with the best recall in the
+# threshold sweep is used (name_aliases_max: recall 0.933 vs 0.867 for
+# name_aliases at their best thresholds).
+LIST_ITEM_TEXT_MODE = "name_aliases_max"
+# One sweep step (0.05) above name_aliases_max's F1-best threshold (0.65). On
+# the 65 JDs, 0.70 adds 25 list items in 24 JDs and all are right on reading
+# the JD line; 0.65 would also add "organizational skills" -> Interpersonal
+# Skills (0.676, wrong) in 3 JDs. Evidence: nlp/experiments/hybrid_list_items.py,
+# reasoning: nlp/experiments/THRESHOLDS.md, "List items in hybrid extraction".
+LIST_ITEM_THRESHOLD = 0.70
