@@ -8,7 +8,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 import nlp  # noqa: E402
-from nlp import extract_skills, load_catalogue, match_skills  # noqa: E402
+from nlp import extract_skills, extractor, load_catalogue, match_skills, matcher  # noqa: E402
 from nlp.normalise import normalise_text, singularise, skill_key, uk_spelling  # noqa: E402
 from nlp.types import (  # noqa: E402
     VALID_METHODS, ExtractedSkill, MatchingMethod, MatchResult, RequiredSkill, StudentSkill,
@@ -34,16 +34,24 @@ def test_invalid_method_raises_value_error(bad):
         match_skills(STUDENT, REQUIRED, method=bad)
 
 
-@pytest.mark.parametrize("method", ["hybrid"])
-def test_unimplemented_extraction_methods_reach_the_stub(method):
-    with pytest.raises(NotImplementedError):
-        extract_skills(JD, method=method)
+@pytest.fixture
+def no_model(monkeypatch):
+    """Replace the model-backed steps, so wiring tests run without the model."""
+    monkeypatch.setattr(extractor, "_semantic_hits", lambda text, catalogue: [])
+    monkeypatch.setattr(matcher, "similarity_matrix",
+                        lambda req, stu, catalogue: [[0.0] * len(stu) for _ in req])
+
+
+def test_hybrid_extraction_is_wired(no_model):
+    found = extract_skills(JD, method="hybrid")
+    assert found == extract_skills(JD, method="keyword")
 
 
 @pytest.mark.parametrize("method", VALID_METHODS)
-def test_matching_methods_reach_the_stub(method):
-    with pytest.raises(NotImplementedError):
-        match_skills(STUDENT, REQUIRED, method=method)
+def test_matching_methods_are_wired(no_model, method):
+    [result] = match_skills(STUDENT, REQUIRED, method=method)
+    assert result["match_status"] == "strong"
+    assert result["matching_method"] == method
 
 
 def test_keyword_extraction_is_wired():
@@ -51,11 +59,11 @@ def test_keyword_extraction_is_wired():
     assert names == ["SQL", "Power BI", "Python", "Docker"]
 
 
-def test_default_method_is_hybrid():
-    with pytest.raises(NotImplementedError):
-        extract_skills(JD)
-    with pytest.raises(NotImplementedError):
-        match_skills(STUDENT, REQUIRED)
+def test_default_method_is_hybrid(no_model, monkeypatch):
+    calls = []
+    monkeypatch.setattr(nlp, "extract_hybrid", lambda text, cat: calls.append(text) or [])
+    assert extract_skills(JD) == [] and calls == [JD]
+    assert match_skills(STUDENT, REQUIRED)[0]["matching_method"] == "hybrid"
 
 
 def test_empty_inputs_return_empty_list():

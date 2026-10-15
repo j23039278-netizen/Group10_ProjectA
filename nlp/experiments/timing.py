@@ -1,5 +1,6 @@
 """
-S2-02 performance check: time per JD for keyword and semantic extraction on CPU.
+S2-02 performance check: time per JD for keyword, semantic and hybrid
+extraction on CPU.
 
     python nlp/experiments/timing.py [path/to/jds.csv ...]
 
@@ -39,7 +40,7 @@ def main(paths):
             texts = [r["raw_text"] for r in csv.DictReader(f) if (r.get("raw_text") or "").strip()]
         lengths = [len(t) for t in texts]
         print(f"{Path(path).relative_to(REPO)}: {len(texts)} JDs, mean {statistics.mean(lengths):.0f} chars")
-        for method in ("keyword", "semantic"):
+        for method in ("keyword", "semantic", "hybrid"):
             extract_skills(texts[0], method=method)          # warm-up
             times, counts = [], []
             for text in texts:

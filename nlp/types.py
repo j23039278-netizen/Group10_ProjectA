@@ -69,7 +69,7 @@ class MatchResult(TypedDict):
     skill_name: str
     importance: Importance
     match_status: MatchStatus
-    similarity_score: float         # 0.0 – 1.0 (1.0 exact/alias match, 0.0 nothing found)
-    matching_method: MatchingMethod # method that decided this row (see docs)
-    matched_student_skill: str | None  # student skill_name that triggered the match, None for a gap
+    similarity_score: float         # 0.0 – 1.0 (1.0 same skill / alias, cosine for semantic, 0.0 for a gap)
+    matching_method: MatchingMethod # the method passed to match_skills() (same for every row)
+    matched_student_skill: str | None  # student skill_name that triggered the result, None for a gap
     reason: str                     # one short English sentence shown to the student

@@ -1,8 +1,9 @@
 """
-Level 1 (keyword) skill extraction for the SEAGAS NLP module.
+Skill extraction for the SEAGAS NLP module: Level 1 (keyword), Level 2
+(semantic, further down) and hybrid (both, at the end of the file).
 Author: Ng Yong Hin (AI / NLP Engineer)
 
-Pure Python + regex, standard library only. Use it through
+Level 1 is pure Python + regex, standard library only. Use it through
 `nlp.extract_skills(text, method="keyword")`.
 
 How it works:
@@ -22,6 +23,7 @@ How it works:
   5. One ExtractedSkill per canonical skill, ordered by start_char.
 """
 
+import bisect
 import re
 import weakref
 from functools import lru_cache
@@ -308,6 +310,51 @@ def _resolve_ambiguous(text, spans):
     return result
 
 
+# ── Hits and results (shared by all three methods) ────────────
+class _Hit(NamedTuple):
+    """One occurrence of a skill in the text."""
+    start: int
+    end: int
+    skill_name: str
+    method: str            # "keyword" or "semantic"
+    confidence: float
+
+
+def _results(text, hits, catalogue):
+    """One ExtractedSkill per skill, ordered by start_char.
+
+    A skill's keyword hits win over its semantic hits. raw_skill_text /
+    offsets come from the first winning hit; confidence_score is the best
+    over the winning hits.
+    """
+    best = {}   # skill_name -> [first hit, confidence]
+    for hit in sorted(hits, key=lambda h: (h.method != "keyword", h.start)):
+        if hit.skill_name not in best:
+            best[hit.skill_name] = [hit, hit.confidence]
+        elif best[hit.skill_name][0].method == hit.method:
+            best[hit.skill_name][1] = max(best[hit.skill_name][1], hit.confidence)
+
+    results = [ExtractedSkill(
+        skill_id=catalogue.get(name)["skill_id"],
+        skill_name=name,
+        raw_skill_text=text[hit.start:hit.end],
+        method=hit.method,
+        confidence_score=min(1.0, max(0.0, conf)),
+        start_char=hit.start,
+        end_char=hit.end,
+    ) for name, (hit, conf) in best.items()]
+    results.sort(key=lambda s: s["start_char"])
+    return results
+
+
+def _keyword_hits(text, catalogue):
+    """Every catalogue name / alias accepted in `text` (all occurrences)."""
+    index = _index_for(catalogue)
+    spans = _longest_first(_candidates(text, index))
+    return [_Hit(span.start, span.end, span.term.skill_name, "keyword", conf)
+            for span, conf in _resolve_ambiguous(text, spans)]
+
+
 def extract_keyword(text, catalogue):
     """Level 1 extraction: catalogue names and aliases found in `text`.
 
@@ -318,30 +365,7 @@ def extract_keyword(text, catalogue):
     """
     if not text or not text.strip():
         return []
-    index = _index_for(catalogue)
-    spans = _longest_first(_candidates(text, index))
-
-    best = {}   # skill_name -> [first span, confidence]
-    for span, conf in sorted(_resolve_ambiguous(text, spans), key=lambda x: x[0].start):
-        name = span.term.skill_name
-        if name not in best:
-            best[name] = [span, conf]
-        else:
-            best[name][1] = max(best[name][1], conf)
-
-    results = []
-    for name, (span, conf) in best.items():
-        entry = catalogue.get(name)
-        results.append(ExtractedSkill(
-            skill_id=entry["skill_id"],
-            skill_name=name,
-            raw_skill_text=text[span.start:span.end],
-            method="keyword",
-            confidence_score=conf,
-            start_char=span.start,
-            end_char=span.end,
-        ))
-    return results
+    return _results(text, _keyword_hits(text, catalogue), catalogue)
 
 
 # ══════════════════════════════════════════════════════════════
@@ -473,15 +497,8 @@ def _semantic_candidates(text, catalogue):
     return [(s, e, phrase) for (s, e), phrase in sorted(found.items())]
 
 
-def extract_semantic(text, catalogue):
-    """Level 2 extraction: catalogue skills semantically similar to JD phrases.
-
-    Returns one ExtractedSkill per canonical skill, ordered by start_char, with
-    method="semantic" and confidence_score = cosine similarity (best over all
-    phrases). raw_skill_text / offsets come from the first matching phrase.
-    """
-    if not text or not text.strip() or not len(catalogue):
-        return []
+def _semantic_hits(text, catalogue):
+    """Every candidate phrase whose most similar skill reaches MATCH_THRESHOLD."""
     from nlp.model import encode, skill_embeddings
 
     candidates = _semantic_candidates(text, catalogue)
@@ -495,25 +512,172 @@ def extract_semantic(text, catalogue):
     best_of = {p: (skills.names[i], float(sims[k, i]))
                for k, (p, i) in enumerate(zip(phrases, best_idx))}
 
-    best = {}   # skill_name -> [start, end, score]
+    hits = []
     for start, end, phrase in candidates:
         name, score = best_of[phrase.lower()]
-        if score < config.MATCH_THRESHOLD:
-            continue
-        if name not in best:
-            best[name] = [start, end, score]
-        else:
-            best[name][2] = max(best[name][2], score)
+        if score >= config.MATCH_THRESHOLD:
+            hits.append(_Hit(start, end, name, "semantic", score))
+    return hits
 
-    results = []
-    for name, (start, end, score) in sorted(best.items(), key=lambda kv: kv[1][0]):
-        results.append(ExtractedSkill(
-            skill_id=catalogue.get(name)["skill_id"],
-            skill_name=name,
-            raw_skill_text=text[start:end],
-            method="semantic",
-            confidence_score=min(1.0, max(0.0, score)),
-            start_char=start,
-            end_char=end,
-        ))
-    return results
+
+def extract_semantic(text, catalogue):
+    """Level 2 extraction: catalogue skills semantically similar to JD phrases.
+
+    Returns one ExtractedSkill per canonical skill, ordered by start_char, with
+    method="semantic" and confidence_score = cosine similarity (best over all
+    phrases). raw_skill_text / offsets come from the first matching phrase.
+    """
+    if not text or not text.strip() or not len(catalogue):
+        return []
+    return _results(text, _semantic_hits(text, catalogue), catalogue)
+
+
+# ══════════════════════════════════════════════════════════════
+# Hybrid extraction
+# ══════════════════════════════════════════════════════════════
+# Use it through `nlp.extract_skills(text, method="hybrid")` (the default).
+#
+#   1. Keyword hits (Level 1), every occurrence.
+#   2. Coordinated skill lists: "good analytical, communication and
+#      problem-solving skills" names three skills that share the head noun
+#      "skills". Keyword finds Communication and Problem Solving; the item it
+#      cannot resolve is read with the head noun ("analytical skills") and
+#      looked up as a catalogue term first (method "keyword"), then by
+#      similarity with config.LIST_ITEM_TEXT_MODE at
+#      config.LIST_ITEM_THRESHOLD (method "semantic"). A list only counts when
+#      one of its items is a keyword hit.
+#   3. Semantic hits (Level 2) for skills not found yet whose span does not
+#      overlap a keyword span ("problem-solving skills" is not semantic
+#      evidence for anything once "problem-solving" was a keyword hit).
+#   4. One ExtractedSkill per canonical skill, ordered by start_char; method
+#      is "keyword" or "semantic" (never "hybrid"), as in jd_extracted_skills.
+
+_LIST_HEAD_RE = re.compile(r"\b(?:skills?|abilities|ability|capabilities|capability|mindset)\b", re.I)
+# Between two items: ", ", ", and ", " and ", " or ", " & ", "/".
+_LIST_SEP_RE = re.compile(r"[ \t]*(?:,[ \t]*(?:(?:and|or)[ \t]+)?|&|/)[ \t]*|[ \t]+(?:and|or)[ \t]+", re.I)
+_LIST_WORD_RE = re.compile(r"[^\W_][\w+#]*(?:-[\w+#]+)*")
+# A list never crosses a sentence end, a bracket or a bullet.
+_LIST_BOUNDARY_RE = re.compile(r"[.;:!?](?=\s|$)|[()\[\]*•\n]")
+MAX_LIST_ITEM_WORDS = 2
+# Words that may stand before an item inside a list ("..., good communication and ...").
+_LIST_QUALIFIERS = frozenset((
+    "a", "an", "the", "very", "highly", "good", "strong", "excellent", "great", "solid",
+    "sound", "effective", "proven", "outstanding", "exceptional", "superb", "keen", "basic",
+))
+# Words that end an item on its left. Any of them other than a qualifier means
+# the sentence, not the list, goes on ("Candidates should have good analytical").
+_LIST_STOP_WORDS = _LIST_QUALIFIERS | frozenset((
+    "and", "or", "of", "in", "with", "to", "have", "has", "having", "possess", "possesses",
+    "show", "shows", "demonstrate", "demonstrates", "demonstrated", "must", "should", "will",
+    "be", "is", "are", "your", "our", "their",
+))
+# Items that ask for no particular skill ("technical and soft skills").
+_LIST_GENERIC_WORDS = frozenset((
+    "technical", "soft", "hard", "hands-on", "practical", "transferable", "core", "key",
+    "essential", "relevant", "general", "overall", "other", "professional", "personal",
+    "basic", "necessary", "required",
+))
+
+
+def _items_before(text, left, right):
+    """(start, end) of the items of a list "a, b and c" that ends at `right`.
+
+    Read right to left from the head noun. An item is at most
+    MAX_LIST_ITEM_WORDS words and stops at a stop word. The list starts in the
+    first piece that has words other than qualifiers before its item.
+    """
+    seps = list(_LIST_SEP_RE.finditer(text, left, right))
+    starts = [left] + [m.end() for m in seps]
+    ends = [m.start() for m in seps] + [right]
+    items = []
+    for k in range(len(starts) - 1, -1, -1):
+        words = list(_LIST_WORD_RE.finditer(text, starts[k], ends[k]))
+        if not words or text[words[-1].end():ends[k]].strip():
+            break                      # nothing here, or other text before the separator / head
+        item = []
+        for word in reversed(words):
+            if word.group().lower() in _LIST_STOP_WORDS or len(item) == MAX_LIST_ITEM_WORDS:
+                break
+            item.append(word)
+        if not item:
+            break
+        items.append((item[-1].start(), item[0].end()))
+        if any(w.group().lower() not in _LIST_QUALIFIERS for w in words[:len(words) - len(item)]):
+            break                      # the list starts inside this piece
+    items.reverse()
+    return items
+
+
+def _list_items(text, hits, catalogue):
+    """[(start, end, phrase)] for list items that keyword extraction did not resolve.
+
+    A list is two or more items joined by commas, "and", "or", "&" or "/"
+    right before a head noun ("skills", "abilities", "mindset"). It counts
+    only if one of its items overlaps a keyword hit. Every other item becomes
+    "<item> <head>" ("analytical skills"). Items made only of generic words
+    ("technical") and ambiguous aliases ("Go") are skipped.
+    """
+    bounds = [m.end() for m in _LIST_BOUNDARY_RE.finditer(text)]
+    found = []
+    for head in _LIST_HEAD_RE.finditer(text):
+        k = bisect.bisect_right(bounds, head.start())
+        left = bounds[k - 1] if k else 0
+        items = _items_before(text, left, head.start())
+        if len(items) < 2:
+            continue
+        is_hit = [any(h.start < end and start < h.end for h in hits) for start, end in items]
+        if not any(is_hit):
+            continue
+        for (start, end), hit in zip(items, is_hit):
+            item = text[start:end]
+            words = item.lower().split()
+            if hit or catalogue.is_ambiguous(item) or all(w in _LIST_GENERIC_WORDS for w in words):
+                continue
+            found.append((start, end, f"{item} {head.group().lower()}"))
+    return found
+
+
+def _list_item_hits(text, catalogue, hits):
+    """Hits for the unresolved items of coordinated skill lists (step 2 above)."""
+    items = _list_items(text, hits, catalogue)
+    if not items:
+        return []
+    index = _index_for(catalogue)
+    found, pending = [], []
+    for start, end, phrase in items:
+        term = index.terms.get(_term_key(phrase))
+        if term is not None and not term.ambiguous:      # "interpersonal skills"
+            found.append(_Hit(start, end, term.skill_name, "keyword", KEYWORD_CONFIDENCE))
+        else:
+            pending.append((start, end, phrase))
+    if pending:
+        from nlp.model import encode, skill_embeddings
+        mode = config.LIST_ITEM_TEXT_MODE
+        # The .npy disk cache holds the main mode only; others stay in memory.
+        skills = skill_embeddings(catalogue, mode, use_disk=mode == config.SKILL_TEXT_MODE)
+        sims = skills.similarity(encode([phrase.lower() for _, _, phrase in pending]))
+        for (start, end, _), row in zip(pending, sims):
+            k = int(row.argmax())
+            if row[k] >= config.LIST_ITEM_THRESHOLD:
+                found.append(_Hit(start, end, skills.names[k], "semantic", float(row[k])))
+    return found
+
+
+def extract_hybrid(text, catalogue):
+    """Hybrid extraction: keyword first, then what only the other steps find.
+
+    Returns one ExtractedSkill per canonical skill, ordered by start_char,
+    with method "keyword" or "semantic" (see the steps above). Every skill
+    keyword extraction finds is in the result, with the same span.
+    """
+    if not text or not text.strip() or not len(catalogue):
+        return []
+    hits = _keyword_hits(text, catalogue)
+    found = {h.skill_name for h in hits}
+    hits += [h for h in _list_item_hits(text, catalogue, hits) if h.skill_name not in found]
+    found = {h.skill_name for h in hits}
+    taken = [(h.start, h.end) for h in hits if h.method == "keyword"]
+    for hit in _semantic_hits(text, catalogue):
+        if hit.skill_name not in found and all(hit.end <= s or hit.start >= e for s, e in taken):
+            hits.append(hit)
+    return _results(text, hits, catalogue)

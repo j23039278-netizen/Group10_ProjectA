@@ -6,15 +6,19 @@ The backend should only use the names exported here:
 
     from nlp import extract_skills, match_skills
 
-The contract (fields, DB mapping, errors, examples) is in docs/NLP_INTERFACE.md.
-Implemented so far: extract_skills(method="keyword") (Level 1) and
-extract_skills(method="semantic") (Level 2), both in nlp/extractor.py.
-Semantic extraction needs nlp/requirements.txt; keyword extraction needs only
-the standard library. Hybrid extraction and match_skills() raise
-NotImplementedError until their branches are merged.
+The contract (fields, DB mapping, errors, examples) is in docs/NLP_INTERFACE.md;
+the Strong / Developing / Gap rules are in docs/NLP_CLASSIFICATION_RULES.md.
+
+  extract_skills(method="keyword")   Level 1, nlp/extractor.py (standard library only)
+  extract_skills(method="semantic")  Level 2, nlp/extractor.py (nlp/requirements.txt)
+  extract_skills(method="hybrid")    both, merged, nlp/extractor.py (nlp/requirements.txt)
+  match_skills(...)                  nlp/matcher.py; method="keyword" needs only the
+                                     standard library, "semantic" / "hybrid" load the
+                                     model when a similarity is needed
 """
 
-from nlp.extractor import extract_keyword, extract_semantic
+from nlp.extractor import extract_hybrid, extract_keyword, extract_semantic
+from nlp.matcher import match
 from nlp.skills import SkillCatalogue, load_catalogue
 from nlp.types import (
     VALID_METHODS,
@@ -65,10 +69,7 @@ def extract_skills(
         return extract_keyword(text, catalogue)
     if method == "semantic":
         return extract_semantic(text, catalogue)
-    raise NotImplementedError(
-        f"nlp.extract_skills(method={method!r}) is not implemented yet. "
-        "Use method=\"keyword\" or \"semantic\" until hybrid extraction is merged."
-    )
+    return extract_hybrid(text, catalogue)
 
 
 def match_skills(
@@ -81,12 +82,11 @@ def match_skills(
     method: "keyword", "semantic" or "hybrid" (keyword first, semantic for the rest).
 
     Returns one MatchResult per item of required_skills, in the same order.
-    No required skills returns []. Raises ValueError for an unknown method.
+    No required skills returns []; no student skills makes every required
+    skill a gap. Raises ValueError for an unknown method or a malformed skill
+    (missing skill_name, unknown proficiency_level or importance).
     """
     _check_method(method)
     if not required_skills:
         return []
-    raise NotImplementedError(
-        "nlp.match_skills() is not implemented yet (interface only). "
-        "Keyword/semantic matching lands in a later nlp branch."
-    )
+    return match(student_skills or [], required_skills, method, load_catalogue())
