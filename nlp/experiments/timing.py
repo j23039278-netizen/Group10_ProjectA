@@ -1,5 +1,5 @@
 """
-S2-02 performance check: time per JD for semantic extraction on CPU.
+S2-02 performance check: time per JD for keyword and semantic extraction on CPU.
 
     python nlp/experiments/timing.py [path/to/jds.csv ...]
 
@@ -37,19 +37,20 @@ def main(paths):
     for path in paths:
         with open(path, encoding="utf-8", newline="") as f:
             texts = [r["raw_text"] for r in csv.DictReader(f) if (r.get("raw_text") or "").strip()]
-        extract_skills(texts[0], method="semantic")          # warm-up
-        times, counts = [], []
-        for text in texts:
-            start = time.perf_counter()
-            found = extract_skills(text, method="semantic")
-            times.append(time.perf_counter() - start)
-            counts.append(len(found))
         lengths = [len(t) for t in texts]
-        print(f"{Path(path).relative_to(REPO)}: {len(texts)} JDs, "
-              f"mean {statistics.mean(lengths):.0f} chars | "
-              f"mean {statistics.mean(times):.3f}s, median {statistics.median(times):.3f}s, "
-              f"max {max(times):.3f}s per JD | {statistics.mean(counts):.1f} skills per JD")
+        print(f"{Path(path).relative_to(REPO)}: {len(texts)} JDs, mean {statistics.mean(lengths):.0f} chars")
+        for method in ("keyword", "semantic"):
+            extract_skills(texts[0], method=method)          # warm-up
+            times, counts = [], []
+            for text in texts:
+                start = time.perf_counter()
+                found = extract_skills(text, method=method)
+                times.append(time.perf_counter() - start)
+                counts.append(len(found))
+            print(f"  {method:<8}: mean {statistics.mean(times):.3f}s, "
+                  f"median {statistics.median(times):.3f}s, max {max(times):.3f}s per JD | "
+                  f"{statistics.mean(counts):.1f} skills per JD")
 
 
 if __name__ == "__main__":
-    main([Path(p) for p in sys.argv[1:]] or DEFAULT_INPUTS)
+    main([Path(p).resolve() for p in sys.argv[1:]] or DEFAULT_INPUTS)

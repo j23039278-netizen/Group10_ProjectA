@@ -1,5 +1,9 @@
 # Threshold experiment (S2-02-01)
 
+**Status (2026-10-15):** done. `threshold_pairs.csv` labelled by hand (60 pairs),
+sweep run, values chosen and set in `nlp/config.py`
+(`name_aliases`, MATCH 0.60, RELATED 0.50). Reasoning: `THRESHOLDS.md`.
+
 Chooses the cosine similarity thresholds for semantic matching
 (`MATCH_THRESHOLD`, `RELATED_THRESHOLD` and `SKILL_TEXT_MODE` in `nlp/config.py`).
 
@@ -12,9 +16,11 @@ python nlp/experiments/threshold_sweep.py
    The model only picks the pairs (spread over similarity bins, best and
    second-best skill per phrase, shuffled); it does not label them.
 2. A person labels every row and saves the file as `threshold_pairs.csv`.
-3. Second run: sweeps 0.40–0.90 for both skill text modes and writes
+3. Second run: sweeps 0.40–0.90 for all three skill text modes and writes
    `results/threshold_sweep.csv`, `results/pair_scores.csv` and
    `results/threshold_sweep.png`. The decision goes in `THRESHOLDS.md`.
+
+`timing.py` measures time per JD for keyword and semantic extraction.
 
 ## Labelling rules (`label` column)
 

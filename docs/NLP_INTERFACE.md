@@ -315,9 +315,13 @@ Text helpers in `nlp/normalise.py`: `normalise_text()`, `uk_spelling()`
   `nlp/resources/skill_embeddings.npy` (+ `.json` with the catalogue hash;
   both git-ignored). A changed `skills_library` gives a new hash, so they are
   rebuilt automatically.
-- **Thresholds:** `MATCH_THRESHOLD` / `RELATED_THRESHOLD` / `SKILL_TEXT_MODE`
-  live only in `nlp/config.py`; how they were chosen is in
-  `nlp/experiments/THRESHOLDS.md`.
+- **Thresholds:** `MATCH_THRESHOLD = 0.60`, `RELATED_THRESHOLD = 0.50`,
+  `SKILL_TEXT_MODE = "name_aliases"`. They live only in `nlp/config.py`; how
+  they were chosen is in `nlp/experiments/THRESHOLDS.md`.
+- **Use with keyword:** semantic extraction alone misses some exact names
+  (e.g. "SQL" scores 0.59). Keep `method="keyword"` until `"hybrid"` is merged;
+  `"semantic"` is for testing and evaluation.
+- **Speed (CPU):** about 0.26 s per JD after warm-up (keyword: about 1 ms).
 - **Output:** as section 3. `raw_skill_text` is the JD phrase that matched
   (e.g. `"interactive dashboards"` → Data Visualisation), `confidence_score`
   is the cosine similarity, `method` is `"semantic"`.
