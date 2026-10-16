@@ -4,10 +4,12 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import PortalLayout from './PortalLayout'
 import AdminUsers from '../pages/AdminUsers'
 import AdminLibrary from '../pages/AdminLibrary'
+import AdminAudit from '../pages/AdminAudit'
 
 const NAV = [
   { path: '/',        label: 'User Management', icon: '👥' },
   { path: '/library', label: 'Skills & Roles',  icon: '📚' },
+  { path: '/audit',   label: 'Audit Log',       icon: '🧾' },
 ]
 
 export default function AdminPortal({ user, onLogout }) {
@@ -16,6 +18,7 @@ export default function AdminPortal({ user, onLogout }) {
       <Routes>
         <Route path="/"        element={<AdminUsers />} />
         <Route path="/library" element={<AdminLibrary />} />
+        <Route path="/audit"   element={<AdminAudit />} />
         <Route path="*"        element={<Navigate to="/" />} />
       </Routes>
     </PortalLayout>

@@ -35,11 +35,11 @@ SEAGAS is a Proof of Concept (POC) web-based platform that uses Natural Language
 
 | Layer | Technology |
 |-------|-----------|
-| Frontend | React.js, Chart.js, Plotly |
-| Backend | Python, FastAPI |
-| AI / NLP | spaCy, Sentence Transformers, scikit-learn |
-| Database | PostgreSQL |
-| Development | GitHub, Docker, VS Code |
+| Frontend | React 18 + Vite, React Router, Recharts |
+| Backend | Python, FastAPI, SQLAlchemy, JWT sign-in, bcrypt password hashing |
+| AI / NLP | Keyword matching (standard library); spaCy + Sentence Transformers (`all-MiniLM-L6-v2`) for semantic and hybrid matching; scikit-learn |
+| Database | PostgreSQL 17 |
+| Development | GitHub, VS Code, pytest |
 
 ---
 
@@ -47,15 +47,20 @@ SEAGAS is a Proof of Concept (POC) web-based platform that uses Natural Language
 
 ```
 Group10_ProjectA/
-├── frontend/           # React frontend (HI)
-├── backend/            # FastAPI backend
-├── nlp/                # NLP & AI matching engine
-├── recommendation/     # Rule-based recommendation engine
-├── database/           # Database schema & migrations
-├── data/               # Synthetic dataset & JD dataset
-├── docs/               # Technical documentation
+├── frontend/           # React + Vite app (student, advisor and admin portals)
+├── backend/            # FastAPI API; start_backend.bat sets everything up
+├── nlp/                # Skill extraction and Strong / Developing / Gap matching (Ng Yong Hin)
+├── recommendation/     # Rule-based recommendation engine (Aaron)
+├── database/           # schema.sql, migrate_existing_db.sql, seed files
+├── data/               # Synthetic students, skills library CSV, JD dataset, run_assessments.py
+├── tests/              # Backend API and data tests (pytest)
+├── docs/               # NLP interface and rules, work reports, progress checks
+├── start_all.bat       # One-click start: backend + frontend (Windows)
 └── README.md
 ```
+
+Key documents: `docs/NLP_INTERFACE.md` (backend ↔ NLP contract), `docs/NLP_CLASSIFICATION_RULES.md`
+(how Strong / Developing / Gap is decided), `database/README.md` (tables).
 
 ---
 
@@ -81,33 +86,75 @@ Group10_ProjectA/
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Python 3.10+
+- Windows (the start scripts are `.bat` files; the manual steps below work anywhere)
+- Python 3.10+ (tested with 3.12)
 - Node.js 18+
-- PostgreSQL 15+
+- PostgreSQL 17 installed in `C:\Program Files\PostgreSQL\17`, user `postgres`, password `postgres123`
 - Git
 
-### Backend Setup
+### Quick start (Windows)
+Double-click **`start_all.bat`** in the repo root. It opens two windows:
+
+| Window | What it does | URL |
+|--------|--------------|-----|
+| SEAGAS Backend (`backend\start_backend.bat`) | Creates `seagas_db` if needed, applies `schema.sql` / `migrate_existing_db.sql`, loads the skills, roles, recommendations, 5,000 synthetic students and the JD dataset, gives `backend\.env` a random `SECRET_KEY`, assesses the synthetic students once, then starts FastAPI | http://127.0.0.1:8000/docs |
+| SEAGAS Frontend (`frontend\start_frontend.bat`) | `npm install` if needed, then `npm run dev` | http://localhost:5173 |
+
+Every step checks first, so the scripts are safe to run again after `git pull`; that is also how
+database changes reach an existing database.
+
+**First run:** when the database has no admin, the backend window asks to create one
+(email must end with `@admin.newinti.edu.my`). No passwords are stored in the code.
+
+### Manual setup
 ```bash
+# Backend
 cd backend
 python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
+venv\Scripts\activate            # macOS / Linux: source venv/bin/activate
 pip install -r requirements.txt
-uvicorn main:app --reload
-```
+python ensure_secret_key.py        # creates backend/.env SECRET_KEY if missing
+# backend/.env also needs DATABASE_URL=postgresql://postgres:postgres123@localhost:5432/seagas_db
+uvicorn main:app --reload          # http://127.0.0.1:8000/docs
 
-### Frontend Setup
-```bash
+# Frontend (another terminal)
 cd frontend
 npm install
-npm start
+npm run dev                        # http://localhost:5173
+```
+For a new database, run `database/schema.sql`, then `database/migrate_existing_db.sql` and the seed
+files in the order used by `backend/start_backend.bat`.
+
+### NLP: semantic and hybrid matching (optional)
+Keyword matching works with no extra install. For semantic and hybrid matching:
+```bash
+python -m pip install -r nlp/requirements.txt    # about 1 GB, mostly torch
+```
+Restart the backend afterwards. The first start downloads the model (~90 MB) and loads it in
+20–30 s; the backend window then shows `NLP model loaded (hybrid ready)`. Without the packages,
+semantic and hybrid requests fall back to keyword matching and the student sees a short notice.
+
+### Accounts and roles
+| Role | How the account is created | Email must end with |
+|------|----------------------------|---------------------|
+| Student | Registers on the website | `@student.newinti.edu.my` |
+| Advisor | An admin creates it in **User Management** | `@advisor.newinti.edu.my` |
+| Admin | The first one in the backend window (`backend/create_admin.py`); more in User Management | `@admin.newinti.edu.my` |
+
+Everyone signs in on the same page; the role stored in the database decides which portal opens.
+Test student: `student0001@synthetic.example.com` / `Seagas@2026` (synthetic data only).
+
+### Running the tests
+```bash
+python -m pip install -r tests/requirements.txt
+python -m pytest tests -q                      # backend API (own temporary database) + data tests
+python -m pytest nlp/tests -q -m "not model"   # NLP tests without loading the model
 ```
 
-### NLP Setup
-```bash
-cd nlp
-pip install -r requirements.txt
-python -m spacy download en_core_web_sm
-```
+### Batch assessments
+`python data/run_assessments.py` assesses every synthetic student that has no assessment yet
+(the start script runs it once), so the advisor dashboard has cohort data.
+Options: `--method keyword|semantic|hybrid`, `--limit N`, `--force`.
 
 ---
 

@@ -16,7 +16,7 @@ from sqlalchemy import (
     ForeignKey, Integer, Numeric, SmallInteger, String,
     Text, UniqueConstraint, func
 )
-from sqlalchemy.dialects.postgresql import ARRAY, UUID
+from sqlalchemy.dialects.postgresql import ARRAY, JSONB, UUID
 from sqlalchemy.orm import DeclarativeBase, relationship
 
 
@@ -147,6 +147,7 @@ class JobRole(Base):
     description    = Column(Text)
     industry_level = Column(String(20), default="entry")
     is_active      = Column(Boolean, nullable=False, default=True)
+    source         = Column(String(10), nullable=False, default="seed")
     created_at     = Column(DateTime, nullable=False, default=datetime.utcnow)
 
     __table_args__ = (
@@ -422,3 +423,20 @@ class StudentResourceProgress(Base):
     resource   = relationship("RecommendationLibrary")
     assessment = relationship("Assessment")
     skill      = relationship("SkillLibrary")
+
+
+# ── TABLE 13: audit_log ──────────────────────────────────────
+# Written by backend/audit.py
+class AuditLog(Base):
+    __tablename__ = "audit_log"
+
+    log_id      = Column(UUID(as_uuid=True), primary_key=True, default=new_uuid)
+    user_id     = Column(UUID(as_uuid=True), ForeignKey("users.user_id", ondelete="SET NULL"), index=True)
+    actor_email = Column(String(255))
+    actor_role  = Column(String(20))
+    action      = Column(String(50), nullable=False, index=True)
+    target_type = Column(String(30))
+    target_id   = Column(String(64))
+    details     = Column(JSONB)
+    ip_address  = Column(String(45))
+    created_at  = Column(DateTime, nullable=False, default=datetime.utcnow)

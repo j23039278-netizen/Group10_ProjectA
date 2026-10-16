@@ -134,6 +134,8 @@ CREATE TABLE job_roles (
     industry_level  VARCHAR(20)  DEFAULT 'entry'
                     CHECK (industry_level IN ('entry', 'junior', 'mid', 'senior')),
     is_active       BOOLEAN      NOT NULL DEFAULT TRUE,
+    source          VARCHAR(10)  NOT NULL DEFAULT 'seed'      -- 'seed' (seed files) | 'admin' (added in the Admin page)
+                    CHECK (source IN ('seed', 'admin')),
     created_at      TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -508,6 +510,27 @@ FROM student_resource_progress srp
 JOIN student_profiles sp ON sp.profile_id = srp.profile_id
 JOIN users u             ON u.user_id     = sp.user_id
 GROUP BY sp.user_id, u.full_name;
+
+-- ── Audit log (NFR: security and accountability) ──────────────
+-- Who did what and when: sign-ins (also failed), registrations, assessments,
+-- JD analyses, advisors opening a student's record, admin account changes.
+-- Written by backend/audit.py; read by GET /api/admin/audit-log.
+CREATE TABLE IF NOT EXISTS audit_log (
+    log_id       UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id      UUID REFERENCES users(user_id) ON DELETE SET NULL,  -- NULL: anonymous (failed login)
+    actor_email  VARCHAR(255),          -- kept if the account is deleted; attempted email on failed login
+    actor_role   VARCHAR(20),
+    action       VARCHAR(50)  NOT NULL, -- e.g. 'auth.login', 'assessment.run', 'admin.user_update'
+    target_type  VARCHAR(30),           -- e.g. 'user', 'assessment', 'job_description'
+    target_id    VARCHAR(64),
+    details      JSONB,                 -- never passwords or tokens
+    ip_address   VARCHAR(45),
+    created_at   TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_audit_log_created_at ON audit_log(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_audit_log_action     ON audit_log(action);
+CREATE INDEX IF NOT EXISTS idx_audit_log_user_id    ON audit_log(user_id);
 
 -- ============================================================
 -- END OF SCHEMA

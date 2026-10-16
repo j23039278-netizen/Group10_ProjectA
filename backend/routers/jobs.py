@@ -4,13 +4,14 @@ Handles job description input, NLP trigger, job role templates
 Author: Soh Way Miin (Carl)
 """
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.orm import Session
 from sqlalchemy import text
 from pydantic import BaseModel
 from typing import Optional
 
 import access
+import audit
 import nlp_service
 from database import get_db
 from routers.auth import get_current_user
@@ -190,6 +191,7 @@ def get_job_description(
 @router.post("/descriptions/{jd_id}/analyse")
 def trigger_nlp_analysis(
     jd_id: str,
+    request: Request,
     method: str = nlp_service.DEFAULT_METHOD,   # keyword | semantic | hybrid
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db)
@@ -246,6 +248,9 @@ def trigger_nlp_analysis(
         text("UPDATE job_descriptions SET nlp_status = 'complete', nlp_processed_at = NOW() WHERE jd_id = :jid"),
         {"jid": jd_id}
     )
+    audit.record(db, "jd.analyse", user=current_user, request=request,
+                 target_type="job_description", target_id=jd_id,
+                 details={"method": method_used, "skill_count": len(extracted)})
     db.commit()
 
     return {

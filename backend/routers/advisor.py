@@ -4,10 +4,11 @@ Handles cohort overview, skill gap reports, student list
 Author: Soh Way Miin (Carl)
 """
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.orm import Session
 from sqlalchemy import text
 
+import audit
 from database import get_db
 from routers.auth import get_current_user
 
@@ -142,6 +143,7 @@ def get_all_students(
 @router.get("/students/{user_id}")
 def get_student_detail(
     user_id: str,
+    request: Request,
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
@@ -161,6 +163,9 @@ def get_student_detail(
 
     if not student:
         raise HTTPException(status_code=404, detail="Student not found")
+
+    audit.record(db, "advisor.view_student", user=current_user, request=request,
+                 target_type="user", target_id=user_id, commit=True)
 
     # Latest assessment
     assessment = db.execute(

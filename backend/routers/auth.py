@@ -4,15 +4,16 @@ Handles login, register, JWT token
 Author: Soh Way Miin (Carl)
 """
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from jose import JWTError, jwt
 from pydantic import BaseModel, EmailStr, Field
 import bcrypt
 import os
 
+import audit
 from database import get_db
 from database import engine
 import sys
@@ -105,7 +106,7 @@ def check_email_domain(email: str, role: str):
 
 def create_access_token(data: dict) -> str:
     to_encode = data.copy()
-    expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    expire = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     to_encode.update({"exp": expire})
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
@@ -145,7 +146,7 @@ def get_current_user(
 
 # ── Endpoints ─────────────────────────────────────────────────
 @router.post("/register", status_code=201)
-def register(req: RegisterRequest, db: Session = Depends(get_db)):
+def register(req: RegisterRequest, request: Request, db: Session = Depends(get_db)):
     from sqlalchemy import text
 
     if req.role != "student":
@@ -170,19 +171,23 @@ def register(req: RegisterRequest, db: Session = Depends(get_db)):
     check_password(req.password)
     hashed = hash_password(req.password)
 
-    db.execute(
+    new_user = db.execute(
         text("""
             INSERT INTO users (email, password_hash, role, full_name)
             VALUES (:email, :pw, 'student', :name)
+            RETURNING *
         """),
         {"email": email, "pw": hashed, "name": req.full_name}
-    )
+    ).fetchone()
+    audit.record(db, "auth.register", user=new_user, request=request,
+                 target_type="user", target_id=new_user.user_id)
     db.commit()
     return {"message": "User registered successfully"}
 
 
 @router.post("/login", response_model=Token)
 def login(
+    request: Request,
     form_data: OAuth2PasswordRequestForm = Depends(),
     db: Session = Depends(get_db)
 ):
@@ -194,13 +199,20 @@ def login(
     ).fetchone()
 
     if not user or not verify_password(form_data.password, user.password_hash):
+        audit.record(db, "auth.login_failed", user=user, email=form_data.username.strip().lower(),
+                     request=request, details={"reason": "unknown email" if not user else "wrong password"},
+                     commit=True)
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect email or password"
         )
 
     if not user.is_active:
+        audit.record(db, "auth.login_failed", user=user, request=request,
+                     details={"reason": "account disabled"}, commit=True)
         raise HTTPException(status_code=403, detail="Account is disabled")
+
+    audit.record(db, "auth.login", user=user, request=request, commit=True)
 
     token = create_access_token({"sub": str(user.user_id), "role": user.role})
 

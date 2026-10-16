@@ -123,4 +123,29 @@ JOIN skills_library sl ON sl.skill_id = smr.skill_id
 GROUP BY sl.skill_id, sl.skill_name, sl.category
 ORDER BY gap_percentage DESC;
 
+-- ── Audit log (NFR: security and accountability) ──────────────
+-- Who did what and when: sign-ins (also failed), registrations, assessments,
+-- JD analyses, advisors opening a student's record, admin account changes.
+-- Written by backend/audit.py; read by GET /api/admin/audit-log.
+CREATE TABLE IF NOT EXISTS audit_log (
+    log_id       UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id      UUID REFERENCES users(user_id) ON DELETE SET NULL,  -- NULL: anonymous (failed login)
+    actor_email  VARCHAR(255),          -- kept if the account is deleted; attempted email on failed login
+    actor_role   VARCHAR(20),
+    action       VARCHAR(50)  NOT NULL, -- e.g. 'auth.login', 'assessment.run', 'admin.user_update'
+    target_type  VARCHAR(30),           -- e.g. 'user', 'assessment', 'job_description'
+    target_id    VARCHAR(64),
+    details      JSONB,                 -- never passwords or tokens
+    ip_address   VARCHAR(45),
+    created_at   TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_audit_log_created_at ON audit_log(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_audit_log_action     ON audit_log(action);
+CREATE INDEX IF NOT EXISTS idx_audit_log_user_id    ON audit_log(user_id);
+
+-- job_roles.source: 'seed' roles are maintained by the seed files, 'admin' roles
+-- are added and edited in the Admin page
+ALTER TABLE job_roles ADD COLUMN IF NOT EXISTS source VARCHAR(10) NOT NULL DEFAULT 'seed';
+
 COMMIT;

@@ -1,9 +1,11 @@
 // SEAGAS — Admin: User Management
-// Admins create advisor/admin accounts, activate or deactivate accounts and reset passwords.
+// Admins create advisor/admin accounts, rename, activate or deactivate accounts and reset passwords.
 // Students are not created here: they register themselves on the Register page.
 import { useState, useEffect, useCallback } from 'react'
 import { authAPI } from '../api/client'
 import { adminAPI } from '../api/admin'
+import { C, card, th, td, input, label, btn, errorText } from './admin/adminStyles'
+import { Modal, Alert } from './admin/AdminUi'
 
 const PAGE_SIZE = 50
 const PASSWORD_MIN = 8
@@ -11,59 +13,10 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 // Must match ROLE_EMAIL_DOMAINS in backend/routers/auth.py
 const EMAIL_DOMAINS = { advisor: 'advisor.newinti.edu.my', admin: 'admin.newinti.edu.my' }
 
-const C = {
-  ink: '#1a1f2e', body: '#4a5168', muted: '#8b92a8', line: '#e4e6ef',
-  blue: '#2d5be3', green: '#16a34a', red: '#dc2626', amber: '#d97706',
-}
-
-const card  = { background: '#fff', border: `1px solid ${C.line}`, borderRadius: '12px' }
-const th    = { textAlign: 'left', fontSize: '11px', fontWeight: '700', color: C.muted, textTransform: 'uppercase', letterSpacing: '0.5px', padding: '10px 12px', borderBottom: `1px solid ${C.line}` }
-const td    = { padding: '11px 12px', fontSize: '13px', color: C.body, borderBottom: '1px solid #f0f1f5' }
-const input = { width: '100%', padding: '9px 11px', fontSize: '13px', border: `1px solid ${C.line}`, borderRadius: '8px', outline: 'none', boxSizing: 'border-box', color: C.ink, background: '#fff' }
-const label = { display: 'block', fontSize: '12px', fontWeight: '600', color: C.body, marginBottom: '6px' }
-
-const btn = (variant = 'primary') => ({
-  padding: '8px 14px', fontSize: '13px', fontWeight: '600', borderRadius: '8px', cursor: 'pointer',
-  border: variant === 'primary' ? 'none' : `1px solid ${C.line}`,
-  background: variant === 'primary' ? C.blue : '#fff',
-  color: variant === 'primary' ? '#fff' : variant === 'danger' ? C.red : C.body,
-})
-
 const ROLE_BADGE = {
   admin:   { bg: '#ede9fe', color: '#6d28d9' },
   advisor: { bg: '#dbeafe', color: '#1d4ed8' },
   student: { bg: '#f1f5f9', color: '#475569' },
-}
-
-function errorText(err, fallback) {
-  if (!err.response) return 'Cannot reach the server. Please make sure the backend is running.'
-  const d = err.response.data?.detail
-  if (Array.isArray(d)) return 'Please check the details. The email address may be invalid.'
-  return typeof d === 'string' ? d : fallback
-}
-
-function Modal({ title, onClose, children }) {
-  return (
-    <div onClick={onClose} style={{ position: 'fixed', inset: 0, background: 'rgba(15,20,35,0.45)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 50, padding: '16px' }}>
-      <div role="dialog" aria-modal="true" aria-label={title} onClick={e => e.stopPropagation()}
-        style={{ ...card, width: '100%', maxWidth: '440px', padding: '24px', boxShadow: '0 20px 50px rgba(0,0,0,0.2)' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px' }}>
-          <div style={{ fontSize: '17px', fontWeight: '700', color: C.ink }}>{title}</div>
-          <button onClick={onClose} aria-label="Close" style={{ border: 'none', background: 'none', fontSize: '20px', color: C.muted, cursor: 'pointer' }}>×</button>
-        </div>
-        {children}
-      </div>
-    </div>
-  )
-}
-
-function Alert({ type = 'error', children }) {
-  const ok = type === 'success'
-  return (
-    <div role={ok ? 'status' : 'alert'} style={{ padding: '10px 12px', borderRadius: '8px', fontSize: '13px', marginBottom: '14px', background: ok ? '#dcfce7' : '#fee2e2', color: ok ? C.green : C.red }}>
-      {children}
-    </div>
-  )
 }
 
 function AddUserModal({ onClose, onCreated }) {
@@ -132,6 +85,48 @@ function AddUserModal({ onClose, onCreated }) {
   )
 }
 
+function EditUserModal({ user, onClose, onSaved }) {
+  const [name, setName]     = useState(user.full_name)
+  const [error, setError]   = useState('')
+  const [saving, setSaving] = useState(false)
+
+  const submit = async (e) => {
+    e.preventDefault()
+    if (!name.trim()) return setError('Please enter the full name.')
+    setSaving(true)
+    setError('')
+    try {
+      const res = await adminAPI.updateUser(user.user_id, { full_name: name.trim() })
+      onSaved(res.data)
+    } catch (err) {
+      setError(errorText(err, 'Could not save the change.'))
+      setSaving(false)
+    }
+  }
+
+  return (
+    <Modal title="Edit user" onClose={onClose}>
+      <form onSubmit={submit} noValidate>
+        {error && <Alert>{error}</Alert>}
+        <div style={{ fontSize: '13px', color: C.body, marginBottom: '14px' }}>
+          {user.email} · <span style={{ textTransform: 'capitalize' }}>{user.role}</span>
+        </div>
+        <div style={{ marginBottom: '18px' }}>
+          <label style={label} htmlFor="eu-name">Full name</label>
+          <input id="eu-name" style={input} value={name} onChange={e => setName(e.target.value)} autoFocus />
+        </div>
+        <div style={{ fontSize: '12px', color: C.muted, marginBottom: '18px' }}>
+          The email and role cannot be changed, because the email domain matches the role.
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
+          <button type="button" style={btn('secondary')} onClick={onClose}>Cancel</button>
+          <button type="submit" style={btn('primary')} disabled={saving}>{saving ? 'Saving…' : 'Save'}</button>
+        </div>
+      </form>
+    </Modal>
+  )
+}
+
 function ResetPasswordModal({ user, onClose, onDone }) {
   const [password, setPassword] = useState('')
   const [confirm, setConfirm]   = useState('')
@@ -190,6 +185,7 @@ export default function AdminUsers() {
   const [notice, setNotice]     = useState('')
   const [adding, setAdding]     = useState(false)
   const [resetting, setResetting] = useState(null)
+  const [editing, setEditing]   = useState(null)
   const [busyId, setBusyId]     = useState(null)
 
   const [meId, setMeId]         = useState(null)
@@ -319,6 +315,8 @@ export default function AdminUsers() {
                     <td style={td}>{u.created_at ? new Date(u.created_at).toLocaleDateString('en-GB') : '—'}</td>
                     <td style={{ ...td, textAlign: 'right', whiteSpace: 'nowrap' }}>
                       <button style={{ ...btn('secondary'), padding: '6px 10px', fontSize: '12px', marginRight: '6px' }}
+                        onClick={() => { setNotice(''); setEditing(u) }}>Edit</button>
+                      <button style={{ ...btn('secondary'), padding: '6px 10px', fontSize: '12px', marginRight: '6px' }}
                         onClick={() => { setNotice(''); setResetting(u) }}>Reset password</button>
                       {!isMe && (
                         <button style={{ ...btn(u.is_active ? 'danger' : 'secondary'), padding: '6px 10px', fontSize: '12px' }}
@@ -353,6 +351,17 @@ export default function AdminUsers() {
             setNotice(`${u.full_name} (${u.role}) can now sign in with ${u.email}.`)
             loadStats()
             loadUsers()
+          }}
+        />
+      )}
+      {editing && (
+        <EditUserModal
+          user={editing}
+          onClose={() => setEditing(null)}
+          onSaved={(saved) => {
+            setUsers(list => list.map(x => x.user_id === saved.user_id ? saved : x))
+            setNotice(`Saved: ${saved.full_name}.`)
+            setEditing(null)
           }}
         />
       )}

@@ -1,0 +1,9 @@
+# Test tools. Install the backend packages first:
+#   python -m pip install -r backend/requirements.txt
+#   python -m pip install -r tests/requirements.txt
+# Then, from the repo root:
+#   python -m pytest tests -q                        # backend API + data tests
+#   python -m pytest nlp/tests -q -m "not model"     # NLP tests without the model
+pytest>=8
+httpx>=0.27          # FastAPI TestClient
+faker                # tests/test_synthetic_data.py
