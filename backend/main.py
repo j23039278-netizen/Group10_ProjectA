@@ -9,6 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
  
 from routers import auth, students, jobs, assessments, advisor, admin
 from routers.progress import router as progress_router
+import nlp_service
  
 app = FastAPI(
     title="SEAGAS API",
@@ -35,6 +36,12 @@ app.include_router(progress_router,    prefix="/api/progress",    tags=["Progres
 app.include_router(admin.router,       prefix="/api/admin",       tags=["Admin"])
  
  
+# Load the NLP model in the background so the first assessment does not wait for it
+@app.on_event("startup")
+def warm_up_nlp():
+    nlp_service.warm_up_in_background()
+
+
 @app.get("/")
 def root():
     return {"message": "SEAGAS API is running", "version": "1.0.0"}

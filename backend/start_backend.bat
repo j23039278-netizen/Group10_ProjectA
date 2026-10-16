@@ -18,7 +18,6 @@ cd /d "%~dp0"
 if not exist ".env" (
     echo Creating backend\.env with the team's local settings ...
     > ".env" echo DATABASE_URL=postgresql://postgres:postgres123@localhost:5432/seagas_db
-    >> ".env" echo SECRET_KEY=seagas_super_secret_key_change_in_production_2026
     >> ".env" echo ALGORITHM=HS256
     >> ".env" echo ACCESS_TOKEN_EXPIRE_MINUTES=30
 )
@@ -40,6 +39,10 @@ if not defined PY (
     echo         Then close this window and double-click start_backend.bat again.
     goto :fail
 )
+
+REM Login tokens are signed with SECRET_KEY: give .env a private random one
+%PY% ensure_secret_key.py
+if errorlevel 1 goto :fail
 
 where psql >nul 2>&1
 if errorlevel 1 (
@@ -119,6 +122,15 @@ for /f "usebackq delims=" %%i in (`psql -d seagas_db -tAc "SELECT count(*) FROM 
 echo [4/4] Installing Python packages ...
 %PY% -m pip install -q -r requirements.txt "psycopg[binary]" "pydantic[email]" python-multipart
 if errorlevel 1 goto :fail
+REM Semantic / hybrid NLP needs nlp\requirements.txt (torch, ~1 GB). Without it the
+REM backend still runs and uses keyword matching, so it is optional here.
+%PY% -c "import sentence_transformers, spacy, en_core_web_sm" >nul 2>&1
+if errorlevel 1 (
+    echo       NLP semantic/hybrid not installed - keyword matching will be used.
+    echo       To enable it: %PY% -m pip install -r ..\nlp\requirements.txt
+) else (
+    echo       NLP semantic/hybrid packages found
+)
 
 REM Advisor accounts are created by an admin, so the first admin has to exist.
 REM create_admin.py asks for the email and password; nothing is hard-coded.

@@ -10,6 +10,8 @@ from sqlalchemy import text
 from pydantic import BaseModel
 from typing import Optional
 
+import access
+import nlp_service
 from database import get_db
 from routers.auth import get_current_user
 
@@ -163,14 +165,8 @@ def get_job_description(
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    """Get a specific JD with its extracted skills"""
-    jd = db.execute(
-        text("SELECT * FROM job_descriptions WHERE jd_id = :jid"),
-        {"jid": jd_id}
-    ).fetchone()
-
-    if not jd:
-        raise HTTPException(status_code=404, detail="Job description not found")
+    """Get a specific JD with its extracted skills (own or shared, any for staff)"""
+    jd = access.get_jd_or_404(db, current_user, jd_id)
 
     extracted = db.execute(
         text("""
@@ -194,26 +190,24 @@ def get_job_description(
 @router.post("/descriptions/{jd_id}/analyse")
 def trigger_nlp_analysis(
     jd_id: str,
+    method: str = nlp_service.DEFAULT_METHOD,   # keyword | semantic | hybrid
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
     """
-    Trigger NLP analysis on a submitted JD.
-    In Sprint 2, this will call Yong Hin's NLP module.
-    For now, returns a placeholder response.
+    Extract the skills a JD asks for with the NLP module (Ng Yong Hin, nlp/)
+    and store them in jd_extracted_skills. Running it again replaces the
+    previous results, so a JD can be re-analysed with another method.
+    Contract: docs/NLP_INTERFACE.md.
     """
-    jd = db.execute(
-        text("SELECT * FROM job_descriptions WHERE jd_id = :jid"),
-        {"jid": jd_id}
-    ).fetchone()
+    # Students can only re-analyse their own JDs; shared dataset JDs are staff-only
+    jd = access.get_jd_or_404(db, current_user, jd_id, for_update=True)
 
-    if not jd:
-        raise HTTPException(status_code=404, detail="Job description not found")
+    try:
+        nlp_service.check_method(method)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
-    if jd.nlp_status == "complete":
-        return {"message": "NLP already completed for this JD", "jd_id": jd_id}
-
-    # Update status to processing
     db.execute(
         text("""
             UPDATE job_descriptions
@@ -224,21 +218,47 @@ def trigger_nlp_analysis(
     )
     db.commit()
 
-    # ── TODO Sprint 2: Call Yong Hin's NLP module here ──
-    # from nlp.extractor import extract_skills
-    # extracted = extract_skills(jd.raw_text)
-    # ... insert into jd_extracted_skills ...
+    # Pass the skills_library rows so every result carries the real skill_id
+    skills = db.execute(text("""
+        SELECT skill_id, skill_name, category, aliases, description, is_active
+        FROM skills_library
+    """)).fetchall()
+    try:
+        extracted, method_used, note = nlp_service.extract_skills(
+            jd.raw_text, method, [dict(r._mapping) for r in skills])
+    except Exception:
+        db.execute(text("UPDATE job_descriptions SET nlp_status = 'failed' WHERE jd_id = :jid"),
+                   {"jid": jd_id})
+        db.commit()
+        raise HTTPException(status_code=500, detail="Skill extraction failed")
 
-    # Placeholder: mark as complete
+    db.execute(text("DELETE FROM jd_extracted_skills WHERE jd_id = :jid"), {"jid": jd_id})
+    for s in extracted:
+        db.execute(text("""
+            INSERT INTO jd_extracted_skills
+                (jd_id, skill_id, raw_skill_text, extraction_method, confidence_score)
+            VALUES (:jid, :sid, :raw, :method, :conf)
+        """), {"jid": jd_id, "sid": s["skill_id"], "raw": s["raw_skill_text"][:255],
+               # per-skill extractor: always keyword or semantic, never hybrid
+               "method": s["method"], "conf": round(s["confidence_score"], 3)})
+
     db.execute(
-        text("UPDATE job_descriptions SET nlp_status = 'complete' WHERE jd_id = :jid"),
+        text("UPDATE job_descriptions SET nlp_status = 'complete', nlp_processed_at = NOW() WHERE jd_id = :jid"),
         {"jid": jd_id}
     )
     db.commit()
 
     return {
-        "message": "NLP analysis triggered",
         "jd_id": jd_id,
         "status": "complete",
-        "note": "Full NLP integration coming in Sprint 2"
+        "method_requested": method,
+        "method_used": method_used,
+        "note": note,
+        "skill_count": len(extracted),
+        "extracted_skills": [
+            {"skill_id": s["skill_id"], "skill_name": s["skill_name"],
+             "raw_skill_text": s["raw_skill_text"], "extraction_method": s["method"],
+             "confidence_score": round(s["confidence_score"], 3)}
+            for s in extracted
+        ],
     }

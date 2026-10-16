@@ -16,6 +16,8 @@ import os
 # Add project root to path so recommendation/ module can be imported
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+import access
+import nlp_service
 from database import get_db
 from routers.auth import get_current_user
 
@@ -26,7 +28,7 @@ router = APIRouter()
 class AssessmentRequest(BaseModel):
     jd_id: Optional[str] = None       # if student uploaded a JD
     role_id: Optional[str] = None     # if student selected a template
-    matching_method: str = "semantic"  # keyword | semantic | hybrid
+    matching_method: str = nlp_service.DEFAULT_METHOD  # keyword | semantic | hybrid
 
 
 # ── Assessment Endpoints ──────────────────────────────────────
@@ -40,9 +42,14 @@ def run_assessment(
     Run skill matching and generate readiness score.
     Scoring weights: required=3pts, preferred=2pts, bonus=1pt.
     Strong match = full points, Developing = half points, Gap = 0.
-    Sprint 2: Level 1 keyword matching.
-    Sprint 3: connects to Yong Hin's NLP semantic matching engine.
+    Strong / Developing / Gap comes from the NLP matcher (Ng Yong Hin, nlp/);
+    rules in docs/NLP_CLASSIFICATION_RULES.md.
     """
+    try:
+        nlp_service.check_method(req.matching_method)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
     if not req.jd_id and not req.role_id:
         raise HTTPException(
             status_code=400,
@@ -78,9 +85,11 @@ def run_assessment(
 
     # Get required skills — from JD or role template
     if req.jd_id:
+        access.get_jd_or_404(db, current_user, req.jd_id)
         required_skills = db.execute(
             text("""
-                SELECT jes.skill_id, jes.raw_skill_text AS skill_name,
+                SELECT jes.skill_id,
+                       COALESCE(sl.skill_name, jes.raw_skill_text) AS skill_name,
                        sl.category, jes.importance
                 FROM jd_extracted_skills jes
                 LEFT JOIN skills_library sl ON sl.skill_id = jes.skill_id
@@ -108,58 +117,34 @@ def run_assessment(
     if not required_skills:
         raise HTTPException(
             status_code=400,
-            detail="No required skills found for this job/role"
+            detail="No skills were found in this job description. Run the analysis first, "
+                   "or paste a longer description." if req.jd_id
+                   else "No required skills found for this role"
         )
 
-    # ── Matching Logic ────────────────────────────────────────
-    # Sprint 2: Level 1 keyword matching
-    # Sprint 3: Yong Hin's NLP semantic/hybrid matching replaces this
-    student_skill_ids   = {str(s.skill_id) for s in student_skills}
-    student_skill_names = {s.skill_name.lower() for s in student_skills}
+    # ── Matching Logic (nlp/, rules in docs/NLP_CLASSIFICATION_RULES.md) ──
+    students = [{"skill_id": str(sk.skill_id), "skill_name": sk.skill_name,
+                 "proficiency_level": sk.proficiency_level,
+                 "evidence_type": list(sk.evidence_type or [])} for sk in student_skills]
+    required = [{"skill_id": str(r.skill_id) if r.skill_id else None,
+                 "skill_name": r.skill_name,
+                 "importance": r.importance or "required"} for r in required_skills]
+    try:
+        match_results, method_used, matching_note = nlp_service.match_skills(
+            students, required, req.matching_method)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
-    match_results    = []
-    strong_count     = 0
-    developing_count = 0
-    gap_count        = 0
-
-    # Weighted scoring: required=3, preferred=2, bonus=1
+    # Weighted scoring: required=3, preferred=2, bonus=1; strong=1, developing=0.5, gap=0
     IMPORTANCE_WEIGHTS = {"required": 3, "preferred": 2, "bonus": 1}
+    STATUS_CREDIT      = {"strong": 1.0, "developing": 0.5, "gap": 0.0}
 
-    earned_points = 0.0
-    max_points    = 0.0
-
-    for req_skill in required_skills:
-        skill_id   = str(req_skill.skill_id) if req_skill.skill_id else None
-        skill_name = req_skill.skill_name.lower() if req_skill.skill_name else ""
-        importance = getattr(req_skill, "importance", "required") or "required"
-        weight     = IMPORTANCE_WEIGHTS.get(importance, 1)
-        max_points += weight
-
-        # Level 1: exact skill_id match
-        if skill_id and skill_id in student_skill_ids:
-            status        = "strong"
-            similarity    = 1.0
-            earned_points += weight * 1.0
-            strong_count  += 1
-        # Level 1: keyword match on name
-        elif any(skill_name in sn or sn in skill_name for sn in student_skill_names):
-            status           = "developing"
-            similarity       = 0.6
-            earned_points   += weight * 0.5
-            developing_count += 1
-        else:
-            status     = "gap"
-            similarity = 0.0
-            gap_count += 1
-
-        match_results.append({
-            "skill_id":         skill_id,
-            "skill_name":       req_skill.skill_name,
-            "importance":       importance,
-            "match_status":     status,
-            "similarity_score": similarity,
-            "matching_method":  req.matching_method
-        })
+    earned_points = sum(IMPORTANCE_WEIGHTS.get(m["importance"], 1) * STATUS_CREDIT[m["match_status"]]
+                        for m in match_results)
+    max_points    = sum(IMPORTANCE_WEIGHTS.get(m["importance"], 1) for m in match_results)
+    strong_count     = sum(m["match_status"] == "strong" for m in match_results)
+    developing_count = sum(m["match_status"] == "developing" for m in match_results)
+    gap_count        = sum(m["match_status"] == "gap" for m in match_results)
 
     # ── Calculate Readiness Score (weighted) ──────────────────
     readiness_score = round(
@@ -167,21 +152,15 @@ def run_assessment(
     ) if max_points > 0 else 0
 
     # ── Calculate 7-Dimension Scores ─────────────────────────
+    # match_results are in the same order as required_skills
     def category_score(category):
-        cat_required = [r for r in required_skills if r.category == category]
-        if not cat_required:
+        """Weighted score within one skill category; developing counts half"""
+        rows = [m for r, m in zip(required_skills, match_results) if r.category == category]
+        if not rows:
             return None
-        cat_student     = [s for s in student_skills if s.category == category]
-        student_cat_ids = {str(s.skill_id) for s in cat_student}
-        # Use weighted scoring within each category too
-        cat_earned = 0.0
-        cat_max    = 0.0
-        for r in cat_required:
-            imp    = getattr(r, "importance", "required") or "required"
-            w      = IMPORTANCE_WEIGHTS.get(imp, 1)
-            cat_max += w
-            if str(r.skill_id) in student_cat_ids:
-                cat_earned += w
+        cat_max    = sum(IMPORTANCE_WEIGHTS.get(m["importance"], 1) for m in rows)
+        cat_earned = sum(IMPORTANCE_WEIGHTS.get(m["importance"], 1) * STATUS_CREDIT[m["match_status"]]
+                         for m in rows)
         return round(cat_earned / cat_max * 100, 2) if cat_max > 0 else 0
 
     score_technical     = category_score("Technical")
@@ -189,10 +168,23 @@ def run_assessment(
     score_analytical    = category_score("Analytical")
     score_communication = category_score("Soft")
 
-    # Experience-based scores from profile counts
-    score_industry_exp  = min((profile.internship_count or 0) * 50, 100)
-    score_project_exp   = min((profile.project_count or 0) * 25, 100)
-    score_certification = min((profile.certification_count or 0) * 33, 100)
+    # Experience-based scores, counted from the student's records so that adding a
+    # project or certification changes them. internship_count is also a profile
+    # field (synthetic data sets it directly), so the larger of the two is used.
+    exp = db.execute(
+        text("""
+            SELECT
+                (SELECT COUNT(*) FROM student_projects WHERE profile_id = :pid)       AS projects,
+                (SELECT COUNT(*) FROM student_projects
+                  WHERE profile_id = :pid AND project_type = 'internship')            AS internship_projects,
+                (SELECT COUNT(*) FROM student_certifications WHERE profile_id = :pid) AS certifications
+        """),
+        {"pid": str(profile.profile_id)}
+    ).fetchone()
+    internships = max(profile.internship_count or 0, exp.internship_projects)
+    score_industry_exp  = min(internships * 50, 100)
+    score_project_exp   = min(exp.projects * 25, 100)
+    score_certification = min(exp.certifications * 33, 100)
 
     # ── Save Assessment to DB ─────────────────────────────────
     result = db.execute(
@@ -214,7 +206,7 @@ def run_assessment(
             "pid":        str(profile.profile_id),
             "jid":        req.jd_id,
             "rid":        req.role_id,
-            "method":     req.matching_method,
+            "method":     method_used,
             "score":      readiness_score,
             "tech":       score_technical,
             "ai":         score_ai_digital,
@@ -234,17 +226,19 @@ def run_assessment(
             db.execute(
                 text("""
                     INSERT INTO skill_match_results
-                        (assessment_id, skill_id, match_status,
-                         similarity_score, matching_method)
-                    VALUES (:aid, :sid, :status, :score, :method)
+                        (assessment_id, skill_id, match_status, similarity_score,
+                         matching_method, matched_student_skill, reason)
+                    VALUES (:aid, :sid, :status, :score, :method, :matched, :reason)
                     ON CONFLICT (assessment_id, skill_id) DO NOTHING
                 """),
                 {
-                    "aid":    assessment_id,
-                    "sid":    mr["skill_id"],
-                    "status": mr["match_status"],
-                    "score":  mr["similarity_score"],
-                    "method": mr["matching_method"]
+                    "aid":     assessment_id,
+                    "sid":     mr["skill_id"],
+                    "status":  mr["match_status"],
+                    "score":   mr["similarity_score"],      # already 3 decimals
+                    "method":  mr["matching_method"],
+                    "matched": mr["matched_student_skill"],
+                    "reason":  mr["reason"]
                 }
             )
     db.commit()
@@ -253,6 +247,8 @@ def run_assessment(
         "assessment_id":   assessment_id,
         "readiness_score": readiness_score,
         "scoring_method":  "weighted (required=3, preferred=2, bonus=1)",
+        "matching_method": method_used,
+        "matching_note":   matching_note,
         "dimension_scores": {
             "technical_skills":    score_technical,
             "ai_digital_skills":   score_ai_digital,
@@ -291,7 +287,10 @@ def get_assessment_history(
     history = db.execute(
         text("""
             SELECT a.assessment_id, a.readiness_score, a.matching_method,
-                   a.created_at, jr.role_name
+                   a.created_at, jr.role_name,
+                   a.score_technical, a.score_ai_digital, a.score_analytical,
+                   a.score_communication, a.score_industry_exp,
+                   a.score_project_exp, a.score_certification
             FROM assessments a
             LEFT JOIN job_roles jr ON jr.role_id = a.role_id
             WHERE a.profile_id = :pid
@@ -309,19 +308,14 @@ def get_assessment(
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    """Get a specific assessment with full skill breakdown"""
-    assessment = db.execute(
-        text("SELECT * FROM assessments WHERE assessment_id = :aid"),
-        {"aid": assessment_id}
-    ).fetchone()
-
-    if not assessment:
-        raise HTTPException(status_code=404, detail="Assessment not found")
+    """Get a specific assessment with full skill breakdown (own, or any for staff)"""
+    assessment = access.get_assessment_or_404(db, current_user, assessment_id)
 
     match_results = db.execute(
         text("""
             SELECT sl.skill_name, sl.category,
-                   smr.match_status, smr.similarity_score, smr.matching_method
+                   smr.match_status, smr.similarity_score, smr.matching_method,
+                   smr.matched_student_skill, smr.reason
             FROM skill_match_results smr
             JOIN skills_library sl ON sl.skill_id = smr.skill_id
             WHERE smr.assessment_id = :aid
@@ -353,6 +347,7 @@ def get_assessment_recommendations(
     Uses Aaron's rule-based recommendation engine (recommendation/engine.py).
     Author: Tan Jun Xiong (Aaron)
     """
+    access.get_assessment_or_404(db, current_user, assessment_id)
     try:
         from recommendation.engine import get_recommendations_for_assessment
         return get_recommendations_for_assessment(

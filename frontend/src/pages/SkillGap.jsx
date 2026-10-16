@@ -150,7 +150,8 @@ export default function SkillGap() {
                 {col.items.length === 0
                   ? <div style={{ fontSize: '12px', color: '#8b92a8' }}>None</div>
                   : col.items.map((s, j) => (
-                    <div key={j} style={{
+                    <div key={j} title={s.reason || undefined} style={{
+                      cursor: s.reason ? 'help' : 'default',
                       padding: '6px 10px', borderRadius: '20px', fontSize: '12px',
                       fontWeight: '500', background: col.bg, color: col.color,
                       display: 'inline-block', margin: '3px'
@@ -159,12 +160,17 @@ export default function SkillGap() {
                     </div>
                   ))
                 }
-                {col.title.includes('Developing') && col.items.length > 0 && (
+                {col.items.some(s => s.reason) && (
+                  <div style={{ fontSize: '11px', color: '#8b92a8', marginTop: '10px' }}>
+                    Hover over a skill to see why it is in this group.
+                  </div>
+                )}
+                {col.title.includes('Developing') && col.items.length > 0 && !col.items.some(s => s.reason) && (
                   <div style={{ fontSize: '11px', color: '#8b92a8', marginTop: '10px' }}>
                     You have some evidence — needs further development.
                   </div>
                 )}
-                {col.title.includes('Gaps') && col.items.length > 0 && (
+                {col.title.includes('Gaps') && col.items.length > 0 && !col.items.some(s => s.reason) && (
                   <div style={{ fontSize: '11px', color: '#8b92a8', marginTop: '10px' }}>
                     No evidence found in your profile.
                   </div>

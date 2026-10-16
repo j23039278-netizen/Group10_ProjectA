@@ -65,7 +65,7 @@ export const jobsAPI = {
   submitJD:    (data)  => API.post('/jobs/descriptions', data),
   getMyJDs:    ()      => API.get('/jobs/descriptions'),
   getJD:       (id)    => API.get(`/jobs/descriptions/${id}`),
-  analyseJD:   (id)    => API.post(`/jobs/descriptions/${id}/analyse`),
+  analyseJD:   (id, method) => API.post(`/jobs/descriptions/${id}/analyse`, null, { params: { method } }),
 };
  
 // ── Assessments ───────────────────────────────────────────────

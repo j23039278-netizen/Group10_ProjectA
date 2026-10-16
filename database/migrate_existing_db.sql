@@ -77,6 +77,10 @@ BEGIN
     END IF;
 END $$;
 
+-- skill_match_results.reason: the NLP matcher's one-sentence explanation
+-- (docs/NLP_INTERFACE.md 6d), shown on the Skill Gap page
+ALTER TABLE skill_match_results ADD COLUMN IF NOT EXISTS reason TEXT;
+
 -- v_student_progress: read from student_resource_progress, which the app
 -- writes to. It used to read student_recommendations, which nothing writes,
 -- so the advisor cohort progress endpoint always returned an empty list.
@@ -92,5 +96,31 @@ FROM student_resource_progress srp
 JOIN student_profiles sp ON sp.profile_id = srp.profile_id
 JOIN users u             ON u.user_id     = sp.user_id
 GROUP BY sp.user_id, u.full_name;
+
+-- View: cohort skill gap summary (used by Advisor Dashboard cohort bar chart)
+-- Only each student's latest assessment counts, so a student who ran several
+-- assessments is not counted several times. total_assessments = students counted.
+CREATE OR REPLACE VIEW v_cohort_skill_gaps AS
+WITH latest AS (
+    SELECT DISTINCT ON (profile_id) assessment_id
+    FROM assessments
+    ORDER BY profile_id, created_at DESC
+)
+SELECT
+    sl.skill_name,
+    sl.category,
+    COUNT(*) FILTER (WHERE smr.match_status = 'gap')        AS gap_count,
+    COUNT(*) FILTER (WHERE smr.match_status = 'developing') AS developing_count,
+    COUNT(*) FILTER (WHERE smr.match_status = 'strong')     AS strong_count,
+    COUNT(*)                                                 AS total_assessments,
+    ROUND(
+        COUNT(*) FILTER (WHERE smr.match_status = 'gap') * 100.0 / NULLIF(COUNT(*), 0),
+        1
+    )                                                        AS gap_percentage
+FROM skill_match_results smr
+JOIN latest l          ON l.assessment_id = smr.assessment_id
+JOIN skills_library sl ON sl.skill_id = smr.skill_id
+GROUP BY sl.skill_id, sl.skill_name, sl.category
+ORDER BY gap_percentage DESC;
 
 COMMIT;

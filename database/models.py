@@ -280,6 +280,7 @@ class SkillMatchResult(Base):
     similarity_score      = Column(Numeric(4, 3))
     matching_method       = Column(String(20), nullable=False)
     matched_student_skill = Column(String(255))
+    reason              = Column(Text)
 
     __table_args__ = (
         UniqueConstraint("assessment_id", "skill_id", name="uq_assessment_skill"),

@@ -9,7 +9,7 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from datetime import datetime, timedelta
 from jose import JWTError, jwt
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field
 import bcrypt
 import os
 
@@ -22,7 +22,12 @@ from database import SessionLocal
 router = APIRouter()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
 
-SECRET_KEY = os.getenv("SECRET_KEY", "fallback_secret")
+# Tokens are signed with SECRET_KEY, so there is no default: anyone who knew a
+# default could forge a token for any account, including admins.
+SECRET_KEY = os.getenv("SECRET_KEY")
+if not SECRET_KEY:
+    raise RuntimeError("SECRET_KEY is not set. Add it to backend/.env "
+                       "(start_backend.bat creates one with a random key).")
 ALGORITHM = os.getenv("ALGORITHM", "HS256")
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", 30))
 
@@ -40,7 +45,7 @@ ROLE_EMAIL_DOMAINS = {
 class RegisterRequest(BaseModel):
     email: EmailStr
     password: str
-    full_name: str
+    full_name: str = Field(min_length=1, max_length=255)
     # Public sign-up is for students only. Advisor and admin accounts are
     # created by an admin through POST /api/admin/users.
     role: str = "student"
@@ -54,11 +59,33 @@ class Token(BaseModel):
 
 
 # ── Helper Functions ──────────────────────────────────────────
+# bcrypt only reads the first 72 bytes and bcrypt 5 raises on longer input
+PASSWORD_MIN_CHARS = 8
+PASSWORD_MAX_BYTES = 72
+
+
+def password_error(password: str):
+    """Message to show if the password breaks the rules, otherwise None"""
+    if len(password) < PASSWORD_MIN_CHARS:
+        return f"Password must be at least {PASSWORD_MIN_CHARS} characters."
+    if len(password.encode()) > PASSWORD_MAX_BYTES:
+        return f"Password must be at most {PASSWORD_MAX_BYTES} bytes (about 72 letters or digits)."
+    return None
+
+
+def check_password(password: str):
+    error = password_error(password)
+    if error:
+        raise HTTPException(status_code=400, detail=error)
+
+
 def hash_password(password: str) -> str:
     return bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
 
 
 def verify_password(password: str, hashed: str) -> bool:
+    if len(password.encode()) > PASSWORD_MAX_BYTES:
+        return False  # can never match a stored hash; bcrypt would raise
     return bcrypt.checkpw(password.encode(), hashed.encode())
 
 
@@ -140,6 +167,7 @@ def register(req: RegisterRequest, db: Session = Depends(get_db)):
     if existing:
         raise HTTPException(status_code=400, detail="Email already registered")
 
+    check_password(req.password)
     hashed = hash_password(req.password)
 
     db.execute(

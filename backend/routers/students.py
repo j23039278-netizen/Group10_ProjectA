@@ -7,9 +7,10 @@ Author: Soh Way Miin (Carl)
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy import text
-from pydantic import BaseModel
-from typing import Optional, List
+from pydantic import BaseModel, Field
+from typing import Literal, Optional, List
 from datetime import date
+from uuid import UUID
 
 from database import get_db
 from routers.auth import get_current_user
@@ -18,37 +19,63 @@ router = APIRouter()
 
 
 # ── Pydantic Schemas ──────────────────────────────────────────
+# Limits match the database columns and CHECKs, so bad input gets a 422 with a
+# clear message instead of a database error (500).
 class ProfileCreate(BaseModel):
-    programme: Optional[str] = None
-    university: Optional[str] = None
-    gpa: Optional[float] = None
-    expected_graduation: Optional[str] = None
-    year_of_study: Optional[int] = None
-    target_role: Optional[str] = None
-    career_interests: Optional[List[str]] = []
+    programme: Optional[str] = Field(None, max_length=255)
+    university: Optional[str] = Field(None, max_length=255)
+    gpa: Optional[float] = Field(None, ge=0, le=4)
+    expected_graduation: Optional[str] = Field(None, max_length=20)
+    year_of_study: Optional[int] = Field(None, ge=1, le=5)
+    target_role: Optional[str] = Field(None, max_length=100)
+    career_interests: Optional[List[str]] = Field([], max_length=20)
 
 
 class SkillAdd(BaseModel):
-    skill_id: str
-    proficiency_level: str = "intermediate"  # beginner | intermediate | advanced
-    evidence_type: Optional[List[str]] = []
-    evidence_notes: Optional[str] = None
+    skill_id: UUID
+    proficiency_level: Literal["beginner", "intermediate", "advanced"] = "intermediate"
+    evidence_type: Optional[List[Literal["project", "certification", "coursework", "internship"]]] = []
+    evidence_notes: Optional[str] = Field(None, max_length=1000)
 
 
 class ProjectAdd(BaseModel):
-    project_title: str
-    description: Optional[str] = None
-    technologies: Optional[List[str]] = []
-    project_type: str = "academic"
-    year_completed: Optional[int] = None
+    project_title: str = Field(min_length=1, max_length=255)
+    description: Optional[str] = Field(None, max_length=5000)
+    technologies: Optional[List[str]] = Field([], max_length=30)
+    project_type: Literal["academic", "personal", "internship", "competition"] = "academic"
+    year_completed: Optional[int] = Field(None, ge=1990, le=2100)
 
 
 class CertificationAdd(BaseModel):
-    cert_name: str
-    issuer: Optional[str] = None
+    cert_name: str = Field(min_length=1, max_length=255)
+    issuer: Optional[str] = Field(None, max_length=255)
     issue_date: Optional[date] = None
     expiry_date: Optional[date] = None
     credential_url: Optional[str] = None
+
+
+def sync_experience_counts(db, profile_id):
+    """Update the profile's project / certification / internship counters from its records.
+
+    internship_count never goes down: synthetic profiles set it directly, without
+    internship-type projects.
+    """
+    db.execute(
+        text("""
+            UPDATE student_profiles sp SET
+                project_count       = (SELECT COUNT(*) FROM student_projects p
+                                        WHERE p.profile_id = sp.profile_id),
+                certification_count = (SELECT COUNT(*) FROM student_certifications c
+                                        WHERE c.profile_id = sp.profile_id),
+                internship_count    = GREATEST(COALESCE(sp.internship_count, 0),
+                                       (SELECT COUNT(*) FROM student_projects p
+                                        WHERE p.profile_id = sp.profile_id
+                                          AND p.project_type = 'internship')),
+                updated_at          = CURRENT_TIMESTAMP
+            WHERE sp.profile_id = :pid
+        """),
+        {"pid": str(profile_id)}
+    )
 
 
 # ── Profile Endpoints ─────────────────────────────────────────
@@ -151,7 +178,7 @@ def get_my_skills(
 ):
     skills = db.execute(
         text("""
-            SELECT ss.student_skill_id, sl.skill_name, sl.category,
+            SELECT ss.student_skill_id, ss.skill_id, sl.skill_name, sl.category,
                    ss.proficiency_level, ss.evidence_type, ss.evidence_notes
             FROM student_skills ss
             JOIN student_profiles sp ON sp.profile_id = ss.profile_id
@@ -182,7 +209,7 @@ def add_skill(
     # Check skill exists in library
     skill = db.execute(
         text("SELECT skill_id FROM skills_library WHERE skill_id = :sid"),
-        {"sid": req.skill_id}
+        {"sid": str(req.skill_id)}
     ).fetchone()
 
     if not skill:
@@ -194,7 +221,7 @@ def add_skill(
             SELECT student_skill_id FROM student_skills
             WHERE profile_id = :pid AND skill_id = :sid
         """),
-        {"pid": str(profile.profile_id), "sid": req.skill_id}
+        {"pid": str(profile.profile_id), "sid": str(req.skill_id)}
     ).fetchone()
 
     if existing:
@@ -208,7 +235,7 @@ def add_skill(
         """),
         {
             "pid": str(profile.profile_id),
-            "sid": req.skill_id,
+            "sid": str(req.skill_id),
             "level": req.proficiency_level,
             "etype": req.evidence_type,
             "enotes": req.evidence_notes
@@ -323,6 +350,7 @@ def add_project(
             "year": req.year_completed
         }
     )
+    sync_experience_counts(db, profile.profile_id)
     db.commit()
     return {"message": "Project added successfully"}
 
@@ -378,5 +406,6 @@ def add_certification(
             "url": req.credential_url
         }
     )
+    sync_experience_counts(db, profile.profile_id)
     db.commit()
     return {"message": "Certification added successfully"}

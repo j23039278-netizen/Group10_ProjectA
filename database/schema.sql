@@ -260,6 +260,7 @@ CREATE TABLE skill_match_results (
     matching_method     VARCHAR(20)  NOT NULL
                         CHECK (matching_method IN ('keyword', 'semantic', 'hybrid')),
     matched_student_skill VARCHAR(255),                         -- which student skill triggered the match
+    reason              TEXT,                                   -- one-sentence explanation from the NLP matcher
 
     UNIQUE (assessment_id, skill_id)
 );
@@ -445,7 +446,14 @@ WHERE u.role = 'student'
 ORDER BY a.created_at DESC;
 
 -- View: cohort skill gap summary (used by Advisor Dashboard cohort bar chart)
+-- Only each student's latest assessment counts, so a student who ran several
+-- assessments is not counted several times. total_assessments = students counted.
 CREATE VIEW v_cohort_skill_gaps AS
+WITH latest AS (
+    SELECT DISTINCT ON (profile_id) assessment_id
+    FROM assessments
+    ORDER BY profile_id, created_at DESC
+)
 SELECT
     sl.skill_name,
     sl.category,
@@ -458,6 +466,7 @@ SELECT
         1
     )                                                        AS gap_percentage
 FROM skill_match_results smr
+JOIN latest l          ON l.assessment_id = smr.assessment_id
 JOIN skills_library sl ON sl.skill_id = smr.skill_id
 GROUP BY sl.skill_id, sl.skill_name, sl.category
 ORDER BY gap_percentage DESC;

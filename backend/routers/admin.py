@@ -16,11 +16,10 @@ from sqlalchemy import text
 from sqlalchemy.orm import Session
 
 from database import get_db
-from routers.auth import check_email_domain, get_current_user, hash_password
+from routers.auth import check_email_domain, check_password, get_current_user, hash_password
 
 router = APIRouter()
 
-PASSWORD_MIN = 8
 STAFF_ROLES = ("advisor", "admin")
 
 
@@ -28,12 +27,6 @@ STAFF_ROLES = ("advisor", "admin")
 def require_admin(current_user):
     if current_user.role != "admin":
         raise HTTPException(status_code=403, detail="Access denied. Admin role required.")
-
-
-def check_password(password: str):
-    if len(password) < PASSWORD_MIN:
-        raise HTTPException(status_code=400,
-                            detail=f"Password must be at least {PASSWORD_MIN} characters.")
 
 
 # ── Pydantic Schemas ──────────────────────────────────────────

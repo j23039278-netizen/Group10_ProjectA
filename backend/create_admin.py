@@ -17,7 +17,7 @@ import sys
 from sqlalchemy import text
 
 from database import SessionLocal
-from routers.auth import ROLE_EMAIL_DOMAINS, email_domain_error, hash_password
+from routers.auth import ROLE_EMAIL_DOMAINS, email_domain_error, hash_password, password_error
 
 PASSWORD_MIN = 8
 EMAIL_RE = re.compile(r"^[^\s@]+@[^\s@]+\.[^\s@]+$")
@@ -34,8 +34,8 @@ def ask(prompt, check, error):
 def ask_password():
     while True:
         pw = getpass.getpass(f"Password (min {PASSWORD_MIN} characters, hidden): ")
-        if len(pw) < PASSWORD_MIN:
-            print(f"  Password must be at least {PASSWORD_MIN} characters.")
+        if password_error(pw):
+            print("  " + password_error(pw))
             continue
         if getpass.getpass("Confirm password: ") != pw:
             print("  Passwords do not match.")

@@ -3,6 +3,14 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { jobsAPI, assessAPI } from '../api/client'
 
+// Matching methods of the NLP module (docs/NLP_INTERFACE.md). Keyword is Level 1,
+// semantic is Level 2; hybrid uses both and is the default.
+const METHODS = [
+  { id: 'hybrid',   label: 'Hybrid',            hint: 'Keyword + semantic (recommended)' },
+  { id: 'keyword',  label: 'Keyword (Level 1)',  hint: 'Exact names and aliases' },
+  { id: 'semantic', label: 'Semantic (Level 2)', hint: 'Similar meaning (AI model)' },
+]
+
 export default function JobAnalysis() {
   const navigate = useNavigate()
   const [roles,     setRoles]     = useState([])
@@ -13,6 +21,8 @@ export default function JobAnalysis() {
   const [loading,   setLoading]   = useState(false)
   const [result,    setResult]    = useState(null)
   const [error,     setError]     = useState('')
+  const [method,    setMethod]    = useState('hybrid')
+  const [jdInfo,    setJdInfo]    = useState(null)   // what the NLP found in a pasted JD
 
   useEffect(() => {
     jobsAPI.getRoles().then(r => setRoles(r.data)).catch(() => {})
@@ -22,20 +32,22 @@ export default function JobAnalysis() {
     setError('')
     setLoading(true)
     setResult(null)
+    setJdInfo(null)
     try {
       let payload = {}
 
       if (mode === 'template') {
         if (!selRole) { setError('Please select a job role.'); setLoading(false); return }
-        payload = { role_id: selRole, matching_method: 'semantic' }
+        payload = { role_id: selRole, matching_method: method }
       } else {
         if (jdText.trim().length < 50) { setError('Job description must be at least 50 characters.'); setLoading(false); return }
         // Submit JD first
         const jdRes = await jobsAPI.submitJD({ title: jdTitle, raw_text: jdText })
         const jdId  = jdRes.data.jd_id
-        // Trigger NLP
-        await jobsAPI.analyseJD(jdId)
-        payload = { jd_id: jdId, matching_method: 'semantic' }
+        // Extract the skills the JD asks for (NLP)
+        const nlpRes = await jobsAPI.analyseJD(jdId, method)
+        setJdInfo(nlpRes.data)
+        payload = { jd_id: jdId, matching_method: method }
       }
 
       // Run assessment
@@ -129,6 +141,27 @@ export default function JobAnalysis() {
             </div>
           )}
 
+          {/* Matching method */}
+          <div style={{ marginTop: '18px' }}>
+            <div style={{ fontSize: '12px', fontWeight: '600', color: '#4a5168', marginBottom: '6px' }}>
+              Matching Method
+            </div>
+            <div role="radiogroup" aria-label="Matching method" style={{ display: 'flex', gap: '6px' }}>
+              {METHODS.map(m => (
+                <button key={m.id} type="button" role="radio" aria-checked={method === m.id}
+                  onClick={() => setMethod(m.id)} title={m.hint} style={{
+                    flex: 1, padding: '7px 6px', borderRadius: '8px', cursor: 'pointer',
+                    border: `1.5px solid ${method === m.id ? '#2d5be3' : '#e4e6ef'}`,
+                    background: method === m.id ? '#eef2fd' : '#f5f6fa',
+                    color: method === m.id ? '#2d5be3' : '#4a5168', fontSize: '12px', fontWeight: '600'
+                  }}>{m.label}</button>
+              ))}
+            </div>
+            <div style={{ fontSize: '11px', color: '#8b92a8', marginTop: '4px' }}>
+              {METHODS.find(m => m.id === method).hint}
+            </div>
+          </div>
+
           {error && (
             <div style={{ background: '#fee2e2', color: '#dc2626', padding: '10px', borderRadius: '8px', fontSize: '13px', marginTop: '12px' }}>
               {error}
@@ -189,6 +222,17 @@ export default function JobAnalysis() {
                 </div>
               </div>
 
+              {/* How the result was produced */}
+              <div style={{ fontSize: '12px', color: '#4a5168', marginBottom: '10px' }}>
+                Matching method: <b style={{ textTransform: 'capitalize' }}>{result.matching_method}</b>
+                {jdInfo && <> · {jdInfo.skill_count} skills found in this job description</>}
+              </div>
+              {(result.matching_note || jdInfo?.note) && (
+                <div style={{ background: '#fef3c7', color: '#92400e', padding: '8px 10px', borderRadius: '8px', fontSize: '12px', marginBottom: '12px' }}>
+                  {result.matching_note || jdInfo.note}
+                </div>
+              )}
+
               {/* Skill Results */}
               <div style={{ maxHeight: '320px', overflowY: 'auto' }}>
                 {result.match_results.map((mr, i) => (
@@ -196,10 +240,15 @@ export default function JobAnalysis() {
                     display: 'flex', justifyContent: 'space-between', alignItems: 'center',
                     padding: '10px 0', borderBottom: i < result.match_results.length-1 ? '1px solid #e4e6ef' : 'none'
                   }}>
-                    <div style={{ fontSize: '13px', fontWeight: '500', color: '#1a1f2e' }}>{mr.skill_name}</div>
+                    <div style={{ minWidth: 0, paddingRight: '10px' }}>
+                      <div style={{ fontSize: '13px', fontWeight: '500', color: '#1a1f2e' }}>{mr.skill_name}</div>
+                      {mr.reason && (
+                        <div style={{ fontSize: '11px', color: '#8b92a8', marginTop: '2px' }}>{mr.reason}</div>
+                      )}
+                    </div>
                     <span style={{
                       padding: '3px 10px', borderRadius: '20px', fontSize: '11px', fontWeight: '600',
-                      background: statusBg[mr.match_status],
+                      flexShrink: 0, background: statusBg[mr.match_status],
                       color: statusColor[mr.match_status]
                     }}>
                       {mr.match_status === 'strong' ? '✅ Strong' : mr.match_status === 'developing' ? '◆ Developing' : '✖ Gap'}
