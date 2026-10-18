@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { assessAPI, progressAPI } from '../api/client'
+import { label } from '../utils/labels'
 
 export default function Recommendations() {
   const location = useLocation()
@@ -139,9 +140,6 @@ export default function Recommendations() {
           }}>
             ✅ Completed
           </span>
-          {progressMap[rid]?.skill_added && (
-            <span style={{ fontSize: '11px', color: '#16a34a' }}>· Skill added</span>
-          )}
         </div>
       )
     }
@@ -392,7 +390,7 @@ export default function Recommendations() {
                       background: typeColor[r.resource_type]?.bg || '#f5f6fa',
                       color: typeColor[r.resource_type]?.color || '#4a5168',
                     }}>
-                      {r.resource_type}
+                      {label(r.resource_type)}
                     </span>
                     {r.provider && (
                       <span style={{ fontSize: '11px', color: '#8b92a8' }}>📍 {r.provider}</span>

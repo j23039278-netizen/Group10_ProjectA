@@ -4,14 +4,17 @@ Handles student profile CRUD, skills, projects, certifications
 Author: Soh Way Miin (Carl)
 """
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, File, HTTPException, Request, Response, UploadFile
 from sqlalchemy.orm import Session
 from sqlalchemy import text
 from pydantic import BaseModel, Field
 from typing import Literal, Optional, List
 from datetime import date
+from urllib.parse import quote
 from uuid import UUID
 
+import audit
+import evidence
 from database import get_db
 from routers.auth import get_current_user
 
@@ -78,6 +81,36 @@ def sync_experience_counts(db, profile_id):
     )
 
 
+def refresh_profile_complete(db, user_id):
+    """Set is_complete from the profile itself: the main academic fields and a target
+    role are filled in, and at least one skill is listed. Advisors count complete
+    profiles on their dashboard. GPA and graduation date stay optional.
+    """
+    db.execute(
+        text("""
+            UPDATE student_profiles sp SET is_complete = (
+                COALESCE(TRIM(sp.programme), '')   <> ''
+                AND COALESCE(TRIM(sp.university), '') <> ''
+                AND sp.year_of_study IS NOT NULL
+                AND COALESCE(TRIM(sp.target_role), '') <> ''
+                AND EXISTS (SELECT 1 FROM student_skills ss WHERE ss.profile_id = sp.profile_id)
+            )
+            WHERE sp.user_id = :uid
+        """),
+        {"uid": str(user_id)}
+    )
+
+
+def get_profile_id(db, current_user, missing="Profile not found"):
+    profile = db.execute(
+        text("SELECT profile_id FROM student_profiles WHERE user_id = :uid"),
+        {"uid": str(current_user.user_id)}
+    ).fetchone()
+    if not profile:
+        raise HTTPException(status_code=404, detail=missing)
+    return profile.profile_id
+
+
 # ── Profile Endpoints ─────────────────────────────────────────
 @router.get("/profile")
 def get_my_profile(
@@ -132,6 +165,7 @@ def create_profile(
             "interests": req.career_interests
         }
     )
+    refresh_profile_complete(db, current_user.user_id)
     db.commit()
     return {"message": "Profile created successfully"}
 
@@ -166,6 +200,7 @@ def update_profile(
             "interests": req.career_interests
         }
     )
+    refresh_profile_complete(db, current_user.user_id)
     db.commit()
     return {"message": "Profile updated successfully"}
 
@@ -241,6 +276,7 @@ def add_skill(
             "enotes": req.evidence_notes
         }
     )
+    refresh_profile_complete(db, current_user.user_id)
     db.commit()
     return {"message": "Skill added successfully"}
 
@@ -266,6 +302,7 @@ def remove_skill(
         """),
         {"pid": str(profile.profile_id), "sid": skill_id}
     )
+    refresh_profile_complete(db, current_user.user_id)
     db.commit()
     return {"message": "Skill removed"}
 
@@ -318,7 +355,7 @@ def get_my_projects(
         {"pid": str(profile.profile_id)}
     ).fetchall()
 
-    return [dict(p._mapping) for p in projects]
+    return evidence.attach_files(db, [dict(p._mapping) for p in projects], "project_id")
 
 
 @router.post("/projects", status_code=201)
@@ -335,11 +372,13 @@ def add_project(
     if not profile:
         raise HTTPException(status_code=404, detail="Create your profile first")
 
-    db.execute(
+    # The id lets the page attach evidence files right after creating the project
+    row = db.execute(
         text("""
             INSERT INTO student_projects
                 (profile_id, project_title, description, technologies, project_type, year_completed)
             VALUES (:pid, :title, :desc, :tech, :ptype, :year)
+            RETURNING project_id
         """),
         {
             "pid": str(profile.profile_id),
@@ -349,10 +388,57 @@ def add_project(
             "ptype": req.project_type,
             "year": req.year_completed
         }
-    )
+    ).fetchone()
     sync_experience_counts(db, profile.profile_id)
     db.commit()
-    return {"message": "Project added successfully"}
+    return {"message": "Project added successfully", "project_id": str(row.project_id)}
+
+
+@router.put("/projects/{project_id}")
+def update_project(
+    project_id: UUID,
+    req: ProjectAdd,
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    profile_id = get_profile_id(db, current_user)
+    updated = db.execute(
+        text("""
+            UPDATE student_projects SET
+                project_title = :title, description = :desc, technologies = :tech,
+                project_type = :ptype, year_completed = :year
+            WHERE project_id = :proj AND profile_id = :pid
+            RETURNING project_id
+        """),
+        {
+            "proj": str(project_id), "pid": str(profile_id),
+            "title": req.project_title, "desc": req.description, "tech": req.technologies,
+            "ptype": req.project_type, "year": req.year_completed
+        }
+    ).fetchone()
+    if not updated:
+        raise HTTPException(status_code=404, detail="Project not found")
+    sync_experience_counts(db, profile_id)
+    db.commit()
+    return {"message": "Project updated"}
+
+
+@router.delete("/projects/{project_id}")
+def delete_project(
+    project_id: UUID,
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    profile_id = get_profile_id(db, current_user)
+    deleted = db.execute(
+        text("DELETE FROM student_projects WHERE project_id = :proj AND profile_id = :pid RETURNING project_id"),
+        {"proj": str(project_id), "pid": str(profile_id)}
+    ).fetchone()
+    if not deleted:
+        raise HTTPException(status_code=404, detail="Project not found")
+    sync_experience_counts(db, profile_id)
+    db.commit()
+    return {"message": "Project deleted"}
 
 
 # ── Certifications Endpoints ──────────────────────────────────
@@ -374,7 +460,7 @@ def get_my_certifications(
         {"pid": str(profile.profile_id)}
     ).fetchall()
 
-    return [dict(c._mapping) for c in certs]
+    return evidence.attach_files(db, [dict(c._mapping) for c in certs], "cert_id")
 
 
 @router.post("/certifications", status_code=201)
@@ -391,11 +477,12 @@ def add_certification(
     if not profile:
         raise HTTPException(status_code=404, detail="Create your profile first")
 
-    db.execute(
+    row = db.execute(
         text("""
             INSERT INTO student_certifications
                 (profile_id, cert_name, issuer, issue_date, expiry_date, credential_url)
             VALUES (:pid, :name, :issuer, :idate, :edate, :url)
+            RETURNING cert_id
         """),
         {
             "pid": str(profile.profile_id),
@@ -405,7 +492,182 @@ def add_certification(
             "edate": req.expiry_date,
             "url": req.credential_url
         }
-    )
+    ).fetchone()
     sync_experience_counts(db, profile.profile_id)
     db.commit()
-    return {"message": "Certification added successfully"}
+    return {"message": "Certification added successfully", "cert_id": str(row.cert_id)}
+
+
+@router.put("/certifications/{cert_id}")
+def update_certification(
+    cert_id: UUID,
+    req: CertificationAdd,
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    profile_id = get_profile_id(db, current_user)
+    updated = db.execute(
+        text("""
+            UPDATE student_certifications SET
+                cert_name = :name, issuer = :issuer, issue_date = :idate,
+                expiry_date = :edate, credential_url = :url
+            WHERE cert_id = :cid AND profile_id = :pid
+            RETURNING cert_id
+        """),
+        {
+            "cid": str(cert_id), "pid": str(profile_id),
+            "name": req.cert_name, "issuer": req.issuer, "idate": req.issue_date,
+            "edate": req.expiry_date, "url": req.credential_url
+        }
+    ).fetchone()
+    if not updated:
+        raise HTTPException(status_code=404, detail="Certification not found")
+    db.commit()
+    return {"message": "Certification updated"}
+
+
+@router.delete("/certifications/{cert_id}")
+def delete_certification(
+    cert_id: UUID,
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    profile_id = get_profile_id(db, current_user)
+    deleted = db.execute(
+        text("DELETE FROM student_certifications WHERE cert_id = :cid AND profile_id = :pid RETURNING cert_id"),
+        {"cid": str(cert_id), "pid": str(profile_id)}
+    ).fetchone()
+    if not deleted:
+        raise HTTPException(status_code=404, detail="Certification not found")
+    sync_experience_counts(db, profile_id)
+    db.commit()
+    return {"message": "Certification deleted"}
+
+
+# ── Evidence files (photos / PDFs proving a project or certification) ──
+# Rules are in evidence.py. Students upload to and delete from their own records;
+# students, advisors and admins can download (students only their own files).
+EVIDENCE_PARENTS = {
+    "project": ("student_projects",       "project_id", "Project not found"),
+    "cert":    ("student_certifications", "cert_id",    "Certification not found"),
+}
+
+
+def save_evidence(db, current_user, kind, item_id, upload):
+    table, key, missing = EVIDENCE_PARENTS[kind]
+    profile_id = get_profile_id(db, current_user)
+    owned = db.execute(text(f"SELECT 1 FROM {table} WHERE {key} = :iid AND profile_id = :pid"),
+                       {"iid": str(item_id), "pid": str(profile_id)}).fetchone()
+    if not owned:
+        raise HTTPException(status_code=404, detail=missing)
+
+    count = db.execute(text(f"SELECT COUNT(*) FROM student_evidence_files WHERE {key} = :iid"),
+                       {"iid": str(item_id)}).scalar()
+    if count >= evidence.MAX_PER_ITEM:
+        raise HTTPException(status_code=400,
+                            detail=f"You can attach at most {evidence.MAX_PER_ITEM} files. Delete one first.")
+
+    data = upload.file.read(evidence.MAX_BYTES + 1)
+    if not data:
+        raise HTTPException(status_code=400, detail="The file is empty.")
+    if len(data) > evidence.MAX_BYTES:
+        raise HTTPException(status_code=413, detail="The file is larger than 5 MB.")
+    content_type = evidence.detect_type(data)
+    if not content_type:
+        raise HTTPException(status_code=400, detail="Only JPG, PNG or PDF files can be attached.")
+
+    row = db.execute(
+        text(f"""
+            INSERT INTO student_evidence_files (profile_id, {key}, file_name, content_type, size_bytes, data)
+            VALUES (:pid, :iid, :name, :ctype, :size, :data)
+            RETURNING {evidence.META_COLUMNS}
+        """),
+        {"pid": str(profile_id), "iid": str(item_id),
+         "name": evidence.clean_name(upload.filename, content_type),
+         "ctype": content_type, "size": len(data), "data": data}
+    ).fetchone()
+    db.commit()
+    return dict(row._mapping)
+
+
+@router.post("/projects/{project_id}/files", status_code=201)
+def upload_project_file(
+    project_id: UUID,
+    file: UploadFile = File(...),
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    return save_evidence(db, current_user, "project", project_id, file)
+
+
+@router.post("/certifications/{cert_id}/files", status_code=201)
+def upload_certification_file(
+    cert_id: UUID,
+    file: UploadFile = File(...),
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    return save_evidence(db, current_user, "cert", cert_id, file)
+
+
+def parse_file_id(file_id):
+    """Malformed ids are just "not found", like the other ID routes"""
+    try:
+        return str(UUID(file_id))
+    except ValueError:
+        raise HTTPException(status_code=404, detail="File not found")
+
+
+@router.get("/files/{file_id}")
+def download_file(
+    file_id: str,
+    request: Request,
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """The file itself. Students get only their own; advisors and admins any (audited)."""
+    row = db.execute(
+        text("""
+            SELECT f.file_name, f.content_type, f.data, f.profile_id, sp.user_id
+            FROM student_evidence_files f
+            JOIN student_profiles sp ON sp.profile_id = f.profile_id
+            WHERE f.file_id = :fid
+        """),
+        {"fid": parse_file_id(file_id)}
+    ).fetchone()
+    own = row is not None and str(row.user_id) == str(current_user.user_id)
+    staff = current_user.role in ("advisor", "admin")
+    if row is None or not (own or staff):
+        raise HTTPException(status_code=404, detail="File not found")
+    if not own:
+        audit.record(db, "advisor.view_file", user=current_user, request=request,
+                     target_type="evidence_file", target_id=file_id,
+                     details={"student_user_id": str(row.user_id)}, commit=True)
+
+    return Response(
+        content=bytes(row.data),
+        media_type=row.content_type,
+        headers={
+            # attachment + nosniff: the browser never renders it as a page from the API origin
+            "Content-Disposition": f"attachment; filename*=UTF-8''{quote(row.file_name)}",
+            "X-Content-Type-Options": "nosniff",
+            "Cache-Control": "private, no-store",
+        },
+    )
+
+
+@router.delete("/files/{file_id}")
+def delete_file(
+    file_id: str,
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    profile_id = get_profile_id(db, current_user, missing="File not found")
+    deleted = db.execute(
+        text("DELETE FROM student_evidence_files WHERE file_id = :fid AND profile_id = :pid RETURNING file_id"),
+        {"fid": parse_file_id(file_id), "pid": str(profile_id)}
+    ).fetchone()
+    if not deleted:
+        raise HTTPException(status_code=404, detail="File not found")
+    db.commit()
+    return {"message": "File deleted"}

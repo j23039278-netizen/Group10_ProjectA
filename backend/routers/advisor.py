@@ -4,11 +4,14 @@ Handles cohort overview, skill gap reports, student list
 Author: Soh Way Miin (Carl)
 """
 
+from uuid import UUID
+
 from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.orm import Session
 from sqlalchemy import text
 
 import audit
+import evidence
 from database import get_db
 from routers.auth import get_current_user
 
@@ -38,9 +41,13 @@ def get_cohort_overview(
         text("SELECT COUNT(*) FROM users WHERE role = 'student' AND is_active = TRUE")
     ).scalar()
 
-    # Profiles completed
+    # Profiles completed (is_complete is kept up to date by routers/students.py)
     profiles_complete = db.execute(
-        text("SELECT COUNT(*) FROM student_profiles")
+        text("""
+            SELECT COUNT(*) FROM student_profiles sp
+            JOIN users u ON u.user_id = sp.user_id
+            WHERE sp.is_complete AND u.role = 'student' AND u.is_active = TRUE
+        """)
     ).scalar()
 
     # Average readiness score
@@ -150,15 +157,21 @@ def get_student_detail(
     """Full employability profile for one student"""
     require_advisor(current_user)
 
+    # A malformed id is just "not found", the same as the other ID routes
+    try:
+        user_id = UUID(user_id)
+    except ValueError:
+        raise HTTPException(status_code=404, detail="Student not found")
+
     # Basic info
     student = db.execute(
         text("""
             SELECT u.full_name, u.email, sp.*
             FROM users u
             JOIN student_profiles sp ON sp.user_id = u.user_id
-            WHERE u.user_id = :uid
+            WHERE u.user_id = CAST(:uid AS uuid) AND u.role = 'student'
         """),
-        {"uid": user_id}
+        {"uid": str(user_id)}
     ).fetchone()
 
     if not student:
@@ -195,7 +208,7 @@ def get_student_detail(
     if assessment:
         gaps = db.execute(
             text("""
-                SELECT sl.skill_name, sl.category, smr.match_status
+                SELECT sl.skill_name, sl.category, smr.match_status, smr.reason
                 FROM skill_match_results smr
                 JOIN skills_library sl ON sl.skill_id = smr.skill_id
                 WHERE smr.assessment_id = :aid
@@ -204,11 +217,72 @@ def get_student_detail(
             {"aid": str(assessment.assessment_id)}
         ).fetchall()
 
+    pid = {"pid": str(student.profile_id)}
+
+    # Every assessment, oldest first, for the readiness-over-time chart
+    history = db.execute(
+        text("""
+            SELECT a.assessment_id, a.readiness_score, a.matching_method,
+                   a.created_at, jr.role_name
+            FROM assessments a
+            LEFT JOIN job_roles jr ON jr.role_id = a.role_id
+            WHERE a.profile_id = :pid
+            ORDER BY a.created_at
+        """),
+        pid
+    ).fetchall()
+
+    role_name = None
+    if assessment and assessment.role_id:
+        role_name = db.execute(text("SELECT role_name FROM job_roles WHERE role_id = :rid"),
+                               {"rid": str(assessment.role_id)}).scalar()
+
+    projects = db.execute(
+        text("""
+            SELECT project_id, project_title, description, technologies, project_type, year_completed
+            FROM student_projects WHERE profile_id = :pid
+            ORDER BY year_completed DESC NULLS LAST
+        """),
+        pid
+    ).fetchall()
+
+    certifications = db.execute(
+        text("""
+            SELECT cert_id, cert_name, issuer, issue_date, expiry_date
+            FROM student_certifications WHERE profile_id = :pid
+            ORDER BY issue_date DESC NULLS LAST
+        """),
+        pid
+    ).fetchall()
+
+    # Recommended activities the student started or finished
+    progress = db.execute(
+        text("""
+            SELECT rl.resource_title, rl.resource_type, sl.skill_name,
+                   srp.status, srp.started_at, srp.completed_at
+            FROM student_resource_progress srp
+            JOIN recommendations_library rl ON rl.resource_id = srp.resource_id
+            LEFT JOIN skills_library sl     ON sl.skill_id    = srp.skill_id
+            WHERE srp.profile_id = :pid
+            ORDER BY srp.updated_at DESC
+        """),
+        pid
+    ).fetchall()
+
+    latest = None
+    if assessment:
+        latest = dict(assessment._mapping)
+        latest["role_name"] = role_name
+
     return {
-        "student":    dict(student._mapping),
-        "assessment": dict(assessment._mapping) if assessment else None,
-        "skills":     [dict(s._mapping) for s in skills],
-        "skill_gaps": [dict(g._mapping) for g in gaps]
+        "student":        dict(student._mapping),
+        "assessment":     latest,
+        "skills":         [dict(s._mapping) for s in skills],
+        "skill_gaps":     [dict(g._mapping) for g in gaps],
+        "history":        [dict(h._mapping) for h in history],
+        "projects":       evidence.attach_files(db, [dict(p._mapping) for p in projects], "project_id"),
+        "certifications": evidence.attach_files(db, [dict(c._mapping) for c in certifications], "cert_id"),
+        "progress":       [dict(p._mapping) for p in progress],
     }
 
 

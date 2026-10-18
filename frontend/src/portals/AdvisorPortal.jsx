@@ -3,6 +3,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import PortalLayout from './PortalLayout'
 import AdvisorDashboard from '../pages/AdvisorDashboard'
+import AdvisorStudentDetail from '../pages/AdvisorStudentDetail'
 
 const NAV = [
   { path: '/', label: 'Cohort Overview', icon: '📊' },
@@ -13,6 +14,7 @@ export default function AdvisorPortal({ user, onLogout }) {
     <PortalLayout user={user} navTitle="Overview" navItems={NAV} onLogout={onLogout}>
       <Routes>
         <Route path="/" element={<AdvisorDashboard />} />
+        <Route path="/students/:userId" element={<AdvisorStudentDetail />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </PortalLayout>

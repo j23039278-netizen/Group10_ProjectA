@@ -17,5 +17,8 @@ export const adminAPI = {
   createRole:    (data)       => API.post('/admin/roles', data),
   updateRole:    (id, data)   => API.patch(`/admin/roles/${id}`, data),
   setRoleSkills: (id, skills) => API.put(`/admin/roles/${id}/skills`, skills),
+  resources:      ()          => API.get('/admin/resources'),
+  createResource: (data)      => API.post('/admin/resources', data),
+  updateResource: (id, data)  => API.patch(`/admin/resources/${id}`, data),
   auditLog:      (params)     => API.get('/admin/audit-log', { params }),
 };

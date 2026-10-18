@@ -54,10 +54,28 @@ export const studentAPI = {
   getSkillLibrary: (cat)  => API.get('/students/skills-library', { params: { category: cat } }),
   getProjects:     ()     => API.get('/students/projects'),
   addProject:      (data) => API.post('/students/projects', data),
+  updateProject:   (id, data) => API.put(`/students/projects/${id}`, data),
+  deleteProject:   (id)   => API.delete(`/students/projects/${id}`),
   getCerts:        ()     => API.get('/students/certifications'),
   addCert:         (data) => API.post('/students/certifications', data),
+  updateCert:      (id, data) => API.put(`/students/certifications/${id}`, data),
+  deleteCert:      (id)   => API.delete(`/students/certifications/${id}`),
 };
  
+// ── Evidence files (photos / PDFs on projects and certifications) ──
+// Downloads go through axios so the login token is sent; the page then shows the blob.
+const uploadFile = (url, file) => {
+  const form = new FormData();
+  form.append('file', file);
+  return API.post(url, form);
+};
+export const fileAPI = {
+  uploadToProject: (id, file) => uploadFile(`/students/projects/${id}/files`, file),
+  uploadToCert:    (id, file) => uploadFile(`/students/certifications/${id}/files`, file),
+  remove:          (fileId)   => API.delete(`/students/files/${fileId}`),
+  download:        (fileId)   => API.get(`/students/files/${fileId}`, { responseType: 'blob' }),
+};
+
 // ── Jobs ──────────────────────────────────────────────────────
 export const jobsAPI = {
   getRoles:    ()      => API.get('/jobs/roles'),
@@ -96,6 +114,10 @@ export const progressAPI = {
   markSkillAdded: (resourceId) =>
     API.patch(`/progress/${resourceId}/skill-added`),
  
+  // Give up an unfinished activity (it shows as not started again)
+  drop: (resourceId) =>
+    API.delete(`/progress/${resourceId}`),
+
   // Get all progress records for this student
   getMy: (status = null) =>
     API.get('/progress/my', { params: status ? { status } : {} }),

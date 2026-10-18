@@ -5,6 +5,7 @@
 // there (start_backend.bat re-applies the seeds), so they are only switched on/off here.
 import { useState, useEffect } from 'react'
 import { adminAPI } from '../api/admin'
+import { label as labelText } from '../utils/labels'
 import { C, card, th, td, input, label, btn, smallBtn, heading, errorText } from './admin/adminStyles'
 import { Modal, Alert, StatusPill, SourcePill } from './admin/AdminUi'
 
@@ -132,7 +133,7 @@ function RoleModal({ role, onClose, onSaved }) {
         <div style={{ marginBottom: '12px' }}>
           <label style={label} htmlFor="ro-level">Level</label>
           <select id="ro-level" style={input} value={form.industry_level} onChange={set('industry_level')}>
-            {LEVELS.map(l => <option key={l} value={l}>{l}</option>)}
+            {LEVELS.map(l => <option key={l} value={l}>{labelText(l)}</option>)}
           </select>
         </div>
         <div style={{ marginBottom: '18px' }}>
@@ -210,7 +211,7 @@ function RoleSkillsModal({ role, allSkills, onClose, onSaved }) {
                   <>
                     <select aria-label={`Importance of ${r.skill_name}`} style={{ ...select, padding: '5px 8px' }} value={r.importance}
                       onChange={e => setRows(list => list.map((x, j) => j === i ? { ...x, importance: e.target.value } : x))}>
-                      {IMPORTANCE.map(v => <option key={v} value={v}>{v}</option>)}
+                      {IMPORTANCE.map(v => <option key={v} value={v}>{labelText(v)}</option>)}
                     </select>
                     <button style={smallBtn('danger')} onClick={() => setRows(list => list.filter((_, j) => j !== i))}>Remove</button>
                   </>

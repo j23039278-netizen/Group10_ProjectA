@@ -148,4 +148,39 @@ CREATE INDEX IF NOT EXISTS idx_audit_log_user_id    ON audit_log(user_id);
 -- are added and edited in the Admin page
 ALTER TABLE job_roles ADD COLUMN IF NOT EXISTS source VARCHAR(10) NOT NULL DEFAULT 'seed';
 
+-- recommendations_library.source: same rule as job_roles. 'seed' resources come from
+-- seed_recommendations_library_final.sql; 'admin' resources are added and edited in
+-- the Admin page (Learning Resources)
+ALTER TABLE recommendations_library ADD COLUMN IF NOT EXISTS source VARCHAR(10) NOT NULL DEFAULT 'seed';
+
+-- student_profiles.is_complete: the backend now keeps it up to date (same rule as
+-- refresh_profile_complete in backend/routers/students.py). Profiles saved before that
+-- were left FALSE, so recompute them. Synthetic students keep their generated value.
+UPDATE student_profiles sp SET is_complete = (
+    COALESCE(TRIM(sp.programme), '')   <> ''
+    AND COALESCE(TRIM(sp.university), '') <> ''
+    AND sp.year_of_study IS NOT NULL
+    AND COALESCE(TRIM(sp.target_role), '') <> ''
+    AND EXISTS (SELECT 1 FROM student_skills ss WHERE ss.profile_id = sp.profile_id)
+)
+FROM users u
+WHERE u.user_id = sp.user_id AND u.email NOT LIKE '%@synthetic.example.com';
+
+-- Evidence files for projects and certifications (same definition as schema.sql)
+CREATE TABLE IF NOT EXISTS student_evidence_files (
+    file_id       UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    profile_id    UUID NOT NULL REFERENCES student_profiles(profile_id) ON DELETE CASCADE,
+    project_id    UUID REFERENCES student_projects(project_id) ON DELETE CASCADE,
+    cert_id       UUID REFERENCES student_certifications(cert_id) ON DELETE CASCADE,
+    file_name     VARCHAR(255) NOT NULL,
+    content_type  VARCHAR(50)  NOT NULL
+                  CHECK (content_type IN ('image/jpeg', 'image/png', 'application/pdf')),
+    size_bytes    INTEGER      NOT NULL CHECK (size_bytes BETWEEN 1 AND 5242880),
+    data          BYTEA        NOT NULL,
+    uploaded_at   TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT chk_evidence_one_parent CHECK ((project_id IS NULL) <> (cert_id IS NULL))
+);
+CREATE INDEX IF NOT EXISTS idx_evidence_project ON student_evidence_files(project_id);
+CREATE INDEX IF NOT EXISTS idx_evidence_cert    ON student_evidence_files(cert_id);
+
 COMMIT;

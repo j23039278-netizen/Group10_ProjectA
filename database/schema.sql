@@ -295,6 +295,8 @@ CREATE TABLE recommendations_library (
                     CHECK (difficulty IN ('beginner', 'intermediate', 'advanced')),
     description     TEXT,
     is_active       BOOLEAN      NOT NULL DEFAULT TRUE,
+    source          VARCHAR(10)  NOT NULL DEFAULT 'seed'        -- 'seed' (seed file) | 'admin' (added in the Admin page)
+                    CHECK (source IN ('seed', 'admin')),
     created_at      TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     -- seed_recommendations_library_final.sql relies on this for ON CONFLICT DO NOTHING
@@ -531,6 +533,29 @@ CREATE TABLE IF NOT EXISTS audit_log (
 CREATE INDEX IF NOT EXISTS idx_audit_log_created_at ON audit_log(created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_audit_log_action     ON audit_log(action);
 CREATE INDEX IF NOT EXISTS idx_audit_log_user_id    ON audit_log(user_id);
+
+-- ── Evidence files (FR-01, NFR-10) ────────────────────────────
+-- Photos / PDFs a student attaches to a project or certification as proof.
+-- Each file belongs to exactly one project OR one certification and is deleted
+-- with it. The bytes live in `data`; list queries must never select that column.
+-- Rules enforced by backend/routers/students.py: JPG, PNG or PDF only (checked
+-- from the file content), at most 5 MB each, at most 5 per project/certification.
+CREATE TABLE IF NOT EXISTS student_evidence_files (
+    file_id       UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    profile_id    UUID NOT NULL REFERENCES student_profiles(profile_id) ON DELETE CASCADE,
+    project_id    UUID REFERENCES student_projects(project_id) ON DELETE CASCADE,
+    cert_id       UUID REFERENCES student_certifications(cert_id) ON DELETE CASCADE,
+    file_name     VARCHAR(255) NOT NULL,
+    content_type  VARCHAR(50)  NOT NULL
+                  CHECK (content_type IN ('image/jpeg', 'image/png', 'application/pdf')),
+    size_bytes    INTEGER      NOT NULL CHECK (size_bytes BETWEEN 1 AND 5242880),
+    data          BYTEA        NOT NULL,
+    uploaded_at   TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT chk_evidence_one_parent CHECK ((project_id IS NULL) <> (cert_id IS NULL))
+);
+
+CREATE INDEX IF NOT EXISTS idx_evidence_project ON student_evidence_files(project_id);
+CREATE INDEX IF NOT EXISTS idx_evidence_cert    ON student_evidence_files(cert_id);
 
 -- ============================================================
 -- END OF SCHEMA

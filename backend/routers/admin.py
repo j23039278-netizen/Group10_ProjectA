@@ -1,8 +1,8 @@
 """
 SEAGAS — Admin Router
 - Users: create advisor/admin accounts, rename, activate/deactivate, reset passwords.
-- Skills library and job roles: list all; add new ones; edit the ones admins
-  added; activate/deactivate any.
+- Skills library, job roles and learning resources (recommendations library):
+  list all; add new ones; edit the ones admins added; activate/deactivate any.
 - Audit log: read and filter.
 
 Students register themselves through /api/auth/register; advisor and admin
@@ -12,7 +12,8 @@ Who owns the library data: the 138 skills and 6 roles that come from
 data/skills/skills_library.csv and the seed files are maintained there
 (start_backend.bat re-applies the seeds), so admins can only switch them on or
 off. Skills and roles that admins add (source = 'admin') are never touched by
-the seeds and can be edited here.
+the seeds and can be edited here. Learning resources follow the same rule with
+database/seed_recommendations_library_final.sql.
 """
 
 import re
@@ -34,8 +35,12 @@ STAFF_ROLES = ("advisor", "admin")
 CATEGORIES = Literal["Technical", "AI_Digital", "Analytical", "Soft"]
 LEVELS = Literal["entry", "junior", "mid", "senior"]
 IMPORTANCE = Literal["required", "preferred", "bonus"]
+RESOURCE_TYPES = Literal["course", "certification", "project", "workshop", "competition", "internship"]
+DIFFICULTIES = Literal["beginner", "intermediate", "advanced"]
 SEED_MANAGED = "This entry comes from the seed files (data/skills/skills_library.csv); " \
                "edit it there. Admins can only activate or deactivate it."
+RESOURCE_SEED_MANAGED = "This resource comes from database/seed_recommendations_library_final.sql; " \
+                        "edit it there. Admins can only activate or deactivate it."
 
 
 # ── Permission Check ──────────────────────────────────────────
@@ -93,6 +98,31 @@ class RoleUpdate(BaseModel):
 class RoleSkill(BaseModel):
     skill_id: UUID
     importance: IMPORTANCE = "required"
+
+
+class ResourceCreate(BaseModel):
+    skill_id: UUID
+    resource_title: str = Field(min_length=1, max_length=255)
+    resource_type: RESOURCE_TYPES = "course"
+    provider: Optional[str] = Field(None, max_length=255)
+    url: Optional[str] = Field(None, max_length=2000)
+    duration_hours: Optional[int] = Field(None, ge=0, le=10000)
+    cost: Optional[str] = Field("Free", max_length=50)
+    difficulty: DIFFICULTIES = "beginner"
+    description: Optional[str] = Field(None, max_length=2000)
+
+
+class ResourceUpdate(BaseModel):
+    skill_id: Optional[UUID] = None
+    resource_title: Optional[str] = Field(None, min_length=1, max_length=255)
+    resource_type: Optional[RESOURCE_TYPES] = None
+    provider: Optional[str] = Field(None, max_length=255)
+    url: Optional[str] = Field(None, max_length=2000)
+    duration_hours: Optional[int] = Field(None, ge=0, le=10000)
+    cost: Optional[str] = Field(None, max_length=50)
+    difficulty: Optional[DIFFICULTIES] = None
+    description: Optional[str] = Field(None, max_length=2000)
+    is_active: Optional[bool] = None
 
 
 USER_COLUMNS = "user_id, email, full_name, role, is_active, created_at"
@@ -477,6 +507,127 @@ def set_role_skills(role_id: UUID, skills: List[RoleSkill], request: Request,
                           "required": sum(s.importance == "required" for s in skills)})
     db.commit()
     return get_role_skills(role_id, current_user, db)
+
+
+# ── Learning resources (recommendations library) ──────────────
+RESOURCE_COLUMNS = """rl.resource_id, rl.skill_id, sl.skill_name, sl.category, rl.resource_title,
+                      rl.resource_type, rl.provider, rl.url, rl.duration_hours, rl.cost,
+                      rl.difficulty, rl.description, rl.is_active, rl.source"""
+
+
+def get_resource_row(db, resource_id):
+    row = db.execute(text(f"""
+        SELECT {RESOURCE_COLUMNS}
+        FROM recommendations_library rl
+        JOIN skills_library sl ON sl.skill_id = rl.skill_id
+        WHERE rl.resource_id = :rid
+    """), {"rid": str(resource_id)}).fetchone()
+    if not row:
+        raise HTTPException(status_code=404, detail="Resource not found")
+    return row
+
+
+def check_resource_unique(db, skill_id, title, resource_id=None):
+    """uq_resource_skill: one title per skill"""
+    clash = db.execute(text("""
+        SELECT 1 FROM recommendations_library
+        WHERE skill_id = :sid AND lower(resource_title) = lower(:t)
+          AND resource_id <> COALESCE(CAST(:rid AS uuid), '00000000-0000-0000-0000-000000000000')
+    """), {"sid": str(skill_id), "t": title, "rid": str(resource_id) if resource_id else None}).fetchone()
+    if clash:
+        raise HTTPException(status_code=400, detail="This skill already has a resource with that title")
+
+
+def check_skill_exists(db, skill_id):
+    if not db.execute(text("SELECT 1 FROM skills_library WHERE skill_id = :sid"),
+                      {"sid": str(skill_id)}).fetchone():
+        raise HTTPException(status_code=400, detail="Unknown skill")
+
+
+@router.get("/resources")
+def list_resources(current_user=Depends(get_current_user), db: Session = Depends(get_db)):
+    """Every learning resource, active or not, with how many students started / finished it"""
+    require_admin(current_user)
+    rows = db.execute(text(f"""
+        SELECT {RESOURCE_COLUMNS},
+               COUNT(srp.progress_id)                                         AS student_count,
+               COUNT(srp.progress_id) FILTER (WHERE srp.status = 'completed') AS completed_count
+        FROM recommendations_library rl
+        JOIN skills_library sl ON sl.skill_id = rl.skill_id
+        LEFT JOIN student_resource_progress srp ON srp.resource_id = rl.resource_id
+        GROUP BY rl.resource_id, sl.skill_id
+        ORDER BY sl.skill_name, rl.resource_title
+    """)).fetchall()
+    return [dict(r._mapping) for r in rows]
+
+
+@router.post("/resources", status_code=201)
+def create_resource(req: ResourceCreate, request: Request,
+                    current_user=Depends(get_current_user), db: Session = Depends(get_db)):
+    """Add a learning resource for a skill (source = 'admin'; the seed file never changes it)"""
+    require_admin(current_user)
+    title = req.resource_title.strip()
+    if not title:
+        raise HTTPException(status_code=400, detail="Title is required.")
+    check_skill_exists(db, req.skill_id)
+    check_resource_unique(db, req.skill_id, title)
+    data = req.model_dump()
+    data.update(resource_title=title, skill_id=str(req.skill_id),
+                provider=(req.provider or "").strip() or None,
+                url=(req.url or "").strip() or None,
+                cost=(req.cost or "").strip() or "Free")
+    row = db.execute(
+        text("""
+            INSERT INTO recommendations_library
+                (skill_id, resource_title, resource_type, provider, url, duration_hours,
+                 cost, difficulty, description, source)
+            VALUES (:skill_id, :resource_title, :resource_type, :provider, :url, :duration_hours,
+                    :cost, :difficulty, :description, 'admin')
+            RETURNING resource_id
+        """),
+        data
+    ).fetchone()
+    audit.record(db, "admin.resource_create", user=current_user, request=request,
+                 target_type="resource", target_id=row.resource_id,
+                 details={"resource_title": title, "resource_type": req.resource_type})
+    db.commit()
+    return dict(get_resource_row(db, row.resource_id)._mapping)
+
+
+@router.patch("/resources/{resource_id}")
+def update_resource(resource_id: UUID, req: ResourceUpdate, request: Request,
+                    current_user=Depends(get_current_user), db: Session = Depends(get_db)):
+    """Activate / deactivate any resource; edit the details of admin-added resources.
+    Inactive resources are no longer recommended (recommendation/engine.py filters on is_active)."""
+    require_admin(current_user)
+    res = get_resource_row(db, resource_id)
+    changes = req.model_dump(exclude_unset=True)
+    content = {k: v for k, v in changes.items() if k != "is_active"}
+    if content and res.source != "admin":
+        raise HTTPException(status_code=400, detail=RESOURCE_SEED_MANAGED)
+    if not changes:
+        raise HTTPException(status_code=400, detail="Nothing to update.")
+    for field in ("resource_title", "resource_type", "difficulty", "is_active"):
+        if field in changes and changes[field] is None:
+            raise HTTPException(status_code=400, detail=f"{field.replace('_', ' ')} cannot be empty.")
+    if "resource_title" in changes:
+        changes["resource_title"] = changes["resource_title"].strip()
+    if "skill_id" in changes:
+        if changes["skill_id"] is None:
+            raise HTTPException(status_code=400, detail="A resource must belong to a skill.")
+        check_skill_exists(db, changes["skill_id"])
+        changes["skill_id"] = str(changes["skill_id"])
+    if "skill_id" in changes or "resource_title" in changes:
+        check_resource_unique(db, changes.get("skill_id", res.skill_id),
+                              changes.get("resource_title", res.resource_title), resource_id)
+
+    sets = [f"{k} = :{k}" for k in changes]
+    db.execute(text(f"UPDATE recommendations_library SET {', '.join(sets)} WHERE resource_id = :rid"),
+               {**changes, "rid": str(resource_id)})
+    audit.record(db, "admin.resource_update", user=current_user, request=request,
+                 target_type="resource", target_id=resource_id, details=changes)
+    db.commit()
+    return dict(get_resource_row(db, resource_id)._mapping)
 
 
 # ── Audit log ─────────────────────────────────────────────────

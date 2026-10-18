@@ -7,6 +7,7 @@ import Profile from '../pages/Profile'
 import JobAnalysis from '../pages/JobAnalysis'
 import SkillGap from '../pages/SkillGap'
 import Recommendations from '../pages/Recommendations'
+import ProgressTracking from '../pages/ProgressTracking'
 
 const NAV = [
   { path: '/',                label: 'Dashboard',       icon: '📊' },
@@ -14,6 +15,7 @@ const NAV = [
   { path: '/job-analysis',    label: 'Job Analysis',    icon: '📄' },
   { path: '/skill-gap',       label: 'Skill Gap',       icon: '🎯' },
   { path: '/recommendations', label: 'Recommendations', icon: '💡' },
+  { path: '/progress',        label: 'Progress',        icon: '📈' },
 ]
 
 export default function StudentPortal({ user, onLogout }) {
@@ -25,6 +27,7 @@ export default function StudentPortal({ user, onLogout }) {
         <Route path="/job-analysis"    element={<JobAnalysis />} />
         <Route path="/skill-gap"       element={<SkillGap />} />
         <Route path="/recommendations" element={<Recommendations />} />
+        <Route path="/progress"        element={<ProgressTracking />} />
         <Route path="*"                element={<Navigate to="/" />} />
       </Routes>
     </PortalLayout>

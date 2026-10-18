@@ -10,7 +10,8 @@ from sqlalchemy.orm import Session
 from sqlalchemy import text
 from pydantic import BaseModel
 from typing import Optional
- 
+from uuid import UUID
+
 from database import get_db
 from routers.auth import get_current_user
  
@@ -225,6 +226,42 @@ def mark_skill_added(
  
  
 # ══════════════════════════════════════════════════════════════
+# DELETE /api/progress/{resource_id}
+# Student gives up an activity they started
+# ══════════════════════════════════════════════════════════════
+@router.delete("/{resource_id}")
+def drop_resource(
+    resource_id: str,
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Remove an unfinished activity from the student's progress, so it shows as
+    "not started" again and can be restarted later. Completed activities stay:
+    they are part of the student's development record.
+    """
+    profile_id = get_profile(current_user, db)
+    try:
+        resource_id = str(UUID(resource_id))
+    except ValueError:
+        raise HTTPException(status_code=404, detail="Activity not found")
+
+    dropped = db.execute(
+        text("""
+            DELETE FROM student_resource_progress
+            WHERE profile_id = :pid AND resource_id = :rid AND status <> 'completed'
+            RETURNING progress_id
+        """),
+        {"pid": profile_id, "rid": resource_id}
+    ).fetchone()
+    if not dropped:
+        raise HTTPException(status_code=404,
+                            detail="No unfinished activity found. Completed activities cannot be removed.")
+    db.commit()
+    return {"message": "Activity removed", "resource_id": resource_id}
+
+
+# ══════════════════════════════════════════════════════════════
 # GET /api/progress/my
 # Get all progress records for this student
 # ══════════════════════════════════════════════════════════════
@@ -244,6 +281,7 @@ def get_my_progress(
         SELECT
             srp.progress_id,
             srp.resource_id,
+            srp.assessment_id,
             srp.status,
             srp.started_at,
             srp.completed_at,

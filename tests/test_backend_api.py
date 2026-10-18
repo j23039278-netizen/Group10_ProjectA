@@ -179,7 +179,8 @@ class TestAuth:
 
 # ── Role-based access ────────────────────────────────────────
 class TestRoles:
-    @pytest.mark.parametrize("path", ["/api/admin/users", "/api/admin/audit-log", "/api/admin/skills"])
+    @pytest.mark.parametrize("path", ["/api/admin/users", "/api/admin/audit-log", "/api/admin/skills",
+                                      "/api/admin/resources"])
     def test_admin_api_needs_admin(self, env, alice, advisor, path):
         assert env["client"].get(path, headers=alice).status_code == 403
         assert env["client"].get(path, headers=advisor).status_code == 403
@@ -334,6 +335,186 @@ class TestAdmin:
         assert leaked == 0
         page = c.get("/api/admin/audit-log?action=auth.login_failed", headers=admin).json()
         assert page["total"] >= 1 and all(e["action"] == "auth.login_failed" for e in page["entries"])
+
+
+    def test_seed_resource_locked_admin_resource_editable(self, env, admin):
+        c = env["client"]
+        listed = c.get("/api/admin/resources", headers=admin)
+        assert listed.status_code == 200 and len(listed.json()) > 0
+        seed = next(r for r in listed.json() if r["source"] == "seed")
+        assert c.patch(f"/api/admin/resources/{seed['resource_id']}", json={"cost": "$1"}, headers=admin).status_code == 400
+
+        tableau = env["conn"].execute("SELECT skill_id::text FROM skills_library WHERE skill_name='Tableau'").fetchone()[0]
+        body = {"skill_id": tableau, "resource_title": "Tableau Dashboards 101", "resource_type": "course",
+                "provider": "Tableau", "url": "https://www.tableau.com/learn", "duration_hours": 6}
+        new = c.post("/api/admin/resources", headers=admin, json=body)
+        assert new.status_code == 201 and new.json()["source"] == "admin" and new.json()["skill_name"] == "Tableau"
+        assert c.post("/api/admin/resources", headers=admin, json=body).status_code == 400   # same title, same skill
+        rid = new.json()["resource_id"]
+        upd = c.patch(f"/api/admin/resources/{rid}", headers=admin, json={"difficulty": "intermediate", "cost": "$20"})
+        assert upd.status_code == 200 and upd.json()["difficulty"] == "intermediate" and upd.json()["cost"] == "$20"
+        assert c.patch(f"/api/admin/resources/{rid}", headers=admin, json={"resource_type": None}).status_code == 400
+
+        # Deactivating any resource (seed ones too) stops it being recommended
+        off = c.patch(f"/api/admin/resources/{seed['resource_id']}", json={"is_active": False}, headers=admin)
+        assert off.status_code == 200 and off.json()["is_active"] is False
+        assert c.patch(f"/api/admin/resources/{seed['resource_id']}", json={"is_active": True}, headers=admin).status_code == 200
+        actions = {r[0] for r in env["conn"].execute("SELECT DISTINCT action FROM audit_log").fetchall()}
+        assert {"admin.resource_create", "admin.resource_update"} <= actions
+
+
+# ── Advisor ──────────────────────────────────────────────────
+class TestAdvisor:
+    def test_profiles_complete_counts_complete_profiles_only(self, env, advisor, bob):
+        c = env["client"]
+        expected = lambda: env["conn"].execute(
+            "SELECT count(*) FROM student_profiles sp JOIN users u USING (user_id) "
+            "WHERE sp.is_complete AND u.role='student' AND u.is_active").fetchone()[0]
+        complete = lambda: env["conn"].execute("SELECT is_complete FROM student_profiles WHERE profile_id = %s",
+                                               (env["ids"]["bob"][1],)).fetchone()[0]
+        # Bob has a skill but only a target role: not complete until the academic fields are filled in
+        assert complete() is False
+        before = c.get("/api/advisor/cohort/overview", headers=advisor).json()["profiles_complete"]
+        assert before == expected()
+        full = {"programme": "BCS", "university": "Swinburne", "year_of_study": 2, "target_role": "Data Analyst"}
+        assert c.put("/api/students/profile", json=full, headers=bob).status_code == 200
+        assert complete() is True
+        assert c.get("/api/advisor/cohort/overview", headers=advisor).json()["profiles_complete"] == before + 1
+        # Without any skill the profile is incomplete again
+        java = env["conn"].execute("SELECT skill_id::text FROM skills_library WHERE skill_name='Java'").fetchone()[0]
+        assert c.delete(f"/api/students/skills/{java}", headers=bob).status_code == 200
+        assert complete() is False
+        assert c.post("/api/students/skills", json={"skill_id": java}, headers=bob).status_code == 201
+        assert complete() is True
+
+    def test_student_detail(self, env, advisor, alice):
+        c = env["client"]
+        run(env, alice, role_id=env["da"])
+        r = c.get(f"/api/advisor/students/{env['ids']['alice'][0]}", headers=advisor)
+        assert r.status_code == 200
+        d = r.json()
+        assert {"student", "assessment", "skills", "skill_gaps", "history", "projects",
+                "certifications", "progress"} <= d.keys()
+        assert d["assessment"]["role_name"] == "Data Analyst" and len(d["history"]) >= 1
+        assert d["history"] == sorted(d["history"], key=lambda h: h["created_at"])   # oldest first, for the chart
+        assert any(g.get("reason") for g in d["skill_gaps"])
+        # Only students have a record here; malformed ids are 404 like the other ID routes
+        assert c.get(f"/api/advisor/students/{env['ids']['advisor']}", headers=advisor).status_code == 404
+        assert c.get("/api/advisor/students/not-a-uuid", headers=advisor).status_code == 404
+        assert c.get(f"/api/advisor/students/{env['ids']['alice'][0]}", headers=alice).status_code == 403
+
+
+# ── Student projects and certifications: edit and delete ─────
+class TestProfileRecords:
+    def test_project_edit_delete_and_ownership(self, env, bob, alice):
+        c = env["client"]
+        assert c.post("/api/students/projects", headers=bob, json={"project_title": "Bot", "project_type": "personal"}).status_code == 201
+        pid = next(p for p in c.get("/api/students/projects", headers=bob).json() if p["project_title"] == "Bot")["project_id"]
+        upd = {"project_title": "Chat Bot", "technologies": ["Python"], "project_type": "internship", "year_completed": 2026}
+        assert c.put(f"/api/students/projects/{pid}", headers=alice, json=upd).status_code == 404   # not hers
+        assert c.delete(f"/api/students/projects/{pid}", headers=alice).status_code == 404
+        assert c.put(f"/api/students/projects/{pid}", headers=bob, json={"project_title": ""}).status_code == 422
+        assert c.put(f"/api/students/projects/{pid}", headers=bob, json=upd).status_code == 200
+        row = next(p for p in c.get("/api/students/projects", headers=bob).json() if p["project_id"] == pid)
+        assert row["project_title"] == "Chat Bot" and row["technologies"] == ["Python"]
+        counts = lambda: env["conn"].execute("SELECT project_count, internship_count FROM student_profiles "
+                                             "WHERE profile_id = %s", (env["ids"]["bob"][1],)).fetchone()
+        assert counts()[0] >= 1 and counts()[1] >= 1   # internship-type project counts as an internship
+        n = counts()[0]
+        assert c.delete(f"/api/students/projects/{pid}", headers=bob).status_code == 200
+        assert counts()[0] == n - 1
+        assert c.delete(f"/api/students/projects/{pid}", headers=bob).status_code == 404
+
+    def test_certification_edit_delete_and_ownership(self, env, bob, alice):
+        c = env["client"]
+        assert c.post("/api/students/certifications", headers=bob, json={"cert_name": "AZ-900"}).status_code == 201
+        cid = next(x for x in c.get("/api/students/certifications", headers=bob).json() if x["cert_name"] == "AZ-900")["cert_id"]
+        upd = {"cert_name": "AZ-900 Azure Fundamentals", "issuer": "Microsoft", "issue_date": "2026-05-01"}
+        assert c.put(f"/api/students/certifications/{cid}", headers=alice, json=upd).status_code == 404
+        assert c.put(f"/api/students/certifications/{cid}", headers=bob, json=upd).status_code == 200
+        row = next(x for x in c.get("/api/students/certifications", headers=bob).json() if x["cert_id"] == cid)
+        assert row["issuer"] == "Microsoft" and row["issue_date"] == "2026-05-01"
+        certs = lambda: env["conn"].execute("SELECT certification_count FROM student_profiles WHERE profile_id = %s",
+                                            (env["ids"]["bob"][1],)).fetchone()[0]
+        n = certs()
+        assert c.delete(f"/api/students/certifications/{cid}", headers=alice).status_code == 404
+        assert c.delete(f"/api/students/certifications/{cid}", headers=bob).status_code == 200
+        assert certs() == n - 1
+
+
+    def test_evidence_files(self, env, alice, bob, advisor):
+        c = env["client"]
+        png = b"\x89PNG\r\n\x1a\n" + b"\x00" * 100
+        pdf = b"%PDF-1.4\n" + b"x" * 100
+        # The create response carries the new id, so the page can attach files straight away
+        pid = c.post("/api/students/projects", headers=alice, json={"project_title": "Evidence demo"}).json()["project_id"]
+        assert any(p["project_id"] == pid for p in c.get("/api/students/projects", headers=alice).json())
+        up = lambda h, data, name="proof.png", url=f"/api/students/projects/{pid}/files": \
+            c.post(url, headers=h, files={"file": (name, data, "image/png")})
+
+        # Type comes from the content, not the name or the browser's Content-Type
+        assert up(alice, b"<svg onload=alert(1)></svg>", "evil.png").status_code == 400
+        assert up(alice, b"", "empty.png").status_code == 400
+        assert up(alice, b"\x89PNG\r\n\x1a\n" + b"\x00" * (5 * 1024 * 1024)).status_code == 413
+        first = up(alice, pdf, "..\\..\\cert")
+        assert first.status_code == 201
+        assert first.json()["content_type"] == "application/pdf" and first.json()["file_name"] == "cert.pdf"
+        assert "data" not in first.json()
+        assert up(bob, png).status_code == 404                                   # not Bob's project
+        for _ in range(4):
+            assert up(alice, png).status_code == 201
+        assert up(alice, png).status_code == 400                                 # 6th file: limit is 5
+
+        files = next(p for p in c.get("/api/students/projects", headers=alice).json() if p["project_id"] == pid)["files"]
+        assert len(files) == 5 and all("data" not in f for f in files)
+        fid = first.json()["file_id"]
+        got = c.get(f"/api/students/files/{fid}", headers=alice)
+        assert got.status_code == 200 and got.content == pdf
+        assert got.headers["x-content-type-options"] == "nosniff" and got.headers["content-disposition"].startswith("attachment")
+        assert c.get(f"/api/students/files/{fid}", headers=bob).status_code == 404
+        assert c.get(f"/api/students/files/{fid}", headers=advisor).status_code == 200
+        assert env["conn"].execute("SELECT count(*) FROM audit_log WHERE action='advisor.view_file' AND target_id=%s",
+                                   (fid,)).fetchone()[0] == 1
+        assert c.get("/api/students/files/not-a-uuid", headers=alice).status_code == 404
+        detail = c.get(f"/api/advisor/students/{env['ids']['alice'][0]}", headers=advisor).json()
+        assert len(next(p for p in detail["projects"] if p["project_id"] == pid)["files"]) == 5
+
+        assert c.delete(f"/api/students/files/{fid}", headers=bob).status_code == 404
+        assert c.delete(f"/api/students/files/{fid}", headers=alice).status_code == 200
+        assert c.get(f"/api/students/files/{fid}", headers=alice).status_code == 404
+
+        # Certifications take files too, and files go with their project when it is deleted
+        cid = c.post("/api/students/certifications", headers=bob, json={"cert_name": "CCNA"}).json()["cert_id"]
+        assert up(bob, png, url=f"/api/students/certifications/{cid}/files").status_code == 201
+        assert len(next(x for x in c.get("/api/students/certifications", headers=bob).json()
+                        if x["cert_id"] == cid)["files"]) == 1
+        assert c.delete(f"/api/students/projects/{pid}", headers=alice).status_code == 200
+        assert env["conn"].execute("SELECT count(*) FROM student_evidence_files WHERE project_id=%s",
+                                   (pid,)).fetchone()[0] == 0
+
+
+# ── Development progress ─────────────────────────────────────
+class TestProgress:
+    def test_give_up_unfinished_activity_only(self, env, alice, bob):
+        c = env["client"]
+        aid = run(env, alice, role_id=env["da"]).json()["assessment_id"]
+        rid, rid2 = [r[0] for r in env["conn"].execute(
+            "SELECT resource_id::text FROM recommendations_library ORDER BY resource_title LIMIT 2").fetchall()]
+
+        assert c.post(f"/api/progress/{rid}/start?assessment_id={aid}", headers=alice).status_code == 201
+        mine = c.get("/api/progress/my", headers=alice).json()["progress"]
+        assert next(p for p in mine if p["resource_id"] == rid)["assessment_id"] == aid   # for "View in Recommendations"
+
+        assert c.delete(f"/api/progress/{rid}", headers=bob).status_code == 404           # Bob never started it
+        assert c.delete(f"/api/progress/{rid}", headers=alice).status_code == 200
+        assert all(p["resource_id"] != rid for p in c.get("/api/progress/my", headers=alice).json()["progress"])
+        assert c.delete(f"/api/progress/{rid}", headers=alice).status_code == 404         # already gone
+        assert c.delete("/api/progress/not-a-uuid", headers=alice).status_code == 404
+
+        # Completed activities stay on the record
+        c.post(f"/api/progress/{rid2}/start?assessment_id={aid}", headers=alice)
+        assert c.post(f"/api/progress/{rid2}/complete", headers=alice, json={"status": "completed"}).status_code == 200
+        assert c.delete(f"/api/progress/{rid2}", headers=alice).status_code == 404
 
 
 # ── Batch assessments (data/run_assessments.py uses this) ────

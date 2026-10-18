@@ -22,11 +22,12 @@ const GROUPS = [
 const ACTION_LABEL = {
   'auth.login': 'Signed in', 'auth.login_failed': 'Failed sign-in', 'auth.register': 'Registered',
   'assessment.run': 'Ran assessment', 'jd.analyse': 'Analysed JD',
-  'advisor.view_student': 'Viewed student',
+  'advisor.view_student': 'Viewed student', 'advisor.view_file': 'Opened evidence file',
   'admin.user_create': 'Created account', 'admin.user_update': 'Changed account',
   'admin.password_reset': 'Reset password',
   'admin.skill_create': 'Added skill', 'admin.skill_update': 'Changed skill',
   'admin.role_create': 'Added role', 'admin.role_update': 'Changed role',
+  'admin.resource_create': 'Added resource', 'admin.resource_update': 'Changed resource',
 }
 
 function describe(details) {

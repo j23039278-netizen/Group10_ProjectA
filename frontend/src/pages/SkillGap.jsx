@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import { assessAPI } from '../api/client'
+import { label } from '../utils/labels'
 
 export default function SkillGap() {
   const location     = useLocation()
@@ -84,7 +85,7 @@ export default function SkillGap() {
             <div style={{ flex: 1 }}>
               <div style={{ fontSize: '15px', fontWeight: '700', color: '#2d5be3' }}>Job Readiness Score</div>
               <div style={{ fontSize: '12px', color: '#4a5168', marginTop: '2px' }}>
-                Method: {assessment.matching_method} · {new Date(assessment.created_at).toLocaleDateString()}
+                Method: {label(assessment.matching_method)} · {new Date(assessment.created_at).toLocaleDateString()}
               </div>
             </div>
             <div style={{ display: 'flex', gap: '16px' }}>
