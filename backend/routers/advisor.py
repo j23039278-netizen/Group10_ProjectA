@@ -124,6 +124,7 @@ def get_all_students(
                 u.user_id,
                 u.full_name,
                 u.email,
+                u.student_number,
                 sp.programme,
                 sp.target_role,
                 sp.gpa,
@@ -166,7 +167,7 @@ def get_student_detail(
     # Basic info
     student = db.execute(
         text("""
-            SELECT u.full_name, u.email, sp.*
+            SELECT u.full_name, u.email, u.student_number, sp.*
             FROM users u
             JOIN student_profiles sp ON sp.user_id = u.user_id
             WHERE u.user_id = CAST(:uid AS uuid) AND u.role = 'student'

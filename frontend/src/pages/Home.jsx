@@ -125,7 +125,6 @@ function HomeContent() {
   const [ctaRef, ctaInView] = useInView(0.3)
 
   const goLogin = () => navigate('/login')
-  const goRegister = () => navigate('/register')
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20)
@@ -171,8 +170,7 @@ function HomeContent() {
               </button>
             ))}
             <div className="hp-nav-actions">
-              <button type="button" className="hp-btn hp-btn-ghost hp-btn-sm" onClick={goLogin}>Sign in</button>
-              <button type="button" className="hp-btn hp-btn-primary hp-btn-sm" onClick={goRegister}>Create an account</button>
+              <button type="button" className="hp-btn hp-btn-primary hp-btn-sm" onClick={goLogin}>Sign in</button>
             </div>
           </nav>
 
@@ -192,8 +190,7 @@ function HomeContent() {
             {NAV.map(n => (
               <button key={n.id} type="button" className="hp-mobile-link" onClick={() => onNav(n.id)}>{n.label}</button>
             ))}
-            <button type="button" className="hp-btn hp-btn-ghost" onClick={goLogin}>Sign in</button>
-            <button type="button" className="hp-btn hp-btn-primary" onClick={goRegister}>Create an account</button>
+            <button type="button" className="hp-btn hp-btn-primary" onClick={goLogin}>Sign in</button>
           </div>
         )}
       </header>

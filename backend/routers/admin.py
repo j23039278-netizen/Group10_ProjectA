@@ -1,11 +1,13 @@
 """
 SEAGAS — Admin Router
-- Users: create advisor/admin accounts, rename, activate/deactivate, reset passwords.
+- Users: create advisor/admin accounts, rename, activate/deactivate, reset passwords
+  (created and reset passwords are temporary: the owner must change them).
+  Student accounts come from the intake lists (routers/intake.py).
 - Skills library, job roles and learning resources (recommendations library):
   list all; add new ones; edit the ones admins added; activate/deactivate any.
 - Audit log: read and filter.
 
-Students register themselves through /api/auth/register; advisor and admin
+Students do not register themselves (routers/intake.py); advisor and admin
 accounts can only be created here, by a signed-in admin.
 
 Who owns the library data: the 138 skills and 6 roles that come from
@@ -125,7 +127,7 @@ class ResourceUpdate(BaseModel):
     is_active: Optional[bool] = None
 
 
-USER_COLUMNS = "user_id, email, full_name, role, is_active, created_at"
+USER_COLUMNS = "user_id, email, full_name, role, student_number, is_active, must_change_password, created_at"
 
 
 def clean_list(items):
@@ -175,7 +177,7 @@ def list_users(
 
     where, params = ["TRUE"], {}
     if search:
-        where.append("(full_name ILIKE :q OR email ILIKE :q)")
+        where.append("(full_name ILIKE :q OR email ILIKE :q OR student_number LIKE :q)")
         params["q"] = f"%{search.strip()}%"
     if role:
         where.append("role = :role")
@@ -206,7 +208,7 @@ def create_user(req: UserCreate, request: Request,
 
     if req.role not in STAFF_ROLES:
         raise HTTPException(status_code=400,
-                            detail="Admins can create advisor or admin accounts. Students register themselves.")
+                            detail="Admins create advisor or admin accounts here. Student accounts are created from the new-student lists (Student Intake).")
     if not req.full_name.strip():
         raise HTTPException(status_code=400, detail="Full name is required.")
     check_password(req.password)
@@ -218,8 +220,8 @@ def create_user(req: UserCreate, request: Request,
 
     user = db.execute(
         text(f"""
-            INSERT INTO users (email, password_hash, role, full_name)
-            VALUES (:email, :pw, :role, :name)
+            INSERT INTO users (email, password_hash, role, full_name, must_change_password)
+            VALUES (:email, :pw, :role, :name, TRUE)
             RETURNING {USER_COLUMNS}
         """),
         {"email": email, "pw": hash_password(req.password),
@@ -283,13 +285,14 @@ def reset_password(
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    """Set a new password for any account"""
+    """Set a temporary password for any account; the owner must change it at next sign-in"""
     require_admin(current_user)
     check_password(req.password)
 
     updated = db.execute(
         text("""
-            UPDATE users SET password_hash = :pw, updated_at = CURRENT_TIMESTAMP
+            UPDATE users SET password_hash = :pw, must_change_password = TRUE,
+                             updated_at = CURRENT_TIMESTAMP
             WHERE user_id = :uid
             RETURNING user_id
         """),

@@ -16,7 +16,8 @@ from sqlalchemy import text
 log = logging.getLogger("uvicorn.error")
 
 ACTIONS = (
-    "auth.login", "auth.login_failed", "auth.register",
+    "auth.login", "auth.login_failed", "auth.register", "auth.password_change",
+    "intake.upload", "intake.accounts_create", "intake.reject",
     "assessment.run", "jd.analyse",
     "advisor.view_student", "advisor.view_file",
     "admin.user_create", "admin.user_update", "admin.password_reset",

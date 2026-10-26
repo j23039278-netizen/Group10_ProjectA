@@ -1,14 +1,14 @@
 // SEAGAS — Admin: User Management
 // Admins create advisor/admin accounts, rename, activate or deactivate accounts and reset passwords.
-// Students are not created here: they register themselves on the Register page.
+// Students are not created here: their accounts come from the new-student lists (Student Intake).
 import { useState, useEffect, useCallback } from 'react'
 import { authAPI } from '../api/client'
 import { adminAPI } from '../api/admin'
+import { passwordProblem } from '../utils/passwordRules'
 import { C, card, th, td, input, label, btn, errorText } from './admin/adminStyles'
 import { Modal, Alert } from './admin/AdminUi'
 
 const PAGE_SIZE = 50
-const PASSWORD_MIN = 8
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 // Must match ROLE_EMAIL_DOMAINS in backend/routers/auth.py
 const EMAIL_DOMAINS = { advisor: 'advisor.newinti.edu.my', admin: 'admin.newinti.edu.my' }
@@ -31,7 +31,7 @@ function AddUserModal({ onClose, onCreated }) {
     if (!EMAIL_RE.test(form.email.trim())) return setError('Please enter a valid email address.')
     if (!form.email.trim().toLowerCase().endsWith(`@${EMAIL_DOMAINS[form.role]}`))
       return setError(`${form.role === 'admin' ? 'Admin' : 'Advisor'} emails must end with @${EMAIL_DOMAINS[form.role]}.`)
-    if (form.password.length < PASSWORD_MIN) return setError(`Password must be at least ${PASSWORD_MIN} characters.`)
+    if (passwordProblem(form.password)) return setError(passwordProblem(form.password))
     if (form.password !== form.confirm)    return setError('Passwords do not match.')
     setSaving(true)
     setError('')
@@ -67,14 +67,14 @@ function AddUserModal({ onClose, onCreated }) {
         </div>
         <div style={{ marginBottom: '12px' }}>
           <label style={label} htmlFor="nu-pw">Temporary password</label>
-          <input id="nu-pw" type="password" style={input} value={form.password} onChange={set('password')} placeholder={`At least ${PASSWORD_MIN} characters`} autoComplete="new-password" />
+          <input id="nu-pw" type="password" style={input} value={form.password} onChange={set('password')} placeholder="8+ characters: A-Z, a-z, 0-9 and a symbol" autoComplete="new-password" />
         </div>
         <div style={{ marginBottom: '18px' }}>
           <label style={label} htmlFor="nu-confirm">Confirm password</label>
           <input id="nu-confirm" type="password" style={input} value={form.confirm} onChange={set('confirm')} autoComplete="new-password" />
         </div>
         <div style={{ fontSize: '12px', color: C.muted, marginBottom: '18px' }}>
-          Share the password with the user privately. They sign in on the normal SEAGAS login page and are taken to the {form.role} pages.
+          Share the password with the user privately. It is temporary: at their first sign-in they must choose their own password.
         </div>
         <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
           <button type="button" style={btn('secondary')} onClick={onClose}>Cancel</button>
@@ -135,7 +135,7 @@ function ResetPasswordModal({ user, onClose, onDone }) {
 
   const submit = async (e) => {
     e.preventDefault()
-    if (password.length < PASSWORD_MIN) return setError(`Password must be at least ${PASSWORD_MIN} characters.`)
+    if (passwordProblem(password)) return setError(passwordProblem(password))
     if (password !== confirm)           return setError('Passwords do not match.')
     setSaving(true)
     setError('')
@@ -153,6 +153,9 @@ function ResetPasswordModal({ user, onClose, onDone }) {
       <form onSubmit={submit} noValidate>
         <div style={{ fontSize: '13px', color: C.body, marginBottom: '14px' }}>
           New password for <b style={{ color: C.ink }}>{user.full_name}</b> ({user.email})
+        </div>
+        <div style={{ fontSize: '12px', color: C.muted, marginBottom: '14px' }}>
+          This password is temporary: at the next sign-in the user must choose a new one.
         </div>
         {error && <Alert>{error}</Alert>}
         <div style={{ marginBottom: '12px' }}>
@@ -250,7 +253,7 @@ export default function AdminUsers() {
         <div>
           <div style={{ fontSize: '26px', fontWeight: '700', color: C.ink }}>User Management</div>
           <div style={{ fontSize: '13px', color: C.body, marginTop: '4px' }}>
-            Create advisor and admin accounts. Students register themselves.
+            Create advisor and admin accounts. Student accounts are created on the Student Intake page.
           </div>
         </div>
         <button style={btn('primary')} onClick={() => { setNotice(''); setAdding(true) }}>+ Add user</button>
@@ -275,7 +278,7 @@ export default function AdminUsers() {
       <div style={{ ...card, padding: '20px 24px' }}>
         <div style={{ display: 'flex', gap: '12px', marginBottom: '16px', flexWrap: 'wrap' }}>
           <input
-            type="search" aria-label="Search users" placeholder="Search by name or email"
+            type="search" aria-label="Search users" placeholder="Search by name, email or student ID"
             style={{ ...input, flex: '1 1 240px', width: 'auto' }}
             value={search} onChange={e => setSearch(e.target.value)}
           />
@@ -294,13 +297,13 @@ export default function AdminUsers() {
         <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '720px' }}>
             <thead>
-              <tr>{['Name', 'Email', 'Role', 'Status', 'Created', ''].map(h => <th key={h} style={th}>{h}</th>)}</tr>
+              <tr>{['Name', 'Email', 'Student ID', 'Role', 'Status', 'Created', ''].map(h => <th key={h} style={th}>{h}</th>)}</tr>
             </thead>
             <tbody>
               {loading ? (
-                <tr><td colSpan={6} style={{ ...td, textAlign: 'center', color: C.muted, padding: '32px' }}>Loading…</td></tr>
+                <tr><td colSpan={7} style={{ ...td, textAlign: 'center', color: C.muted, padding: '32px' }}>Loading…</td></tr>
               ) : users.length === 0 ? (
-                <tr><td colSpan={6} style={{ ...td, textAlign: 'center', color: C.muted, padding: '32px' }}>No users match.</td></tr>
+                <tr><td colSpan={7} style={{ ...td, textAlign: 'center', color: C.muted, padding: '32px' }}>No users match.</td></tr>
               ) : users.map(u => {
                 const badge = ROLE_BADGE[u.role] || ROLE_BADGE.student
                 const isMe  = u.user_id === meId
@@ -308,6 +311,7 @@ export default function AdminUsers() {
                   <tr key={u.user_id} style={{ opacity: u.is_active ? 1 : 0.6 }}>
                     <td style={{ ...td, color: C.ink, fontWeight: '600' }}>{u.full_name}{isMe && <span style={{ color: C.muted, fontWeight: '500' }}> (you)</span>}</td>
                     <td style={td}>{u.email}</td>
+                    <td style={{ ...td, fontFamily: 'Consolas, monospace' }}>{u.student_number || '—'}</td>
                     <td style={td}>
                       <span style={{ padding: '3px 9px', borderRadius: '999px', fontSize: '11px', fontWeight: '600', textTransform: 'capitalize', background: badge.bg, color: badge.color }}>{u.role}</span>
                     </td>

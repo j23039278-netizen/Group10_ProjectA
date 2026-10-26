@@ -6,7 +6,8 @@ Author: Tan Jun Xiong (Aaron) — Co-Leader & Recommendation Engine Developer
 Logic:
   1. Receive skill gaps from assessment results (gap / developing)
   2. Look up matching resources in recommendations_library
-  3. Prioritise by: gap > developing, difficulty order, resource type order
+  3. Prioritise by: gap > developing; within a skill: cost tier (free first),
+     difficulty order, resource type order
   4. Return ranked recommendations with explanation
 """
  
@@ -32,6 +33,26 @@ DIFFICULTY_ORDER = {
     "advanced":     3,
 }
  
+# ── Cost tier (free first) ────────────────────────────────────
+# recommendations_library.cost is free text ("Free", "Free to audit", "$150 USD").
+#   free           completely free
+#   free_to_learn  learning is free; a certificate, more usage or extra features
+#                  cost money ("Free to audit", "Free tier", "Free / $14/mo")
+#   paid           costs money, including short free trials ("Free trial")
+COST_TIER_ORDER = {"free": 1, "free_to_learn": 2, "paid": 3}
+
+
+def cost_tier(cost: Optional[str]) -> str:
+    c = (cost or "Free").strip().lower()
+    if c == "free":
+        return "free"
+    if "trial" in c:
+        return "paid"
+    if c.startswith("free"):
+        return "free_to_learn"
+    return "paid"
+
+
 # ── Gap type priority (gaps first, then developing) ───────────
 GAP_TYPE_PRIORITY = {
     "gap":        1,
@@ -148,7 +169,8 @@ def _get_resources_for_skill(
 ) -> List[Dict]:
     """
     Fetch and rank resources for a specific skill gap.
-    Returns resources sorted by: difficulty → type priority
+    Returns resources sorted by: cost tier (free first) → difficulty → type priority.
+    Sorted here rather than in SQL so cost_tier() is the only place that reads cost.
     """
     resources = db.execute(
         text("""
@@ -165,25 +187,15 @@ def _get_resources_for_skill(
             FROM recommendations_library
             WHERE skill_id = :sid
             AND is_active = TRUE
-            ORDER BY
-                CASE difficulty
-                    WHEN 'beginner'     THEN 1
-                    WHEN 'intermediate' THEN 2
-                    WHEN 'advanced'     THEN 3
-                    ELSE 4
-                END,
-                CASE resource_type
-                    WHEN 'course'        THEN 1
-                    WHEN 'certification' THEN 2
-                    WHEN 'project'       THEN 3
-                    WHEN 'workshop'      THEN 4
-                    WHEN 'competition'   THEN 5
-                    ELSE 6
-                END
-            LIMIT :limit
         """),
-        {"sid": skill_id, "limit": max_resources}
+        {"sid": skill_id}
     ).fetchall()
+    resources = sorted(resources, key=lambda r: (
+        COST_TIER_ORDER[cost_tier(r.cost)],
+        DIFFICULTY_ORDER.get(r.difficulty, 4),
+        RESOURCE_TYPE_PRIORITY.get(r.resource_type, 7),
+        r.resource_title,
+    ))[:max_resources]
  
     return [
         {
@@ -194,6 +206,7 @@ def _get_resources_for_skill(
             "url":            r.url,
             "duration_hours": r.duration_hours,
             "cost":           r.cost,
+            "cost_tier":      cost_tier(r.cost),
             "difficulty":     r.difficulty,
             "description":    r.description,
         }

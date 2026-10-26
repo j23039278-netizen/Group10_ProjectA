@@ -49,7 +49,7 @@ echo ============================================================
 echo  SEAGAS is running
 echo    Frontend: http://localhost:5173
 echo    Backend : http://127.0.0.1:8000/docs
-echo  Test login: student0001@synthetic.example.com / Seagas@2026
+echo  Test login: student0001@synthetic.example.com / ID 900000001 / Seagas@2026
 echo  To stop: close the "SEAGAS Backend" and "SEAGAS Frontend" windows.
 echo ============================================================
 

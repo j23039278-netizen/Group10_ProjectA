@@ -57,7 +57,7 @@ export default function AdvisorDashboard() {
   const q = search.trim().toLowerCase()
   const filteredStudents = students.filter(s =>
     (!status || statusBadge(s.latest_score == null ? null : parseFloat(s.latest_score)).key === status) &&
-    (!q || [s.full_name, s.email, s.programme, s.target_role].some(v => (v || '').toLowerCase().includes(q)))
+    (!q || [s.full_name, s.email, s.student_number, s.programme, s.target_role].some(v => (v || '').toLowerCase().includes(q)))
   )
 
   const chartData = skillGaps.slice(0, 10).map(g => ({
@@ -188,7 +188,7 @@ export default function AdvisorDashboard() {
               Student List ({filteredStudents.length}{filteredStudents.length !== students.length ? ` of ${students.length}` : ''})
             </div>
             <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-              <input type="search" aria-label="Search students" placeholder="Search name, email, programme or role"
+              <input type="search" aria-label="Search students" placeholder="Search name, student ID, email, programme or role"
                 value={search} onChange={e => { setSearch(e.target.value); setShownRows(PAGE_SIZE) }}
                 style={{ width: '280px', maxWidth: '100%', padding: '8px 11px', fontSize: '13px', border: '1px solid #e4e6ef', borderRadius: '8px', outline: 'none' }} />
               <select aria-label="Filter by status" value={status} onChange={e => { setStatus(e.target.value); setShownRows(PAGE_SIZE) }}
@@ -205,7 +205,7 @@ export default function AdvisorDashboard() {
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
               <tr>
-                {['Name', 'Programme', 'Target Role', 'Readiness', 'Status'].map(h => (
+                {['Name', 'Student ID', 'Programme', 'Target Role', 'Readiness', 'Status'].map(h => (
                   <th key={h} style={{ textAlign: 'left', fontSize: '11px', fontWeight: '700', color: '#8b92a8', textTransform: 'uppercase', letterSpacing: '0.5px', padding: '10px 12px', borderBottom: '1px solid #e4e6ef' }}>
                     {h}
                   </th>
@@ -214,7 +214,7 @@ export default function AdvisorDashboard() {
             </thead>
             <tbody>
               {filteredStudents.length === 0 && (
-                <tr><td colSpan={5} style={{ padding: '32px', textAlign: 'center', fontSize: '13px', color: '#8b92a8' }}>No students match.</td></tr>
+                <tr><td colSpan={6} style={{ padding: '32px', textAlign: 'center', fontSize: '13px', color: '#8b92a8' }}>No students match.</td></tr>
               )}
               {filteredStudents.slice(0, shownRows).map((s, i) => {
                 const score = s.latest_score == null ? null : parseFloat(s.latest_score)
@@ -225,6 +225,7 @@ export default function AdvisorDashboard() {
                     onKeyDown={e => { if (e.key === 'Enter') open() }}
                     style={{ background: i % 2 === 0 ? '#f5f6fa' : '#fff', cursor: 'pointer' }}>
                     <td style={{ padding: '10px 12px', fontSize: '13px', fontWeight: '500', color: '#2d5be3' }}>{s.full_name}</td>
+                    <td style={{ padding: '10px 12px', fontSize: '12px', color: '#4a5168', fontFamily: 'Consolas, monospace' }}>{s.student_number || '—'}</td>
                     <td style={{ padding: '10px 12px', fontSize: '12px', color: '#4a5168' }}>{s.programme || '—'}</td>
                     <td style={{ padding: '10px 12px', fontSize: '12px', color: '#4a5168' }}>{s.target_role || '—'}</td>
                     <td style={{ padding: '10px 12px', fontSize: '14px', fontWeight: '700', color: scoreColor(score) }}>

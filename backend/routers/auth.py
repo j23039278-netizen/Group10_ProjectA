@@ -1,10 +1,12 @@
 """
 SEAGAS — Authentication Router
-Handles login, register, JWT token
+Handles login, first-login password change, JWT token.
+Students do not register themselves: their accounts are created from the
+advisor's intake list by an admin (routers/intake.py).
 Author: Soh Way Miin (Carl)
 """
 
-from fastapi import APIRouter, Depends, HTTPException, Request, status
+from fastapi import APIRouter, Depends, Form, HTTPException, Request, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from datetime import datetime, timedelta, timezone
@@ -43,13 +45,10 @@ ROLE_EMAIL_DOMAINS = {
 
 
 # ── Pydantic Schemas ──────────────────────────────────────────
-class RegisterRequest(BaseModel):
-    email: EmailStr
-    password: str
-    full_name: str = Field(min_length=1, max_length=255)
-    # Public sign-up is for students only. Advisor and admin accounts are
-    # created by an admin through POST /api/admin/users.
-    role: str = "student"
+class ChangePasswordRequest(BaseModel):
+    # Not needed while the password is temporary: the user has just signed in with it
+    current_password: str = ""
+    new_password: str
 
 
 class Token(BaseModel):
@@ -57,6 +56,7 @@ class Token(BaseModel):
     token_type: str
     role: str
     full_name: str
+    must_change_password: bool = False
 
 
 # ── Helper Functions ──────────────────────────────────────────
@@ -65,12 +65,21 @@ PASSWORD_MIN_CHARS = 8
 PASSWORD_MAX_BYTES = 72
 
 
+# Rules for every new password (frontend copy: frontend/src/utils/passwordRules.js)
+PASSWORD_RULE_TEXT = ("at least 8 characters, with an uppercase letter, a lowercase letter, "
+                      "a number and a symbol")
+
+
 def password_error(password: str):
     """Message to show if the password breaks the rules, otherwise None"""
-    if len(password) < PASSWORD_MIN_CHARS:
-        return f"Password must be at least {PASSWORD_MIN_CHARS} characters."
     if len(password.encode()) > PASSWORD_MAX_BYTES:
         return f"Password must be at most {PASSWORD_MAX_BYTES} bytes (about 72 letters or digits)."
+    if (len(password) < PASSWORD_MIN_CHARS
+            or not any(c.isupper() for c in password)
+            or not any(c.islower() for c in password)
+            or not any(c.isdigit() for c in password)
+            or not any(not c.isalnum() and not c.isspace() for c in password)):
+        return f"Password must have {PASSWORD_RULE_TEXT}."
     return None
 
 
@@ -111,7 +120,12 @@ def create_access_token(data: dict) -> str:
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
 
+# While an account still has its temporary password, only these requests work
+PASSWORD_CHANGE_PATHS = ("/api/auth/me", "/api/auth/change-password")
+
+
 def get_current_user(
+    request: Request,
     token: str = Depends(oauth2_scheme),
     db: Session = Depends(get_db)
 ):
@@ -141,56 +155,27 @@ def get_current_user(
     # A deactivated account must not keep using a token issued before
     if result is None or not result.is_active:
         raise credentials_exception
+    # A temporary password (new student, admin reset) must be changed before
+    # the account can do anything else
+    if result.must_change_password and request.url.path not in PASSWORD_CHANGE_PATHS:
+        raise HTTPException(status_code=403,
+                            detail="Please change your temporary password before continuing.")
     return result
 
 
 # ── Endpoints ─────────────────────────────────────────────────
-@router.post("/register", status_code=201)
-def register(req: RegisterRequest, request: Request, db: Session = Depends(get_db)):
-    from sqlalchemy import text
-
-    if req.role != "student":
-        raise HTTPException(
-            status_code=403,
-            detail="Only student accounts can be registered. "
-                   "Advisor and admin accounts are created by an administrator."
-        )
-
-    email = req.email.strip().lower()
-    check_email_domain(email, "student")
-
-    # Check if email exists
-    existing = db.execute(
-        text("SELECT user_id FROM users WHERE lower(email) = :email"),
-        {"email": email}
-    ).fetchone()
-
-    if existing:
-        raise HTTPException(status_code=400, detail="Email already registered")
-
-    check_password(req.password)
-    hashed = hash_password(req.password)
-
-    new_user = db.execute(
-        text("""
-            INSERT INTO users (email, password_hash, role, full_name)
-            VALUES (:email, :pw, 'student', :name)
-            RETURNING *
-        """),
-        {"email": email, "pw": hashed, "name": req.full_name}
-    ).fetchone()
-    audit.record(db, "auth.register", user=new_user, request=request,
-                 target_type="user", target_id=new_user.user_id)
-    db.commit()
-    return {"message": "User registered successfully"}
-
-
 @router.post("/login", response_model=Token)
 def login(
     request: Request,
     form_data: OAuth2PasswordRequestForm = Depends(),
+    student_id: str = Form(None),
     db: Session = Depends(get_db)
 ):
+    """Email + password; students also give their student ID.
+
+    Every failure gives the same message, so the response never tells which of
+    the three was wrong.
+    """
     from sqlalchemy import text
 
     user = db.execute(
@@ -198,13 +183,19 @@ def login(
         {"email": form_data.username.strip().lower()}
     ).fetchone()
 
-    if not user or not verify_password(form_data.password, user.password_hash):
+    reason = None
+    if not user:
+        reason = "unknown email"
+    elif not verify_password(form_data.password, user.password_hash):
+        reason = "wrong password"
+    elif user.role == "student" and (student_id or "").strip() != user.student_number:
+        reason = "wrong or missing student ID"
+    if reason:
         audit.record(db, "auth.login_failed", user=user, email=form_data.username.strip().lower(),
-                     request=request, details={"reason": "unknown email" if not user else "wrong password"},
-                     commit=True)
+                     request=request, details={"reason": reason}, commit=True)
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect email or password"
+            detail="Incorrect email, student ID or password"
         )
 
     if not user.is_active:
@@ -220,7 +211,8 @@ def login(
         "access_token": token,
         "token_type": "bearer",
         "role": user.role,
-        "full_name": user.full_name
+        "full_name": user.full_name,
+        "must_change_password": user.must_change_password
     }
 
 
@@ -230,5 +222,40 @@ def get_me(current_user=Depends(get_current_user)):
         "user_id": str(current_user.user_id),
         "email": current_user.email,
         "full_name": current_user.full_name,
-        "role": current_user.role
+        "role": current_user.role,
+        "student_number": current_user.student_number,
+        "must_change_password": current_user.must_change_password
     }
+
+
+@router.post("/change-password")
+def change_password(
+    req: ChangePasswordRequest,
+    request: Request,
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """Set a new password; required after a temporary one (first sign-in, admin reset).
+
+    While the password is temporary the current password is not asked again: the
+    user has just signed in with it. A voluntary change must give it.
+    """
+    from sqlalchemy import text
+
+    if not current_user.must_change_password and             not verify_password(req.current_password, current_user.password_hash):
+        raise HTTPException(status_code=400, detail="Your current password is not correct.")
+    check_password(req.new_password)
+    if verify_password(req.new_password, current_user.password_hash):
+        raise HTTPException(status_code=400, detail="Choose a password different from the current one.")
+    db.execute(
+        text("""
+            UPDATE users SET password_hash = :pw, must_change_password = FALSE,
+                             updated_at = CURRENT_TIMESTAMP
+            WHERE user_id = :uid
+        """),
+        {"pw": hash_password(req.new_password), "uid": str(current_user.user_id)}
+    )
+    audit.record(db, "auth.password_change", user=current_user, request=request,
+                 target_type="user", target_id=current_user.user_id)
+    db.commit()
+    return {"message": "Password changed"}

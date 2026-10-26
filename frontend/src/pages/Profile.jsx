@@ -1,6 +1,6 @@
 // SEAGAS — Student Profile Page
 import { useState, useEffect } from 'react'
-import { studentAPI, fileAPI } from '../api/client'
+import { studentAPI, fileAPI, authAPI } from '../api/client'
 import { label } from '../utils/labels'
 import EvidenceFiles, { PendingFiles } from '../components/EvidenceFiles'
 import { MAX_FILES } from '../components/evidenceRules'
@@ -27,6 +27,8 @@ export default function Profile() {
   const [loading,  setLoading]  = useState(true)
   const [saving,   setSaving]   = useState(false)
   const [msg,      setMsg]      = useState('')
+  // Student ID and school email: set by the admin, shown read-only
+  const [account,  setAccount]  = useState(null)
 
   // Profile form state
   const [form, setForm] = useState({
@@ -54,6 +56,7 @@ export default function Profile() {
   const [savingItem, setSavingItem] = useState(false)
 
   useEffect(() => { loadAll() }, [])
+  useEffect(() => { authAPI.me().then(r => setAccount(r.data)).catch(() => {}) }, [])
 
   const loadAll = async () => {
     try {
@@ -266,6 +269,12 @@ export default function Profile() {
       <div style={{ marginBottom: '24px' }}>
         <div style={{ fontSize: '26px', fontWeight: '700', color: '#1a1f2e' }}>My Profile</div>
         <div style={{ fontSize: '13px', color: '#4a5168', marginTop: '4px' }}>Manage your employability profile</div>
+        {account?.student_number && (
+          <div style={{ fontSize: '13px', color: '#4a5168', marginTop: '6px' }}>
+            Student ID <b style={{ color: '#1a1f2e', fontFamily: 'Consolas, monospace' }}>{account.student_number}</b> · {account.email}
+            <span style={{ color: '#8b92a8' }}> (set by the university; contact your advisor if it is wrong)</span>
+          </div>
+        )}
       </div>
 
       {/* Tabs */}

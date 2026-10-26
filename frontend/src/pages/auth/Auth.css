@@ -1,4 +1,4 @@
-/* SEAGAS — Login / Register styles. Builds on the Home tokens (.hp) and is scoped under .au */
+/* SEAGAS — Login / Change Password styles. Builds on the Home tokens (.hp) and is scoped under .au */
 
 .au {
   position: relative;
@@ -219,4 +219,10 @@
   .au-title { font-size: 24px; }
   .au-roles-2 { grid-template-columns: 1fr; }
   .au-checks { grid-template-columns: 1fr; }
+}
+
+/* Text for screen readers only (e.g. password rule done / missing) */
+.au .sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
 }

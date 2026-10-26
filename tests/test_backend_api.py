@@ -13,7 +13,9 @@ else (default: postgresql://postgres:postgres123@localhost:5432/postgres).
 Matching uses method="keyword" so results are exact and no NLP model is needed.
 """
 
+import io
 import os
+import re
 import sys
 from pathlib import Path
 
@@ -99,8 +101,22 @@ def env():
     admin_conn.close()
 
 
-def token(env, email, password=PASSWORD):
-    r = env["client"].post("/api/auth/login", data={"username": email, "password": password})
+def student_number(env, email):
+    row = env["conn"].execute("SELECT student_number FROM users WHERE lower(email) = lower(%s)", (email,)).fetchone()
+    return row[0] if row else None
+
+
+def login(env, email, password=PASSWORD, student_id=None):
+    """POST /api/auth/login. Students sign in with their student ID too (looked up if not given)."""
+    data = {"username": email, "password": password}
+    sid = student_id if student_id is not None else student_number(env, email)
+    if sid:
+        data["student_id"] = sid
+    return env["client"].post("/api/auth/login", data=data)
+
+
+def token(env, email, password=PASSWORD, student_id=None):
+    r = login(env, email, password, student_id)
     assert r.status_code == 200, r.text
     return {"Authorization": "Bearer " + r.json()["access_token"]}
 
@@ -145,35 +161,66 @@ class TestAuth:
         r = env["client"].post("/api/auth/login", data={"username": "alice@student.newinti.edu.my", "password": "x" * 80})
         assert r.status_code == 401
 
-    @pytest.mark.parametrize("email,status", [
-        ("new1@student.newinti.edu.my", 201),
-        ("new2@gmail.com", 400),
-        ("new3@advisor.newinti.edu.my", 400),
-        ("new4@fake-student.newinti.edu.my", 400),
-    ])
-    def test_register_student_email_domain(self, env, email, status):
-        r = env["client"].post("/api/auth/register", json={"email": email, "password": "Password1!", "full_name": "N"})
-        assert r.status_code == status, r.text
+    def test_student_login_needs_student_id(self, env):
+        c = env["client"]
+        sid = student_number(env, "alice@student.newinti.edu.my")
+        assert len(sid) == 9 and sid.isdigit()                      # given by the database
+        no_id = c.post("/api/auth/login", data={"username": "alice@student.newinti.edu.my", "password": PASSWORD})
+        assert no_id.status_code == 401 and "student ID" in no_id.json()["detail"]
+        assert login(env, "alice@student.newinti.edu.my", student_id="123456789").status_code == 401
+        bobs = student_number(env, "bob@student.newinti.edu.my")
+        assert login(env, "alice@student.newinti.edu.my", student_id=bobs).status_code == 401
+        assert login(env, "alice@student.newinti.edu.my", student_id=f" {sid} ").status_code == 200
+        reasons = {r[0] for r in env["conn"].execute(
+            "SELECT details->>'reason' FROM audit_log WHERE action = 'auth.login_failed'").fetchall()}
+        assert "wrong or missing student ID" in reasons
 
-    @pytest.mark.parametrize("password", ["short", "x" * 73, "密码" * 13])
-    def test_register_password_rules(self, env, password):
-        r = env["client"].post("/api/auth/register", json={
-            "email": "pw@student.newinti.edu.my", "password": password, "full_name": "P"})
+    def test_every_student_has_a_student_number(self, env):
+        conn = env["conn"]
+        assert conn.execute("SELECT count(*) FROM users WHERE role = 'student' AND student_number IS NULL").fetchone()[0] == 0
+        assert conn.execute("SELECT count(*) FROM users WHERE role <> 'student' AND student_number IS NOT NULL").fetchone()[0] == 0
+        with pytest.raises(psycopg.errors.CheckViolation):
+            conn.execute("INSERT INTO users (email, password_hash, role, full_name, student_number) "
+                         "VALUES ('bad@student.newinti.edu.my', 'x', 'student', 'B', '12AB')")
+        synthetic = conn.execute("INSERT INTO users (email, password_hash, role, full_name) "
+                                 "VALUES ('student0042@synthetic.example.com', 'x', 'student', 'S') "
+                                 "RETURNING student_number").fetchone()[0]
+        assert synthetic == "900000042"                             # same in every database
+
+    @pytest.mark.parametrize("password", [
+        "Sh0rt!",            # under 8 characters
+        "nouppercase1!",     # no uppercase
+        "NOLOWERCASE1!",     # no lowercase
+        "NoDigitsHere!",     # no number
+        "NoSymbols123",      # no symbol
+        "Aa1!" + "x" * 70,   # over 72 bytes
+        "密码Aa1!" * 13,      # over 72 bytes in UTF-8
+    ])
+    def test_new_password_rules(self, env, bob, password):
+        r = env["client"].post("/api/auth/change-password", headers=bob,
+                               json={"current_password": PASSWORD, "new_password": password})
         assert r.status_code == 400
 
-    def test_register_cannot_choose_staff_role(self, env):
+    def test_voluntary_change_needs_current_password(self, env, bob):
+        # Bob's password is not temporary, so he must prove he knows it
+        r = env["client"].post("/api/auth/change-password", headers=bob,
+                               json={"current_password": "wrong-one", "new_password": "Brand#New2026"})
+        assert r.status_code == 400 and "current password" in r.json()["detail"]
+
+    def test_self_registration_is_gone(self, env):
         r = env["client"].post("/api/auth/register", json={
-            "email": "x@student.newinti.edu.my", "password": "Password1!", "full_name": "X", "role": "admin"})
-        assert r.status_code == 403
+            "email": "new1@student.newinti.edu.my", "password": "Password1!", "full_name": "N"})
+        assert r.status_code in (404, 405)
 
     def test_deactivated_account_and_old_token(self, env, admin):
         c = env["client"]
-        r = c.post("/api/auth/register", json={"email": "temp@student.newinti.edu.my", "password": "Password1!", "full_name": "T"})
-        assert r.status_code == 201
+        pw = bcrypt.hashpw(b"Password1!", bcrypt.gensalt()).decode()
+        uid = env["conn"].execute("INSERT INTO users (email, password_hash, role, full_name) "
+                                  "VALUES ('temp@student.newinti.edu.my', %s, 'student', 'T') RETURNING user_id::text",
+                                  (pw,)).fetchone()[0]
         headers = token(env, "temp@student.newinti.edu.my", "Password1!")
-        uid = env["conn"].execute("SELECT user_id::text FROM users WHERE email='temp@student.newinti.edu.my'").fetchone()[0]
         assert c.patch(f"/api/admin/users/{uid}", json={"is_active": False}, headers=admin).status_code == 200
-        assert c.post("/api/auth/login", data={"username": "temp@student.newinti.edu.my", "password": "Password1!"}).status_code == 403
+        assert login(env, "temp@student.newinti.edu.my", "Password1!").status_code == 403
         assert c.get("/api/auth/me", headers=headers).status_code == 401
 
 
@@ -328,7 +375,7 @@ class TestAdmin:
         alice_uid = env["ids"]["alice"][0]
         c.get(f"/api/advisor/students/{alice_uid}", headers=advisor)
         actions = {r[0] for r in env["conn"].execute("SELECT DISTINCT action FROM audit_log").fetchall()}
-        assert {"auth.login", "auth.login_failed", "auth.register", "assessment.run", "jd.analyse",
+        assert {"auth.login", "auth.login_failed", "assessment.run", "jd.analyse",
                 "advisor.view_student", "admin.user_create", "admin.user_update",
                 "admin.skill_create", "admin.role_create"} <= actions
         leaked = env["conn"].execute("SELECT count(*) FROM audit_log WHERE details::text LIKE '%%$2b$%%'").fetchone()[0]
@@ -515,6 +562,124 @@ class TestProgress:
         c.post(f"/api/progress/{rid2}/start?assessment_id={aid}", headers=alice)
         assert c.post(f"/api/progress/{rid2}/complete", headers=alice, json={"status": "completed"}).status_code == 200
         assert c.delete(f"/api/progress/{rid2}", headers=alice).status_code == 404
+
+
+# ── Recommendations: cost tiers ──────────────────────────────
+@pytest.mark.parametrize("cost,tier", [
+    ("Free", "free"), (" free ", "free"), (None, "free"),
+    ("Free to audit", "free_to_learn"), ("Free tier", "free_to_learn"), ("Free / $14/mo", "free_to_learn"),
+    ("Free trial", "paid"), ("Paid ~$15", "paid"), ("$150 USD", "paid"), ("Low cost", "paid"),
+])
+def test_cost_tier(cost, tier):
+    sys.path.insert(0, str(ROOT))
+    from recommendation.engine import cost_tier
+    assert cost_tier(cost) == tier
+
+
+def test_recommendations_free_first(env, alice):
+    aid = run(env, alice, role_id=env["da"]).json()["assessment_id"]
+    recs = env["client"].get(f"/api/assessments/{aid}/recommendations", headers=alice).json()["recommendations"]
+    order = {"free": 1, "free_to_learn": 2, "paid": 3}
+    tiers = [[r["cost_tier"] for r in rec["resources"]] for rec in recs]
+    assert any(tiers)
+    assert all(t == sorted(t, key=order.get) for t in tiers)       # within each skill: free first
+
+
+# ── New student intake: advisor list -> admin accounts -> first login ──
+def upload(env, headers, name, content, mime="text/csv"):
+    return env["client"].post("/api/intake/batches", headers=headers, files={"file": (name, content, mime)})
+
+
+class TestIntake:
+    CSV = ("Full Name,Phone Number,Personal Email\n"
+           "Mei Ling Tan,+60 12-345 6789,meiling.tan@example.com\n"
+           "Arjun Nair,0123456780,arjun.nair@example.com\n"
+           "No Email,0123,not-an-email\n"
+           "Mei Ling Again,012,MEILING.TAN@example.com\n"
+           "Siti Aminah,,siti.aminah@example.com\n").encode()
+
+    def test_full_intake_flow(self, env, advisor, admin, alice):
+        c, conn = env["client"], env["conn"]
+
+        # 1. The advisor uploads the list; bad rows are skipped and explained
+        assert upload(env, alice, "new.csv", self.CSV).status_code == 403          # students cannot
+        r = upload(env, advisor, "new.csv", self.CSV)
+        assert r.status_code == 201, r.text
+        assert r.json()["students"] == 3
+        assert [s["line"] for s in r.json()["skipped"]] == [4, 5]                  # bad email, duplicate
+        bid = r.json()["batch_id"]
+        assert any(b["batch_id"] == bid and b["pending"] == 3 for b in c.get("/api/intake/batches", headers=advisor).json())
+
+        # 2. The admin lets the system suggest IDs and emails, edits one, rejects one
+        assert c.post(f"/api/intake/batches/{bid}/assign", headers=advisor).status_code == 403
+        rows = c.post(f"/api/intake/batches/{bid}/assign", headers=admin).json()["rows"]
+        assert all(len(r["student_number"]) == 9 and r["school_email"] == f"{r['student_number']}@student.newinti.edu.my"
+                   for r in rows)
+        mei, arjun, siti = rows
+        alice_id = student_number(env, "alice@student.newinti.edu.my")
+        patch = lambda row, n, e: c.patch(f"/api/intake/rows/{row['row_id']}", headers=admin,
+                                          json={"student_number": n, "school_email": e})
+        assert patch(mei, "12345", "x@student.newinti.edu.my").status_code == 422           # not 9 digits
+        assert patch(mei, "105000001", "mei@gmail.com").status_code == 400                  # wrong domain
+        assert patch(mei, alice_id, "mei@student.newinti.edu.my").status_code == 400        # taken
+        assert patch(mei, "105000001", "105000001@student.newinti.edu.my").status_code == 200
+        assert c.post(f"/api/intake/rows/{siti['row_id']}/reject", headers=admin, json={"note": "duplicate"}).status_code == 200
+        assert c.post(f"/api/intake/rows/{siti['row_id']}/reject", headers=admin, json={}).status_code == 404
+
+        # 3. Accounts are created; each student's personal email gets the details
+        done = c.post(f"/api/intake/batches/{bid}/create-accounts", headers=admin, json={}).json()
+        assert len(done["created"]) == 2 and not done["failed"]
+        assert {d["email_status"] for d in done["created"]} == {"not_sent"}               # no mail server in tests
+        mail = next(e for e in c.get("/api/intake/outbox", headers=admin).json()["emails"]
+                    if e["to_address"] == "meiling.tan@example.com")
+        assert "105000001" in mail["body"] and "105000001@student.newinti.edu.my" in mail["body"]
+        temp = re.search(r"Temporary password:\s+(\S+)", mail["body"]).group(1)
+        assert c.get("/api/intake/outbox", headers=advisor).status_code == 403
+
+        # 4. First sign-in: email + student ID + temporary password, then a new password is required
+        r = login(env, "105000001@student.newinti.edu.my", temp, student_id="105000001")
+        assert r.status_code == 200 and r.json()["must_change_password"] is True
+        h = {"Authorization": "Bearer " + r.json()["access_token"]}
+        assert c.get("/api/students/profile", headers=h).status_code == 403              # blocked until changed
+        assert c.get("/api/auth/me", headers=h).json()["student_number"] == "105000001"
+        # The temporary password is not asked again: the student has just signed in with it
+        assert re.search(r"[A-Z]", temp) and re.search(r"[a-z]", temp) and re.search(r"[0-9]", temp)             and re.search(r"[^A-Za-z0-9]", temp)                                       # meets the rules itself
+        change = lambda new: c.post("/api/auth/change-password", headers=h, json={"new_password": new})
+        assert change("MyOwnPass9").status_code == 400                                   # no symbol
+        assert change(temp).status_code == 400                                           # same as temporary
+        assert change("MyOwnPass9!").status_code == 200
+        assert c.get("/api/students/profile", headers=h).status_code == 404              # allowed now (no profile yet)
+        assert login(env, "105000001@student.newinti.edu.my", temp, student_id="105000001").status_code == 401
+        assert login(env, "105000001@student.newinti.edu.my", "MyOwnPass9!", student_id="105000001").status_code == 200
+
+        # The same person cannot be put on a new list again
+        again = upload(env, advisor, "again.csv", b"Full Name,Personal Email\nMei Ling,meiling.tan@example.com\n")
+        assert again.status_code == 400
+
+        # 5. An admin reset makes the password temporary again
+        uid = conn.execute("SELECT user_id::text FROM users WHERE student_number = '105000001'").fetchone()[0]
+        assert c.post(f"/api/admin/users/{uid}/reset-password", headers=admin, json={"password": "Reset#2026"}).status_code == 200
+        r = login(env, "105000001@student.newinti.edu.my", "Reset#2026", student_id="105000001")
+        assert r.json()["must_change_password"] is True
+
+        actions = {a[0] for a in conn.execute("SELECT DISTINCT action FROM audit_log").fetchall()}
+        assert {"intake.upload", "intake.reject", "intake.accounts_create", "auth.password_change"} <= actions
+
+    def test_xlsx_upload_and_bad_files(self, env, advisor):
+        from openpyxl import Workbook
+        wb = Workbook()
+        wb.active.append(["Name", "Mobile", "Email"])
+        wb.active.append(["Lim Wei", 60123456789, "lim.wei@example.com"])        # Excel number for the phone
+        buf = io.BytesIO()
+        wb.save(buf)
+        r = upload(env, advisor, "students.xlsx", buf.getvalue(),
+                   "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+        assert r.status_code == 201 and r.json()["students"] == 1, r.text
+        rows = env["client"].get(f"/api/intake/batches/{r.json()['batch_id']}", headers=advisor).json()["rows"]
+        assert rows[0]["phone"] == "60123456789"
+        assert upload(env, advisor, "x.xlsx", b"not a zip").status_code == 400
+        assert upload(env, advisor, "x.txt", b"a,b").status_code == 400
+        assert upload(env, advisor, "x.csv", b"Phone,Address\n1,2\n").status_code == 400  # no name / email column
 
 
 # ── Batch assessments (data/run_assessments.py uses this) ────

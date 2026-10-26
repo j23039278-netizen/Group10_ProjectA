@@ -3,7 +3,7 @@ import logoSrc from '../../assets/brand/seagas-logo.png'
 import emblemSrc from '../../assets/brand/seagas-emblem.png'
 import wordmarkSrc from '../../assets/brand/seagas-wordmark.png'
 
-// Emblem + "Seagas" side by side (navbar, Login / Register)
+// Emblem + "Seagas" side by side (navbar, sign-in pages)
 export function BrandLogo({ className = '' }) {
   return <img src={logoSrc} alt="Seagas" className={className} draggable="false" />
 }

@@ -183,4 +183,106 @@ CREATE TABLE IF NOT EXISTS student_evidence_files (
 CREATE INDEX IF NOT EXISTS idx_evidence_project ON student_evidence_files(project_id);
 CREATE INDEX IF NOT EXISTS idx_evidence_cert    ON student_evidence_files(cert_id);
 
+-- ── Student accounts: student number, intake, first-login password ──
+-- Students do not register themselves. An advisor uploads a list of new students
+-- (student_intake_*), an admin creates their accounts with a student number and a
+-- school email, and the student gets a temporary password by email
+-- (email_outbox when no mail server is configured). must_change_password makes
+-- the student choose a new password at first sign-in (also after an admin reset).
+-- Safe to run more than once.
+ALTER TABLE users ADD COLUMN IF NOT EXISTS student_number VARCHAR(9);
+ALTER TABLE users ADD COLUMN IF NOT EXISTS must_change_password BOOLEAN NOT NULL DEFAULT FALSE;
+CREATE UNIQUE INDEX IF NOT EXISTS uq_users_student_number ON users(student_number);
+
+-- Numbers suggested for new students. Real Swinburne numbers look like 105967029;
+-- 9xxxxxxxx is kept for the synthetic test students.
+CREATE SEQUENCE IF NOT EXISTS student_number_seq START WITH 107000001 MINVALUE 100000000 MAXVALUE 899999999;
+
+-- Next free student number. Synthetic test students get a fixed one from their
+-- email (student0001@synthetic.example.com -> 900000001), so it is the same in
+-- every teammate's database.
+CREATE OR REPLACE FUNCTION next_student_number(p_email TEXT) RETURNS VARCHAR AS $$
+DECLARE
+    n VARCHAR(9);
+BEGIN
+    IF lower(p_email) ~ '^student[0-9]{1,8}@synthetic\.example\.com$' THEN
+        RETURN '9' || lpad(substring(lower(p_email) from '^student([0-9]+)@'), 8, '0');
+    END IF;
+    LOOP
+        n := nextval('student_number_seq')::text;
+        EXIT WHEN NOT EXISTS (SELECT 1 FROM users WHERE student_number = n);
+    END LOOP;
+    RETURN n;
+END $$ LANGUAGE plpgsql;
+
+-- Every student account gets a number, whichever way it is inserted (intake,
+-- synthetic seed file, tests): the seed files need no change.
+CREATE OR REPLACE FUNCTION users_assign_student_number() RETURNS trigger AS $$
+BEGIN
+    IF NEW.role = 'student' AND NEW.student_number IS NULL THEN
+        NEW.student_number := next_student_number(NEW.email);
+    END IF;
+    RETURN NEW;
+END $$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS trg_users_student_number ON users;
+CREATE TRIGGER trg_users_student_number
+    BEFORE INSERT OR UPDATE OF role, student_number ON users
+    FOR EACH ROW EXECUTE FUNCTION users_assign_student_number();
+
+UPDATE users SET student_number = next_student_number(email)
+WHERE role = 'student' AND student_number IS NULL;
+
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'chk_users_student_number') THEN
+        ALTER TABLE users ADD CONSTRAINT chk_users_student_number CHECK (
+            (role = 'student' AND student_number ~ '^[0-9]{9}$')
+            OR (role <> 'student' AND student_number IS NULL));
+    END IF;
+END $$;
+
+-- A list of new students uploaded by an advisor (Excel / CSV)
+CREATE TABLE IF NOT EXISTS student_intake_batches (
+    batch_id     UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    uploaded_by  UUID REFERENCES users(user_id) ON DELETE SET NULL,
+    file_name    VARCHAR(255) NOT NULL,
+    uploaded_at  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- One new student from that list. student_number / school_email are what the
+-- admin assigns (suggested by the system, editable) until the account is created.
+CREATE TABLE IF NOT EXISTS student_intake_rows (
+    row_id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    batch_id        UUID NOT NULL REFERENCES student_intake_batches(batch_id) ON DELETE CASCADE,
+    line_number     INTEGER      NOT NULL,                     -- row in the uploaded file
+    full_name       VARCHAR(255) NOT NULL,
+    phone           VARCHAR(30),
+    personal_email  VARCHAR(255) NOT NULL,
+    student_number  VARCHAR(9),
+    school_email    VARCHAR(255),
+    status          VARCHAR(10)  NOT NULL DEFAULT 'pending'
+                    CHECK (status IN ('pending', 'created', 'rejected')),
+    user_id         UUID REFERENCES users(user_id) ON DELETE SET NULL,   -- the account created
+    note            TEXT,                                               -- why it was rejected
+    processed_by    UUID REFERENCES users(user_id) ON DELETE SET NULL,
+    processed_at    TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS idx_intake_rows_batch  ON student_intake_rows(batch_id);
+CREATE INDEX IF NOT EXISTS idx_intake_rows_status ON student_intake_rows(status);
+
+-- Every notification email. status 'not_sent' = no mail server configured
+-- (SMTP_HOST in backend/.env), so admins read it here and pass it on.
+CREATE TABLE IF NOT EXISTS email_outbox (
+    email_id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    to_address       VARCHAR(255) NOT NULL,
+    subject          VARCHAR(255) NOT NULL,
+    body             TEXT         NOT NULL,
+    status           VARCHAR(10)  NOT NULL CHECK (status IN ('sent', 'not_sent', 'failed')),
+    error            TEXT,
+    related_user_id  UUID REFERENCES users(user_id) ON DELETE SET NULL,
+    created_at       TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS idx_email_outbox_created ON email_outbox(created_at DESC);
+
 COMMIT;

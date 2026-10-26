@@ -137,12 +137,21 @@ semantic and hybrid requests fall back to keyword matching and the student sees 
 ### Accounts and roles
 | Role | How the account is created | Email must end with |
 |------|----------------------------|---------------------|
-| Student | Registers on the website | `@student.newinti.edu.my` |
+| Student | An advisor uploads the new-student list (**New Students**); an admin assigns the student ID and school email and creates the account (**Student Intake**) | `@student.newinti.edu.my` |
 | Advisor | An admin creates it in **User Management** | `@advisor.newinti.edu.my` |
 | Admin | The first one in the backend window (`backend/create_admin.py`); more in User Management | `@admin.newinti.edu.my` |
 
 Everyone signs in on the same page; the role stored in the database decides which portal opens.
-Test student: `student0001@synthetic.example.com` / `Seagas@2026` (synthetic data only).
+Students also enter their 9-digit **student ID**. There is no sign-up page.
+
+New students receive their student ID, school email and a temporary password at their personal
+email, and must choose their own password at first sign-in (admin password resets work the same
+way). Without a mail server the emails are only stored, and admins read them under
+**Student Intake → Email outbox**. To send real emails, add `SMTP_HOST`, `SMTP_PORT`,
+`SMTP_USER`, `SMTP_PASSWORD` and `SMTP_FROM` to `backend/.env` (never commit them).
+
+Test student: `student0001@synthetic.example.com`, student ID `900000001`, password `Seagas@2026`
+(synthetic data only; synthetic student number N has student ID 900000000 + N, e.g. student0042 → `900000042`).
 
 ### Running the tests
 ```bash

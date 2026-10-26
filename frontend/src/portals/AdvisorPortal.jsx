@@ -4,9 +4,11 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import PortalLayout from './PortalLayout'
 import AdvisorDashboard from '../pages/AdvisorDashboard'
 import AdvisorStudentDetail from '../pages/AdvisorStudentDetail'
+import AdvisorNewStudents from '../pages/AdvisorNewStudents'
 
 const NAV = [
   { path: '/', label: 'Cohort Overview', icon: '📊' },
+  { path: '/new-students', label: 'New Students', icon: '📝' },
 ]
 
 export default function AdvisorPortal({ user, onLogout }) {
@@ -15,6 +17,7 @@ export default function AdvisorPortal({ user, onLogout }) {
       <Routes>
         <Route path="/" element={<AdvisorDashboard />} />
         <Route path="/students/:userId" element={<AdvisorStudentDetail />} />
+        <Route path="/new-students" element={<AdvisorNewStudents />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </PortalLayout>

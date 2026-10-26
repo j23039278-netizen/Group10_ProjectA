@@ -5,6 +5,25 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { assessAPI, progressAPI } from '../api/client'
 import { label } from '../utils/labels'
 
+// Cost tiers, in the order the page shows them (cost_tier comes from recommendation/engine.py)
+const TIERS = [
+  { id: 'free',          title: 'Free',          note: 'Completely free',
+    style: { bg: '#dcfce7', color: '#15803d', border: '#bbf7d0' } },
+  { id: 'free_to_learn', title: 'Free to learn', note: 'Learning is free; a certificate or extra features cost money',
+    style: { bg: '#e0f2fe', color: '#0369a1', border: '#bae6fd' } },
+  { id: 'paid',          title: 'Paid',          note: 'Costs money (including free trials)',
+    style: { bg: '#f1f5f9', color: '#475569', border: '#e2e8f0' } },
+]
+// Category order inside each tier
+const CATEGORY_ORDER = [
+  { id: 'Technical',  title: 'Technical skills' },
+  { id: 'AI_Digital', title: 'AI / Digital skills' },
+  { id: 'Analytical', title: 'Analytical skills' },
+  { id: 'Soft',       title: 'Soft skills' },
+  { id: 'Other',      title: 'Other' },
+]
+const CATEGORY_IDS = CATEGORY_ORDER.map(c => c.id)
+
 export default function Recommendations() {
   const location = useLocation()
   const navigate = useNavigate()
@@ -19,6 +38,8 @@ export default function Recommendations() {
   const [actionLoading, setActionLoading] = useState({})
   // dialog: { show, resourceId, resourceTitle, prompt }
   const [dialog,      setDialog]      = useState(null)
+  // Cost tab being shown: 'free' (default) | 'free_to_learn' | 'paid'
+  const [tier,        setTier]        = useState('free')
 
   // ── Load assessment history on mount ─────────────────────────
   useEffect(() => {
@@ -187,6 +208,94 @@ export default function Recommendations() {
     )
   }
 
+  // ── One resource row (same look as before) ───────────────────
+  const renderResource = (r, j, total) => (
+  <div key={j} style={{
+    display: 'flex', alignItems: 'flex-start', gap: '14px',
+    padding: '14px', background: '#f5f6fa', borderRadius: '10px',
+    marginBottom: j < total - 1 ? '10px' : '0',
+    border: progressMap[r.resource_id]?.status === 'completed'
+      ? '1.5px solid #bbf7d0'
+      : progressMap[r.resource_id]?.status === 'in_progress'
+      ? '1.5px solid #fde68a'
+      : '1.5px solid transparent',
+    transition: 'border-color 0.2s',
+  }}>
+    {/* Icon */}
+    <div style={{
+      width: '38px', height: '38px', borderRadius: '8px', flexShrink: 0,
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      fontSize: '18px',
+      background: typeColor[r.resource_type]?.bg || '#f5f6fa',
+    }}>
+      {typeIcon[r.resource_type] || '📖'}
+    </div>
+
+    {/* Details */}
+    <div style={{ flex: 1 }}>
+      <div style={{ fontSize: '13px', fontWeight: '600', color: '#1a1f2e', marginBottom: '3px' }}>
+        {r.resource_title}
+      </div>
+      {r.description && (
+        <div style={{ fontSize: '12px', color: '#4a5168', marginBottom: '6px' }}>{r.description}</div>
+      )}
+      <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+        <span style={{
+          padding: '2px 8px', borderRadius: '20px', fontSize: '11px', fontWeight: '600',
+          background: typeColor[r.resource_type]?.bg || '#f5f6fa',
+          color: typeColor[r.resource_type]?.color || '#4a5168',
+        }}>
+          {label(r.resource_type)}
+        </span>
+        {r.provider && (
+          <span style={{ fontSize: '11px', color: '#8b92a8' }}>📍 {r.provider}</span>
+        )}
+        {r.cost && (
+          <span style={{ fontSize: '11px', color: '#8b92a8' }}>💰 {r.cost}</span>
+        )}
+        {r.duration_hours && (
+          <span style={{ fontSize: '11px', color: '#8b92a8' }}>⏱ ~{r.duration_hours} hrs</span>
+        )}
+        {r.difficulty && (
+          <span style={{ fontSize: '11px', color: '#8b92a8', textTransform: 'capitalize' }}>
+            📊 {r.difficulty}
+          </span>
+        )}
+      </div>
+    </div>
+
+    {/* Action Buttons */}
+    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0, alignSelf: 'center' }}>
+      {/* Open link */}
+      {r.url && (
+        <a href={r.url} target="_blank" rel="noreferrer" style={{
+          padding: '7px 14px', background: '#2d5be3', color: '#fff',
+          borderRadius: '7px', fontSize: '12px', fontWeight: '600',
+          textDecoration: 'none',
+        }}>
+          Open →
+        </a>
+      )}
+      {/* Progress button */}
+      <ProgressButton resource={r} />
+    </div>
+  </div>
+  )
+
+  // ── Sections: cost tier first, then category, then skill (gaps first) ──
+  const sections = TIERS.map(t => {
+    const categories = CATEGORY_ORDER.map(c => ({
+      ...c,
+      skills: recs
+        .filter(rec => (CATEGORY_IDS.includes(rec.category) ? rec.category : 'Other') === c.id)
+        .map(rec => ({ ...rec, resources: rec.resources.filter(r => (r.cost_tier || 'paid') === t.id) }))
+        .filter(rec => rec.resources.length > 0),
+    })).filter(c => c.skills.length > 0)
+    const count = categories.reduce((n, c) => n + c.skills.reduce((m, rec) => m + rec.resources.length, 0), 0)
+    return { ...t, categories, count }
+  })
+  const noResources = recs.filter(rec => rec.resources.length === 0)
+
   if (loading) return <div style={{ padding: '40px', color: '#8b92a8' }}>Loading...</div>
 
   return (
@@ -330,105 +439,82 @@ export default function Recommendations() {
         </div>
       )}
 
-      {/* ── Recommendation Cards ── */}
-      {recs.map((rec, i) => (
-        <div key={i} style={{
-          background: '#fff', border: '1px solid #e4e6ef',
-          borderRadius: '12px', padding: '20px', marginBottom: '12px',
-        }}>
-          {/* Skill Gap Header */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px' }}>
-            <span style={{
-              padding: '4px 12px', borderRadius: '20px', fontSize: '12px', fontWeight: '700',
-              background: gapColor[rec.gap_type]?.bg || '#fee2e2',
-              color: gapColor[rec.gap_type]?.color || '#dc2626',
-            }}>
-              {rec.gap_type === 'gap' ? '✖ Skill Gap' : '◆ Developing'}
-            </span>
-            <span style={{ fontSize: '15px', fontWeight: '700', color: '#1a1f2e' }}>{rec.skill_name}</span>
+      {/* ── Recommendations: one cost tier at a time (Free by default), grouped by category ── */}
+      {recs.length > 0 && (
+        <div role="tablist" aria-label="Cost" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '16px' }}>
+          {sections.map(sec => {
+            const active = sec.id === tier
+            return (
+              <button key={sec.id} role="tab" aria-selected={active} onClick={() => setTier(sec.id)}
+                style={{ padding: '8px 16px', borderRadius: '20px', fontSize: '13px', fontWeight: '600', cursor: 'pointer',
+                         background: active ? sec.style.color : '#fff', color: active ? '#fff' : sec.style.color,
+                         border: `1.5px solid ${active ? sec.style.color : sec.style.border}` }}>
+                {sec.title} ({sec.count})
+              </button>
+            )
+          })}
+        </div>
+      )}
+
+      {/* Nothing in the chosen tier: point to the tiers that have something */}
+      {recs.length > 0 && sections.find(sec => sec.id === tier)?.count === 0 && (
+        <div style={{ background: '#fff', border: '1px solid #e4e6ef', borderRadius: '12px', padding: '24px', marginBottom: '12px',
+                      textAlign: 'center', fontSize: '13px', color: '#4a5168' }}>
+          No {sections.find(sec => sec.id === tier).title.toLowerCase()} resources for these skill gaps.
+          {sections.filter(sec => sec.count > 0).map(sec => (
+            <button key={sec.id} onClick={() => setTier(sec.id)}
+              style={{ marginLeft: '8px', border: 'none', background: 'none', color: '#2d5be3', fontWeight: '600', cursor: 'pointer', fontSize: '13px' }}>
+              See {sec.title} ({sec.count}) →
+            </button>
+          ))}
+        </div>
+      )}
+
+      {sections.filter(sec => sec.id === tier && sec.count > 0).map(sec => (
+        <section key={sec.id} role="tabpanel" style={{ marginBottom: '24px' }}>
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px', flexWrap: 'wrap', marginBottom: '12px',
+                        paddingBottom: '8px', borderBottom: `2px solid ${sec.style.border}` }}>
+            <span style={{ fontSize: '18px', fontWeight: '700', color: sec.style.color }}>{sec.title}</span>
+            <span style={{ fontSize: '12px', color: '#8b92a8' }}>{sec.note} · {sec.count} resource{sec.count === 1 ? '' : 's'}</span>
           </div>
 
-          {/* Resources */}
-          {rec.resources.length === 0 ? (
-            <div style={{ fontSize: '13px', color: '#8b92a8', fontStyle: 'italic' }}>
-              No specific resources available yet. Try searching online for {rec.skill_name} courses.
-            </div>
-          ) : (
-            rec.resources.map((r, j) => (
-              <div key={j} style={{
-                display: 'flex', alignItems: 'flex-start', gap: '14px',
-                padding: '14px', background: '#f5f6fa', borderRadius: '10px',
-                marginBottom: j < rec.resources.length - 1 ? '10px' : '0',
-                border: progressMap[r.resource_id]?.status === 'completed'
-                  ? '1.5px solid #bbf7d0'
-                  : progressMap[r.resource_id]?.status === 'in_progress'
-                  ? '1.5px solid #fde68a'
-                  : '1.5px solid transparent',
-                transition: 'border-color 0.2s',
-              }}>
-                {/* Icon */}
-                <div style={{
-                  width: '38px', height: '38px', borderRadius: '8px', flexShrink: 0,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: '18px',
-                  background: typeColor[r.resource_type]?.bg || '#f5f6fa',
-                }}>
-                  {typeIcon[r.resource_type] || '📖'}
-                </div>
-
-                {/* Details */}
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: '13px', fontWeight: '600', color: '#1a1f2e', marginBottom: '3px' }}>
-                    {r.resource_title}
-                  </div>
-                  {r.description && (
-                    <div style={{ fontSize: '12px', color: '#4a5168', marginBottom: '6px' }}>{r.description}</div>
-                  )}
-                  <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                    <span style={{
-                      padding: '2px 8px', borderRadius: '20px', fontSize: '11px', fontWeight: '600',
-                      background: typeColor[r.resource_type]?.bg || '#f5f6fa',
-                      color: typeColor[r.resource_type]?.color || '#4a5168',
-                    }}>
-                      {label(r.resource_type)}
-                    </span>
-                    {r.provider && (
-                      <span style={{ fontSize: '11px', color: '#8b92a8' }}>📍 {r.provider}</span>
-                    )}
-                    {r.cost && (
-                      <span style={{ fontSize: '11px', color: '#8b92a8' }}>💰 {r.cost}</span>
-                    )}
-                    {r.duration_hours && (
-                      <span style={{ fontSize: '11px', color: '#8b92a8' }}>⏱ ~{r.duration_hours} hrs</span>
-                    )}
-                    {r.difficulty && (
-                      <span style={{ fontSize: '11px', color: '#8b92a8', textTransform: 'capitalize' }}>
-                        📊 {r.difficulty}
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                {/* Action Buttons */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0, alignSelf: 'center' }}>
-                  {/* Open link */}
-                  {r.url && (
-                    <a href={r.url} target="_blank" rel="noreferrer" style={{
-                      padding: '7px 14px', background: '#2d5be3', color: '#fff',
-                      borderRadius: '7px', fontSize: '12px', fontWeight: '600',
-                      textDecoration: 'none',
-                    }}>
-                      Open →
-                    </a>
-                  )}
-                  {/* Progress button */}
-                  <ProgressButton resource={r} />
-                </div>
+          {sec.categories.map(cat => (
+            <div key={cat.id} style={{ marginBottom: '14px' }}>
+              <div style={{ fontSize: '12px', fontWeight: '700', color: '#4a5168', textTransform: 'uppercase',
+                            letterSpacing: '0.5px', margin: '0 0 8px 2px' }}>
+                {cat.title}
               </div>
-            ))
-          )}
-        </div>
+              {cat.skills.map(rec => (
+                <div key={rec.skill_id} style={{
+                  background: '#fff', border: '1px solid #e4e6ef',
+                  borderRadius: '12px', padding: '20px', marginBottom: '12px',
+                }}>
+                  {/* Skill Gap Header */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px' }}>
+                    <span style={{
+                      padding: '4px 12px', borderRadius: '20px', fontSize: '12px', fontWeight: '700',
+                      background: gapColor[rec.gap_type]?.bg || '#fee2e2',
+                      color: gapColor[rec.gap_type]?.color || '#dc2626',
+                    }}>
+                      {rec.gap_type === 'gap' ? '✖ Skill Gap' : '◆ Developing'}
+                    </span>
+                    <span style={{ fontSize: '15px', fontWeight: '700', color: '#1a1f2e' }}>{rec.skill_name}</span>
+                  </div>
+                  {rec.resources.map((r, j) => renderResource(r, j, rec.resources.length))}
+                </div>
+              ))}
+            </div>
+          ))}
+        </section>
       ))}
+
+      {/* Skills with no resource in the library yet */}
+      {noResources.length > 0 && (
+        <div style={{ background: '#fff', border: '1px solid #e4e6ef', borderRadius: '12px', padding: '16px 20px', marginBottom: '12px',
+                      fontSize: '13px', color: '#4a5168' }}>
+          <b>No resources in our library yet for:</b> {noResources.map(r => r.skill_name).join(', ')}. Try searching online for courses on these skills.
+        </div>
+      )}
 
       {/* ── Note ── */}
       {recs.length > 0 && (

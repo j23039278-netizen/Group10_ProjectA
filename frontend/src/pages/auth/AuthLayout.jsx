@@ -1,4 +1,4 @@
-// SEAGAS — shared layout for the Login and Register pages (styled to match the Home page).
+// SEAGAS — shared layout for the Login and Change Password pages (styled to match the Home page).
 // One centred column: logo, a short heading, then the form card.
 import { useState } from 'react'
 import { Link } from 'react-router-dom'

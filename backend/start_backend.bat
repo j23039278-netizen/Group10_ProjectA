@@ -168,7 +168,7 @@ if exist "..\data\jd_dataset\jd_dataset.csv" (
 echo.
 echo ============================================================
 echo  Backend starting at http://127.0.0.1:8000/docs
-echo  Test login:  student0001@synthetic.example.com / Seagas@2026
+echo  Test login:  student0001@synthetic.example.com / ID 900000001 / Seagas@2026
 echo  Press Ctrl+C in this window to stop the server.
 echo ============================================================
 REM start_all.bat sets SEAGAS_NO_DOCS=1 so only the frontend page opens

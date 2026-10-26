@@ -103,7 +103,7 @@ export default function AdvisorStudentDetail() {
         <div>
           <div style={{ fontSize: '26px', fontWeight: '700', color: C.ink }}>{student.full_name}</div>
           <div style={{ fontSize: '13px', color: C.body, marginTop: '4px' }}>
-            {student.email} · {student.programme || 'No programme'}{student.year_of_study ? ` · Year ${student.year_of_study}` : ''}
+            Student ID {student.student_number} · {student.email} · {student.programme || 'No programme'}{student.year_of_study ? ` · Year ${student.year_of_study}` : ''}
           </div>
         </div>
         <Pill bg={student.is_complete ? '#dcfce7' : '#fef3c7'} color={student.is_complete ? C.green : C.amber}>

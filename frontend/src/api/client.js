@@ -33,14 +33,18 @@ API.interceptors.response.use(
  
 // ── Auth ──────────────────────────────────────────────────────
 export const authAPI = {
-  login: (email, password) => {
+  // Students also send their student ID; advisors and admins leave it empty.
+  login: (email, password, studentId = '') => {
     const form = new URLSearchParams();
     form.append('username', email);
     form.append('password', password);
+    if (studentId.trim()) form.append('student_id', studentId.trim());
     return API.post('/auth/login', form);
   },
-  register: (data) => API.post('/auth/register', data),
   me: () => API.get('/auth/me'),
+  // Required after a temporary password (first sign-in, admin reset)
+  changePassword: (currentPassword, newPassword) =>
+    API.post('/auth/change-password', { current_password: currentPassword, new_password: newPassword }),
 };
  
 // ── Students ──────────────────────────────────────────────────

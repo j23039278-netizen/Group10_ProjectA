@@ -11,16 +11,18 @@ const PAGE_SIZE = 50
 // action prefix filters (the API matches the start of the action name)
 const GROUPS = [
   { id: '',          label: 'All events' },
-  { id: 'auth.',     label: 'Sign-in and registration' },
+  { id: 'auth.',     label: 'Sign-in and passwords' },
   { id: 'auth.login_failed', label: 'Failed sign-ins only' },
   { id: 'assessment.', label: 'Assessments' },
   { id: 'jd.',       label: 'JD analyses' },
   { id: 'advisor.',  label: 'Advisor views' },
   { id: 'admin.',    label: 'Admin changes' },
+  { id: 'intake.',   label: 'Student intake' },
 ]
 
 const ACTION_LABEL = {
-  'auth.login': 'Signed in', 'auth.login_failed': 'Failed sign-in', 'auth.register': 'Registered',
+  'auth.login': 'Signed in', 'auth.login_failed': 'Failed sign-in', 'auth.register': 'Registered', 'auth.password_change': 'Changed password',
+  'intake.upload': 'Uploaded new students', 'intake.accounts_create': 'Created student accounts', 'intake.reject': 'Rejected new student',
   'assessment.run': 'Ran assessment', 'jd.analyse': 'Analysed JD',
   'advisor.view_student': 'Viewed student', 'advisor.view_file': 'Opened evidence file',
   'admin.user_create': 'Created account', 'admin.user_update': 'Changed account',
