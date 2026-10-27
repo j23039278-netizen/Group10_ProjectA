@@ -4,6 +4,8 @@ import { useState, useEffect, useCallback } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { assessAPI, progressAPI } from '../api/client'
 import { label } from '../utils/labels'
+import CompleteActivity from '../components/CompleteActivity'
+import EvidenceFiles from '../components/EvidenceFiles'
 
 // Cost tiers, in the order the page shows them (cost_tier comes from recommendation/engine.py)
 const TIERS = [
@@ -40,6 +42,8 @@ export default function Recommendations() {
   const [dialog,      setDialog]      = useState(null)
   // Cost tab being shown: 'free' (default) | 'free_to_learn' | 'paid'
   const [tier,        setTier]        = useState('free')
+  // Activity whose "Complete" dialog is open (evidence is required to complete)
+  const [completing,  setCompleting]  = useState(null)
 
   // ── Load assessment history on mount ─────────────────────────
   useEffect(() => {
@@ -82,27 +86,23 @@ export default function Recommendations() {
     }
   }
 
-  // ── Handle Mark Complete button ───────────────────────────────
-  const handleComplete = async (resourceId, resourceTitle) => {
-    setActionLoading(p => ({ ...p, [resourceId]: true }))
-    try {
-      const res = await progressAPI.complete(resourceId)
-      setProgressMap(p => ({
-        ...p,
-        [resourceId]: { ...p[resourceId], status: 'completed', completed_at: new Date().toISOString() }
-      }))
-      // Show dialog with prompt from backend
-      setDialog({
-        show: true,
-        resourceId,
-        resourceTitle,
-        prompt: res.data.prompt,
-      })
-    } catch (e) {
-      console.error('Complete failed', e)
-    } finally {
-      setActionLoading(p => ({ ...p, [resourceId]: false }))
-    }
+  // Reload progress + evidence for the selected assessment (after evidence changes)
+  const reloadProgress = async () => {
+    const res = await progressAPI.getAssessmentProgress(selId)
+    setProgressMap(res.data.progress || {})
+  }
+
+  // ── Activity completed in the Complete dialog (evidence attached) ──
+  const handleCompleted = async (resource, res) => {
+    setCompleting(null)
+    await reloadProgress()
+    // Show dialog with prompt from backend
+    setDialog({
+      show: true,
+      resourceId: resource.resource_id,
+      resourceTitle: resource.resource_title,
+      prompt: res.data.prompt,
+    })
   }
 
   // ── Handle "Yes, update profile" in dialog ───────────────────
@@ -176,7 +176,7 @@ export default function Recommendations() {
             ⏳ In Progress
           </span>
           <button
-            onClick={() => handleComplete(rid, resource.resource_title)}
+            onClick={() => setCompleting(resource)}
             disabled={busy}
             style={{
               padding: '7px 12px', background: busy ? '#d1d5db' : '#16a34a',
@@ -262,6 +262,10 @@ export default function Recommendations() {
           </span>
         )}
       </div>
+      {/* Evidence the student attached to this activity */}
+      {progressMap[r.resource_id]?.evidence?.length > 0 && (
+        <EvidenceFiles files={progressMap[r.resource_id].evidence} />
+      )}
     </div>
 
     {/* Action Buttons */}
@@ -300,6 +304,15 @@ export default function Recommendations() {
 
   return (
     <div style={{ padding: '28px 32px' }}>
+
+      {/* ── Complete activity: attach evidence first ── */}
+      {completing && (
+        <CompleteActivity resource={completing}
+          evidence={progressMap[completing.resource_id]?.evidence || []}
+          onChanged={reloadProgress}
+          onCompleted={res => handleCompleted(completing, res)}
+          onClose={() => setCompleting(null)} />
+      )}
 
       {/* ── Completion Dialog ── */}
       {dialog?.show && (

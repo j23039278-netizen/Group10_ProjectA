@@ -1,7 +1,7 @@
 // SEAGAS — Job Analysis Page
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { jobsAPI, assessAPI } from '../api/client'
+import { jobsAPI, assessAPI, authAPI } from '../api/client'
 
 // Matching methods of the NLP module (docs/NLP_INTERFACE.md). Keyword is Level 1,
 // semantic is Level 2; hybrid uses both and is the default.
@@ -25,7 +25,8 @@ export default function JobAnalysis() {
   const [jdInfo,    setJdInfo]    = useState(null)   // what the NLP found in a pasted JD
 
   useEffect(() => {
-    jobsAPI.getRoles().then(r => setRoles(r.data)).catch(() => {})
+    // Only the role templates offered to the student's course
+    authAPI.me().then(r => jobsAPI.getRoles(r.data.course)).then(r => setRoles(r.data)).catch(() => {})
   }, [])
 
   const runAssessment = async () => {
@@ -107,11 +108,21 @@ export default function JobAnalysis() {
                 borderRadius: '8px', fontSize: '13px', background: '#f5f6fa', marginBottom: '12px'
               }}>
                 <option value="">Choose a job role...</option>
-                {roles.map(r => <option key={r.role_id} value={r.role_id}>{r.role_name}</option>)}
+                {/* A role without its skills yet cannot be assessed */}
+                {roles.map(r => (
+                  <option key={r.role_id} value={r.role_id} disabled={!r.skill_count}>
+                    {r.role_name}{r.skill_count ? '' : ' (skills coming soon)'}
+                  </option>
+                ))}
               </select>
               {selRole && (
                 <div style={{ background: '#eef2fd', borderRadius: '8px', padding: '12px', fontSize: '12px', color: '#2d5be3' }}>
                   ℹ️ This will compare your skills against the pre-built skill requirements for this role.
+                </div>
+              )}
+              {roles.length > 0 && roles.every(r => !r.skill_count) && (
+                <div style={{ background: '#fffbeb', borderRadius: '8px', padding: '12px', fontSize: '12px', color: '#92400e' }}>
+                  The role templates for your course do not have their skills yet. You can still paste a job description.
                 </div>
               )}
             </div>

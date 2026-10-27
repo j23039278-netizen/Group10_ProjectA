@@ -55,6 +55,18 @@ def run_assessment(
         raise HTTPException(status_code=404, detail="Create your student profile first")
     if req.jd_id:
         access.get_jd_or_404(db, current_user, req.jd_id)
+    elif req.role_id and current_user.role == "student":
+        # Role templates are offered per course (job_roles.courses)
+        try:
+            offered = db.execute(text("SELECT CAST(:c AS VARCHAR) = ANY(courses) FROM job_roles WHERE role_id = CAST(:r AS uuid)"),
+                                 {"c": current_user.course, "r": req.role_id}).scalar()
+        except Exception:
+            db.rollback()
+            offered = None
+        if offered is None:
+            raise HTTPException(status_code=404, detail="Job role not found")
+        if not offered:
+            raise HTTPException(status_code=400, detail="This role is not offered to your course.")
 
     try:
         result = assessment_service.run_for_profile(

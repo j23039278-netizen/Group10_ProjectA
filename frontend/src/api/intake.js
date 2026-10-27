@@ -8,6 +8,7 @@ export const intakeAPI = {
     form.append('file', file);
     return API.post('/intake/batches', form);
   },
+  template:       ()               => API.get('/intake/template', { responseType: 'blob' }),
   batches:        ()               => API.get('/intake/batches'),
   batch:          (id)             => API.get(`/intake/batches/${id}`),
   // admin only

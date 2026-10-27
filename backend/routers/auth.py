@@ -224,6 +224,7 @@ def get_me(current_user=Depends(get_current_user)):
         "full_name": current_user.full_name,
         "role": current_user.role,
         "student_number": current_user.student_number,
+        "course": current_user.course,
         "must_change_password": current_user.must_change_password
     }
 

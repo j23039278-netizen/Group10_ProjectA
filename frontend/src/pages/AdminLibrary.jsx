@@ -8,6 +8,7 @@ import { adminAPI } from '../api/admin'
 import { label as labelText } from '../utils/labels'
 import { C, card, th, td, input, label, btn, smallBtn, heading, errorText } from './admin/adminStyles'
 import { Modal, Alert, StatusPill, SourcePill } from './admin/AdminUi'
+import { COURSES, courseLabel } from '../utils/courses'
 
 const CATEGORIES = [
   { id: 'Technical',  label: 'Technical' },
@@ -101,6 +102,7 @@ function RoleModal({ role, onClose, onSaved }) {
   const [form, setForm] = useState({
     role_name: role?.role_name || '', industry_level: role?.industry_level || 'junior',
     description: role?.description || '',
+    courses: role?.courses || ['CS'],
   })
   const [error, setError]   = useState('')
   const [saving, setSaving] = useState(false)
@@ -109,8 +111,9 @@ function RoleModal({ role, onClose, onSaved }) {
   const submit = async (e) => {
     e.preventDefault()
     if (!form.role_name.trim()) return setError('Please enter the role name.')
+    if (form.courses.length === 0) return setError('Choose at least one course.')
     const body = { role_name: form.role_name.trim(), industry_level: form.industry_level,
-                   description: form.description.trim() || null }
+                   description: form.description.trim() || null, courses: form.courses }
     setSaving(true)
     setError('')
     try {
@@ -136,6 +139,20 @@ function RoleModal({ role, onClose, onSaved }) {
             {LEVELS.map(l => <option key={l} value={l}>{labelText(l)}</option>)}
           </select>
         </div>
+        <fieldset style={{ border: 'none', padding: 0, margin: '0 0 12px' }}>
+          <legend style={label}>Courses (students of these courses can choose this role)</legend>
+          <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
+            {COURSES.map(c => (
+              <label key={c.id} style={{ fontSize: '13px', color: C.body, display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}>
+                <input type="checkbox" checked={form.courses.includes(c.id)}
+                  onChange={e => setForm(f => ({ ...f, courses: e.target.checked
+                    ? COURSES.map(x => x.id).filter(id => id === c.id || f.courses.includes(id))
+                    : f.courses.filter(id => id !== c.id) }))} />
+                {c.label}
+              </label>
+            ))}
+          </div>
+        </fieldset>
         <div style={{ marginBottom: '18px' }}>
           <label style={label} htmlFor="ro-desc">Description</label>
           <textarea id="ro-desc" rows={3} style={{ ...input, resize: 'vertical', fontFamily: 'inherit' }} value={form.description} onChange={set('description')} />
@@ -313,11 +330,12 @@ export default function AdminLibrary() {
         </div>
         <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '720px' }}>
-            <thead><tr>{['Role', 'Level', 'Skills', 'Required', 'Source', 'Status', ''].map(h => <th key={h} style={th}>{h}</th>)}</tr></thead>
+            <thead><tr>{['Role', 'Courses', 'Level', 'Skills', 'Required', 'Source', 'Status', ''].map(h => <th key={h} style={th}>{h}</th>)}</tr></thead>
             <tbody>
               {roles.map(r => (
                 <tr key={r.role_id} style={{ opacity: r.is_active ? 1 : 0.6 }}>
                   <td style={{ ...td, color: C.ink, fontWeight: '600' }}>{r.role_name}</td>
+                  <td style={td}>{(r.courses || []).map(courseLabel).join(', ') || '—'}</td>
                   <td style={{ ...td, textTransform: 'capitalize' }}>{r.industry_level || '—'}</td>
                   <td style={td}>{r.skill_count}</td>
                   <td style={td}>{r.required_count}</td>

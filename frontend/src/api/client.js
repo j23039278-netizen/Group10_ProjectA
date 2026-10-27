@@ -52,6 +52,8 @@ export const studentAPI = {
   getProfile:      ()     => API.get('/students/profile'),
   createProfile:   (data) => API.post('/students/profile', data),
   updateProfile:   (data) => API.put('/students/profile', data),
+  // GPA / CGPA did not change this semester: stops the reminder
+  confirmResults:  ()     => API.post('/students/profile/results-confirmed'),
   getSkills:       ()     => API.get('/students/skills'),
   addSkill:        (data) => API.post('/students/skills', data),
   removeSkill:     (id)   => API.delete(`/students/skills/${id}`),
@@ -73,16 +75,20 @@ const uploadFile = (url, file) => {
   form.append('file', file);
   return API.post(url, form);
 };
+// Evidence is a file or a link (videos are links); see components/evidenceRules.js
 export const fileAPI = {
   uploadToProject: (id, file) => uploadFile(`/students/projects/${id}/files`, file),
   uploadToCert:    (id, file) => uploadFile(`/students/certifications/${id}/files`, file),
+  linkToProject:   (id, url, title) => API.post(`/students/projects/${id}/links`, { url, title }),
+  linkToCert:      (id, url, title) => API.post(`/students/certifications/${id}/links`, { url, title }),
   remove:          (fileId)   => API.delete(`/students/files/${fileId}`),
   download:        (fileId)   => API.get(`/students/files/${fileId}`, { responseType: 'blob' }),
 };
 
 // ── Jobs ──────────────────────────────────────────────────────
 export const jobsAPI = {
-  getRoles:    ()      => API.get('/jobs/roles'),
+  // course: only the roles offered to that course (CS | BUSINESS | ICT)
+  getRoles:    (course) => API.get('/jobs/roles', { params: course ? { course } : {} }),
   getRoleSkills: (id)  => API.get(`/jobs/roles/${id}/skills`),
   submitJD:    (data)  => API.post('/jobs/descriptions', data),
   getMyJDs:    ()      => API.get('/jobs/descriptions'),
@@ -110,7 +116,11 @@ export const progressAPI = {
       params: { assessment_id: assessmentId }
     }),
  
-  // Mark a resource as completed
+  // Evidence for a started activity (required before completing)
+  uploadEvidence: (resourceId, file) => uploadFile(`/progress/${resourceId}/files`, file),
+  linkEvidence:   (resourceId, url, title) => API.post(`/progress/${resourceId}/links`, { url, title }),
+
+  // Mark a resource as completed (needs at least one piece of evidence)
   complete: (resourceId) =>
     API.post(`/progress/${resourceId}/complete`, { status: 'completed', skill_added: false }),
  

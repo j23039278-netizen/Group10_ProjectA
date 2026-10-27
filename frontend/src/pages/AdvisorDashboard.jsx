@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { advisorAPI } from '../api/advisor'
+import { COURSES, courseLabel } from '../utils/courses'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 
 // The student list can hold thousands of rows; only this many are drawn at once
@@ -18,26 +19,27 @@ export default function AdvisorDashboard() {
   const [loading,   setLoading]   = useState(true)
   const [search,    setSearch]    = useState('')
   const [status,    setStatus]    = useState('')
+  // One course for every tab ('' = all courses); kept when coming back from a student
+  const [course,    setCourse]    = useState(location.state?.course || '')
   const [shownRows, setShownRows] = useState(PAGE_SIZE)
 
-  useEffect(() => { loadAll() }, [])
+  useEffect(() => {
+    advisorAPI.students().then(r => setStudents(r.data)).catch(console.error)
+  }, [])
 
-  const loadAll = async () => {
-    try {
-      const [ovRes, sgRes, stRes] = await Promise.all([
-        advisorAPI.overview(),
-        advisorAPI.skillGaps(),
-        advisorAPI.students(),
-      ])
-      setOverview(ovRes.data)
-      setSkillGaps(sgRes.data)
-      setStudents(stRes.data)
-    } catch (e) {
-      console.error(e)
-    } finally {
-      setLoading(false)
-    }
-  }
+  // The overview numbers and the skill gaps are worked out on the server per course
+  useEffect(() => {
+    let current = true
+    Promise.all([advisorAPI.overview(course), advisorAPI.skillGaps(course)])
+      .then(([ovRes, sgRes]) => {
+        if (!current) return
+        setOverview(ovRes.data)
+        setSkillGaps(sgRes.data)
+      })
+      .catch(console.error)
+      .finally(() => { if (current) setLoading(false) })
+    return () => { current = false }
+  }, [course])
 
   // A score of 0 is a real result, so only null means "not assessed"
   const scoreColor = (s) => {
@@ -54,8 +56,14 @@ export default function AdvisorDashboard() {
 
   if (loading) return <div style={{ padding: '40px', color: '#8b92a8' }}>Loading...</div>
 
+  const cohortName = course ? `${courseLabel(course)} Students` : 'All Students'
+  const noGapsText = course === 'BUSINESS'
+    ? 'No assessment data yet. Business roles do not have their skills yet, so Business students cannot be assessed.'
+    : 'No assessment data yet.'
+
   const q = search.trim().toLowerCase()
   const filteredStudents = students.filter(s =>
+    (!course || s.course === course) &&
     (!status || statusBadge(s.latest_score == null ? null : parseFloat(s.latest_score)).key === status) &&
     (!q || [s.full_name, s.email, s.student_number, s.programme, s.target_role].some(v => (v || '').toLowerCase().includes(q)))
   )
@@ -73,6 +81,23 @@ export default function AdvisorDashboard() {
         <div style={{ fontSize: '13px', color: '#4a5168', marginTop: '4px' }}>
           Cohort-level employability insights
         </div>
+      </div>
+
+      {/* Course: every tab shows only Computer Science, Business or ICT students */}
+      <div role="tablist" aria-label="Course" style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '16px' }}>
+        {[{ id: '', label: 'All courses' }, ...COURSES].map(c => {
+          const active = course === c.id
+          const n = c.id ? students.filter(s => s.course === c.id).length : students.length
+          return (
+            <button key={c.id || 'all'} role="tab" aria-selected={active}
+              onClick={() => { setCourse(c.id); setShownRows(PAGE_SIZE) }}
+              style={{ padding: '6px 14px', borderRadius: '20px', fontSize: '12px', fontWeight: '600', cursor: 'pointer',
+                       background: active ? '#2d5be3' : '#fff', color: active ? '#fff' : '#4a5168',
+                       border: `1.5px solid ${active ? '#2d5be3' : '#e4e6ef'}` }}>
+              {c.label} ({n})
+            </button>
+          )
+        })}
       </div>
 
       {/* Tabs */}
@@ -114,11 +139,11 @@ export default function AdvisorDashboard() {
           {/* Chart */}
           <div style={{ background: '#fff', border: '1px solid #e4e6ef', borderRadius: '12px', padding: '24px' }}>
             <div style={{ fontSize: '13px', fontWeight: '700', color: '#1a1f2e', marginBottom: '16px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-              Top Skill Gaps Across Cohort
+              Top Skill Gaps — {cohortName}
             </div>
             {chartData.length === 0 ? (
               <div style={{ textAlign: 'center', padding: '40px', color: '#8b92a8' }}>
-                No assessment data yet.
+                {noGapsText}
               </div>
             ) : (
               <ResponsiveContainer width="100%" height={280}>
@@ -139,10 +164,10 @@ export default function AdvisorDashboard() {
       {tab === 'skill gaps' && (
         <div style={{ background: '#fff', border: '1px solid #e4e6ef', borderRadius: '12px', padding: '24px' }}>
           <div style={{ fontSize: '13px', fontWeight: '700', color: '#1a1f2e', marginBottom: '16px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-            Skill Gap Report — All Students
+            Skill Gap Report — {cohortName}
           </div>
           {skillGaps.length === 0 ? (
-            <div style={{ color: '#8b92a8', textAlign: 'center', padding: '40px' }}>No data yet.</div>
+            <div style={{ color: '#8b92a8', textAlign: 'center', padding: '40px' }}>{noGapsText}</div>
           ) : (
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
               <thead>
@@ -205,7 +230,7 @@ export default function AdvisorDashboard() {
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
               <tr>
-                {['Name', 'Student ID', 'Programme', 'Target Role', 'Readiness', 'Status'].map(h => (
+                {['Name', 'Student ID', 'Course', 'Programme', 'Target Role', 'Readiness', 'Status'].map(h => (
                   <th key={h} style={{ textAlign: 'left', fontSize: '11px', fontWeight: '700', color: '#8b92a8', textTransform: 'uppercase', letterSpacing: '0.5px', padding: '10px 12px', borderBottom: '1px solid #e4e6ef' }}>
                     {h}
                   </th>
@@ -214,18 +239,19 @@ export default function AdvisorDashboard() {
             </thead>
             <tbody>
               {filteredStudents.length === 0 && (
-                <tr><td colSpan={6} style={{ padding: '32px', textAlign: 'center', fontSize: '13px', color: '#8b92a8' }}>No students match.</td></tr>
+                <tr><td colSpan={7} style={{ padding: '32px', textAlign: 'center', fontSize: '13px', color: '#8b92a8' }}>No students match.</td></tr>
               )}
               {filteredStudents.slice(0, shownRows).map((s, i) => {
                 const score = s.latest_score == null ? null : parseFloat(s.latest_score)
                 const badge = statusBadge(score)
-                const open  = () => navigate(`/students/${s.user_id}`)
+                const open  = () => navigate(`/students/${s.user_id}`, { state: { course } })
                 return (
                   <tr key={s.user_id} onClick={open} tabIndex={0}
                     onKeyDown={e => { if (e.key === 'Enter') open() }}
                     style={{ background: i % 2 === 0 ? '#f5f6fa' : '#fff', cursor: 'pointer' }}>
                     <td style={{ padding: '10px 12px', fontSize: '13px', fontWeight: '500', color: '#2d5be3' }}>{s.full_name}</td>
                     <td style={{ padding: '10px 12px', fontSize: '12px', color: '#4a5168', fontFamily: 'Consolas, monospace' }}>{s.student_number || '—'}</td>
+                    <td style={{ padding: '10px 12px', fontSize: '12px', color: '#4a5168', whiteSpace: 'nowrap' }}>{courseLabel(s.course)}</td>
                     <td style={{ padding: '10px 12px', fontSize: '12px', color: '#4a5168' }}>{s.programme || '—'}</td>
                     <td style={{ padding: '10px 12px', fontSize: '12px', color: '#4a5168' }}>{s.target_role || '—'}</td>
                     <td style={{ padding: '10px 12px', fontSize: '14px', fontWeight: '700', color: scoreColor(score) }}>

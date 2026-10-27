@@ -27,7 +27,8 @@ router = APIRouter()
 class ProfileCreate(BaseModel):
     programme: Optional[str] = Field(None, max_length=255)
     university: Optional[str] = Field(None, max_length=255)
-    gpa: Optional[float] = Field(None, ge=0, le=4)
+    gpa: Optional[float] = Field(None, ge=0, le=4)    # latest semester
+    cgpa: Optional[float] = Field(None, ge=0, le=4)   # cumulative
     expected_graduation: Optional[str] = Field(None, max_length=20)
     year_of_study: Optional[int] = Field(None, ge=1, le=5)
     target_role: Optional[str] = Field(None, max_length=100)
@@ -111,7 +112,53 @@ def get_profile_id(db, current_user, missing="Profile not found"):
     return profile.profile_id
 
 
+def ensure_profile(db, current_user):
+    """The student's profile row, created empty if the student has none yet.
+
+    New accounts (created by an admin from the intake list) have no profile until
+    the student saves the Info tab; adding a skill, project or certification
+    first must still work.
+    """
+    if current_user.role != "student":
+        raise HTTPException(status_code=403, detail="Only students have a profile")
+    db.execute(
+        text("INSERT INTO student_profiles (user_id) VALUES (:uid) ON CONFLICT (user_id) DO NOTHING"),
+        {"uid": str(current_user.user_id)}
+    )
+    return db.execute(
+        text("SELECT profile_id FROM student_profiles WHERE user_id = :uid"),
+        {"uid": str(current_user.user_id)}
+    ).fetchone()
+
+
 # ── Profile Endpoints ─────────────────────────────────────────
+# Semester starts (month, day) for the GPA / CGPA reminder: the January, May and
+# September intakes. Change them here if the academic calendar changes.
+SEMESTER_STARTS = ((1, 1), (5, 1), (9, 1))
+COURSE_NAMES = {"CS": "Computer Science", "BUSINESS": "Business", "ICT": "ICT"}
+
+
+def current_semester_start(today=None):
+    """The start date of the semester that today falls in"""
+    today = today or date.today()
+    starts = [date(today.year, m, d) for m, d in SEMESTER_STARTS if date(today.year, m, d) <= today]
+    if starts:
+        return max(starts)
+    m, d = SEMESTER_STARTS[-1]
+    return date(today.year - 1, m, d)
+
+
+def check_target_role(db, current_user, role_name):
+    """400 unless the role is an active role offered to the student's course"""
+    ok = db.execute(text("""
+        SELECT 1 FROM job_roles
+        WHERE role_name = :n AND is_active AND CAST(:course AS VARCHAR) = ANY(courses)
+    """), {"n": role_name, "course": current_user.course}).fetchone()
+    if not ok:
+        raise HTTPException(status_code=400, detail=f"{role_name} is not a target role for "
+                                                    f"{COURSE_NAMES.get(current_user.course, '')} students.")
+
+
 @router.get("/profile")
 def get_my_profile(
     current_user=Depends(get_current_user),
@@ -125,7 +172,13 @@ def get_my_profile(
     if not profile:
         raise HTTPException(status_code=404, detail="Profile not found. Please create one.")
 
-    return dict(profile._mapping)
+    row = dict(profile._mapping)
+    # Remind the student to enter this semester's GPA / CGPA
+    start = current_semester_start()
+    updated = row["results_updated_at"]
+    row["semester_start"] = start.isoformat()
+    row["results_reminder"] = updated is None or updated.date() < start
+    return row
 
 
 @router.post("/profile", status_code=201)
@@ -134,40 +187,9 @@ def create_profile(
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    if current_user.role != "student":
-        raise HTTPException(status_code=403, detail="Only students can create profiles")
-
-    # Check if profile already exists
-    existing = db.execute(
-        text("SELECT profile_id FROM student_profiles WHERE user_id = :uid"),
-        {"uid": str(current_user.user_id)}
-    ).fetchone()
-
-    if existing:
-        raise HTTPException(status_code=400, detail="Profile already exists. Use PUT to update.")
-
-    db.execute(
-        text("""
-            INSERT INTO student_profiles
-                (user_id, programme, university, gpa, expected_graduation,
-                 year_of_study, target_role, career_interests)
-            VALUES
-                (:uid, :prog, :uni, :gpa, :grad, :year, :role, :interests)
-        """),
-        {
-            "uid": str(current_user.user_id),
-            "prog": req.programme,
-            "uni": req.university,
-            "gpa": req.gpa,
-            "grad": req.expected_graduation,
-            "year": req.year_of_study,
-            "role": req.target_role,
-            "interests": req.career_interests
-        }
-    )
-    refresh_profile_complete(db, current_user.user_id)
-    db.commit()
-    return {"message": "Profile created successfully"}
+    # The row may already exist (created empty when the student added a skill first)
+    ensure_profile(db, current_user)
+    return update_profile(req, current_user, db)
 
 
 @router.put("/profile")
@@ -176,16 +198,29 @@ def update_profile(
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
+    ensure_profile(db, current_user)
+    target_role = (req.target_role or "").strip() or None
+    if target_role:
+        check_target_role(db, current_user, target_role)
+
+    # A new GPA / CGPA answers the start-of-semester reminder
+    old = db.execute(text("SELECT gpa, cgpa FROM student_profiles WHERE user_id = :uid"),
+                     {"uid": str(current_user.user_id)}).fetchone()
+    as2 = lambda v: None if v is None else round(float(v), 2)
+    results_changed = (as2(req.gpa), as2(req.cgpa)) != (as2(old.gpa), as2(old.cgpa))
+
     db.execute(
         text("""
             UPDATE student_profiles SET
                 programme = :prog,
                 university = :uni,
                 gpa = :gpa,
+                cgpa = :cgpa,
                 expected_graduation = :grad,
                 year_of_study = :year,
                 target_role = :role,
                 career_interests = :interests,
+                results_updated_at = CASE WHEN :changed THEN NOW() ELSE results_updated_at END,
                 updated_at = NOW()
             WHERE user_id = :uid
         """),
@@ -194,15 +229,27 @@ def update_profile(
             "prog": req.programme,
             "uni": req.university,
             "gpa": req.gpa,
+            "cgpa": req.cgpa,
             "grad": req.expected_graduation,
             "year": req.year_of_study,
-            "role": req.target_role,
-            "interests": req.career_interests
+            "role": target_role,
+            "interests": req.career_interests,
+            "changed": results_changed,
         }
     )
     refresh_profile_complete(db, current_user.user_id)
     db.commit()
-    return {"message": "Profile updated successfully"}
+    return {"message": "Profile saved"}
+
+
+@router.post("/profile/results-confirmed")
+def confirm_results(current_user=Depends(get_current_user), db: Session = Depends(get_db)):
+    """The student's GPA / CGPA did not change this semester: stop the reminder"""
+    ensure_profile(db, current_user)
+    db.execute(text("UPDATE student_profiles SET results_updated_at = NOW() WHERE user_id = :uid"),
+               {"uid": str(current_user.user_id)})
+    db.commit()
+    return {"message": "Thanks, your results are marked as up to date."}
 
 
 # ── Skills Endpoints ──────────────────────────────────────────
@@ -233,13 +280,8 @@ def add_skill(
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    profile = db.execute(
-        text("SELECT profile_id FROM student_profiles WHERE user_id = :uid"),
-        {"uid": str(current_user.user_id)}
-    ).fetchone()
-
-    if not profile:
-        raise HTTPException(status_code=404, detail="Create your profile first")
+    # A new student may add skills / projects / certifications before saving the Info tab
+    profile = ensure_profile(db, current_user)
 
     # Check skill exists in library
     skill = db.execute(
@@ -348,7 +390,7 @@ def get_my_projects(
     ).fetchone()
 
     if not profile:
-        raise HTTPException(status_code=404, detail="Profile not found")
+        return []   # a new student has no profile yet
 
     projects = db.execute(
         text("SELECT * FROM student_projects WHERE profile_id = :pid ORDER BY year_completed DESC"),
@@ -364,13 +406,8 @@ def add_project(
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    profile = db.execute(
-        text("SELECT profile_id FROM student_profiles WHERE user_id = :uid"),
-        {"uid": str(current_user.user_id)}
-    ).fetchone()
-
-    if not profile:
-        raise HTTPException(status_code=404, detail="Create your profile first")
+    # A new student may add skills / projects / certifications before saving the Info tab
+    profile = ensure_profile(db, current_user)
 
     # The id lets the page attach evidence files right after creating the project
     row = db.execute(
@@ -453,7 +490,7 @@ def get_my_certifications(
     ).fetchone()
 
     if not profile:
-        raise HTTPException(status_code=404, detail="Profile not found")
+        return []   # a new student has no profile yet
 
     certs = db.execute(
         text("SELECT * FROM student_certifications WHERE profile_id = :pid ORDER BY issue_date DESC"),
@@ -469,13 +506,8 @@ def add_certification(
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    profile = db.execute(
-        text("SELECT profile_id FROM student_profiles WHERE user_id = :uid"),
-        {"uid": str(current_user.user_id)}
-    ).fetchone()
-
-    if not profile:
-        raise HTTPException(status_code=404, detail="Create your profile first")
+    # A new student may add skills / projects / certifications before saving the Info tab
+    profile = ensure_profile(db, current_user)
 
     row = db.execute(
         text("""
@@ -544,50 +576,30 @@ def delete_certification(
     return {"message": "Certification deleted"}
 
 
-# ── Evidence files (photos / PDFs proving a project or certification) ──
-# Rules are in evidence.py. Students upload to and delete from their own records;
-# students, advisors and admins can download (students only their own files).
+# ── Evidence (files and links proving a project or certification) ──
+# Rules are in evidence.py. Students add to and delete from their own records;
+# students, advisors and admins can download files (students only their own).
+# Activity evidence is added through routers/progress.py.
 EVIDENCE_PARENTS = {
     "project": ("student_projects",       "project_id", "Project not found"),
     "cert":    ("student_certifications", "cert_id",    "Certification not found"),
 }
 
 
-def save_evidence(db, current_user, kind, item_id, upload):
+class EvidenceLink(BaseModel):
+    url: str = Field(min_length=1, max_length=2000)
+    title: Optional[str] = Field(None, max_length=255)
+
+
+def owned_parent(db, current_user, kind, item_id):
+    """(profile_id, key) if the project / certification belongs to the student, else 404"""
     table, key, missing = EVIDENCE_PARENTS[kind]
     profile_id = get_profile_id(db, current_user)
     owned = db.execute(text(f"SELECT 1 FROM {table} WHERE {key} = :iid AND profile_id = :pid"),
                        {"iid": str(item_id), "pid": str(profile_id)}).fetchone()
     if not owned:
         raise HTTPException(status_code=404, detail=missing)
-
-    count = db.execute(text(f"SELECT COUNT(*) FROM student_evidence_files WHERE {key} = :iid"),
-                       {"iid": str(item_id)}).scalar()
-    if count >= evidence.MAX_PER_ITEM:
-        raise HTTPException(status_code=400,
-                            detail=f"You can attach at most {evidence.MAX_PER_ITEM} files. Delete one first.")
-
-    data = upload.file.read(evidence.MAX_BYTES + 1)
-    if not data:
-        raise HTTPException(status_code=400, detail="The file is empty.")
-    if len(data) > evidence.MAX_BYTES:
-        raise HTTPException(status_code=413, detail="The file is larger than 5 MB.")
-    content_type = evidence.detect_type(data)
-    if not content_type:
-        raise HTTPException(status_code=400, detail="Only JPG, PNG or PDF files can be attached.")
-
-    row = db.execute(
-        text(f"""
-            INSERT INTO student_evidence_files (profile_id, {key}, file_name, content_type, size_bytes, data)
-            VALUES (:pid, :iid, :name, :ctype, :size, :data)
-            RETURNING {evidence.META_COLUMNS}
-        """),
-        {"pid": str(profile_id), "iid": str(item_id),
-         "name": evidence.clean_name(upload.filename, content_type),
-         "ctype": content_type, "size": len(data), "data": data}
-    ).fetchone()
-    db.commit()
-    return dict(row._mapping)
+    return profile_id, key
 
 
 @router.post("/projects/{project_id}/files", status_code=201)
@@ -597,7 +609,8 @@ def upload_project_file(
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    return save_evidence(db, current_user, "project", project_id, file)
+    profile_id, key = owned_parent(db, current_user, "project", project_id)
+    return evidence.save_file(db, profile_id, key, project_id, file)
 
 
 @router.post("/certifications/{cert_id}/files", status_code=201)
@@ -607,7 +620,30 @@ def upload_certification_file(
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    return save_evidence(db, current_user, "cert", cert_id, file)
+    profile_id, key = owned_parent(db, current_user, "cert", cert_id)
+    return evidence.save_file(db, profile_id, key, cert_id, file)
+
+
+@router.post("/projects/{project_id}/links", status_code=201)
+def add_project_link(
+    project_id: UUID,
+    req: EvidenceLink,
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    profile_id, key = owned_parent(db, current_user, "project", project_id)
+    return evidence.save_link(db, profile_id, key, project_id, req.url, req.title)
+
+
+@router.post("/certifications/{cert_id}/links", status_code=201)
+def add_certification_link(
+    cert_id: UUID,
+    req: EvidenceLink,
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    profile_id, key = owned_parent(db, current_user, "cert", cert_id)
+    return evidence.save_link(db, profile_id, key, cert_id, req.url, req.title)
 
 
 def parse_file_id(file_id):
@@ -628,7 +664,7 @@ def download_file(
     """The file itself. Students get only their own; advisors and admins any (audited)."""
     row = db.execute(
         text("""
-            SELECT f.file_name, f.content_type, f.data, f.profile_id, sp.user_id
+            SELECT f.kind, f.file_name, f.content_type, f.data, f.profile_id, sp.user_id
             FROM student_evidence_files f
             JOIN student_profiles sp ON sp.profile_id = f.profile_id
             WHERE f.file_id = :fid
@@ -639,6 +675,8 @@ def download_file(
     staff = current_user.role in ("advisor", "admin")
     if row is None or not (own or staff):
         raise HTTPException(status_code=404, detail="File not found")
+    if row.kind != "file":
+        raise HTTPException(status_code=400, detail="This evidence is a link; open its URL instead.")
     if not own:
         audit.record(db, "advisor.view_file", user=current_user, request=request,
                      target_type="evidence_file", target_id=file_id,
@@ -663,11 +701,22 @@ def delete_file(
     db: Session = Depends(get_db)
 ):
     profile_id = get_profile_id(db, current_user, missing="File not found")
+    fid = parse_file_id(file_id)
+    # A completed activity must keep at least one piece of evidence
+    last = db.execute(text("""
+        SELECT 1 FROM student_evidence_files f
+        JOIN student_resource_progress srp ON srp.progress_id = f.progress_id
+        WHERE f.file_id = :fid AND f.profile_id = :pid AND srp.status = 'completed'
+          AND (SELECT COUNT(*) FROM student_evidence_files g WHERE g.progress_id = f.progress_id) = 1
+    """), {"fid": fid, "pid": str(profile_id)}).fetchone()
+    if last:
+        raise HTTPException(status_code=400,
+                            detail="A completed activity needs at least one piece of evidence. Add another one first.")
     deleted = db.execute(
         text("DELETE FROM student_evidence_files WHERE file_id = :fid AND profile_id = :pid RETURNING file_id"),
-        {"fid": parse_file_id(file_id), "pid": str(profile_id)}
+        {"fid": fid, "pid": str(profile_id)}
     ).fetchone()
     if not deleted:
         raise HTTPException(status_code=404, detail="File not found")
     db.commit()
-    return {"message": "File deleted"}
+    return {"message": "Evidence deleted"}

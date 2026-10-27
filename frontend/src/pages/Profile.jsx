@@ -1,11 +1,12 @@
 // SEAGAS — Student Profile Page
 import { useState, useEffect } from 'react'
-import { studentAPI, fileAPI, authAPI } from '../api/client'
+import { studentAPI, fileAPI, authAPI, jobsAPI } from '../api/client'
 import { label } from '../utils/labels'
+import { courseLabel } from '../utils/courses'
 import EvidenceFiles, { PendingFiles } from '../components/EvidenceFiles'
 import { MAX_FILES } from '../components/evidenceRules'
+import ResultsReminder from '../components/ResultsReminder'
 
-const ROLES = ['Data Analyst','Data Scientist','Software Developer','Cybersecurity Analyst','Cloud Engineer','Web Developer']
 const CATEGORIES = ['Technical','AI_Digital','Analytical','Soft']
 const PROFICIENCY = ['beginner','intermediate','advanced']
 const PROJECT_TYPES = ['academic','personal','internship','competition']
@@ -27,12 +28,14 @@ export default function Profile() {
   const [loading,  setLoading]  = useState(true)
   const [saving,   setSaving]   = useState(false)
   const [msg,      setMsg]      = useState('')
-  // Student ID and school email: set by the admin, shown read-only
+  // Student ID, course and school email: set by the admin, shown read-only
   const [account,  setAccount]  = useState(null)
+  // Target roles offered to the student's course
+  const [roles,    setRoles]    = useState([])
 
   // Profile form state
   const [form, setForm] = useState({
-    programme: '', university: '', gpa: '', expected_graduation: '',
+    programme: '', university: '', gpa: '', cgpa: '', expected_graduation: '',
     year_of_study: '', target_role: '', career_interests: []
   })
 
@@ -56,20 +59,27 @@ export default function Profile() {
   const [savingItem, setSavingItem] = useState(false)
 
   useEffect(() => { loadAll() }, [])
-  useEffect(() => { authAPI.me().then(r => setAccount(r.data)).catch(() => {}) }, [])
+  useEffect(() => {
+    authAPI.me().then(r => {
+      setAccount(r.data)
+      return jobsAPI.getRoles(r.data.course)
+    }).then(r => setRoles(r.data)).catch(() => {})
+  }, [])
 
   const loadAll = async () => {
     try {
-      const [libRes, skillRes, projRes, certRes] = await Promise.all([
+      // Each part loads on its own, so one failing request (e.g. a new student
+      // without a profile yet) cannot leave the skill list empty
+      const [libRes, skillRes, projRes, certRes] = await Promise.allSettled([
         studentAPI.getSkillLibrary(),
         studentAPI.getSkills(),
         studentAPI.getProjects(),
         studentAPI.getCerts(),
       ])
-      setLibrary(libRes.data)
-      setSkills(skillRes.data)
-      setProjects(projRes.data)
-      setCerts(certRes.data)
+      if (libRes.status === 'fulfilled')   setLibrary(libRes.value.data)
+      if (skillRes.status === 'fulfilled') setSkills(skillRes.value.data)
+      if (projRes.status === 'fulfilled')  setProjects(projRes.value.data)
+      if (certRes.status === 'fulfilled')  setCerts(certRes.value.data)
 
       try {
         const profRes = await studentAPI.getProfile()
@@ -77,7 +87,8 @@ export default function Profile() {
         setForm({
           programme:           profRes.data.programme || '',
           university:          profRes.data.university || '',
-          gpa:                 profRes.data.gpa || '',
+          gpa:                 profRes.data.gpa ?? '',
+          cgpa:                profRes.data.cgpa ?? '',
           expected_graduation: profRes.data.expected_graduation || '',
           year_of_study:       profRes.data.year_of_study || '',
           target_role:         profRes.data.target_role || '',
@@ -91,16 +102,20 @@ export default function Profile() {
 
   const saveProfile = async () => {
     setSaving(true)
+    // Empty number fields are sent as "not given"
+    const num = (v) => (v === '' || v == null ? null : Number(v))
+    const data = { ...form, gpa: num(form.gpa), cgpa: num(form.cgpa), year_of_study: num(form.year_of_study),
+                   target_role: form.target_role || null }
     try {
       if (profile) {
-        await studentAPI.updateProfile(form)
+        await studentAPI.updateProfile(data)
       } else {
-        await studentAPI.createProfile(form)
+        await studentAPI.createProfile(data)
       }
       setMsg('Profile saved successfully!')
       loadAll()
     } catch (e) {
-      setMsg('Error saving profile.')
+      setMsg(errMsg(e, 'Error saving profile.'))
     } finally {
       setSaving(false)
       setTimeout(() => setMsg(''), 3000)
@@ -126,13 +141,15 @@ export default function Profile() {
   }
 
   // Upload the form's files one by one to the saved record; returns the ones that failed
-  const uploadPending = async (files, upload) => {
+  // Save the form's evidence (files and links) to the saved record; returns the ones that failed
+  const uploadPending = async (files, upload, addLink) => {
     const failed = []
     for (const f of files) {
       try {
-        await upload(f)
+        if (f.kind === 'link') await addLink(f.url, f.title)
+        else await upload(f)
       } catch (e) {
-        failed.push(`${f.name} (${errMsg(e, 'upload failed')})`)
+        failed.push(`${f.kind === 'link' ? f.url : f.name} (${errMsg(e, 'not saved')})`)
       }
     }
     return failed
@@ -151,9 +168,9 @@ export default function Profile() {
       let id = editProjId
       if (id) await studentAPI.updateProject(id, body)
       else id = (await studentAPI.addProject(body)).data.project_id
-      const failed = await uploadPending(projFiles, f => fileAPI.uploadToProject(id, f))
+      const failed = await uploadPending(projFiles, f => fileAPI.uploadToProject(id, f), (url, title) => fileAPI.linkToProject(id, url, title))
       cancelProject()
-      if (failed.length) setItemError(`The project was saved, but these files were not attached: ${failed.join('; ')}`)
+      if (failed.length) setItemError(`The project was saved, but these evidence items were not attached: ${failed.join('; ')}`)
       loadAll()
     } catch (e) {
       setItemError(errMsg(e, 'Could not save the project.'))
@@ -200,9 +217,9 @@ export default function Profile() {
       let id = editCertId
       if (id) await studentAPI.updateCert(id, body)
       else id = (await studentAPI.addCert(body)).data.cert_id
-      const failed = await uploadPending(certFiles, f => fileAPI.uploadToCert(id, f))
+      const failed = await uploadPending(certFiles, f => fileAPI.uploadToCert(id, f), (url, title) => fileAPI.linkToCert(id, url, title))
       cancelCert()
-      if (failed.length) setItemError(`The certification was saved, but these files were not attached: ${failed.join('; ')}`)
+      if (failed.length) setItemError(`The certification was saved, but these evidence items were not attached: ${failed.join('; ')}`)
       loadAll()
     } catch (e) {
       setItemError(errMsg(e, 'Could not save the certification.'))
@@ -269,13 +286,41 @@ export default function Profile() {
       <div style={{ marginBottom: '24px' }}>
         <div style={{ fontSize: '26px', fontWeight: '700', color: '#1a1f2e' }}>My Profile</div>
         <div style={{ fontSize: '13px', color: '#4a5168', marginTop: '4px' }}>Manage your employability profile</div>
-        {account?.student_number && (
-          <div style={{ fontSize: '13px', color: '#4a5168', marginTop: '6px' }}>
-            Student ID <b style={{ color: '#1a1f2e', fontFamily: 'Consolas, monospace' }}>{account.student_number}</b> · {account.email}
-            <span style={{ color: '#8b92a8' }}> (set by the university; contact your advisor if it is wrong)</span>
-          </div>
-        )}
       </div>
+
+      {/* Who the student is: the account details come from the university */}
+      {account && card(
+        <>
+          {cardTitle('My Details')}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '14px 20px' }}>
+            {[
+              ['Name',         account.full_name],
+              ['Student ID',   account.student_number, true],
+              ['Course',       courseLabel(account.course)],
+              ['School Email', account.email],
+              ['University',   profile?.university],
+              ['Programme',    profile?.programme],
+              ['Target Role',  profile?.target_role],
+              ['GPA / CGPA',   profile && (profile.gpa != null || profile.cgpa != null)
+                                 ? `${profile.gpa ?? '—'} / ${profile.cgpa ?? '—'}` : null],
+            ].map(([k, v, mono]) => (
+              <div key={k}>
+                <div style={{ fontSize: '11px', fontWeight: '600', color: '#8b92a8', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{k}</div>
+                <div style={{ fontSize: '14px', color: v ? '#1a1f2e' : '#8b92a8', marginTop: '3px', fontWeight: '500',
+                              fontFamily: mono ? 'Consolas, monospace' : undefined, wordBreak: 'break-word' }}>
+                  {v || 'Not set'}
+                </div>
+              </div>
+            ))}
+          </div>
+          <div style={{ fontSize: '12px', color: '#8b92a8', marginTop: '12px' }}>
+            Name, student ID, course and school email are set by the university; contact your advisor if one is wrong.
+            Edit the rest in the Info tab.
+          </div>
+        </>
+      )}
+
+      <ResultsReminder profile={profile} onUpdate={() => setTab('info')} onConfirmed={loadAll} />
 
       {/* Tabs */}
       <div style={{ display: 'flex', gap: '4px', borderBottom: '2px solid #e4e6ef', marginBottom: '20px' }}>
@@ -293,7 +338,7 @@ export default function Profile() {
       {tab === 'info' && card(
         <>
           {cardTitle('Academic Background')}
-          {msg && <div style={{ background: '#dcfce7', color: '#16a34a', padding: '10px', borderRadius: '8px', marginBottom: '12px', fontSize: '13px' }}>{msg}</div>}
+          {msg && <div role="status" style={{ background: msg.startsWith('Profile saved') ? '#dcfce7' : '#fee2e2', color: msg.startsWith('Profile saved') ? '#16a34a' : '#dc2626', padding: '10px', borderRadius: '8px', marginBottom: '12px', fontSize: '13px' }}>{msg}</div>}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
             <div><label style={{ fontSize: '12px', fontWeight: '600', color: '#4a5168', display: 'block', marginBottom: '5px' }}>Programme</label>
               {inp(form.programme, v => setForm({...form, programme: v}), 'e.g. BCS Cyber Security')}
@@ -301,8 +346,11 @@ export default function Profile() {
             <div><label style={{ fontSize: '12px', fontWeight: '600', color: '#4a5168', display: 'block', marginBottom: '5px' }}>University</label>
               {inp(form.university, v => setForm({...form, university: v}), 'e.g. Swinburne University')}
             </div>
-            <div><label style={{ fontSize: '12px', fontWeight: '600', color: '#4a5168', display: 'block', marginBottom: '5px' }}>GPA</label>
+            <div><label style={{ fontSize: '12px', fontWeight: '600', color: '#4a5168', display: 'block', marginBottom: '5px' }}>GPA (last semester)</label>
               {inp(form.gpa, v => setForm({...form, gpa: v}), 'e.g. 3.25', 'number')}
+            </div>
+            <div><label style={{ fontSize: '12px', fontWeight: '600', color: '#4a5168', display: 'block', marginBottom: '5px' }}>CGPA (overall)</label>
+              {inp(form.cgpa, v => setForm({...form, cgpa: v}), 'e.g. 3.40', 'number')}
             </div>
             <div><label style={{ fontSize: '12px', fontWeight: '600', color: '#4a5168', display: 'block', marginBottom: '5px' }}>Expected Graduation</label>
               {inp(form.expected_graduation, v => setForm({...form, expected_graduation: v}), 'e.g. December 2027')}
@@ -318,8 +366,14 @@ export default function Profile() {
               <select value={form.target_role} onChange={e => setForm({...form, target_role: e.target.value})}
                 style={{ width: '100%', padding: '9px 12px', border: '1.5px solid #e4e6ef', borderRadius: '8px', fontSize: '13px', background: '#f5f6fa' }}>
                 <option value="">Select target role</option>
-                {ROLES.map(r => <option key={r} value={r}>{r}</option>)}
+                {roles.map(r => <option key={r.role_id} value={r.role_name}>{r.role_name}</option>)}
+                {/* A role saved before it was limited to the course stays visible until changed */}
+                {form.target_role && !roles.some(r => r.role_name === form.target_role) &&
+                  <option value={form.target_role}>{form.target_role} (not offered to your course)</option>}
               </select>
+              <div style={{ fontSize: '11px', color: '#8b92a8', marginTop: '4px' }}>
+                Roles for {courseLabel(account?.course)} students.
+              </div>
             </div>
           </div>
           <button onClick={saveProfile} disabled={saving} style={{
@@ -413,7 +467,7 @@ export default function Profile() {
                   </select>
                 </div>
                 <div style={{ gridColumn: '1/-1' }}>
-                  <label style={{ fontSize: '11px', color: '#8b92a8', display: 'block', marginBottom: '5px' }}>Proof (optional): photo or PDF</label>
+                  <label style={{ fontSize: '11px', color: '#8b92a8', display: 'block', marginBottom: '5px' }}>Proof (optional): file or link</label>
                   <PendingFiles files={projFiles} onChange={setProjFiles} onError={setItemError}
                     slots={MAX_FILES - ((projects.find(x => x.project_id === editProjId)?.files || []).length)} />
                 </div>
@@ -441,6 +495,7 @@ export default function Profile() {
                       </div>
                       <EvidenceFiles files={p.files}
                         onUpload={async f => { await fileAPI.uploadToProject(p.project_id, f); setItemError(''); await loadAll() }}
+                        onAddLink={async (url, title) => { await fileAPI.linkToProject(p.project_id, url, title); setItemError(''); await loadAll() }}
                         onDelete={async f => { await fileAPI.remove(f.file_id); await loadAll() }}
                         onError={setItemError} />
                     </div>
@@ -473,7 +528,7 @@ export default function Profile() {
                   {inp(certForm.expiry_date, v => setCertForm({...certForm, expiry_date: v}), '', 'date')}
                 </div>
                 <div style={{ gridColumn: '1/-1' }}>
-                  <label style={{ fontSize: '11px', color: '#8b92a8', display: 'block', marginBottom: '5px' }}>Proof (optional): photo or PDF</label>
+                  <label style={{ fontSize: '11px', color: '#8b92a8', display: 'block', marginBottom: '5px' }}>Proof (optional): file or link</label>
                   <PendingFiles files={certFiles} onChange={setCertFiles} onError={setItemError}
                     slots={MAX_FILES - ((certs.find(x => x.cert_id === editCertId)?.files || []).length)} />
                 </div>
@@ -501,6 +556,7 @@ export default function Profile() {
                       </div>
                       <EvidenceFiles files={c.files}
                         onUpload={async f => { await fileAPI.uploadToCert(c.cert_id, f); setItemError(''); await loadAll() }}
+                        onAddLink={async (url, title) => { await fileAPI.linkToCert(c.cert_id, url, title); setItemError(''); await loadAll() }}
                         onDelete={async f => { await fileAPI.remove(f.file_id); await loadAll() }}
                         onError={setItemError} />
                     </div>

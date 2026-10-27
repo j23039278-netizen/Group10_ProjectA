@@ -540,6 +540,33 @@ class TestProfileRecords:
                                    (pid,)).fetchone()[0] == 0
 
 
+    def test_office_files_and_links(self, env, bob):
+        import zipfile
+        c = env["client"]
+
+        def office(*parts):
+            buf = io.BytesIO()
+            with zipfile.ZipFile(buf, "w") as z:
+                for name in ("[Content_Types].xml",) + parts:
+                    z.writestr(name, "<x/>")
+            return buf.getvalue()
+
+        pid = c.post("/api/students/projects", headers=bob, json={"project_title": "Office demo"}).json()["project_id"]
+        up = lambda name, data: c.post(f"/api/students/projects/{pid}/files", headers=bob, files={"file": (name, data, "application/octet-stream")})
+        docx = up("report", office("word/document.xml"))
+        assert docx.status_code == 201 and docx.json()["file_name"] == "report.docx"
+        assert docx.json()["content_type"].endswith("wordprocessingml.document")
+        assert up("slides.pptx", office("ppt/presentation.xml")).json()["content_type"].endswith("presentationml.presentation")
+        assert up("macro.docx", office("word/document.xml", "word/vbaProject.bin")).status_code == 400  # macros
+        assert up("fake.docx", office("other.xml")).status_code == 400                                  # a zip, not Word
+        assert up("clip.mp4", b"\x00\x00\x00\x18ftypmp42" + b"\x00" * 50).status_code == 400            # videos as links
+
+        link = c.post(f"/api/students/projects/{pid}/links", headers=bob, json={"url": "https://github.com/bob/demo"})
+        assert link.status_code == 201 and link.json()["file_name"] == "github.com/bob/demo"
+        files = next(p for p in c.get("/api/students/projects", headers=bob).json() if p["project_id"] == pid)["files"]
+        assert sorted(f["kind"] for f in files) == ["file", "file", "link"]
+
+
 # ── Development progress ─────────────────────────────────────
 class TestProgress:
     def test_give_up_unfinished_activity_only(self, env, alice, bob):
@@ -560,8 +587,41 @@ class TestProgress:
 
         # Completed activities stay on the record
         c.post(f"/api/progress/{rid2}/start?assessment_id={aid}", headers=alice)
+        c.post(f"/api/progress/{rid2}/links", headers=alice, json={"url": "https://github.com/alice/ab-test"})
         assert c.post(f"/api/progress/{rid2}/complete", headers=alice, json={"status": "completed"}).status_code == 200
         assert c.delete(f"/api/progress/{rid2}", headers=alice).status_code == 404
+
+    def test_complete_needs_evidence_and_advisor_sees_it(self, env, alice, bob, advisor):
+        c = env["client"]
+        aid = run(env, alice, role_id=env["da"]).json()["assessment_id"]
+        rid = env["conn"].execute("SELECT resource_id::text FROM recommendations_library "
+                                  "ORDER BY resource_title OFFSET 5 LIMIT 1").fetchone()[0]
+        complete = lambda: c.post(f"/api/progress/{rid}/complete", headers=alice, json={"status": "completed"})
+        link = lambda h, url, title=None: c.post(f"/api/progress/{rid}/links", headers=h, json={"url": url, "title": title})
+
+        assert link(alice, "https://youtu.be/demo").status_code == 404           # not started yet
+        assert complete().status_code == 400                                      # not started
+        c.post(f"/api/progress/{rid}/start?assessment_id={aid}", headers=alice)
+        r = complete()
+        assert r.status_code == 400 and "evidence" in r.json()["detail"]          # no evidence yet
+
+        for bad in ("javascript:alert(1)", "ftp://x.com/a", "www.no-scheme.com", "https://has space.com"):
+            assert link(alice, bad).status_code == 400, bad
+        assert link(bob, "https://youtu.be/demo").status_code == 404              # Bob never started it
+        video = link(alice, "https://youtu.be/demo", "My demo video")
+        assert video.status_code == 201
+        assert video.json()["kind"] == "link" and video.json()["file_name"] == "My demo video"
+        assert c.get(f"/api/students/files/{video.json()['file_id']}", headers=alice).status_code == 400  # a link, not a file
+        assert complete().status_code == 200
+
+        progress = c.get(f"/api/progress/assessment/{aid}", headers=alice).json()["progress"][rid]
+        assert [e["link_url"] for e in progress["evidence"]] == ["https://youtu.be/demo"]
+        # The only piece of evidence of a completed activity cannot be removed
+        assert c.delete(f"/api/students/files/{video.json()['file_id']}", headers=alice).status_code == 400
+
+        detail = c.get(f"/api/advisor/students/{env['ids']['alice'][0]}", headers=advisor).json()
+        act = next(p for p in detail["progress"] if p["progress_id"] == progress["evidence"][0]["progress_id"])
+        assert act["status"] == "completed" and act["files"][0]["link_url"] == "https://youtu.be/demo"
 
 
 # ── Recommendations: cost tiers ──────────────────────────────
@@ -591,12 +651,13 @@ def upload(env, headers, name, content, mime="text/csv"):
 
 
 class TestIntake:
-    CSV = ("Full Name,Phone Number,Personal Email\n"
-           "Mei Ling Tan,+60 12-345 6789,meiling.tan@example.com\n"
-           "Arjun Nair,0123456780,arjun.nair@example.com\n"
-           "No Email,0123,not-an-email\n"
-           "Mei Ling Again,012,MEILING.TAN@example.com\n"
-           "Siti Aminah,,siti.aminah@example.com\n").encode()
+    CSV = ("Full Name,Phone Number,Personal Email,Course\n"
+           "Mei Ling Tan,+60 12-345 6789,meiling.tan@example.com,Business\n"
+           "Arjun Nair,0123456780,arjun.nair@example.com,ict\n"
+           "No Email,0123,not-an-email,CS\n"
+           "Mei Ling Again,012,MEILING.TAN@example.com,Business\n"
+           "Siti Aminah,,siti.aminah@example.com,Computer Science\n"
+           "No Course,,no.course@example.com,Medicine\n").encode()
 
     def test_full_intake_flow(self, env, advisor, admin, alice):
         c, conn = env["client"], env["conn"]
@@ -606,7 +667,8 @@ class TestIntake:
         r = upload(env, advisor, "new.csv", self.CSV)
         assert r.status_code == 201, r.text
         assert r.json()["students"] == 3
-        assert [s["line"] for s in r.json()["skipped"]] == [4, 5]                  # bad email, duplicate
+        assert [s["line"] for s in r.json()["skipped"]] == [4, 5, 7]               # bad email, duplicate, bad course
+        assert "course" in r.json()["skipped"][2]["error"]
         bid = r.json()["batch_id"]
         assert any(b["batch_id"] == bid and b["pending"] == 3 for b in c.get("/api/intake/batches", headers=advisor).json())
 
@@ -616,6 +678,7 @@ class TestIntake:
         assert all(len(r["student_number"]) == 9 and r["school_email"] == f"{r['student_number']}@student.newinti.edu.my"
                    for r in rows)
         mei, arjun, siti = rows
+        assert [r["course"] for r in rows] == ["BUSINESS", "ICT", "CS"]
         alice_id = student_number(env, "alice@student.newinti.edu.my")
         patch = lambda row, n, e: c.patch(f"/api/intake/rows/{row['row_id']}", headers=admin,
                                           json={"student_number": n, "school_email": e})
@@ -629,10 +692,14 @@ class TestIntake:
         # 3. Accounts are created; each student's personal email gets the details
         done = c.post(f"/api/intake/batches/{bid}/create-accounts", headers=admin, json={}).json()
         assert len(done["created"]) == 2 and not done["failed"]
+        courses = dict(env["conn"].execute("SELECT full_name, course FROM users WHERE full_name IN "
+                                           "('Mei Ling Tan', 'Arjun Nair')").fetchall())
+        assert courses == {"Mei Ling Tan": "BUSINESS", "Arjun Nair": "ICT"}
         assert {d["email_status"] for d in done["created"]} == {"not_sent"}               # no mail server in tests
         mail = next(e for e in c.get("/api/intake/outbox", headers=admin).json()["emails"]
                     if e["to_address"] == "meiling.tan@example.com")
         assert "105000001" in mail["body"] and "105000001@student.newinti.edu.my" in mail["body"]
+        assert "Course:              Business" in mail["body"]
         temp = re.search(r"Temporary password:\s+(\S+)", mail["body"]).group(1)
         assert c.get("/api/intake/outbox", headers=advisor).status_code == 403
 
@@ -653,7 +720,7 @@ class TestIntake:
         assert login(env, "105000001@student.newinti.edu.my", "MyOwnPass9!", student_id="105000001").status_code == 200
 
         # The same person cannot be put on a new list again
-        again = upload(env, advisor, "again.csv", b"Full Name,Personal Email\nMei Ling,meiling.tan@example.com\n")
+        again = upload(env, advisor, "again.csv", b"Full Name,Personal Email,Course\nMei Ling,meiling.tan@example.com,CS\n")
         assert again.status_code == 400
 
         # 5. An admin reset makes the password temporary again
@@ -668,18 +735,193 @@ class TestIntake:
     def test_xlsx_upload_and_bad_files(self, env, advisor):
         from openpyxl import Workbook
         wb = Workbook()
-        wb.active.append(["Name", "Mobile", "Email"])
-        wb.active.append(["Lim Wei", 60123456789, "lim.wei@example.com"])        # Excel number for the phone
+        wb.active.append(["Name", "Mobile", "Email", "Course"])
+        wb.active.append(["Lim Wei", 60123456789, "lim.wei@example.com", "  Information and Communication Technology "])
         buf = io.BytesIO()
         wb.save(buf)
         r = upload(env, advisor, "students.xlsx", buf.getvalue(),
                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
         assert r.status_code == 201 and r.json()["students"] == 1, r.text
         rows = env["client"].get(f"/api/intake/batches/{r.json()['batch_id']}", headers=advisor).json()["rows"]
-        assert rows[0]["phone"] == "60123456789"
+        assert rows[0]["phone"] == "60123456789"                                  # Excel number for the phone
+        assert rows[0]["course"] == "ICT"
         assert upload(env, advisor, "x.xlsx", b"not a zip").status_code == 400
         assert upload(env, advisor, "x.txt", b"a,b").status_code == 400
         assert upload(env, advisor, "x.csv", b"Phone,Address\n1,2\n").status_code == 400  # no name / email column
+        no_course = upload(env, advisor, "x.csv", b"Full Name,Personal Email\nA B,a.b@example.com\n")
+        assert no_course.status_code == 400 and "Course" in no_course.json()["detail"]
+
+
+# ── Courses (Computer Science / Business / ICT) ──────────────
+class TestCourses:
+    def test_every_student_has_a_course(self, env):
+        conn = env["conn"]
+        assert conn.execute("SELECT count(*) FROM users WHERE role = 'student' AND course IS NULL").fetchone()[0] == 0
+        assert conn.execute("SELECT count(*) FROM users WHERE role <> 'student' AND course IS NOT NULL").fetchone()[0] == 0
+        # Synthetic students are split by number: N mod 3 -> 1 CS, 2 Business, 0 ICT
+        got = {n: conn.execute("INSERT INTO users (email, password_hash, role, full_name) "
+                               "VALUES (%s, 'x', 'student', 'S') RETURNING course",
+                               (f"student{n:04d}@synthetic.example.com",)).fetchone()[0]
+               for n in (4000, 4001, 4002)}
+        assert got == {4000: "CS", 4001: "BUSINESS", 4002: "ICT"}   # 4000 mod 3 = 1, 4001 -> 2, 4002 -> 0
+        with pytest.raises(psycopg.errors.CheckViolation):
+            conn.execute("UPDATE users SET course = 'MEDICINE' WHERE email = 'student4000@synthetic.example.com'")
+
+    def test_course_in_lists_and_filters(self, env, advisor, admin, alice):
+        c, conn = env["client"], env["conn"]
+        conn.execute("UPDATE users SET course = 'BUSINESS' WHERE email = 'bob@student.newinti.edu.my'")
+        students = c.get("/api/advisor/students", headers=advisor).json()
+        assert {s["full_name"]: s["course"] for s in students if s["full_name"] in ("Alice", "Bob")} == \
+            {"Alice": "CS", "Bob": "BUSINESS"}
+        biz = c.get("/api/admin/users?course=business", headers=admin).json()
+        assert biz["total"] >= 1 and all(u["course"] == "BUSINESS" for u in biz["users"])
+        assert "Bob" in {u["full_name"] for u in biz["users"]}
+        assert c.get("/api/admin/stats", headers=admin).json()["courses"]["BUSINESS"] >= 1
+        assert c.get("/api/auth/me", headers=alice).json()["course"] == "CS"
+        detail = c.get(f"/api/advisor/students/{env['ids']['alice'][0]}", headers=advisor).json()
+        assert detail["student"]["course"] == "CS"
+
+
+def course_student(env, email, name, course):
+    """A student of one course, signed in"""
+    pw = bcrypt.hashpw(PASSWORD.encode(), bcrypt.gensalt()).decode()
+    env["conn"].execute("INSERT INTO users (email, password_hash, role, full_name, course) "
+                        "VALUES (%s, %s, 'student', %s, %s) ON CONFLICT (email) DO NOTHING", (email, pw, name, course))
+    return token(env, email)
+
+
+class TestRolesByCourse:
+    def test_roles_offered_per_course(self, env):
+        c = env["client"]
+        names = lambda course: {r["role_name"] for r in c.get(f"/api/jobs/roles?course={course}").json()}
+        it = {"Web Developer", "Data Analyst", "Cloud Engineer", "Cybersecurity Analyst"}
+        biz = {"Business Analyst", "Marketing Executive", "Financial Analyst", "HR Executive"}
+        assert it | {"Software Developer", "Data Scientist"} <= names("CS")
+        assert names("ICT") == it
+        assert names("BUSINESS") == biz
+        # Business roles exist but have no skills yet
+        assert all(r["skill_count"] == 0 for r in c.get("/api/jobs/roles?course=BUSINESS").json())
+
+    def test_target_role_must_suit_the_course(self, env):
+        c = env["client"]
+        carol = course_student(env, "carol@student.newinti.edu.my", "Carol", "BUSINESS")
+        dan = course_student(env, "dan@student.newinti.edu.my", "Dan", "ICT")
+        put = lambda h, role: c.put("/api/students/profile", headers=h, json={"target_role": role})
+        assert put(carol, "Data Analyst").status_code == 400
+        assert put(carol, "Business Analyst").status_code == 200
+        assert put(dan, "Data Scientist").status_code == 400
+        assert put(dan, "Data Analyst").status_code == 200
+        assert put(dan, "Pilot").status_code == 400
+        # An assessment against a role of another course is refused
+        r = run(env, carol, role_id=env["da"])
+        assert r.status_code == 400 and "course" in r.json()["detail"]
+
+    def test_admin_role_courses(self, env, admin):
+        c = env["client"]
+        body = {"role_name": "Retail Manager", "courses": ["BUSINESS"]}
+        new = c.post("/api/admin/roles", headers=admin, json=body)
+        assert new.status_code == 201 and new.json()["courses"] == ["BUSINESS"]
+        rid = new.json()["role_id"]
+        assert "Retail Manager" in {r["role_name"] for r in c.get("/api/jobs/roles?course=BUSINESS").json()}
+        upd = c.patch(f"/api/admin/roles/{rid}", headers=admin, json={"courses": ["ICT", "BUSINESS", "ICT"]})
+        assert upd.status_code == 200 and upd.json()["courses"] == ["BUSINESS", "ICT"]
+        assert c.patch(f"/api/admin/roles/{rid}", headers=admin, json={"courses": []}).status_code == 422
+        assert c.patch(f"/api/admin/roles/{rid}", headers=admin, json={"courses": ["LAW"]}).status_code == 422
+        # Without courses a new role is for Computer Science students
+        cs = c.post("/api/admin/roles", headers=admin, json={"role_name": "Game Developer"})
+        assert cs.json()["courses"] == ["CS"]
+
+
+class TestResultsReminder:
+    def test_semester_start(self, env):
+        from datetime import date
+        from routers.students import current_semester_start
+        assert current_semester_start(date(2026, 3, 15)) == date(2026, 1, 1)
+        assert current_semester_start(date(2026, 5, 1)) == date(2026, 5, 1)
+        assert current_semester_start(date(2026, 8, 31)) == date(2026, 5, 1)
+        assert current_semester_start(date(2026, 12, 31)) == date(2026, 9, 1)
+
+    def test_gpa_cgpa_and_reminder(self, env):
+        c, conn = env["client"], env["conn"]
+        h = course_student(env, "erin@student.newinti.edu.my", "Erin", "CS")
+        assert c.post("/api/students/profile", headers=h, json={"target_role": "Data Scientist"}).status_code in (200, 201)
+        profile = lambda: c.get("/api/students/profile", headers=h).json()
+        assert profile()["results_reminder"] is True                       # results never entered
+        assert c.put("/api/students/profile", headers=h, json={"cgpa": 4.5}).status_code == 422
+        body = {"target_role": "Data Scientist", "gpa": 3.6, "cgpa": 3.42}
+        assert c.put("/api/students/profile", headers=h, json=body).status_code == 200
+        p = profile()
+        assert float(p["gpa"]) == 3.6 and float(p["cgpa"]) == 3.42 and p["results_reminder"] is False
+
+        # A new semester starts: the reminder comes back until the student answers it
+        conn.execute("UPDATE student_profiles sp SET results_updated_at = NOW() - INTERVAL '200 days' "
+                     "FROM users u WHERE u.user_id = sp.user_id AND u.email = 'erin@student.newinti.edu.my'")
+        assert profile()["results_reminder"] is True
+        # Saving other fields with the same results does not count as an update
+        assert c.put("/api/students/profile", headers=h, json={**body, "university": "INTI"}).status_code == 200
+        assert profile()["results_reminder"] is True
+        assert c.post("/api/students/profile/results-confirmed", headers=h).status_code == 200
+        assert profile()["results_reminder"] is False
+
+
+class TestCourseOverview:
+    def test_overview_and_gaps_by_course(self, env, advisor):
+        c, conn = env["client"], env["conn"]
+        for course in ("CS", "BUSINESS", "ICT"):
+            o = c.get(f"/api/advisor/cohort/overview?course={course.lower()}", headers=advisor)
+            assert o.status_code == 200 and o.json()["course"] == course
+            expected = conn.execute("SELECT count(*) FROM users WHERE role = 'student' AND is_active "
+                                    "AND course = %s", (course,)).fetchone()[0]
+            assert o.json()["total_students"] == expected
+            assert c.get(f"/api/advisor/cohort/skill-gaps?course={course}", headers=advisor).status_code == 200
+        everyone = c.get("/api/advisor/cohort/overview", headers=advisor).json()
+        assert everyone["course"] is None
+        assert everyone["total_students"] == sum(
+            c.get(f"/api/advisor/cohort/overview?course={k}", headers=advisor).json()["total_students"]
+            for k in ("CS", "BUSINESS", "ICT"))
+        assert c.get("/api/advisor/cohort/overview?course=LAW", headers=advisor).status_code == 400
+        assert c.get("/api/advisor/cohort/skill-gaps?course=LAW", headers=advisor).status_code == 400
+
+
+class TestIntakeTemplate:
+    def test_template_has_course_drop_down(self, env, advisor, admin, alice):
+        from openpyxl import load_workbook
+        c = env["client"]
+        assert c.get("/api/intake/template", headers=alice).status_code == 403
+        assert c.get("/api/intake/template", headers=admin).status_code == 200
+        r = c.get("/api/intake/template", headers=advisor)
+        assert r.status_code == 200 and r.headers["content-type"].startswith("application/vnd.openxmlformats")
+        ws = load_workbook(io.BytesIO(r.content)).active
+        assert [cell.value for cell in ws[1]] == ["Full Name", "Phone Number", "Personal Email", "Course"]
+        dv = ws.data_validations.dataValidation[0]
+        assert dv.type == "list" and dv.formula1 == '"Computer Science,Business,ICT"'
+        assert "D2:D1001" in str(dv.sqref)
+        # The filled-in template uploads as it is
+        assert upload(env, advisor, "template.xlsx", r.content,
+                      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet").json()["students"] == 3
+
+
+class TestNewStudent:
+    def test_new_student_without_profile_can_add_skills(self, env):
+        c, conn = env["client"], env["conn"]
+        pw = bcrypt.hashpw(PASSWORD.encode(), bcrypt.gensalt()).decode()
+        conn.execute("INSERT INTO users (email, password_hash, role, full_name, course) "
+                     "VALUES ('fresh@student.newinti.edu.my', %s, 'student', 'Fresh', 'ICT')", (pw,))
+        h = token(env, "fresh@student.newinti.edu.my")
+        # Everything the Profile page loads works without a profile
+        assert len(c.get("/api/students/skills-library", headers=h).json()) > 100
+        assert c.get("/api/students/skills", headers=h).json() == []
+        assert c.get("/api/students/projects", headers=h).json() == []
+        assert c.get("/api/students/certifications", headers=h).json() == []
+        assert c.get("/api/students/profile", headers=h).status_code == 404
+        # Adding a skill creates the (empty) profile
+        sid = conn.execute("SELECT skill_id::text FROM skills_library WHERE skill_name = 'Python'").fetchone()[0]
+        assert c.post("/api/students/skills", headers=h, json={"skill_id": sid}).status_code == 201
+        assert c.get("/api/students/profile", headers=h).status_code == 200
+        # Saving the Info tab afterwards still works, even though the page may send "create"
+        info = {"programme": "Bachelor of ICT", "university": "INTI", "year_of_study": 1, "target_role": "Data Analyst"}
+        assert c.post("/api/students/profile", headers=h, json=info).status_code in (200, 201)
+        assert c.get("/api/students/profile", headers=h).json()["programme"] == "Bachelor of ICT"
 
 
 # ── Batch assessments (data/run_assessments.py uses this) ────

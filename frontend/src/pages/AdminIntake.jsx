@@ -6,6 +6,7 @@
 // are kept in the Email Outbox tab, so the admin can pass them on.
 import { useState, useEffect, useCallback } from 'react'
 import { intakeAPI } from '../api/intake'
+import { COURSES, courseLabel } from '../utils/courses'
 import { C, card, th, td, input, btn, smallBtn, heading, errorText } from './admin/adminStyles'
 import { Alert } from './admin/AdminUi'
 
@@ -65,6 +66,12 @@ function BatchDetail({ batchId, onChanged, onCreated }) {
     setNotice(`Saved ${row.full_name}.`)
   })
 
+  const changeCourse = (row, course) => run(row.row_id, async () => {
+    await intakeAPI.updateRow(row.row_id, { course })
+    await load()
+    setNotice(`${row.full_name}: course set to ${courseLabel(course)}.`)
+  })
+
   const reject = (row) => {
     const note = window.prompt(`Reject ${row.full_name}? No account will be created.\n\nReason (optional):`, '')
     if (note === null) return
@@ -120,8 +127,8 @@ function BatchDetail({ batchId, onChanged, onCreated }) {
       {notice && <Alert type="success">{notice}</Alert>}
       {error && <Alert>{error}</Alert>}
       <div style={{ overflowX: 'auto' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '980px' }}>
-          <thead><tr>{['Row', 'Name', 'Phone', 'Personal email', 'Student ID', 'School email', 'Status', ''].map(h => <th key={h} style={th}>{h}</th>)}</tr></thead>
+        <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '1100px' }}>
+          <thead><tr>{['Row', 'Name', 'Phone', 'Personal email', 'Course', 'Student ID', 'School email', 'Status', ''].map(h => <th key={h} style={th}>{h}</th>)}</tr></thead>
           <tbody>
             {data.rows.map(r => {
               const editable = r.status === 'pending' && r.student_number
@@ -132,6 +139,15 @@ function BatchDetail({ batchId, onChanged, onCreated }) {
                   <td style={{ ...td, color: C.ink, fontWeight: '600' }}>{r.full_name}</td>
                   <td style={td}>{r.phone || '—'}</td>
                   <td style={td}>{r.personal_email}</td>
+                  <td style={td}>
+                    {r.status === 'pending'
+                      ? <select aria-label={`Course for ${r.full_name}`} style={{ ...input, width: 'auto', padding: '6px 8px' }}
+                          value={r.course || ''} disabled={busy === r.row_id} onChange={e => changeCourse(r, e.target.value)}>
+                          {!r.course && <option value="">Choose…</option>}
+                          {COURSES.map(c => <option key={c.id} value={c.id}>{c.label}</option>)}
+                        </select>
+                      : <span style={{ whiteSpace: 'nowrap' }}>{courseLabel(r.course)}</span>}
+                  </td>
                   <td style={td}>
                     {editable
                       ? <input aria-label={`Student ID for ${r.full_name}`} style={{ ...input, width: '110px', fontFamily: 'Consolas, monospace' }} maxLength={9}

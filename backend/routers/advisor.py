@@ -4,6 +4,7 @@ Handles cohort overview, skill gap reports, student list
 Author: Soh Way Miin (Carl)
 """
 
+from typing import Optional
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, Request
@@ -27,83 +28,98 @@ def require_advisor(current_user):
         )
 
 
+# ── Course filter (CS | BUSINESS | ICT; none = every student) ─
+def course_param(course):
+    if course is None or course == "":
+        return None
+    c = course.upper()
+    if c not in ("CS", "BUSINESS", "ICT"):
+        raise HTTPException(status_code=400, detail="course must be CS, BUSINESS or ICT")
+    return c
+
+
+# Each student's latest assessment, limited to one course when :course is set
+LATEST_ASSESSMENTS = """
+    SELECT DISTINCT ON (a.profile_id) a.assessment_id, a.profile_id, a.readiness_score
+    FROM assessments a
+    JOIN student_profiles sp ON sp.profile_id = a.profile_id
+    JOIN users u             ON u.user_id     = sp.user_id
+    WHERE u.role = 'student' AND u.is_active
+      AND (CAST(:course AS VARCHAR) IS NULL OR u.course = CAST(:course AS VARCHAR))
+    ORDER BY a.profile_id, a.created_at DESC
+"""
+
+
 # ── Cohort Overview ───────────────────────────────────────────
 @router.get("/cohort/overview")
 def get_cohort_overview(
+    course: Optional[str] = None,
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    """Cohort-level summary for advisor dashboard"""
+    """Cohort-level summary for the advisor dashboard (one course, or everyone)"""
     require_advisor(current_user)
+    params = {"course": course_param(course)}
 
-    # Total students
-    total = db.execute(
-        text("SELECT COUNT(*) FROM users WHERE role = 'student' AND is_active = TRUE")
-    ).scalar()
-
-    # Profiles completed (is_complete is kept up to date by routers/students.py)
-    profiles_complete = db.execute(
+    counts = db.execute(
         text("""
-            SELECT COUNT(*) FROM student_profiles sp
-            JOIN users u ON u.user_id = sp.user_id
-            WHERE sp.is_complete AND u.role = 'student' AND u.is_active = TRUE
-        """)
-    ).scalar()
+            SELECT COUNT(*)                                   AS total,
+                   COUNT(*) FILTER (WHERE sp.is_complete)     AS complete
+            FROM users u
+            LEFT JOIN student_profiles sp ON sp.user_id = u.user_id
+            WHERE u.role = 'student' AND u.is_active = TRUE
+              AND (CAST(:course AS VARCHAR) IS NULL OR u.course = CAST(:course AS VARCHAR))
+        """),
+        params
+    ).fetchone()
 
-    # Average readiness score
-    avg_score = db.execute(
-        text("""
-            SELECT ROUND(AVG(a.readiness_score), 1)
-            FROM assessments a
-            JOIN (
-                SELECT profile_id, MAX(created_at) AS latest
-                FROM assessments GROUP BY profile_id
-            ) latest ON latest.profile_id = a.profile_id
-            AND latest.latest = a.created_at
-        """)
-    ).scalar()
-
-    # Students at risk (readiness < 40%)
-    at_risk = db.execute(
-        text("""
-            SELECT COUNT(DISTINCT a.profile_id)
-            FROM assessments a
-            JOIN (
-                SELECT profile_id, MAX(created_at) AS latest
-                FROM assessments GROUP BY profile_id
-            ) latest ON latest.profile_id = a.profile_id
-            AND latest.latest = a.created_at
-            WHERE a.readiness_score < 40
-        """)
-    ).scalar()
+    scores = db.execute(
+        text(f"""
+            SELECT ROUND(AVG(readiness_score), 1)               AS avg_score,
+                   COUNT(*) FILTER (WHERE readiness_score < 40) AS at_risk,
+                   COUNT(*)                                     AS assessed
+            FROM ({LATEST_ASSESSMENTS}) latest
+        """),
+        params
+    ).fetchone()
 
     return {
-        "total_students":     total,
-        "profiles_complete":  profiles_complete,
-        "avg_readiness_score": float(avg_score) if avg_score else 0,
-        "students_at_risk":   at_risk
+        "course":              params["course"],
+        "total_students":      counts.total,
+        "profiles_complete":   counts.complete,
+        "students_assessed":   scores.assessed,
+        "avg_readiness_score": float(scores.avg_score) if scores.avg_score else 0,
+        "students_at_risk":    scores.at_risk
     }
 
 
 # ── Skill Gap Report ──────────────────────────────────────────
 @router.get("/cohort/skill-gaps")
 def get_cohort_skill_gaps(
+    course: Optional[str] = None,
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    """Top skill gaps across all students — uses v_cohort_skill_gaps view"""
+    """Top skill gaps across the latest assessments of one course, or of every student"""
     require_advisor(current_user)
 
     gaps = db.execute(
-        text("""
-            SELECT skill_name, category,
-                   gap_count, developing_count, strong_count,
-                   total_assessments, gap_percentage
-            FROM v_cohort_skill_gaps
-            WHERE total_assessments > 0
-            ORDER BY gap_percentage DESC
+        text(f"""
+            SELECT sl.skill_name, sl.category,
+                   COUNT(*) FILTER (WHERE smr.match_status = 'gap')        AS gap_count,
+                   COUNT(*) FILTER (WHERE smr.match_status = 'developing') AS developing_count,
+                   COUNT(*) FILTER (WHERE smr.match_status = 'strong')     AS strong_count,
+                   COUNT(*)                                                 AS total_assessments,
+                   ROUND(COUNT(*) FILTER (WHERE smr.match_status = 'gap') * 100.0
+                         / NULLIF(COUNT(*), 0), 1)                          AS gap_percentage
+            FROM skill_match_results smr
+            JOIN ({LATEST_ASSESSMENTS}) latest ON latest.assessment_id = smr.assessment_id
+            JOIN skills_library sl ON sl.skill_id = smr.skill_id
+            GROUP BY sl.skill_id, sl.skill_name, sl.category
+            ORDER BY gap_percentage DESC, gap_count DESC
             LIMIT 20
-        """)
+        """),
+        {"course": course_param(course)}
     ).fetchall()
 
     return [dict(g._mapping) for g in gaps]
@@ -125,6 +141,7 @@ def get_all_students(
                 u.full_name,
                 u.email,
                 u.student_number,
+                u.course,
                 sp.programme,
                 sp.target_role,
                 sp.gpa,
@@ -167,7 +184,7 @@ def get_student_detail(
     # Basic info
     student = db.execute(
         text("""
-            SELECT u.full_name, u.email, u.student_number, sp.*
+            SELECT u.full_name, u.email, u.student_number, u.course, sp.*
             FROM users u
             JOIN student_profiles sp ON sp.user_id = u.user_id
             WHERE u.user_id = CAST(:uid AS uuid) AND u.role = 'student'
@@ -259,7 +276,7 @@ def get_student_detail(
     # Recommended activities the student started or finished
     progress = db.execute(
         text("""
-            SELECT rl.resource_title, rl.resource_type, sl.skill_name,
+            SELECT srp.progress_id, rl.resource_title, rl.resource_type, sl.skill_name,
                    srp.status, srp.started_at, srp.completed_at
             FROM student_resource_progress srp
             JOIN recommendations_library rl ON rl.resource_id = srp.resource_id
@@ -283,7 +300,7 @@ def get_student_detail(
         "history":        [dict(h._mapping) for h in history],
         "projects":       evidence.attach_files(db, [dict(p._mapping) for p in projects], "project_id"),
         "certifications": evidence.attach_files(db, [dict(c._mapping) for c in certifications], "cert_id"),
-        "progress":       [dict(p._mapping) for p in progress],
+        "progress":       evidence.attach_files(db, [dict(p._mapping) for p in progress], "progress_id"),
     }
 
 

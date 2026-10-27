@@ -1,11 +1,12 @@
 // SEAGAS — Advisor: one student's profile, latest assessment, skill gaps,
 // readiness over time and development progress (FR-13). Read-only.
 import { useState, useEffect } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, useLocation } from 'react-router-dom'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import { advisorAPI } from '../api/advisor'
 import { label } from '../utils/labels'
 import EvidenceFiles from '../components/EvidenceFiles'
+import { courseLabel } from '../utils/courses'
 
 const C = { ink: '#1a1f2e', body: '#4a5168', muted: '#8b92a8', line: '#e4e6ef',
             blue: '#2d5be3', green: '#16a34a', amber: '#d97706', red: '#dc2626' }
@@ -55,6 +56,7 @@ function Field({ label, value }) {
 export default function AdvisorStudentDetail() {
   const { userId } = useParams()
   const navigate   = useNavigate()
+  const location   = useLocation()
   const [data, setData]       = useState(null)
   const [error, setError]     = useState('')
   const [loading, setLoading] = useState(true)
@@ -70,7 +72,7 @@ export default function AdvisorStudentDetail() {
   }, [userId])
 
   const back = (
-    <button onClick={() => navigate('/', { state: { tab: 'students' } })}
+    <button onClick={() => navigate('/', { state: { tab: 'students', course: location.state?.course || '' } })}
       style={{ border: 'none', background: 'none', color: C.blue, fontSize: '13px', fontWeight: '600', cursor: 'pointer', padding: 0, marginBottom: '14px' }}>
       ← Back to students
     </button>
@@ -103,7 +105,7 @@ export default function AdvisorStudentDetail() {
         <div>
           <div style={{ fontSize: '26px', fontWeight: '700', color: C.ink }}>{student.full_name}</div>
           <div style={{ fontSize: '13px', color: C.body, marginTop: '4px' }}>
-            Student ID {student.student_number} · {student.email} · {student.programme || 'No programme'}{student.year_of_study ? ` · Year ${student.year_of_study}` : ''}
+            Student ID {student.student_number} · {courseLabel(student.course)} · {student.email} · {student.programme || 'No programme'}{student.year_of_study ? ` · Year ${student.year_of_study}` : ''}
           </div>
         </div>
         <Pill bg={student.is_complete ? '#dcfce7' : '#fef3c7'} color={student.is_complete ? C.green : C.amber}>
@@ -255,9 +257,9 @@ export default function AdvisorStudentDetail() {
         <div style={heading}>Development Activities</div>
         {progress.length === 0 ? <div style={muted}>The student has not started any recommended activity yet.</div> : (
           <div style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '560px' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '760px' }}>
               <thead>
-                <tr>{['Activity', 'Type', 'Skill', 'Status', 'Completed'].map(h => (
+                <tr>{['Activity', 'Type', 'Skill', 'Status', 'Completed', 'Evidence'].map(h => (
                   <th key={h} style={{ textAlign: 'left', fontSize: '11px', fontWeight: '700', color: C.muted, textTransform: 'uppercase', padding: '8px 10px', borderBottom: `1px solid ${C.line}` }}>{h}</th>
                 ))}</tr>
               </thead>
@@ -271,6 +273,7 @@ export default function AdvisorStudentDetail() {
                       <td style={{ padding: '9px 10px', fontSize: '12px', color: C.body }}>{p.skill_name || '—'}</td>
                       <td style={{ padding: '9px 10px' }}><Pill bg={st.bg} color={st.color}>{st.label}</Pill></td>
                       <td style={{ padding: '9px 10px', fontSize: '12px', color: C.body }}>{fmtDate(p.completed_at)}</td>
+                      <td style={{ padding: '0 10px 6px', fontSize: '12px' }}><EvidenceFiles files={p.files || []} emptyText="—" /></td>
                     </tr>
                   )
                 })}

@@ -2,7 +2,8 @@
 SEAGAS — New student intake (how student accounts are created)
 
 1. An advisor uploads a list of new students (Excel .xlsx or .csv) with their
-   full name, phone number and personal email.             POST /batches
+   full name, phone number, personal email and course (Computer Science,
+   Business or ICT).                                        POST /batches
 2. An admin opens the list, lets the system suggest a student number and a
    school email for each student (both editable), then creates the accounts.
    Each student gets a temporary password.  POST /batches/{id}/assign,
@@ -21,10 +22,11 @@ import csv
 import io
 import re
 import secrets
-from typing import List, Optional
+from typing import List, Literal, Optional
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, File, HTTPException, Request, UploadFile
+from fastapi.responses import Response
 from pydantic import BaseModel, Field
 from sqlalchemy import text
 from sqlalchemy.orm import Session
@@ -48,9 +50,25 @@ COLUMN_WORDS = {
     "full_name":      ("full name", "name", "student name"),
     "phone":          ("phone", "mobile", "contact", "tel"),
     "personal_email": ("personal email", "email", "e-mail"),
+    "course":         ("course", "programme", "program", "faculty"),
 }
+REQUIRED_COLUMNS = "Full Name, Phone Number, Personal Email, Course"
 
-ROW_COLUMNS = """r.row_id, r.batch_id, r.line_number, r.full_name, r.phone, r.personal_email,
+# What the Course column may say (case-insensitive) -> stored code
+COURSES = {
+    "cs": "CS", "computer science": "CS",
+    "business": "BUSINESS",
+    "ict": "ICT", "information and communication technology": "ICT",
+    "information & communication technology": "ICT",
+}
+COURSE_NAMES = {"CS": "Computer Science", "BUSINESS": "Business", "ICT": "ICT"}
+
+
+def parse_course(value):
+    """CS / BUSINESS / ICT, or None if the text is not one of the three courses"""
+    return COURSES.get(" ".join((value or "").lower().split()))
+
+ROW_COLUMNS = """r.row_id, r.batch_id, r.line_number, r.full_name, r.phone, r.personal_email, r.course,
                  r.student_number, r.school_email, r.status, r.user_id, r.note, r.processed_at"""
 
 
@@ -117,11 +135,11 @@ def find_columns(header):
             if hit is not None:
                 cols[key] = hit
                 break
-    missing = [k for k in ("full_name", "personal_email") if k not in cols]
+    missing = [k for k in ("full_name", "personal_email", "course") if k not in cols]
     if missing:
         raise HTTPException(
             status_code=400,
-            detail="The first row must contain the column names: Full Name, Phone Number, Personal Email.")
+            detail=f"The first row must contain the column names: {REQUIRED_COLUMNS}.")
     return cols
 
 
@@ -139,7 +157,54 @@ def clean_row(cells, cols):
         return None, "personal email is not valid"
     if phone and not PHONE_RE.match(phone):
         return None, "phone number is not valid"
-    return {"full_name": name, "personal_email": email, "phone": phone or None}, None
+    course = parse_course(cell("course"))
+    if not course:
+        return None, "course must be Computer Science, Business or ICT"
+    return {"full_name": name, "personal_email": email, "phone": phone or None, "course": course}, None
+
+
+# ── Advisor: Excel template (Course is a drop-down list) ──────
+TEMPLATE_ROWS = [
+    ("Example Student", "+60 12-345 6789", "example.student@gmail.com", "Computer Science"),
+    ("Another Student", "+60 13-222 3333", "another.student@gmail.com", "Business"),
+    ("Third Student",   "+60 14-444 5555", "third.student@gmail.com",   "ICT"),
+]
+
+
+@router.get("/template")
+def download_template(current_user=Depends(get_current_user)):
+    """An .xlsx with the four columns; the Course cells only accept the three courses"""
+    require_staff(current_user)
+    from openpyxl import Workbook
+    from openpyxl.styles import Font
+    from openpyxl.worksheet.datavalidation import DataValidation
+
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "New students"
+    ws.append(["Full Name", "Phone Number", "Personal Email", "Course"])
+    for cell in ws[1]:
+        cell.font = Font(bold=True)
+    for row in TEMPLATE_ROWS:
+        ws.append(row)
+    for col, width in zip("ABCD", (28, 20, 34, 20)):
+        ws.column_dimensions[col].width = width
+
+    courses = ",".join(COURSE_NAMES.values())
+    dv = DataValidation(type="list", formula1=f'"{courses}"', allow_blank=False,
+                        showErrorMessage=True, errorTitle="Course",
+                        error="Choose Computer Science, Business or ICT from the list.")
+    ws.add_data_validation(dv)
+    dv.add("D2:D1001")      # one row per student, up to the 1,000-student limit
+    ws.freeze_panes = "A2"
+
+    out = io.BytesIO()
+    wb.save(out)
+    return Response(
+        content=out.getvalue(),
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        headers={"Content-Disposition": 'attachment; filename="new_students_template.xlsx"'},
+    )
 
 
 # ── Advisor: upload a list ────────────────────────────────────
@@ -187,8 +252,8 @@ def upload_batch(
     ).scalar()
     db.execute(
         text("""
-            INSERT INTO student_intake_rows (batch_id, line_number, full_name, phone, personal_email)
-            VALUES (:b, :line, :full_name, :phone, :personal_email)
+            INSERT INTO student_intake_rows (batch_id, line_number, full_name, phone, personal_email, course)
+            VALUES (:b, :line, :full_name, :phone, :personal_email, :course)
         """),
         [{"b": str(batch_id), **r} for r in rows]
     )
@@ -275,13 +340,15 @@ def assign_numbers(batch_id: str, current_user=Depends(get_current_user), db: Se
 
 
 class RowUpdate(BaseModel):
-    student_number: str = Field(min_length=9, max_length=9)
-    school_email: str = Field(min_length=3, max_length=255)
+    # Student ID and school email are changed together; course on its own
+    student_number: Optional[str] = Field(None, min_length=9, max_length=9)
+    school_email: Optional[str] = Field(None, min_length=3, max_length=255)
+    course: Optional[Literal["CS", "BUSINESS", "ICT"]] = None
 
 
 @router.patch("/rows/{row_id}")
 def update_row(row_id: str, req: RowUpdate, current_user=Depends(get_current_user), db: Session = Depends(get_db)):
-    """Change the suggested student ID / school email of a pending student"""
+    """Change the suggested student ID / school email, or the course, of a pending student"""
     require_admin(current_user)
     rid = parse_id(row_id, "Student not found")
     row = db.execute(text("SELECT status FROM student_intake_rows WHERE row_id = :r"), {"r": rid}).fetchone()
@@ -289,10 +356,17 @@ def update_row(row_id: str, req: RowUpdate, current_user=Depends(get_current_use
         raise HTTPException(status_code=404, detail="Student not found")
     if row.status != "pending":
         raise HTTPException(status_code=400, detail="Only students still waiting for an account can be changed.")
-    number, email = req.student_number.strip(), req.school_email.strip().lower()
-    check_assignment(db, rid, number, email)
-    db.execute(text("UPDATE student_intake_rows SET student_number = :n, school_email = :e WHERE row_id = :r"),
-               {"n": number, "e": email, "r": rid})
+    if req.student_number is None and req.school_email is None and req.course is None:
+        raise HTTPException(status_code=400, detail="Nothing to update.")
+    if (req.student_number is None) != (req.school_email is None):
+        raise HTTPException(status_code=400, detail="Give both the student ID and the school email.")
+    if req.student_number is not None:
+        number, email = req.student_number.strip(), req.school_email.strip().lower()
+        check_assignment(db, rid, number, email)
+        db.execute(text("UPDATE student_intake_rows SET student_number = :n, school_email = :e WHERE row_id = :r"),
+                   {"n": number, "e": email, "r": rid})
+    if req.course is not None:
+        db.execute(text("UPDATE student_intake_rows SET course = :c WHERE row_id = :r"), {"c": req.course, "r": rid})
     db.commit()
     return dict(db.execute(text(f"SELECT {ROW_COLUMNS} FROM student_intake_rows r WHERE r.row_id = :r"),
                            {"r": rid}).fetchone()._mapping)
@@ -336,7 +410,7 @@ def create_accounts(
         only = "AND row_id = ANY(CAST(:ids AS uuid[]))"
         params["ids"] = [str(i) for i in req.row_ids]
     rows = db.execute(text(f"""
-        SELECT row_id, full_name, personal_email, student_number, school_email
+        SELECT row_id, full_name, personal_email, student_number, school_email, course
         FROM student_intake_rows
         WHERE batch_id = :b AND status = 'pending' {only}
         ORDER BY line_number
@@ -344,6 +418,10 @@ def create_accounts(
 
     created, failed = [], []
     for r in rows:
+        if not r.course:   # lists uploaded before the Course column existed
+            failed.append({"row_id": str(r.row_id), "full_name": r.full_name,
+                           "error": "no course: choose Computer Science, Business or ICT first"})
+            continue
         number, email = r.student_number, r.school_email
         if not number:
             number = db.execute(text("SELECT next_student_number('')")).scalar()
@@ -355,10 +433,11 @@ def create_accounts(
             continue
         password = temporary_password()
         user_id = db.execute(text("""
-            INSERT INTO users (email, password_hash, role, full_name, student_number, must_change_password)
-            VALUES (:e, :pw, 'student', :name, :n, TRUE)
+            INSERT INTO users (email, password_hash, role, full_name, student_number, course, must_change_password)
+            VALUES (:e, :pw, 'student', :name, :n, :course, TRUE)
             RETURNING user_id
-        """), {"e": email, "pw": hash_password(password), "name": r.full_name, "n": number}).scalar()
+        """), {"e": email, "pw": hash_password(password), "name": r.full_name, "n": number,
+               "course": r.course}).scalar()
         db.execute(text("""
             UPDATE student_intake_rows
             SET status = 'created', user_id = :u, student_number = :n, school_email = :e,
@@ -366,7 +445,7 @@ def create_accounts(
             WHERE row_id = :r
         """), {"u": str(user_id), "n": number, "e": email,
                "admin": str(current_user.user_id), "r": str(r.row_id)})
-        subject, body = notifications.welcome_email(r.full_name, number, email, password)
+        subject, body = notifications.welcome_email(r.full_name, number, email, password, COURSE_NAMES[r.course])
         mail = notifications.send_email(db, r.personal_email, subject, body, related_user_id=user_id)
         created.append({"row_id": str(r.row_id), "full_name": r.full_name, "student_number": number,
                         "school_email": email, "email_status": mail})

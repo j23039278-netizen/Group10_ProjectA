@@ -137,12 +137,22 @@ semantic and hybrid requests fall back to keyword matching and the student sees 
 ### Accounts and roles
 | Role | How the account is created | Email must end with |
 |------|----------------------------|---------------------|
-| Student | An advisor uploads the new-student list (**New Students**); an admin assigns the student ID and school email and creates the account (**Student Intake**) | `@student.newinti.edu.my` |
+| Student | An advisor uploads the new-student list (**New Students**: Full Name, Phone Number, Personal Email, Course); an admin assigns the student ID and school email and creates the account (**Student Intake**) | `@student.newinti.edu.my` |
 | Advisor | An admin creates it in **User Management** | `@advisor.newinti.edu.my` |
 | Admin | The first one in the backend window (`backend/create_admin.py`); more in User Management | `@admin.newinti.edu.my` |
 
 Everyone signs in on the same page; the role stored in the database decides which portal opens.
 Students also enter their 9-digit **student ID**. There is no sign-up page.
+Every student belongs to one course: **Computer Science**, **Business** or **ICT** (the 5,000
+synthetic students are split evenly). Advisor and admin student lists, and the advisor overview
+and skill-gap charts, can be filtered by course. The course decides which target roles a student
+can choose: Computer Science all 6 IT roles, ICT 4 of them (Web Developer, Data Analyst, Cloud
+Engineer, Cybersecurity Analyst), Business the Business roles (Business Analyst, Marketing
+Executive, Financial Analyst, HR Executive — their skills are still to be added in Admin →
+Skills & Roles). Admins set a role's courses when adding or editing it. Students enter both
+GPA and CGPA and are reminded to update them at the start of each semester (January, May,
+September). The advisor's **Download the template** gives an Excel file whose Course column is
+a drop-down list.
 
 New students receive their student ID, school email and a temporary password at their personal
 email, and must choose their own password at first sign-in (admin password resets work the same

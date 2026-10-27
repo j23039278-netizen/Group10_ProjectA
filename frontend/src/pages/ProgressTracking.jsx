@@ -8,6 +8,8 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import { assessAPI, progressAPI } from '../api/client'
+import CompleteActivity from '../components/CompleteActivity'
+import EvidenceFiles from '../components/EvidenceFiles'
 
 const C = { ink: '#1a1f2e', body: '#4a5168', muted: '#8b92a8', line: '#e4e6ef',
             blue: '#2d5be3', green: '#16a34a', amber: '#d97706', red: '#dc2626' }
@@ -38,6 +40,8 @@ function ActivityList({ items, empty, done, actions }) {
           {[p.resource_type, p.skill_name, p.provider,
             done ? `Completed ${fmtDate(p.completed_at)}` : `Started ${fmtDate(p.started_at)}`].filter(Boolean).join(' · ')}
         </div>
+        {/* Evidence attached to this activity */}
+        <EvidenceFiles files={p.files || []} />
       </div>
       <div style={{ display: 'flex', gap: '6px', alignItems: 'flex-start', flexWrap: 'wrap', justifyContent: 'flex-end', flexShrink: 0 }}>
         {done && (
@@ -58,6 +62,8 @@ export default function ProgressTracking() {
   const [error, setError]       = useState('')
   const [notice, setNotice]     = useState('')
   const [busy, setBusy]         = useState(null)   // resource_id while a button's request runs
+  // Activity whose "Complete" dialog is open (evidence is required to complete)
+  const [completing, setCompleting] = useState(null)
   const [loading, setLoading]   = useState(true)
 
   const load = () => Promise.all([assessAPI.history(), progressAPI.getMy()])
@@ -77,28 +83,23 @@ export default function ProgressTracking() {
 
   useEffect(() => { load() }, [])
 
-  const complete = async (p) => {
-    setBusy(p.resource_id)
-    setNotice('')
-    try {
-      const res = await progressAPI.complete(p.resource_id)
-      await load()
-      setNotice(`Well done! "${p.resource_title}" is completed.`)
-      // Same follow-up as the Recommendations page: offer to update the profile
-      const prompt = res.data.prompt
-      if (prompt && window.confirm(`${prompt.message}\n\nOK opens My Profile.`)) {
+  // Called by the Complete dialog once evidence is attached and the activity is completed
+  const completed = async (p, res) => {
+    setCompleting(null)
+    await load()
+    setNotice(`Well done! "${p.resource_title}" is completed.`)
+    // Same follow-up as the Recommendations page: offer to update the profile
+    const prompt = res.data.prompt
+    if (prompt && window.confirm(`${prompt.message}\n\nOK opens My Profile.`)) {
+      try {
         await progressAPI.markSkillAdded(p.resource_id)
-        navigate('/profile')
-      }
-    } catch {
-      setError('Could not mark it as completed. Please try again.')
-    } finally {
-      setBusy(null)
+      } catch { /* the activity is completed either way */ }
+      navigate('/profile')
     }
   }
 
   const giveUp = async (p) => {
-    if (!window.confirm(`Stop "${p.resource_title}"?\n\nIt will show as not started again, and you can restart it later from Recommendations.`)) return
+    if (!window.confirm(`Stop "${p.resource_title}"?\n\nIt will show as not started again and any evidence you attached to it is deleted. You can restart it later from Recommendations.`)) return
     setBusy(p.resource_id)
     setNotice('')
     try {
@@ -114,7 +115,7 @@ export default function ProgressTracking() {
 
   const activeActions = (p) => (
     <>
-      <button onClick={() => complete(p)} disabled={busy === p.resource_id} style={actionBtn(C.green, '#fff')}>✓ Mark Complete</button>
+      <button onClick={() => { setNotice(''); setCompleting(p) }} disabled={busy === p.resource_id} style={actionBtn(C.green, '#fff')}>✓ Mark Complete</button>
       {p.assessment_id && (
         <button onClick={() => navigate('/recommendations', { state: { assessmentId: p.assessment_id } })}
           style={actionBtn('#fff', C.blue, C.line)}>View in Recommendations</button>
@@ -149,13 +150,21 @@ export default function ProgressTracking() {
   const first     = forRole.length ? parseFloat(forRole[0].readiness_score) : null
   const current   = forRole.length ? parseFloat(forRole[forRole.length - 1].readiness_score) : null
   const change    = forRole.length > 1 ? Math.round((current - first) * 100) / 100 : null
-  const completed = progress.filter(p => p.status === 'completed')
+  const doneList  = progress.filter(p => p.status === 'completed')
   const active    = progress.filter(p => p.status !== 'completed')
   const chart     = forRole.map(h => ({ date: fmtDate(h.created_at), score: parseFloat(h.readiness_score), method: h.matching_method }))
 
   return (
     <div style={{ padding: '28px 32px' }}>
       {header}
+
+      {completing && (
+        <CompleteActivity resource={completing}
+          evidence={progress.find(x => x.resource_id === completing.resource_id)?.files || []}
+          onChanged={load}
+          onCompleted={res => completed(completing, res)}
+          onClose={() => setCompleting(null)} />
+      )}
 
       {notice && <div role="status" style={{ background: '#dcfce7', color: C.green, padding: '10px 12px', borderRadius: '8px', fontSize: '13px', marginBottom: '14px' }}>{notice}</div>}
       {error && <div role="alert" style={{ background: '#fee2e2', color: C.red, padding: '10px 12px', borderRadius: '8px', fontSize: '13px', marginBottom: '14px' }}>{error}</div>}
@@ -168,7 +177,7 @@ export default function ProgressTracking() {
           { label: 'Change Since First', value: change == null ? '—' : `${change > 0 ? '+' : ''}${change}%`,
             color: change == null ? C.muted : change > 0 ? C.green : change < 0 ? C.red : C.body,
             note: change == null ? 'Run another assessment for this role' : `Over ${forRole.length} assessments` },
-          { label: 'Completed Actions', value: `${completed.length} / ${progress.length}`, color: C.blue,
+          { label: 'Completed Actions', value: `${doneList.length} / ${progress.length}`, color: C.blue,
             note: `${active.length} still in progress` },
         ].map(s => (
           <div key={s.label} style={{ ...card, marginBottom: 0, padding: '18px 20px' }}>
@@ -218,8 +227,8 @@ export default function ProgressTracking() {
           <ActivityList items={active} empty="Nothing in progress. Start an activity from Recommendations." actions={activeActions} />
         </div>
         <div style={card}>
-          <div style={heading}>Completed ({completed.length})</div>
-          <ActivityList items={completed} empty="No completed activities yet." done />
+          <div style={heading}>Completed ({doneList.length})</div>
+          <ActivityList items={doneList} empty="No completed activities yet." done />
         </div>
       </div>
     </div>

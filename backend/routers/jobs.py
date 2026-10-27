@@ -29,15 +29,22 @@ class JDCreate(BaseModel):
 
 # ── Job Role Templates ────────────────────────────────────────
 @router.get("/roles")
-def get_job_roles(db: Session = Depends(get_db)):
-    """Get all 6 pre-built IT job role templates"""
+def get_job_roles(course: Optional[str] = None, db: Session = Depends(get_db)):
+    """Active job role templates, with the courses that offer each and how many skills it has.
+
+    course (CS | BUSINESS | ICT): only roles offered to that course. A role with
+    skill_count 0 cannot be used for an assessment yet.
+    """
     roles = db.execute(
         text("""
-            SELECT role_id, role_name, role_code, description, industry_level
-            FROM job_roles
-            WHERE is_active = TRUE
-            ORDER BY role_name
-        """)
+            SELECT jr.role_id, jr.role_name, jr.role_code, jr.description, jr.industry_level, jr.courses,
+                   (SELECT COUNT(*) FROM job_role_skills jrs WHERE jrs.role_id = jr.role_id) AS skill_count
+            FROM job_roles jr
+            WHERE jr.is_active = TRUE
+              AND (CAST(:course AS VARCHAR) IS NULL OR CAST(:course AS VARCHAR) = ANY(jr.courses))
+            ORDER BY jr.role_name
+        """),
+        {"course": course.upper() if course else None}
     ).fetchall()
 
     return [dict(r._mapping) for r in roles]

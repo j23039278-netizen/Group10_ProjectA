@@ -1,17 +1,20 @@
 """
 SEAGAS -- Development Progress Router
 Handles student resource tracking (FR-11)
-Start, complete, and track recommended learning activities
+Start, complete, and track recommended learning activities.
+A student must attach evidence (a file or a link, evidence.py) to an activity
+before it can be marked complete; advisors see that evidence on the student page.
 Author: Soh Way Miin (Carl) -- Backend Developer
 """
  
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
 from sqlalchemy.orm import Session
 from sqlalchemy import text
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import Optional
 from uuid import UUID
 
+import evidence
 from database import get_db
 from routers.auth import get_current_user
  
@@ -123,43 +126,34 @@ def complete_resource(
     if not resource:
         raise HTTPException(status_code=404, detail="Resource not found")
  
-    # Update to completed
-    result = db.execute(
+    # Evidence is attached to the started activity, so it must exist and have some
+    activity = db.execute(
+        text("""
+            SELECT srp.progress_id,
+                   (SELECT COUNT(*) FROM student_evidence_files f WHERE f.progress_id = srp.progress_id) AS evidence
+            FROM student_resource_progress srp
+            WHERE srp.profile_id = :pid AND srp.resource_id = :rid
+        """),
+        {"pid": profile_id, "rid": resource_id}
+    ).fetchone()
+    if not activity:
+        raise HTTPException(status_code=400, detail="Start this activity and attach your evidence first.")
+    if activity.evidence == 0:
+        raise HTTPException(status_code=400,
+                            detail="Attach at least one piece of evidence (a certificate, screenshot, report "
+                                   "or link) before marking this activity complete.")
+
+    db.execute(
         text("""
             UPDATE student_resource_progress
             SET status       = 'completed',
                 completed_at = NOW(),
                 skill_added  = :skill_added,
                 updated_at   = NOW()
-            WHERE profile_id = :pid
-            AND   resource_id = :rid
-            RETURNING progress_id
+            WHERE progress_id = :prog
         """),
-        {
-            "pid": profile_id,
-            "rid": resource_id,
-            "skill_added": req.skill_added
-        }
-    ).fetchone()
- 
-    # If no record exists yet (student skipped Start), create one
-    if not result:
-        db.execute(
-            text("""
-                INSERT INTO student_resource_progress
-                    (profile_id, resource_id, skill_id, status,
-                     started_at, completed_at, skill_added)
-                VALUES
-                    (:pid, :rid, :sid, 'completed',
-                     NOW(), NOW(), :skill_added)
-            """),
-            {
-                "pid": profile_id,
-                "rid": resource_id,
-                "sid": str(resource.skill_id) if resource.skill_id else None,
-                "skill_added": req.skill_added
-            }
-        )
+        {"prog": str(activity.progress_id), "skill_added": req.skill_added}
+    )
     db.commit()
  
     # Build prompt for frontend dialog
@@ -262,6 +256,53 @@ def drop_resource(
 
 
 # ══════════════════════════════════════════════════════════════
+# POST /api/progress/{resource_id}/files  |  /links
+# Evidence for an activity the student started
+# ══════════════════════════════════════════════════════════════
+class EvidenceLink(BaseModel):
+    url: str = Field(min_length=1, max_length=2000)
+    title: Optional[str] = Field(None, max_length=255)
+
+
+def get_activity(db, current_user, resource_id):
+    """(profile_id, progress_id) of the student's own activity, or 404"""
+    profile_id = get_profile(current_user, db)
+    try:
+        rid = str(UUID(resource_id))
+    except ValueError:
+        raise HTTPException(status_code=404, detail="Activity not found")
+    row = db.execute(
+        text("SELECT progress_id FROM student_resource_progress WHERE profile_id = :pid AND resource_id = :rid"),
+        {"pid": profile_id, "rid": rid}
+    ).fetchone()
+    if not row:
+        raise HTTPException(status_code=404, detail="Start this activity before adding evidence.")
+    return profile_id, row.progress_id
+
+
+@router.post("/{resource_id}/files", status_code=201)
+def add_activity_file(
+    resource_id: str,
+    file: UploadFile = File(...),
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    profile_id, progress_id = get_activity(db, current_user, resource_id)
+    return evidence.save_file(db, profile_id, "progress_id", progress_id, file)
+
+
+@router.post("/{resource_id}/links", status_code=201)
+def add_activity_link(
+    resource_id: str,
+    req: EvidenceLink,
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    profile_id, progress_id = get_activity(db, current_user, resource_id)
+    return evidence.save_link(db, profile_id, "progress_id", progress_id, req.url, req.title)
+
+
+# ══════════════════════════════════════════════════════════════
 # GET /api/progress/my
 # Get all progress records for this student
 # ══════════════════════════════════════════════════════════════
@@ -307,10 +348,11 @@ def get_my_progress(
     query += " ORDER BY srp.updated_at DESC"
  
     records = db.execute(text(query), params).fetchall()
- 
+    rows = evidence.attach_files(db, [dict(r._mapping) for r in records], "progress_id")
+
     return {
-        "total": len(records),
-        "progress": [dict(r._mapping) for r in records]
+        "total": len(rows),
+        "progress": rows
     }
  
  
@@ -370,6 +412,7 @@ def get_assessment_progress(
     records = db.execute(
         text("""
             SELECT
+                srp.progress_id,
                 srp.resource_id,
                 srp.status,
                 srp.started_at,
@@ -382,15 +425,17 @@ def get_assessment_progress(
         {"pid": profile_id, "aid": assessment_id}
     ).fetchall()
  
+    rows = evidence.attach_files(db, [dict(r._mapping) for r in records], "progress_id")
     # Return as dict keyed by resource_id for easy frontend lookup
     progress_map = {
-        str(r.resource_id): {
-            "status":       r.status,
-            "started_at":   str(r.started_at) if r.started_at else None,
-            "completed_at": str(r.completed_at) if r.completed_at else None,
-            "skill_added":  r.skill_added
+        str(r["resource_id"]): {
+            "status":       r["status"],
+            "started_at":   str(r["started_at"]) if r["started_at"] else None,
+            "completed_at": str(r["completed_at"]) if r["completed_at"] else None,
+            "skill_added":  r["skill_added"],
+            "evidence":     r["files"],
         }
-        for r in records
+        for r in rows
     }
  
     return {

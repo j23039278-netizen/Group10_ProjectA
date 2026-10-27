@@ -72,15 +72,16 @@ def send_email(db, to_address, subject, body, related_user_id=None):
     return status
 
 
-def welcome_email(full_name, student_number, school_email, temp_password):
+def welcome_email(full_name, student_number, school_email, temp_password, course_name=None):
     """Subject and body of the account email a new student receives"""
     subject = "Your SEAGAS student account"
+    course_line = f"  Course:              {course_name}\n" if course_name else ""
     body = f"""Dear {full_name},
 
 Your SEAGAS account has been created.
 
   Student ID:          {student_number}
-  School email:        {school_email}
+{course_line}  School email:        {school_email}
   Temporary password:  {temp_password}
 
 Sign in at {FRONTEND_URL}/login with your school email, student ID and the

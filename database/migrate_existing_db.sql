@@ -183,6 +183,37 @@ CREATE TABLE IF NOT EXISTS student_evidence_files (
 CREATE INDEX IF NOT EXISTS idx_evidence_project ON student_evidence_files(project_id);
 CREATE INDEX IF NOT EXISTS idx_evidence_cert    ON student_evidence_files(cert_id);
 
+-- Evidence v2 (27 October): evidence can also be a link (videos, GitHub, Drive,
+-- credential pages), files can be Word / PowerPoint, and evidence can belong to a
+-- recommended activity (student_resource_progress): a student must attach at
+-- least one piece before marking an activity complete. Safe to run more than once.
+ALTER TABLE student_evidence_files ADD COLUMN IF NOT EXISTS kind VARCHAR(4) NOT NULL DEFAULT 'file';
+ALTER TABLE student_evidence_files ADD COLUMN IF NOT EXISTS link_url TEXT;
+ALTER TABLE student_evidence_files ADD COLUMN IF NOT EXISTS progress_id UUID
+    REFERENCES student_resource_progress(progress_id) ON DELETE CASCADE;
+ALTER TABLE student_evidence_files ALTER COLUMN data DROP NOT NULL;
+ALTER TABLE student_evidence_files ALTER COLUMN content_type DROP NOT NULL;
+-- Office type names are longer than 50 characters
+ALTER TABLE student_evidence_files ALTER COLUMN content_type TYPE VARCHAR(100);
+ALTER TABLE student_evidence_files ALTER COLUMN size_bytes DROP NOT NULL;
+ALTER TABLE student_evidence_files DROP CONSTRAINT IF EXISTS chk_evidence_one_parent;
+ALTER TABLE student_evidence_files DROP CONSTRAINT IF EXISTS student_evidence_files_content_type_check;
+ALTER TABLE student_evidence_files DROP CONSTRAINT IF EXISTS student_evidence_files_size_bytes_check;
+ALTER TABLE student_evidence_files DROP CONSTRAINT IF EXISTS chk_evidence_kind;
+-- Exactly one owner: a project, a certification or a recommended activity
+ALTER TABLE student_evidence_files ADD CONSTRAINT chk_evidence_one_parent
+    CHECK (num_nonnulls(project_id, cert_id, progress_id) = 1);
+-- A file has bytes of an allowed type (max 5 MB); a link has only an http(s) URL
+ALTER TABLE student_evidence_files ADD CONSTRAINT chk_evidence_kind CHECK (
+    (kind = 'file' AND data IS NOT NULL AND link_url IS NULL
+        AND size_bytes BETWEEN 1 AND 5242880
+        AND content_type IN ('image/jpeg', 'image/png', 'application/pdf',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'application/vnd.openxmlformats-officedocument.presentationml.presentation'))
+    OR (kind = 'link' AND data IS NULL AND content_type IS NULL AND size_bytes IS NULL
+        AND link_url ~* '^https?://[^[:space:]]+$' AND length(link_url) <= 2000));
+CREATE INDEX IF NOT EXISTS idx_evidence_progress ON student_evidence_files(progress_id);
+
 -- ── Student accounts: student number, intake, first-login password ──
 -- Students do not register themselves. An advisor uploads a list of new students
 -- (student_intake_*), an admin creates their accounts with a student number and a
@@ -284,5 +315,139 @@ CREATE TABLE IF NOT EXISTS email_outbox (
     created_at       TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 CREATE INDEX IF NOT EXISTS idx_email_outbox_created ON email_outbox(created_at DESC);
+
+
+-- ── Course (27 October): every student belongs to Computer Science, Business or ICT ──
+-- Set by the admin from the advisor's intake list (the Course column). Students
+-- cannot change it. Synthetic students are split evenly by number: student N
+-- -> N mod 3 = 1 CS, 2 BUSINESS, 0 ICT, the same in every database. Any other
+-- student inserted without a course (tests, scripts) gets CS. Safe to run again.
+ALTER TABLE users ADD COLUMN IF NOT EXISTS course VARCHAR(10);
+ALTER TABLE student_intake_rows ADD COLUMN IF NOT EXISTS course VARCHAR(10);
+
+CREATE OR REPLACE FUNCTION default_course(p_email TEXT) RETURNS VARCHAR AS $$
+DECLARE
+    n BIGINT;
+BEGIN
+    IF lower(p_email) ~ '^student[0-9]{1,8}@synthetic\.example\.com$' THEN
+        n := substring(lower(p_email) from '^student([0-9]+)@')::BIGINT;
+        RETURN CASE n % 3 WHEN 1 THEN 'CS' WHEN 2 THEN 'BUSINESS' ELSE 'ICT' END;
+    END IF;
+    RETURN 'CS';
+END $$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION users_assign_course() RETURNS trigger AS $$
+BEGIN
+    IF NEW.role = 'student' AND NEW.course IS NULL THEN
+        NEW.course := default_course(NEW.email);
+    END IF;
+    RETURN NEW;
+END $$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS trg_users_course ON users;
+CREATE TRIGGER trg_users_course
+    BEFORE INSERT OR UPDATE OF role, course ON users
+    FOR EACH ROW EXECUTE FUNCTION users_assign_course();
+
+UPDATE users SET course = default_course(email) WHERE role = 'student' AND course IS NULL;
+
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'chk_users_course') THEN
+        ALTER TABLE users ADD CONSTRAINT chk_users_course CHECK (
+            (role = 'student' AND course IN ('CS', 'BUSINESS', 'ICT'))
+            OR (role <> 'student' AND course IS NULL));
+    END IF;
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'chk_intake_course') THEN
+        ALTER TABLE student_intake_rows ADD CONSTRAINT chk_intake_course
+            CHECK (course IS NULL OR course IN ('CS', 'BUSINESS', 'ICT'));
+    END IF;
+END $$;
+CREATE INDEX IF NOT EXISTS idx_users_course ON users(course);
+
+-- Synthetic students: programme name matching their course, chosen by target role.
+-- Only rows that do not match yet are changed, so running this again changes nothing.
+-- (start_backend.bat runs this file again right after loading the synthetic students.)
+UPDATE student_profiles sp SET programme = CASE u.course
+        WHEN 'BUSINESS' THEN CASE WHEN sp.target_role IN ('Data Analyst', 'Data Scientist')
+                                  THEN 'Bachelor of Business (Business Analytics)'
+                                  ELSE 'Bachelor of Business (Information Systems)' END
+        WHEN 'ICT' THEN CASE sp.target_role
+                            WHEN 'Cybersecurity Analyst' THEN 'Bachelor of Information and Communication Technology (Network Security)'
+                            WHEN 'Cloud Engineer'        THEN 'Bachelor of Information and Communication Technology (Cloud and Networking)'
+                            WHEN 'Data Analyst'          THEN 'Bachelor of Information and Communication Technology (Data Management)'
+                            WHEN 'Data Scientist'        THEN 'Bachelor of Information and Communication Technology (Data Management)'
+                            ELSE 'Bachelor of Information and Communication Technology (Software Systems)' END
+        ELSE CASE sp.target_role
+                 WHEN 'Cybersecurity Analyst' THEN 'Bachelor of Computer Science (Cybersecurity)'
+                 WHEN 'Cloud Engineer'        THEN 'Bachelor of Computer Science (Cloud Computing)'
+                 WHEN 'Data Analyst'          THEN 'Bachelor of Computer Science (Data Science)'
+                 WHEN 'Data Scientist'        THEN 'Bachelor of Computer Science (Data Science)'
+                 ELSE 'Bachelor of Computer Science (Software Development)' END
+    END,
+    updated_at = CURRENT_TIMESTAMP
+FROM users u
+WHERE u.user_id = sp.user_id
+  AND u.email LIKE '%@synthetic.example.com'
+  AND NOT (   (u.course = 'BUSINESS' AND sp.programme LIKE 'Bachelor of Business%')
+           OR (u.course = 'ICT'      AND sp.programme LIKE 'Bachelor of Information and Communication Technology%')
+           OR (u.course = 'CS'       AND (sp.programme LIKE 'Bachelor of Computer Science%'
+                                          OR sp.programme LIKE 'Bachelor of Software Engineering%')));
+
+
+-- ── Roles per course, Business roles, GPA + CGPA (27 October) ──
+-- job_roles.courses: which courses' students may choose the role as target role.
+-- CS: all 6 IT roles; ICT: 4 of them; Business: the Business roles below (their
+-- skills are added later in Admin → Skills & Roles, so source = 'admin').
+-- Safe to run more than once.
+ALTER TABLE job_roles ADD COLUMN IF NOT EXISTS courses VARCHAR(10)[] NOT NULL DEFAULT ARRAY['CS']::VARCHAR(10)[];
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'chk_job_roles_courses') THEN
+        ALTER TABLE job_roles ADD CONSTRAINT chk_job_roles_courses CHECK (
+            cardinality(courses) >= 1
+            AND courses <@ ARRAY['CS', 'BUSINESS', 'ICT']::VARCHAR(10)[]);
+    END IF;
+END $$;
+
+UPDATE job_roles SET courses = ARRAY['CS', 'ICT']::VARCHAR(10)[]
+WHERE source = 'seed' AND role_code IN ('WEB_DEV', 'DATA_ANALYST', 'CLOUD_ENGINEER', 'CYBER_ANALYST');
+UPDATE job_roles SET courses = ARRAY['CS']::VARCHAR(10)[]
+WHERE source = 'seed' AND role_code IN ('SOFTWARE_DEV', 'DATA_SCIENTIST');
+
+INSERT INTO job_roles (role_name, role_code, description, industry_level, source, courses) VALUES
+('Business Analyst',   'BUSINESS_ANALYST',  'Analyses business processes and data to recommend improvements and support decisions.', 'junior', 'admin', ARRAY['BUSINESS']::VARCHAR(10)[]),
+('Marketing Executive','MARKETING_EXEC',    'Plans and runs marketing campaigns, including digital marketing and market research.',  'junior', 'admin', ARRAY['BUSINESS']::VARCHAR(10)[]),
+('Financial Analyst',  'FINANCIAL_ANALYST', 'Prepares financial reports, budgets and forecasts to support business decisions.',       'junior', 'admin', ARRAY['BUSINESS']::VARCHAR(10)[]),
+('HR Executive',       'HR_EXEC',           'Supports recruitment, employee relations, training and other human-resources work.',    'junior', 'admin', ARRAY['BUSINESS']::VARCHAR(10)[])
+ON CONFLICT (role_code) DO NOTHING;
+
+-- Synthetic students: a target role allowed for their course. ICT students who
+-- aimed at a CS-only role get the closest ICT role; Business students get a
+-- Business role by number (student N -> N mod 4). Only rows that break the rule
+-- are changed, so running this again changes nothing.
+UPDATE student_profiles sp SET target_role = CASE
+        WHEN u.course = 'ICT' THEN CASE sp.target_role WHEN 'Data Scientist' THEN 'Data Analyst' ELSE 'Web Developer' END
+        ELSE (ARRAY['Business Analyst', 'Marketing Executive', 'Financial Analyst', 'HR Executive'])
+             [(substring(lower(u.email) from '^student([0-9]+)@')::INT % 4) + 1]
+    END,
+    updated_at = CURRENT_TIMESTAMP
+FROM users u
+WHERE u.user_id = sp.user_id
+  AND u.email ~* '^student[0-9]+@synthetic\.example\.com$'
+  AND u.course IN ('ICT', 'BUSINESS')
+  AND NOT EXISTS (SELECT 1 FROM job_roles jr
+                  WHERE jr.role_name = sp.target_role AND u.course = ANY(jr.courses));
+
+-- GPA = the latest semester's GPA, CGPA = cumulative. Both entered by the student;
+-- results_updated_at drives the start-of-semester reminder (backend/routers/students.py).
+ALTER TABLE student_profiles ADD COLUMN IF NOT EXISTS cgpa DECIMAL(3,2);
+ALTER TABLE student_profiles ADD COLUMN IF NOT EXISTS results_updated_at TIMESTAMP;
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'chk_profiles_cgpa') THEN
+        ALTER TABLE student_profiles ADD CONSTRAINT chk_profiles_cgpa CHECK (cgpa IS NULL OR cgpa BETWEEN 0 AND 4);
+    END IF;
+END $$;
 
 COMMIT;

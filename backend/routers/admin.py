@@ -84,16 +84,22 @@ class SkillUpdate(BaseModel):
     is_active: Optional[bool] = None
 
 
+COURSE = Literal["CS", "BUSINESS", "ICT"]
+
+
 class RoleCreate(BaseModel):
     role_name: str = Field(min_length=1, max_length=100)
     description: Optional[str] = Field(None, max_length=2000)
     industry_level: LEVELS = "junior"
+    # Courses whose students may choose this role as their target role
+    courses: List[COURSE] = Field(["CS"], min_length=1, max_length=3)
 
 
 class RoleUpdate(BaseModel):
     role_name: Optional[str] = Field(None, min_length=1, max_length=100)
     description: Optional[str] = Field(None, max_length=2000)
     industry_level: Optional[LEVELS] = None
+    courses: Optional[List[COURSE]] = Field(None, min_length=1, max_length=3)
     is_active: Optional[bool] = None
 
 
@@ -127,7 +133,7 @@ class ResourceUpdate(BaseModel):
     is_active: Optional[bool] = None
 
 
-USER_COLUMNS = "user_id, email, full_name, role, student_number, is_active, must_change_password, created_at"
+USER_COLUMNS = "user_id, email, full_name, role, student_number, course, is_active, must_change_password, created_at"
 
 
 def clean_list(items):
@@ -158,6 +164,11 @@ def get_user_stats(current_user=Depends(get_current_user), db: Session = Depends
     stats = {r: {"total": 0, "active": 0} for r in ("student", "advisor", "admin")}
     for r in rows:
         stats[r.role] = {"total": r.total, "active": r.active}
+    # Students per course (Computer Science / Business / ICT)
+    courses = {c: 0 for c in ("CS", "BUSINESS", "ICT")}
+    for c in db.execute(text("SELECT course, COUNT(*) AS n FROM users WHERE role = 'student' GROUP BY course")).fetchall():
+        courses[c.course] = c.n
+    stats["courses"] = courses
     return stats
 
 
@@ -165,6 +176,7 @@ def get_user_stats(current_user=Depends(get_current_user), db: Session = Depends
 def list_users(
     search: Optional[str] = None,
     role: Optional[str] = None,
+    course: Optional[str] = None,     # CS | BUSINESS | ICT (students only)
     limit: int = 50,
     offset: int = 0,
     current_user=Depends(get_current_user),
@@ -182,6 +194,9 @@ def list_users(
     if role:
         where.append("role = :role")
         params["role"] = role
+    if course:
+        where.append("course = :course")
+        params["course"] = course.upper()
     where_sql = " AND ".join(where)
 
     total = db.execute(text(f"SELECT COUNT(*) FROM users WHERE {where_sql}"), params).scalar()
@@ -388,7 +403,7 @@ def update_skill(skill_id: UUID, req: SkillUpdate, request: Request,
 
 # ── Job roles ─────────────────────────────────────────────────
 ROLE_COLUMNS = """jr.role_id, jr.role_name, jr.role_code, jr.description, jr.industry_level,
-                  jr.is_active, jr.source"""
+                  jr.courses, jr.is_active, jr.source"""
 
 
 def get_role_row(db, role_id):
@@ -442,11 +457,12 @@ def create_role(req: RoleCreate, request: Request,
         raise HTTPException(status_code=400, detail=f"A role called {name} already exists")
     row = db.execute(
         text("""
-            INSERT INTO job_roles (role_name, role_code, description, industry_level, source)
-            VALUES (:name, :code, :desc, :level, 'admin')
+            INSERT INTO job_roles (role_name, role_code, description, industry_level, courses, source)
+            VALUES (:name, :code, :desc, :level, CAST(:courses AS VARCHAR(10)[]), 'admin')
             RETURNING role_id
         """),
-        {"name": name, "code": code, "desc": req.description, "level": req.industry_level}
+        {"name": name, "code": code, "desc": req.description, "level": req.industry_level,
+         "courses": sorted(set(req.courses))}
     ).fetchone()
     audit.record(db, "admin.role_create", user=current_user, request=request,
                  target_type="job_role", target_id=row.role_id, details={"role_name": name})
@@ -472,7 +488,9 @@ def update_role(role_id: UUID, req: RoleUpdate, request: Request,
                       {"n": changes["role_name"], "rid": str(role_id)}).fetchone():
             raise HTTPException(status_code=400, detail="Another role already has that name")
 
-    sets = [f"{k} = :{k}" for k in changes]
+    if changes.get("courses") is not None:
+        changes["courses"] = sorted(set(changes["courses"]))
+    sets = [f"{k} = CAST(:{k} AS VARCHAR(10)[])" if k == "courses" else f"{k} = :{k}" for k in changes]
     db.execute(text(f"UPDATE job_roles SET {', '.join(sets)} WHERE role_id = :rid"),
                {**changes, "rid": str(role_id)})
     audit.record(db, "admin.role_update", user=current_user, request=request,

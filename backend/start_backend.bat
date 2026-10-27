@@ -114,6 +114,9 @@ if "%SYN%"=="0" (
     echo       loading 5000 students, please wait ...
     psql -d seagas_db -q -v ON_ERROR_STOP=1 -f "..\data\output\seed_synthetic_students.sql"
     if errorlevel 1 goto :fail
+    REM Courses: programme names matching each synthetic student's course (idempotent)
+    psql -d seagas_db -q -v ON_ERROR_STOP=1 -o NUL -f "..\database\migrate_existing_db.sql"
+    if errorlevel 1 goto :fail
 ) else (
     echo       %SYN% synthetic students already loaded
 )

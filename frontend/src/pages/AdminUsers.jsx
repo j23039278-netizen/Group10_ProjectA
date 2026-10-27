@@ -5,6 +5,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { authAPI } from '../api/client'
 import { adminAPI } from '../api/admin'
 import { passwordProblem } from '../utils/passwordRules'
+import { COURSES, courseLabel } from '../utils/courses'
 import { C, card, th, td, input, label, btn, errorText } from './admin/adminStyles'
 import { Modal, Alert } from './admin/AdminUi'
 
@@ -182,6 +183,7 @@ export default function AdminUsers() {
   const [search, setSearch]     = useState('')
   const [query, setQuery]       = useState('')
   const [roleFilter, setRole]   = useState('')
+  const [courseFilter, setCourse] = useState('')   // '' = all; a course shows only its students
   const [page, setPage]         = useState(0)
   const [loading, setLoading]   = useState(true)
   const [error, setError]       = useState('')
@@ -200,6 +202,7 @@ export default function AdminUsers() {
     try {
       const res = await adminAPI.users({
         search: query || undefined, role: roleFilter || undefined,
+        course: courseFilter || undefined,
         limit: PAGE_SIZE, offset: page * PAGE_SIZE,
       })
       setUsers(res.data.users)
@@ -210,7 +213,7 @@ export default function AdminUsers() {
     } finally {
       setLoading(false)
     }
-  }, [query, roleFilter, page])
+  }, [query, roleFilter, courseFilter, page])
 
   useEffect(() => {
     loadStats()
@@ -283,7 +286,8 @@ export default function AdminUsers() {
             value={search} onChange={e => setSearch(e.target.value)}
           />
           <select aria-label="Filter by role" style={{ ...input, flex: '0 0 160px', width: 'auto' }}
-            value={roleFilter} onChange={e => { setPage(0); setRole(e.target.value) }}>
+            value={roleFilter} disabled={!!courseFilter} title={courseFilter ? 'A course shows students only' : undefined}
+            onChange={e => { setPage(0); setRole(e.target.value) }}>
             <option value="">All roles</option>
             <option value="admin">Admins</option>
             <option value="advisor">Advisors</option>
@@ -291,19 +295,36 @@ export default function AdminUsers() {
           </select>
         </div>
 
+        {/* Course: only students of Computer Science, Business or ICT */}
+        <div role="tablist" aria-label="Course" style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '14px' }}>
+          {[{ id: '', label: 'All users' }, ...COURSES].map(c => {
+            const active = courseFilter === c.id
+            const n = c.id ? stats?.courses?.[c.id] : null
+            return (
+              <button key={c.id || 'all'} role="tab" aria-selected={active}
+                onClick={() => { setPage(0); setCourse(c.id); if (c.id) setRole('') }}
+                style={{ padding: '6px 14px', borderRadius: '20px', fontSize: '12px', fontWeight: '600', cursor: 'pointer',
+                         background: active ? C.blue : '#fff', color: active ? '#fff' : C.body,
+                         border: `1.5px solid ${active ? C.blue : C.line}` }}>
+                {c.id ? `${c.label} students` : c.label}{n != null ? ` (${n})` : ''}
+              </button>
+            )
+          })}
+        </div>
+
         {notice && <Alert type="success">{notice}</Alert>}
         {error && <Alert>{error}</Alert>}
 
         <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '720px' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '820px' }}>
             <thead>
-              <tr>{['Name', 'Email', 'Student ID', 'Role', 'Status', 'Created', ''].map(h => <th key={h} style={th}>{h}</th>)}</tr>
+              <tr>{['Name', 'Email', 'Student ID', 'Course', 'Role', 'Status', 'Created', ''].map(h => <th key={h} style={th}>{h}</th>)}</tr>
             </thead>
             <tbody>
               {loading ? (
-                <tr><td colSpan={7} style={{ ...td, textAlign: 'center', color: C.muted, padding: '32px' }}>Loading…</td></tr>
+                <tr><td colSpan={8} style={{ ...td, textAlign: 'center', color: C.muted, padding: '32px' }}>Loading…</td></tr>
               ) : users.length === 0 ? (
-                <tr><td colSpan={7} style={{ ...td, textAlign: 'center', color: C.muted, padding: '32px' }}>No users match.</td></tr>
+                <tr><td colSpan={8} style={{ ...td, textAlign: 'center', color: C.muted, padding: '32px' }}>No users match.</td></tr>
               ) : users.map(u => {
                 const badge = ROLE_BADGE[u.role] || ROLE_BADGE.student
                 const isMe  = u.user_id === meId
@@ -312,6 +333,7 @@ export default function AdminUsers() {
                     <td style={{ ...td, color: C.ink, fontWeight: '600' }}>{u.full_name}{isMe && <span style={{ color: C.muted, fontWeight: '500' }}> (you)</span>}</td>
                     <td style={td}>{u.email}</td>
                     <td style={{ ...td, fontFamily: 'Consolas, monospace' }}>{u.student_number || '—'}</td>
+                    <td style={{ ...td, whiteSpace: 'nowrap' }}>{u.course ? courseLabel(u.course) : '—'}</td>
                     <td style={td}>
                       <span style={{ padding: '3px 9px', borderRadius: '999px', fontSize: '11px', fontWeight: '600', textTransform: 'capitalize', background: badge.bg, color: badge.color }}>{u.role}</span>
                     </td>

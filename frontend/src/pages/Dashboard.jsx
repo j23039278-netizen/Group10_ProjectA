@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { assessAPI, studentAPI } from '../api/client'
+import ResultsReminder from '../components/ResultsReminder'
 
 export default function Dashboard({ onLogout }) {
   const navigate = useNavigate()
@@ -53,13 +54,15 @@ export default function Dashboard({ onLogout }) {
         </div>
       </div>
 
+      <ResultsReminder profile={profile} onUpdate={() => navigate('/profile')} onConfirmed={loadData} />
+
       {/* Stat Cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: '16px', marginBottom: '16px' }}>
         {[
           { label: 'Job Readiness',  value: `${score}%`,             color: scoreColor },
           { label: 'Assessments',    value: history.length,           color: '#2d5be3' },
           { label: 'Target Role',    value: profile?.target_role || '—', color: '#1a1f2e', small: true },
-          { label: 'GPA',            value: profile?.gpa || '—',     color: '#1a1f2e' },
+          { label: 'GPA / CGPA',     value: `${profile?.gpa ?? '—'} / ${profile?.cgpa ?? '—'}`, color: '#1a1f2e', small: true },
         ].map((s, i) => (
           <div key={i} style={{
             background: '#fff', border: '1px solid #e4e6ef',
