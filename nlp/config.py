@@ -17,10 +17,17 @@ SPACY_MODEL = "en_core_web_sm"
 #   "name_description" -> "Power BI: Business intelligence and data visualisation tool by Microsoft."
 SKILL_TEXT_MODE = "name_aliases"
 
+# Version of the Strong / Developing / Gap rules (docs/NLP_CLASSIFICATION_RULES.md).
+# Change it whenever nlp/matcher.py would classify a stored assessment differently:
+# start_backend.bat (data/run_assessments.py --auto) then re-assesses every
+# synthetic student once, so the advisor dashboard shows the new rules.
+MATCH_RULES_VERSION = "2026-10-28"   # rules A and C adopted
+
 # Cosine similarity thresholds.
-#   MATCH:   a JD phrase / student skill at or above this counts as the skill.
+#   MATCH:   a JD phrase at or above this counts as the skill; a different
+#            student skill at or above this is "very close" (still Developing).
 #   RELATED: at or above this (but below MATCH) it is a similar, not the same,
-#            skill; match_skills() will use it for "developing".
+#            skill; match_skills() uses it for "developing".
 # Chosen from 60 hand-labelled pairs; see nlp/experiments/THRESHOLDS.md.
 MATCH_THRESHOLD = 0.60
 RELATED_THRESHOLD = 0.50
