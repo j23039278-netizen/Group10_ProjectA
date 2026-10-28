@@ -82,8 +82,12 @@ def test_keyword_method_never_uses_similarity(similarity):
     ("advanced", [], "strong"),
     ("intermediate", [], "strong"),
     ("beginner", ["project"], "strong"),
-    ("beginner", ["coursework"], "strong"),
+    ("beginner", ["certification"], "strong"),
+    ("beginner", ["internship"], "strong"),
+    ("beginner", ["coursework", "project"], "strong"),
+    ("beginner", ["coursework"], "developing"),        # rule C: coursework alone is not enough
     ("beginner", [], "developing"),
+    ("intermediate", ["coursework"], "strong"),
 ])
 def test_same_skill_rules(similarity, method, level, evidence, expected):
     [r] = match_skills([student("SQL", level, evidence)], [required("SQL")], method)
@@ -93,9 +97,10 @@ def test_same_skill_rules(similarity, method, level, evidence, expected):
 @pytest.mark.parametrize("method", ["semantic", "hybrid"])
 @pytest.mark.parametrize("sim, level, evidence, expected", [
     (1.0, "beginner", [], "developing"),
-    (MATCH, "intermediate", [], "strong"),
-    (MATCH, "beginner", ["project"], "strong"),
-    (MATCH, "beginner", [], "developing"),           # weak: beginner, no evidence
+    (1.0, "advanced", ["project"], "developing"),    # rule A: a different skill is never Strong
+    (MATCH, "intermediate", [], "developing"),
+    (MATCH, "beginner", ["project"], "developing"),
+    (MATCH, "beginner", [], "developing"),
     (MATCH - 0.001, "advanced", ["project"], "developing"),
     (MATCH - 1e-6, "advanced", ["project"], "developing"),
     (RELATED, "advanced", [], "developing"),
@@ -143,11 +148,11 @@ def test_semantic_takes_the_most_similar_student_skill(similarity):
     assert (azure["matched_student_skill"], azure["match_status"]) == ("GCP", "developing")  # 0.65 > 0.55
 
 
-def test_similarity_ties_go_to_the_better_status(similarity):
+def test_similarity_ties_go_to_the_better_backed_skill(similarity):
     similarity.table.update({("Azure", "AWS"): 0.65, ("Azure", "GCP"): 0.65})
     students = [student("GCP", "beginner"), student("AWS", "advanced")]
     [r] = match_skills(students, [required("Azure")], "semantic")
-    assert (r["matched_student_skill"], r["match_status"]) == ("AWS", "strong")
+    assert (r["matched_student_skill"], r["match_status"]) == ("AWS", "developing")
 
 
 # ── Missing skills ────────────────────────────────────────────
@@ -207,16 +212,19 @@ def test_every_result_is_complete(similarity, method):
 def test_reasons_follow_the_templates(similarity):
     similarity.table.update({("Requirements Analysis", "Business Analysis"): 0.7, ("Azure", "AWS"): 0.55})
     students = [student("SQL", "advanced", ["project", "coursework"]), student("Python", "beginner"),
+                student("Excel", "beginner", ["coursework"]),
                 student("Business Analysis"), student("AWS", "intermediate")]
-    reqs = [required("SQL"), required("Python"), required("Requirements Analysis"), required("Azure"),
-            required("Docker")]
+    reqs = [required("SQL"), required("Python"), required("Excel"), required("Requirements Analysis"),
+            required("Azure"), required("Docker")]
     assert [r["reason"] for r in match_skills(students, reqs, "hybrid")] == [
         "You list SQL (advanced, with project and coursework evidence), which matches this skill, "
         "so this is marked Strong.",
-        "You list Python at beginner level with no project, certification, coursework or internship "
-        "evidence, so this is marked Developing.",
-        "You list Business Analysis (intermediate), which is very close to Requirements Analysis, "
-        "so this is marked Strong.",
+        "You list Python (beginner). A beginner skill needs project, certification or internship "
+        "evidence to count as Strong, so this is marked Developing.",
+        "You list Excel (beginner, with coursework evidence). A beginner skill needs project, "
+        "certification or internship evidence to count as Strong, so this is marked Developing.",
+        "You list Business Analysis (intermediate), which is very close to Requirements Analysis "
+        "but not the same skill, so this is marked Developing.",
         "You list AWS (intermediate). It is closely related to Azure but not the same skill, "
         "so this is marked Developing.",
         "No skill in your profile is Docker or close enough to it, so this is marked as a Gap.",

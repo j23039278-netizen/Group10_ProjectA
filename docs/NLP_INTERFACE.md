@@ -197,7 +197,7 @@ match_skills(
   {"skill_id": null, "skill_name": "Python", "importance": "required",
    "match_status": "developing", "similarity_score": 1.0, "matching_method": "hybrid",
    "matched_student_skill": "Python",
-   "reason": "You list Python at beginner level with no project, certification, coursework or internship evidence, so this is marked Developing."},
+   "reason": "You list Python (beginner). A beginner skill needs project, certification or internship evidence to count as Strong, so this is marked Developing."},
   {"skill_id": null, "skill_name": "Power BI", "importance": "required",
    "match_status": "gap", "similarity_score": 0.0, "matching_method": "hybrid",
    "matched_student_skill": null,

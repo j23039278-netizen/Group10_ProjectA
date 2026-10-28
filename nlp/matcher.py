@@ -16,10 +16,11 @@ For each required skill (results keep the order of required_skills):
             not match.
 
 Classification (thresholds from nlp/config.py):
-  strong      same skill, or similarity >= MATCH_THRESHOLD, and the student
-              skill is intermediate / advanced or has evidence
-  developing  same skill or similarity >= MATCH_THRESHOLD, but beginner with
-              no evidence; or RELATED_THRESHOLD <= similarity < MATCH_THRESHOLD
+  strong      the same skill, intermediate / advanced, or beginner with
+              project, certification or internship evidence
+  developing  the same skill at beginner level with no evidence or coursework
+              only (rule C); or a different skill with similarity >=
+              RELATED_THRESHOLD, whatever its level (rule A)
   gap         anything else (similarity_score 0.0, matched_student_skill None)
 
 The keyword method needs only the standard library; semantic and hybrid load
@@ -36,6 +37,8 @@ from nlp.types import MatchResult
 
 PROFICIENCY_LEVELS = ("beginner", "intermediate", "advanced")
 IMPORTANCE_LEVELS = ("required", "preferred", "bonus")
+# Evidence that lets a beginner skill count as Strong; coursework alone does not (rule C).
+STRONG_EVIDENCE = frozenset({"project", "certification", "internship"})
 _STATUS_RANK = {"gap": 0, "developing": 1, "strong": 2}
 
 # ── Reasons ───────────────────────────────────────────────────
@@ -44,12 +47,10 @@ _STATUS_RANK = {"gap": 0, "developing": 1, "strong": 2}
 # {detail}: its level and evidence, e.g. "advanced, with project evidence".
 REASONS = {
     "same_strong": "You list {student} ({detail}), which matches this skill, so this is marked Strong.",
-    "same_developing": ("You list {student} at beginner level with no project, certification, "
-                        "coursework or internship evidence, so this is marked Developing."),
-    "similar_strong": ("You list {student} ({detail}), which is very close to {skill}, "
-                       "so this is marked Strong."),
-    "similar_developing": ("You list {student} at beginner level with no evidence; it is very close "
-                           "to {skill}, so this is marked Developing."),
+    "same_developing": ("You list {student} ({detail}). A beginner skill needs project, certification "
+                        "or internship evidence to count as Strong, so this is marked Developing."),
+    "similar": ("You list {student} ({detail}), which is very close to {skill} but not the same "
+                "skill, so this is marked Developing."),
     "related": ("You list {student} ({detail}). It is closely related to {skill} but not the same "
                 "skill, so this is marked Developing."),
     "gap_keyword": "No skill in your profile is {skill} or another name for it, so this is marked as a Gap.",
@@ -122,8 +123,9 @@ def _same(required, student):
 
 
 def _solid(student):
-    """Intermediate / advanced, or backed by a project, certification, coursework or internship."""
-    return student.level != "beginner" or bool(student.evidence)
+    """Intermediate / advanced, or a beginner backed by a project, certification or
+    internship. Coursework alone does not count (rule C)."""
+    return student.level != "beginner" or not STRONG_EVIDENCE.isdisjoint(student.evidence)
 
 
 # ── Similarity ────────────────────────────────────────────────
@@ -190,8 +192,10 @@ def _score(value):
 
 # ── Classification ────────────────────────────────────────────
 def _status(kind, similarity, student):
-    """match_status for kind "same" (same skill) or "similar" (semantic)."""
-    if kind == "same" or (kind == "similar" and similarity >= config.MATCH_THRESHOLD):
+    """match_status for kind "same" (same skill) or "similar" (semantic).
+    Only the same skill can be Strong; a different skill, however close, is at
+    most Developing (rule A)."""
+    if kind == "same":
         return "strong" if _solid(student) else "developing"
     if kind == "similar" and similarity >= config.RELATED_THRESHOLD:
         return "developing"
@@ -200,11 +204,11 @@ def _status(kind, similarity, student):
 
 def _best_similar(required, students, sims):
     """(kind, similarity, student) of the most similar student skill; ties go to
-    the better status, then to the skill listed first."""
+    the better status, then to the better-backed skill, then to the one listed first."""
     best_key, best = None, None
     for s in students:
         kind, sim = ("same", 1.0) if _same(required, s) else ("similar", _score(sims[s.index]))
-        key = (sim, _STATUS_RANK[_status(kind, sim, s)], -s.index)
+        key = (sim, _STATUS_RANK[_status(kind, sim, s)], _solid(s), -s.index)
         if best_key is None or key > best_key:
             best_key, best = key, (kind, sim, s)
     return best
@@ -227,7 +231,7 @@ def _result(required, decision, method, has_students):
     elif kind == "same":
         case = "same_" + status
     elif similarity >= config.MATCH_THRESHOLD:
-        case = "similar_" + status
+        case = "similar"
     else:
         case = "related"
     reason = REASONS[case].format(skill=required.name,
