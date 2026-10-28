@@ -311,7 +311,9 @@ DATA = ROOT / "data" / "output"
 ROLE_SEED = ROOT / "database" / "seed_job_role_skills.sql"
 ROLE_NAMES = {"DATA_ANALYST": "Data Analyst", "DATA_SCIENTIST": "Data Scientist",
               "SOFTWARE_DEV": "Software Developer", "CYBER_ANALYST": "Cybersecurity Analyst",
-              "CLOUD_ENGINEER": "Cloud Engineer", "WEB_DEV": "Web Developer"}
+              "CLOUD_ENGINEER": "Cloud Engineer", "WEB_DEV": "Web Developer",
+              "BUSINESS_ANALYST": "Business Analyst", "MARKETING_EXEC": "Marketing Executive",
+              "FINANCIAL_ANALYST": "Financial Analyst", "HR_EXEC": "HR Executive"}
 ARCHETYPES = ("strong", "average", "weak")
 ROLES = ("Data Analyst", "Cybersecurity Analyst")
 

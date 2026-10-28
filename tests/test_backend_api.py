@@ -799,8 +799,24 @@ class TestRolesByCourse:
         assert it | {"Software Developer", "Data Scientist"} <= names("CS")
         assert names("ICT") == it
         assert names("BUSINESS") == biz
-        # Business roles exist but have no skills yet
-        assert all(r["skill_count"] == 0 for r in c.get("/api/jobs/roles?course=BUSINESS").json())
+        # Business role templates (seed_job_role_skills.sql v3): 9 required + 8 preferred + 6 bonus
+        assert all(r["skill_count"] == 23 for r in c.get("/api/jobs/roles?course=BUSINESS").json())
+
+    def test_business_student_assessed_against_business_role(self, env):
+        c, conn = env["client"], env["conn"]
+        farah = course_student(env, "farah@student.newinti.edu.my", "Farah", "BUSINESS")
+        sid = lambda name: conn.execute("SELECT skill_id::text FROM skills_library WHERE skill_name = %s",
+                                        (name,)).fetchone()[0]
+        for skill, level in (("Recruitment", "advanced"), ("Payroll", "beginner")):
+            assert c.post("/api/students/skills", headers=farah,
+                          json={"skill_id": sid(skill), "proficiency_level": level}).status_code == 201
+        assert c.put("/api/students/profile", headers=farah, json={"target_role": "HR Executive"}).status_code == 200
+        hr = conn.execute("SELECT role_id::text FROM job_roles WHERE role_code = 'HR_EXEC'").fetchone()[0]
+        r = run(env, farah, role_id=hr)
+        assert r.status_code == 201, r.text
+        status = {m["skill_name"]: m["match_status"] for m in r.json()["match_results"]}
+        assert len(status) == 23
+        assert (status["Recruitment"], status["Payroll"], status["Employment Law"]) == ("strong", "developing", "gap")
 
     def test_target_role_must_suit_the_course(self, env):
         c = env["client"]

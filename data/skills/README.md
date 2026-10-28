@@ -38,13 +38,16 @@ The seed is idempotent. It uses `ON CONFLICT (skill_name) DO UPDATE`, so running
 1. A skill name appears only once (case-insensitive).
 2. Each alias (including ambiguous ones) belongs to one skill only and is never the same as another skill's name.
 3. All 32 v1 skills from `schema.sql` are present, spelled exactly the same. **Never rename or delete a v1 skill.** Their names are referenced by `job_role_skills`, the synthetic data and Aaron's `recommendations_library`. Only their aliases and description may change.
-4. The library has between 120 and 150 skills, and every skill has a description.
+4. The library has between 120 and 200 skills, and every skill has a description.
+5. `source` is the library version the skill was added in: `v1`, `v2` or `v3`.
 
 Do not edit `database/schema.sql`. Carl owns it. All changes to the library go into the v2 seed.
 
 ## Current contents
 
-138 skills: 88 Technical, 21 AI_Digital, 15 Analytical and 14 Soft (32 from v1 and 106 added in v2). The v1 aliases that pointed at other skills (for example SQL → MySQL, Linux → Bash, Cloud Computing → AWS, Project Management → Agile) were removed.
+166 skills: 109 Technical, 21 AI_Digital, 20 Analytical and 16 Soft (32 from v1, 106 added in v2 and 28 added in v3). The v1 aliases that pointed at other skills (for example SQL → MySQL, Linux → Bash, Cloud Computing → AWS, Project Management → Agile) were removed.
+
+**v3 (Sprint 3, Business roles):** 28 skills for the Business Analyst, Marketing Executive, Financial Analyst and HR Executive roles, in the new subcategories Marketing, Finance & Accounting, Human Resources, Business Process and Business Software, plus the soft skills Negotiation and Creativity. They use the existing four categories, because assessments store one score per category. "Financial modelling" and "Budgeting" moved from Financial Analysis to their own skills. Aliases that are common in any Malaysian JD were left out: EPF and SOCSO appear in benefits sections, and "continuous improvement" and "management reporting" in IT roles. The role templates are drafts from expert judgement, to be checked against Business JDs.
 
 **Category principle:** each domain sits in one category, so each assessment dimension has a clear meaning.
 

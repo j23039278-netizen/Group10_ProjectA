@@ -92,7 +92,7 @@ Risk Analysis,Analytical,Analytical,Risk assessment|Risk management,,Identifying
 Data Modelling,Analytical,Analytical,ER diagram|Database modelling|Schema design,,Designing data structures and relationships.,v2
 Systems Thinking,Analytical,Analytical,Systems analysis|Holistic thinking,,Understanding how components interact in a system.,v2
 A/B Testing,Analytical,Analytical,Split testing|Experimentation,,Comparing two versions to determine which performs better.,v2
-Financial Analysis,Analytical,Analytical,Financial modelling|Budgeting|Cost analysis,,Evaluating financial data to support decisions.,v2
+Financial Analysis,Analytical,Analytical,Cost analysis,,Evaluating financial data to support decisions.,v2
 Adaptability,Soft,Soft,Agility|Adaptable,Resilience|Flexibility,Adjusting to new conditions and challenges.,v2
 Presentation Skills,Soft,Soft,Public speaking|Presenting|Slide presentation,,Delivering clear and engaging presentations.,v2
 Project Management,Soft,Soft,Project planning|Project coordination,PM,Planning and executing projects on time.,v2
@@ -137,3 +137,31 @@ Data Mining,Analytical,Analytical,Pattern mining|Knowledge discovery,,Discoverin
 Stakeholder Communication,Soft,Soft,Stakeholder engagement|Client communication|Business communication,,"Communicating requirements, progress and results to stakeholders.",v2
 Decision Making,Analytical,Analytical,Data-driven decision making|Decision-making,,Evaluating options and evidence to make sound decisions.,v2
 Customer Focus,Soft,Soft,Customer service|Customer orientation|Client focus,,Understanding and prioritising the needs of customers and users.,v2
+Digital Marketing,Technical,Marketing,Online marketing|Internet marketing|Performance marketing|Digital campaigns,,"Planning, running and measuring marketing campaigns through online channels.",v3
+Social Media Marketing,Technical,Marketing,Social media management|Social media campaigns|Instagram marketing|TikTok marketing|Facebook marketing|Meta Ads,,Growing an audience and running campaigns on social media platforms.,v3
+Search Engine Optimisation,Technical,Marketing,SEO|On-page SEO|Off-page SEO|Keyword research,,Improving how websites rank in organic search results.,v3
+Search Engine Marketing,Technical,Marketing,Google Ads|Pay-per-click|PPC advertising|Paid search,SEM,Buying and optimising paid search advertising.,v3
+Content Marketing,Technical,Marketing,Content creation|Copywriting|Content writing|Content strategy,,Planning and writing content that attracts and engages customers.,v3
+Email Marketing,Technical,Marketing,Email campaigns|Mailchimp|Newsletter marketing|Marketing automation,,"Designing, sending and measuring email campaigns.",v3
+Brand Management,Technical,Marketing,Branding|Brand strategy|Brand development|Brand guidelines,,"Building and protecting a brand's identity, voice and reputation.",v3
+Market Research,Analytical,Marketing,Market analysis|Consumer research|Competitor analysis|Customer insights|Market surveys,,"Collecting and analysing data about markets, customers and competitors.",v3
+Accounting,Technical,Finance & Accounting,Bookkeeping|Financial accounting|Double-entry bookkeeping|Accounts payable|Accounts receivable|Full set of accounts,,"Recording, classifying and reconciling financial transactions.",v3
+Financial Reporting,Technical,Finance & Accounting,Financial statements|MFRS|IFRS|Month-end closing,,Preparing financial statements and reports under accounting standards such as MFRS.,v3
+Taxation,Technical,Finance & Accounting,Tax compliance|Corporate tax|Income tax|Tax filing|Sales and Service Tax,SST,Preparing tax computations and meeting tax filing obligations.,v3
+Auditing,Technical,Finance & Accounting,Internal audit|External audit|Statutory audit|Audit procedures,,Examining financial records and controls for accuracy and compliance.,v3
+Financial Modelling,Analytical,Finance & Accounting,Financial modeling|Financial models|DCF valuation|Valuation modelling,,Building spreadsheet models of a business's financial performance.,v3
+Budgeting & Forecasting,Analytical,Finance & Accounting,Budgeting|Financial forecasting|Budget planning|Variance analysis,,"Planning budgets, forecasting results and explaining variances.",v3
+Recruitment,Technical,Human Resources,Talent acquisition|Recruitment and selection|Candidate sourcing|Candidate screening|Recruiting,,"Sourcing, screening and selecting candidates for open positions.",v3
+Employee Relations,Technical,Human Resources,Industrial relations|Staff relations|Grievance handling|Disciplinary procedures,,"Managing the relationship between an organisation and its employees, including grievances.",v3
+Employment Law,Technical,Human Resources,Employment Act|Employment Act 1955|Labour law|Employment legislation,,Applying labour laws such as Malaysia's Employment Act 1955 to HR practice.,v3
+Payroll,Technical,Human Resources,Payroll processing|Payroll administration|Statutory contributions,,"Calculating salaries, deductions and statutory contributions such as EPF and SOCSO.",v3
+HRIS,Technical,Human Resources,HR information system|Human resource information system|HR system|Workday|SAP SuccessFactors|BambooHR,,Using HR information systems to manage employee records and HR processes.,v3
+Training & Development,Technical,Human Resources,Learning and development|L&D|Employee training|Training needs analysis,,Identifying training needs and organising learning for employees.,v3
+Performance Management,Technical,Human Resources,Performance appraisal|Performance reviews|KPI management|Appraisal process,,"Setting goals, reviewing performance and supporting employee improvement.",v3
+Process Mapping,Analytical,Business Process,BPMN|Process modelling|Business process modelling|Flowcharting|Process flow diagrams,,"Drawing how a business process works, step by step, to analyse or improve it.",v3
+Business Process Improvement,Analytical,Business Process,Process improvement|Six Sigma|Lean Six Sigma,Lean,Finding and removing waste or delays in business processes.,v3
+User Acceptance Testing,Technical,Business Process,UAT|Acceptance testing,,Checking with business users that a system meets their requirements before release.,v3
+CRM Software,Technical,Business Software,CRM|Salesforce|HubSpot|Zoho CRM|Customer relationship management,,Using customer relationship management systems to track customers and sales.,v3
+Accounting Software,Technical,Business Software,Xero|QuickBooks|AutoCount|MYOB|SAP FICO|Accounting system,,Using accounting systems to record transactions and produce reports.,v3
+Negotiation,Soft,Soft,Negotiation skills|Negotiating|Vendor negotiation,,Reaching agreements that work for both sides.,v3
+Creativity,Soft,Soft,Creative thinking|Innovative thinking|Ideation,,Coming up with original ideas and new ways to solve problems.,v3

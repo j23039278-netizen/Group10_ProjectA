@@ -6,8 +6,8 @@
 --     python -m pytest tests/test_skills_library.py -q
 --     psql -U postgres -d seagas_db -f database/seed_skills_library_v2.sql
 --
--- Total skills : 138  (AI_Digital 21, Analytical 15, Soft 14, Technical 88)
--- Generated at : 2026-10-12 14:06
+-- Total skills : 166  (AI_Digital 21, Analytical 20, Soft 16, Technical 109)
+-- Generated at : 2026-10-28 18:35
 --
 -- Run AFTER schema.sql. Idempotent: ON CONFLICT (skill_name) DO UPDATE, so
 -- alias / category / subcategory / description fixes to the 32 v1 skills
@@ -114,7 +114,7 @@ INSERT INTO skills_library (skill_name, category, subcategory, aliases, descript
 ('Data Modelling', 'Analytical', 'Analytical', ARRAY['ER diagram', 'Database modelling', 'Schema design']::TEXT[], 'Designing data structures and relationships.', 'v2'),
 ('Systems Thinking', 'Analytical', 'Analytical', ARRAY['Systems analysis', 'Holistic thinking']::TEXT[], 'Understanding how components interact in a system.', 'v2'),
 ('A/B Testing', 'Analytical', 'Analytical', ARRAY['Split testing', 'Experimentation']::TEXT[], 'Comparing two versions to determine which performs better.', 'v2'),
-('Financial Analysis', 'Analytical', 'Analytical', ARRAY['Financial modelling', 'Budgeting', 'Cost analysis']::TEXT[], 'Evaluating financial data to support decisions.', 'v2'),
+('Financial Analysis', 'Analytical', 'Analytical', ARRAY['Cost analysis']::TEXT[], 'Evaluating financial data to support decisions.', 'v2'),
 ('Adaptability', 'Soft', 'Soft', ARRAY['Agility', 'Adaptable']::TEXT[], 'Adjusting to new conditions and challenges.', 'v2'),
 ('Presentation Skills', 'Soft', 'Soft', ARRAY['Public speaking', 'Presenting', 'Slide presentation']::TEXT[], 'Delivering clear and engaging presentations.', 'v2'),
 ('Project Management', 'Soft', 'Soft', ARRAY['Project planning', 'Project coordination']::TEXT[], 'Planning and executing projects on time.', 'v2'),
@@ -158,7 +158,35 @@ INSERT INTO skills_library (skill_name, category, subcategory, aliases, descript
 ('Data Mining', 'Analytical', 'Analytical', ARRAY['Pattern mining', 'Knowledge discovery']::TEXT[], 'Discovering patterns and relationships in large datasets.', 'v2'),
 ('Stakeholder Communication', 'Soft', 'Soft', ARRAY['Stakeholder engagement', 'Client communication', 'Business communication']::TEXT[], 'Communicating requirements, progress and results to stakeholders.', 'v2'),
 ('Decision Making', 'Analytical', 'Analytical', ARRAY['Data-driven decision making', 'Decision-making']::TEXT[], 'Evaluating options and evidence to make sound decisions.', 'v2'),
-('Customer Focus', 'Soft', 'Soft', ARRAY['Customer service', 'Customer orientation', 'Client focus']::TEXT[], 'Understanding and prioritising the needs of customers and users.', 'v2')
+('Customer Focus', 'Soft', 'Soft', ARRAY['Customer service', 'Customer orientation', 'Client focus']::TEXT[], 'Understanding and prioritising the needs of customers and users.', 'v2'),
+('Digital Marketing', 'Technical', 'Marketing', ARRAY['Online marketing', 'Internet marketing', 'Performance marketing', 'Digital campaigns']::TEXT[], 'Planning, running and measuring marketing campaigns through online channels.', 'v3'),
+('Social Media Marketing', 'Technical', 'Marketing', ARRAY['Social media management', 'Social media campaigns', 'Instagram marketing', 'TikTok marketing', 'Facebook marketing', 'Meta Ads']::TEXT[], 'Growing an audience and running campaigns on social media platforms.', 'v3'),
+('Search Engine Optimisation', 'Technical', 'Marketing', ARRAY['SEO', 'On-page SEO', 'Off-page SEO', 'Keyword research']::TEXT[], 'Improving how websites rank in organic search results.', 'v3'),
+('Search Engine Marketing', 'Technical', 'Marketing', ARRAY['Google Ads', 'Pay-per-click', 'PPC advertising', 'Paid search']::TEXT[], 'Buying and optimising paid search advertising.', 'v3'),
+('Content Marketing', 'Technical', 'Marketing', ARRAY['Content creation', 'Copywriting', 'Content writing', 'Content strategy']::TEXT[], 'Planning and writing content that attracts and engages customers.', 'v3'),
+('Email Marketing', 'Technical', 'Marketing', ARRAY['Email campaigns', 'Mailchimp', 'Newsletter marketing', 'Marketing automation']::TEXT[], 'Designing, sending and measuring email campaigns.', 'v3'),
+('Brand Management', 'Technical', 'Marketing', ARRAY['Branding', 'Brand strategy', 'Brand development', 'Brand guidelines']::TEXT[], 'Building and protecting a brand''s identity, voice and reputation.', 'v3'),
+('Market Research', 'Analytical', 'Marketing', ARRAY['Market analysis', 'Consumer research', 'Competitor analysis', 'Customer insights', 'Market surveys']::TEXT[], 'Collecting and analysing data about markets, customers and competitors.', 'v3'),
+('Accounting', 'Technical', 'Finance & Accounting', ARRAY['Bookkeeping', 'Financial accounting', 'Double-entry bookkeeping', 'Accounts payable', 'Accounts receivable', 'Full set of accounts']::TEXT[], 'Recording, classifying and reconciling financial transactions.', 'v3'),
+('Financial Reporting', 'Technical', 'Finance & Accounting', ARRAY['Financial statements', 'MFRS', 'IFRS', 'Month-end closing']::TEXT[], 'Preparing financial statements and reports under accounting standards such as MFRS.', 'v3'),
+('Taxation', 'Technical', 'Finance & Accounting', ARRAY['Tax compliance', 'Corporate tax', 'Income tax', 'Tax filing', 'Sales and Service Tax']::TEXT[], 'Preparing tax computations and meeting tax filing obligations.', 'v3'),
+('Auditing', 'Technical', 'Finance & Accounting', ARRAY['Internal audit', 'External audit', 'Statutory audit', 'Audit procedures']::TEXT[], 'Examining financial records and controls for accuracy and compliance.', 'v3'),
+('Financial Modelling', 'Analytical', 'Finance & Accounting', ARRAY['Financial modeling', 'Financial models', 'DCF valuation', 'Valuation modelling']::TEXT[], 'Building spreadsheet models of a business''s financial performance.', 'v3'),
+('Budgeting & Forecasting', 'Analytical', 'Finance & Accounting', ARRAY['Budgeting', 'Financial forecasting', 'Budget planning', 'Variance analysis']::TEXT[], 'Planning budgets, forecasting results and explaining variances.', 'v3'),
+('Recruitment', 'Technical', 'Human Resources', ARRAY['Talent acquisition', 'Recruitment and selection', 'Candidate sourcing', 'Candidate screening', 'Recruiting']::TEXT[], 'Sourcing, screening and selecting candidates for open positions.', 'v3'),
+('Employee Relations', 'Technical', 'Human Resources', ARRAY['Industrial relations', 'Staff relations', 'Grievance handling', 'Disciplinary procedures']::TEXT[], 'Managing the relationship between an organisation and its employees, including grievances.', 'v3'),
+('Employment Law', 'Technical', 'Human Resources', ARRAY['Employment Act', 'Employment Act 1955', 'Labour law', 'Employment legislation']::TEXT[], 'Applying labour laws such as Malaysia''s Employment Act 1955 to HR practice.', 'v3'),
+('Payroll', 'Technical', 'Human Resources', ARRAY['Payroll processing', 'Payroll administration', 'Statutory contributions']::TEXT[], 'Calculating salaries, deductions and statutory contributions such as EPF and SOCSO.', 'v3'),
+('HRIS', 'Technical', 'Human Resources', ARRAY['HR information system', 'Human resource information system', 'HR system', 'Workday', 'SAP SuccessFactors', 'BambooHR']::TEXT[], 'Using HR information systems to manage employee records and HR processes.', 'v3'),
+('Training & Development', 'Technical', 'Human Resources', ARRAY['Learning and development', 'L&D', 'Employee training', 'Training needs analysis']::TEXT[], 'Identifying training needs and organising learning for employees.', 'v3'),
+('Performance Management', 'Technical', 'Human Resources', ARRAY['Performance appraisal', 'Performance reviews', 'KPI management', 'Appraisal process']::TEXT[], 'Setting goals, reviewing performance and supporting employee improvement.', 'v3'),
+('Process Mapping', 'Analytical', 'Business Process', ARRAY['BPMN', 'Process modelling', 'Business process modelling', 'Flowcharting', 'Process flow diagrams']::TEXT[], 'Drawing how a business process works, step by step, to analyse or improve it.', 'v3'),
+('Business Process Improvement', 'Analytical', 'Business Process', ARRAY['Process improvement', 'Six Sigma', 'Lean Six Sigma']::TEXT[], 'Finding and removing waste or delays in business processes.', 'v3'),
+('User Acceptance Testing', 'Technical', 'Business Process', ARRAY['UAT', 'Acceptance testing']::TEXT[], 'Checking with business users that a system meets their requirements before release.', 'v3'),
+('CRM Software', 'Technical', 'Business Software', ARRAY['CRM', 'Salesforce', 'HubSpot', 'Zoho CRM', 'Customer relationship management']::TEXT[], 'Using customer relationship management systems to track customers and sales.', 'v3'),
+('Accounting Software', 'Technical', 'Business Software', ARRAY['Xero', 'QuickBooks', 'AutoCount', 'MYOB', 'SAP FICO', 'Accounting system']::TEXT[], 'Using accounting systems to record transactions and produce reports.', 'v3'),
+('Negotiation', 'Soft', 'Soft', ARRAY['Negotiation skills', 'Negotiating', 'Vendor negotiation']::TEXT[], 'Reaching agreements that work for both sides.', 'v3'),
+('Creativity', 'Soft', 'Soft', ARRAY['Creative thinking', 'Innovative thinking', 'Ideation']::TEXT[], 'Coming up with original ideas and new ways to solve problems.', 'v3')
 ON CONFLICT (skill_name) DO UPDATE SET
     category    = EXCLUDED.category,
     subcategory = EXCLUDED.subcategory,

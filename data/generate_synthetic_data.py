@@ -85,6 +85,12 @@ ROLE_CODES = {
     "CYBER_ANALYST": "Cybersecurity Analyst",
     "CLOUD_ENGINEER": "Cloud Engineer",
     "WEB_DEV": "Web Developer",
+    # Business roles (skills library v3). Not in ROLE_WEIGHTS yet, so no student
+    # is drawn for them; their students are generated separately (Sprint 3).
+    "BUSINESS_ANALYST": "Business Analyst",
+    "MARKETING_EXEC": "Marketing Executive",
+    "FINANCIAL_ANALYST": "Financial Analyst",
+    "HR_EXEC": "HR Executive",
 }
 
 ROLES = {
@@ -121,6 +127,25 @@ ROLES = {
                        "Bachelor of Information Technology",
                        "Bachelor of Software Engineering"],
         "interests": ["Web Development", "Frontend Development", "UI/UX"],
+    },
+    "Business Analyst": {
+        "programmes": ["Bachelor of Business (Business Analytics)",
+                       "Bachelor of Business (Information Systems)"],
+        "interests": ["Business Analysis", "Process Improvement", "Data Analytics"],
+    },
+    "Marketing Executive": {
+        "programmes": ["Bachelor of Business (Marketing)",
+                       "Bachelor of Business (Digital Marketing)"],
+        "interests": ["Digital Marketing", "Branding", "Social Media"],
+    },
+    "Financial Analyst": {
+        "programmes": ["Bachelor of Business (Finance)",
+                       "Bachelor of Business (Accounting)"],
+        "interests": ["Corporate Finance", "Accounting", "Financial Planning"],
+    },
+    "HR Executive": {
+        "programmes": ["Bachelor of Business (Human Resource Management)"],
+        "interests": ["Human Resources", "Talent Acquisition", "Organisational Behaviour"],
     },
 }
 
@@ -366,6 +391,18 @@ def load_library_skills(csv_path=SKILLS_CSV_PATH, schema_path=SCHEMA_PATH):
     return load_schema_skills(schema_path)
 
 
+def load_it_library_skills(csv_path=SKILLS_CSV_PATH):
+    """Skill names of library v1 + v2 (the IT skills), or None without the CSV.
+
+    IT students' off-role noise is drawn from these, so adding the Business
+    skills (v3) does not change any IT student generated with the same seed.
+    """
+    if not os.path.exists(csv_path):
+        return None
+    with open(csv_path, newline="", encoding="utf-8") as f:
+        return {r["skill_name"].strip() for r in csv.DictReader(f) if r.get("source") in ("v1", "v2")}
+
+
 def load_schema_skills(path):
     """Return the set of skill names seeded in schema.sql (fallback only)."""
     if not os.path.exists(path):
@@ -523,8 +560,9 @@ def generate(n, seed):
         if missing:
             raise SystemExit(f"These skills are not in the skills library "
                              f"(data/skills/skills_library.csv): {missing}")
-    # off-role noise is drawn from the whole library
-    all_skills = sorted(known if known is not None else used_skills)
+    # off-role noise is drawn from the IT part of the library (v1 + v2)
+    it_skills = load_it_library_skills()
+    all_skills = sorted(it_skills if it_skills is not None else known if known is not None else used_skills)
 
     if bcrypt:
         # salt derived from the seed (own RNG, so the main sequence is unchanged)

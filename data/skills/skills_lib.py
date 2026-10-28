@@ -16,7 +16,10 @@ CSV_PATH = SKILLS_DIR / "skills_library.csv"
 SCHEMA_PATH = REPO_ROOT / "database" / "schema.sql"
 
 VALID_CATEGORIES = {"Technical", "AI_Digital", "Analytical", "Soft"}
-MIN_SKILLS, MAX_SKILLS = 120, 150
+# Library version a skill was added in: v1 (schema.sql), v2 (IT, Sprint 2),
+# v3 (Business roles, Sprint 3).
+VALID_SOURCES = {"v1", "v2", "v3"}
+MIN_SKILLS, MAX_SKILLS = 120, 200
 MAX_NAME_LEN = 100  # skills_library.skill_name VARCHAR(100)
 
 
@@ -58,8 +61,8 @@ def validate(rows, v1_names=None):
             problems.append(f"{r['skill_name']}: missing description")
         if len(r["skill_name"]) > MAX_NAME_LEN:
             problems.append(f"{r['skill_name']}: skill_name longer than {MAX_NAME_LEN}")
-        if r.get("source") not in {"v1", "v2"}:
-            problems.append(f"{r['skill_name']}: source must be v1 or v2")
+        if r.get("source") not in VALID_SOURCES:
+            problems.append(f"{r['skill_name']}: source must be one of {', '.join(sorted(VALID_SOURCES))}")
 
     # every alias (incl. ambiguous ones) must belong to exactly one skill
     # and must not equal any skill_name. Exception: an ambiguous alias may equal

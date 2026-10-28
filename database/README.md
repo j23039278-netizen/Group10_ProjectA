@@ -10,7 +10,7 @@
 |---|-------|------|----|
 | 1 | `users` | 所有用户账号（student/advisor/admin）+ 认证 | NFR-04 |
 | 2 | `student_profiles` | 学生基本信息、GPA、目标职位 | FR-01 |
-| 3 | `skills_library` | 138 个 IT 技能库（下拉菜单来源），含 `subcategory` 和 `source`（v1/v2） | FR-02 |
+| 3 | `skills_library` | 166 个技能（138 个 IT + 28 个 Business，下拉菜单来源），含 `subcategory` 和 `source`（v1/v2/v3） | FR-02 |
 | 4 | `student_skills` | 学生拥有的技能（profile × skill） | FR-01, FR-02 |
 | 5 | `job_roles` | 6 个 IT 职位模板 | FR-03 |
 | 5b | `job_role_skills` | 每个职位需要的技能 | FR-03 |
