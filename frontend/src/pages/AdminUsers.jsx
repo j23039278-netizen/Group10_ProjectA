@@ -456,7 +456,7 @@ export default function AdminUsers() {
           </select>
         </div>
 
-        {/* Course: only students of Computer Science, Business or ICT */}
+        {/* Course: only students of one course */}
         <div role="tablist" aria-label="Course" style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '14px' }}>
           {[{ id: '', label: 'All users' }, ...COURSES].map(c => {
             const active = courseFilter === c.id

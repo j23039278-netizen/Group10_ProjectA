@@ -100,6 +100,8 @@ class SkillCreate(BaseModel):
     subcategory: Optional[str] = Field(None, max_length=50)
     aliases: List[str] = Field([], max_length=30)
     description: Optional[str] = Field(None, max_length=1000)
+    # Courses whose students see the skill when adding their skills
+    courses: List[COURSE] = Field(["CS", "BUSINESS", "ICT"], min_length=1, max_length=3)
 
 
 class SkillUpdate(BaseModel):
@@ -107,6 +109,7 @@ class SkillUpdate(BaseModel):
     subcategory: Optional[str] = Field(None, max_length=50)
     aliases: Optional[List[str]] = Field(None, max_length=30)
     description: Optional[str] = Field(None, max_length=1000)
+    courses: Optional[List[COURSE]] = Field(None, min_length=1, max_length=3)
     is_active: Optional[bool] = None
 
 
@@ -485,7 +488,7 @@ def reset_password(
 
 # ── Skills library ────────────────────────────────────────────
 SKILL_COLUMNS = """sl.skill_id, sl.skill_name, sl.category, sl.subcategory, sl.aliases,
-                   sl.description, sl.source, sl.is_active"""
+                   sl.description, sl.courses, sl.source, sl.is_active"""
 
 
 def get_skill_row(db, skill_id):
@@ -521,12 +524,13 @@ def create_skill(req: SkillCreate, request: Request,
         raise HTTPException(status_code=400, detail=f"A skill called {name} already exists")
     row = db.execute(
         text("""
-            INSERT INTO skills_library (skill_name, category, subcategory, aliases, description, source)
-            VALUES (:name, :cat, :sub, :aliases, :desc, 'admin')
+            INSERT INTO skills_library (skill_name, category, subcategory, aliases, description, courses, source)
+            VALUES (:name, :cat, :sub, :aliases, :desc, CAST(:courses AS VARCHAR(10)[]), 'admin')
             RETURNING skill_id
         """),
         {"name": name, "cat": req.category, "sub": (req.subcategory or "").strip() or None,
-         "aliases": clean_list(req.aliases), "desc": req.description}
+         "aliases": clean_list(req.aliases), "desc": req.description,
+         "courses": sorted(set(req.courses))}
     ).fetchone()
     audit.record(db, "admin.skill_create", user=current_user, request=request,
                  target_type="skill", target_id=row.skill_id,
@@ -556,6 +560,9 @@ def update_skill(skill_id: UUID, req: SkillUpdate, request: Request,
     if "aliases" in changes:
         sets.append("aliases = :aliases")
         params["aliases"] = clean_list(changes["aliases"])
+    if changes.get("courses"):
+        sets.append("courses = CAST(:courses AS VARCHAR(10)[])")
+        params["courses"] = sorted(set(changes["courses"]))
     db.execute(text(f"UPDATE skills_library SET {', '.join(sets)} WHERE skill_id = :sid"), params)
     audit.record(db, "admin.skill_update", user=current_user, request=request,
                  target_type="skill", target_id=skill_id, details=changes)

@@ -14,7 +14,7 @@ from urllib.parse import quote
 from uuid import UUID
 
 import audit
-from advisor_scope import courses_of
+from advisor_scope import COURSE_NAMES, courses_of
 import evidence
 import programmes
 from database import get_db
@@ -137,7 +137,6 @@ def ensure_profile(db, current_user):
 # Semester starts (month, day) for the GPA / CGPA reminder: the January, May and
 # September intakes. Change them here if the academic calendar changes.
 SEMESTER_STARTS = ((1, 1), (5, 1), (9, 1))
-COURSE_NAMES = {"CS": "Computer Science", "BUSINESS": "Business", "ICT": "ICT"}
 
 
 def current_semester_start(today=None):

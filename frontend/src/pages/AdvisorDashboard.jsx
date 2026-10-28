@@ -259,7 +259,7 @@ export default function AdvisorDashboard() {
                     style={{ background: i % 2 === 0 ? '#f5f6fa' : '#fff', cursor: 'pointer' }}>
                     <td style={{ padding: '10px 12px', fontSize: '13px', fontWeight: '500', color: '#2d5be3' }}>{s.full_name}</td>
                     <td style={{ padding: '10px 12px', fontSize: '12px', color: '#4a5168', fontFamily: 'Consolas, monospace' }}>{s.student_number || '—'}</td>
-                    <td style={{ padding: '10px 12px', fontSize: '12px', color: '#4a5168', whiteSpace: 'nowrap' }}>{courseLabel(s.course)}</td>
+                    <td style={{ padding: '10px 12px', fontSize: '12px', color: '#4a5168' }}>{courseLabel(s.course)}</td>
                     <td style={{ padding: '10px 12px', fontSize: '12px', color: '#4a5168' }}>{s.programme || '—'}</td>
                     <td style={{ padding: '10px 12px', fontSize: '12px', color: '#4a5168' }}>{s.target_role || '—'}</td>
                     <td style={{ padding: '10px 12px', fontSize: '14px', fontWeight: '700', color: scoreColor(score) }}>

@@ -704,7 +704,7 @@ def upload(env, headers, name, content, mime="text/csv"):
 class TestIntake:
     CSV = ("Full Name,Phone Number,Personal Email,Course,Programme\n"
            "Mei Ling Tan,+60 12-345 6789,meiling.tan@example.com,Business,Bachelor of Business (Marketing)\n"
-           "Arjun Nair,0123456780,arjun.nair@example.com,ict,bachelor of information and communication technology (software systems)\n"
+           "Arjun Nair,0123456780,arjun.nair@example.com,ict,bachelor of information and communications technology (software systems)\n"
            "No Email,0123,not-an-email,CS,Bachelor of Computer Science (Software Development)\n"
            "Mei Ling Again,012,MEILING.TAN@example.com,Business,Bachelor of Business (Marketing)\n"
            "Siti Aminah,,siti.aminah@example.com,Computer Science,Bachelor of Computer Science (Software Development)\n"
@@ -791,8 +791,8 @@ class TestIntake:
         from openpyxl import Workbook
         wb = Workbook()
         wb.active.append(["Name", "Mobile", "Email", "Course", "Major"])
-        wb.active.append(["Lim Wei", 60123456789, "lim.wei@example.com", "  Information and Communication Technology ",
-                          "Bachelor of Information and Communication Technology (Software Systems)"])
+        wb.active.append(["Lim Wei", 60123456789, "lim.wei@example.com", "  Information and Communications Technology ",
+                          "Bachelor of Information and Communications Technology (Software Systems)"])
         buf = io.BytesIO()
         wb.save(buf)
         r = upload(env, advisor, "students.xlsx", buf.getvalue(),
@@ -800,7 +800,7 @@ class TestIntake:
         assert r.status_code == 201 and r.json()["students"] == 1, r.text
         rows = env["client"].get(f"/api/intake/batches/{r.json()['batch_id']}", headers=advisor).json()["rows"]
         assert rows[0]["phone"] == "60123456789"                                  # Excel number for the phone
-        assert rows[0]["course"] == "ICT" and rows[0]["programme"] == "Bachelor of Information and Communication Technology (Software Systems)"
+        assert rows[0]["course"] == "ICT" and rows[0]["programme"] == "Bachelor of Information and Communications Technology (Software Systems)"
         assert upload(env, advisor, "x.xlsx", b"not a zip").status_code == 400
         assert upload(env, advisor, "x.txt", b"a,b").status_code == 400
         assert upload(env, advisor, "x.csv", b"Phone,Address\n1,2\n").status_code == 400  # no name / email column
@@ -1009,13 +1009,13 @@ class TestIntakeTemplate:
         # Programme: the list of the course chosen in the same row (named ranges on a hidden sheet)
         assert prog_dv.formula1 == 'INDIRECT(SUBSTITUTE($D2," ","_"))' and "E2:E1001" in str(prog_dv.sqref)
         book = load_workbook(io.BytesIO(r.content))
-        assert set(book.defined_names) == {"Computer_Science", "ICT"}
+        assert set(book.defined_names) == {"Computer_Science", "Information_and_Communications_Technology"}
         assert book["Lists"].sheet_state == "hidden"
-        assert dv.type == "list" and dv.formula1 == '"Computer Science,ICT"'        # Dean of Computing
+        assert dv.type == "list" and dv.formula1 == '"Computer Science,Information and Communications Technology"'        # Dean of Computing
         assert "D2:D1001" in str(dv.sqref)
-        assert [row[3].value for row in ws.iter_rows(min_row=2)] == ["Computer Science", "ICT"]
+        assert [row[3].value for row in ws.iter_rows(min_row=2)] == ["Computer Science", "Information and Communications Technology"]
         every = load_workbook(io.BytesIO(c.get("/api/intake/template", headers=admin).content)).active
-        assert every.data_validations.dataValidation[0].formula1 == '"Computer Science,Business,ICT"'
+        assert every.data_validations.dataValidation[0].formula1 == '"Computer Science,Business,Information and Communications Technology"'
         # The filled-in template uploads as it is
         assert upload(env, advisor, "template.xlsx", r.content,
                       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet").json()["students"] == 2
@@ -1070,7 +1070,7 @@ class TestAdvisorScope:
                        "role": "admin"}).status_code == 400                                     # admins have none
 
         suggested = c.get("/api/admin/staff-number?position=hop&courses=ICT", headers=admin).json()
-        assert suggested["staff_number"].startswith("12") and suggested["position_label"] == "Head of Programme, ICT"
+        assert suggested["staff_number"].startswith("12") and suggested["position_label"] == "Head of Programme, Information and Communications Technology"
         hop = create(body("hop.ict@advisor.newinti.edu.my", advisor_position="hop", advisor_courses=["ICT"]))
         assert hop.status_code == 201, hop.text
         hop = hop.json()
@@ -1139,7 +1139,7 @@ class TestAdvisorScope:
         # New-student lists: rows of other courses are skipped with the reason
         csv = (b"Full Name,Personal Email,Course,Programme\n"
                b"Cs New,cs.new@example.com,Computer Science,Bachelor of Computer Science (Software Development)\n"
-               b"Ict New,ict.new@example.com,ICT,Bachelor of Information and Communication Technology (Software Systems)\n")
+               b"Ict New,ict.new@example.com,ICT,Bachelor of Information and Communications Technology (Software Systems)\n")
         r = upload(env, hop_cs, "mine.csv", csv)
         assert r.status_code == 201 and r.json()["students"] == 1
         assert r.json()["skipped"][0]["line"] == 3 and "Computer Science" in r.json()["skipped"][0]["error"]
@@ -1160,6 +1160,25 @@ class TestSkillsAndProgrammes:
         r = c.post("/api/students/skills", headers=biz, json={"skill_id": docker})
         assert r.status_code == 400 and "course" in r.json()["detail"]
 
+    def test_admin_skill_courses(self, env, admin):
+        c = env["client"]
+        biz = course_student(env, "gina@student.newinti.edu.my", "Gina", "BUSINESS")
+        cs = course_student(env, "hari@student.newinti.edu.my", "Hari", "CS")
+        names = lambda h: {s["skill_name"] for s in c.get("/api/students/skills-library", headers=h).json()}
+        new = c.post("/api/admin/skills", headers=admin, json={"skill_name": "Retail Operations", "category": "Technical",
+                                                               "courses": ["BUSINESS"]})
+        assert new.status_code == 201 and new.json()["courses"] == ["BUSINESS"]
+        assert "Retail Operations" in names(biz) and "Retail Operations" not in names(cs)
+        upd = c.patch(f"/api/admin/skills/{new.json()['skill_id']}", headers=admin, json={"courses": ["ICT", "CS"]})
+        assert upd.status_code == 200 and upd.json()["courses"] == ["CS", "ICT"]
+        assert "Retail Operations" in names(cs) and "Retail Operations" not in names(biz)
+        assert c.patch(f"/api/admin/skills/{new.json()['skill_id']}", headers=admin, json={"courses": []}).status_code == 422
+        listed = {s["skill_name"]: s for s in c.get("/api/admin/skills", headers=admin).json()}
+        assert listed["Docker"]["courses"] == ["CS", "ICT"] and listed["Payroll"]["courses"] == ["BUSINESS"]
+        # Without courses an admin skill is for every course
+        every = c.post("/api/admin/skills", headers=admin, json={"skill_name": "Public Speaking Club", "category": "Soft"})
+        assert every.json()["courses"] == ["BUSINESS", "CS", "ICT"]
+
     def test_programmes_and_admin_change(self, env, admin, advisor):
         c, conn = env["client"], env["conn"]
         biz = c.get("/api/students/programmes?course=business", headers=advisor).json()
@@ -1175,7 +1194,7 @@ class TestSkillsAndProgrammes:
 
     def test_intake_programme_edit_and_account(self, env, admin):
         c, conn = env["client"], env["conn"]
-        csv = f"Full Name,Personal Email,Course,Programme\nIvy Lee,ivy.lee@example.com,ICT,Bachelor of Information and Communication Technology (Software Systems)\n".encode()
+        csv = f"Full Name,Personal Email,Course,Programme\nIvy Lee,ivy.lee@example.com,ICT,Bachelor of Information and Communications Technology (Software Systems)\n".encode()
         bid = upload(env, admin, "ivy.csv", csv).json()["batch_id"]
         row = c.get(f"/api/intake/batches/{bid}", headers=admin).json()["rows"][0]
         edit = lambda body: c.patch(f"/api/intake/rows/{row['row_id']}", headers=admin, json=body)

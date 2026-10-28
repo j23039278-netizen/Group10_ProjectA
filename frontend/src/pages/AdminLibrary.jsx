@@ -8,7 +8,7 @@ import { adminAPI } from '../api/admin'
 import { label as labelText } from '../utils/labels'
 import { C, card, th, td, input, label, btn, smallBtn, heading, errorText } from './admin/adminStyles'
 import { Modal, Alert, StatusPill, SourcePill } from './admin/AdminUi'
-import { COURSES, courseLabel } from '../utils/courses'
+import { COURSES, coursesText } from '../utils/courses'
 
 const CATEGORIES = [
   { id: 'Technical',  label: 'Technical' },
@@ -21,6 +21,26 @@ const LEVELS = ['entry', 'junior', 'mid', 'senior']
 const IMPORTANCE = ['required', 'preferred', 'bonus']
 const select = { ...input, width: 'auto' }
 
+// Course checkboxes (at least one), kept in the COURSES order
+function CoursesField({ value, onChange, legend }) {
+  return (
+    <fieldset style={{ border: 'none', padding: 0, margin: '0 0 12px' }}>
+      <legend style={label}>{legend}</legend>
+      <div style={{ display: 'flex', gap: '6px 16px', flexWrap: 'wrap' }}>
+        {COURSES.map(c => (
+          <label key={c.id} style={{ fontSize: '13px', color: C.body, display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}>
+            <input type="checkbox" checked={value.includes(c.id)}
+              onChange={e => onChange(e.target.checked
+                ? COURSES.map(x => x.id).filter(id => id === c.id || value.includes(id))
+                : value.filter(id => id !== c.id))} />
+            {c.label}
+          </label>
+        ))}
+      </div>
+    </fieldset>
+  )
+}
+
 // ── Add / edit a skill ───────────────────────────────────────
 function SkillModal({ skill, onClose, onSaved }) {
   const editing = !!skill
@@ -28,6 +48,7 @@ function SkillModal({ skill, onClose, onSaved }) {
     skill_name: skill?.skill_name || '', category: skill?.category || 'Technical',
     subcategory: skill?.subcategory || '', aliases: (skill?.aliases || []).join(', '),
     description: skill?.description || '',
+    courses: skill?.courses || COURSES.map(c => c.id),
   })
   const [error, setError]   = useState('')
   const [saving, setSaving] = useState(false)
@@ -36,10 +57,12 @@ function SkillModal({ skill, onClose, onSaved }) {
   const submit = async (e) => {
     e.preventDefault()
     if (!editing && !form.skill_name.trim()) return setError('Please enter the skill name.')
+    if (form.courses.length === 0) return setError('Choose at least one course.')
     const body = {
       category: form.category, subcategory: form.subcategory.trim() || null,
       aliases: form.aliases.split(',').map(a => a.trim()).filter(Boolean),
       description: form.description.trim() || null,
+      courses: form.courses,
     }
     setSaving(true)
     setError('')
@@ -83,6 +106,8 @@ function SkillModal({ skill, onClose, onSaved }) {
             Other names for the same skill. The NLP uses them to find this skill in job descriptions.
           </div>
         </div>
+        <CoursesField legend="Courses (students of these courses see this skill)" value={form.courses}
+          onChange={courses => setForm(f => ({ ...f, courses }))} />
         <div style={{ marginBottom: '18px' }}>
           <label style={label} htmlFor="sk-desc">Description</label>
           <textarea id="sk-desc" rows={3} style={{ ...input, resize: 'vertical', fontFamily: 'inherit' }} value={form.description} onChange={set('description')} />
@@ -139,20 +164,8 @@ function RoleModal({ role, onClose, onSaved }) {
             {LEVELS.map(l => <option key={l} value={l}>{labelText(l)}</option>)}
           </select>
         </div>
-        <fieldset style={{ border: 'none', padding: 0, margin: '0 0 12px' }}>
-          <legend style={label}>Courses (students of these courses can choose this role)</legend>
-          <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
-            {COURSES.map(c => (
-              <label key={c.id} style={{ fontSize: '13px', color: C.body, display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}>
-                <input type="checkbox" checked={form.courses.includes(c.id)}
-                  onChange={e => setForm(f => ({ ...f, courses: e.target.checked
-                    ? COURSES.map(x => x.id).filter(id => id === c.id || f.courses.includes(id))
-                    : f.courses.filter(id => id !== c.id) }))} />
-                {c.label}
-              </label>
-            ))}
-          </div>
-        </fieldset>
+        <CoursesField legend="Courses (students of these courses can choose this role)" value={form.courses}
+          onChange={courses => setForm(f => ({ ...f, courses }))} />
         <div style={{ marginBottom: '18px' }}>
           <label style={label} htmlFor="ro-desc">Description</label>
           <textarea id="ro-desc" rows={3} style={{ ...input, resize: 'vertical', fontFamily: 'inherit' }} value={form.description} onChange={set('description')} />
@@ -263,6 +276,7 @@ export default function AdminLibrary() {
   const [roles, setRoles]         = useState([])
   const [search, setSearch]       = useState('')
   const [category, setCategory]   = useState('')
+  const [course, setCourse]       = useState('')     // '' = all courses; filters roles and skills
   const [showInactive, setShowInactive] = useState(false)
   const [loading, setLoading]     = useState(true)
   const [error, setError]         = useState('')
@@ -296,8 +310,11 @@ export default function AdminLibrary() {
     }
   }
 
+  const forCourse = (item) => !course || (item.courses || []).includes(course)
+  const shownRoles = roles.filter(forCourse)
   const q = search.trim().toLowerCase()
   const shown = skills.filter(s =>
+    forCourse(s) &&
     (showInactive || s.is_active) &&
     (!category || s.category === category) &&
     (!q || s.skill_name.toLowerCase().includes(q) ||
@@ -322,6 +339,22 @@ export default function AdminLibrary() {
       {notice && <Alert type="success">{notice}</Alert>}
       {error && <Alert>{error}</Alert>}
 
+      {/* Course: show only the roles and skills of one course */}
+      <div role="tablist" aria-label="Course" style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '16px' }}>
+        {[{ id: '', label: 'All courses' }, ...COURSES].map(c => {
+          const active = course === c.id
+          const has = (item) => !c.id || (item.courses || []).includes(c.id)
+          return (
+            <button key={c.id || 'all'} role="tab" aria-selected={active} onClick={() => setCourse(c.id)}
+              style={{ padding: '6px 14px', borderRadius: '20px', fontSize: '12px', fontWeight: '600', cursor: 'pointer',
+                       background: active ? C.blue : '#fff', color: active ? '#fff' : C.body,
+                       border: `1.5px solid ${active ? C.blue : C.line}` }}>
+              {c.label} ({roles.filter(has).length} roles · {skills.filter(s => s.is_active && has(s)).length} skills)
+            </button>
+          )
+        })}
+      </div>
+
       {/* Job roles */}
       <div style={{ ...card, padding: '20px 24px', marginBottom: '16px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px', gap: '12px', flexWrap: 'wrap' }}>
@@ -332,10 +365,13 @@ export default function AdminLibrary() {
           <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '720px' }}>
             <thead><tr>{['Role', 'Courses', 'Level', 'Skills', 'Required', 'Source', 'Status', ''].map(h => <th key={h} style={th}>{h}</th>)}</tr></thead>
             <tbody>
-              {roles.map(r => (
+              {shownRoles.length === 0 && (
+                <tr><td colSpan={8} style={{ ...td, textAlign: 'center', color: C.muted, padding: '24px' }}>No roles for this course.</td></tr>
+              )}
+              {shownRoles.map(r => (
                 <tr key={r.role_id} style={{ opacity: r.is_active ? 1 : 0.6 }}>
                   <td style={{ ...td, color: C.ink, fontWeight: '600' }}>{r.role_name}</td>
-                  <td style={td}>{(r.courses || []).map(courseLabel).join(', ') || '—'}</td>
+                  <td style={td}>{coursesText(r.courses)}</td>
                   <td style={{ ...td, textTransform: 'capitalize' }}>{r.industry_level || '—'}</td>
                   <td style={td}>{r.skill_count}</td>
                   <td style={td}>{r.required_count}</td>
@@ -375,17 +411,18 @@ export default function AdminLibrary() {
           </div>
         </div>
         <div style={{ overflow: 'auto', maxHeight: '560px' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '860px' }}>
-            <thead><tr>{['Skill', 'Category', 'Subcategory', 'Aliases', 'Roles', 'Source', 'Status', ''].map(h =>
+          <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '1000px' }}>
+            <thead><tr>{['Skill', 'Category', 'Subcategory', 'Courses', 'Aliases', 'Roles', 'Source', 'Status', ''].map(h =>
               <th key={h} style={{ ...th, position: 'sticky', top: 0 }}>{h}</th>)}</tr></thead>
             <tbody>
               {shown.length === 0 ? (
-                <tr><td colSpan={8} style={{ ...td, textAlign: 'center', color: C.muted, padding: '32px' }}>No skills match.</td></tr>
+                <tr><td colSpan={9} style={{ ...td, textAlign: 'center', color: C.muted, padding: '32px' }}>No skills match.</td></tr>
               ) : shown.map(s => (
                 <tr key={s.skill_id} style={{ opacity: s.is_active ? 1 : 0.6 }}>
                   <td style={{ ...td, color: C.ink, fontWeight: '600', whiteSpace: 'nowrap' }}>{s.skill_name}</td>
                   <td style={{ ...td, whiteSpace: 'nowrap' }}>{CATEGORY_LABEL[s.category] || s.category}</td>
                   <td style={td}>{s.subcategory || '—'}</td>
+                  <td style={td}>{coursesText(s.courses)}</td>
                   <td style={{ ...td, color: C.muted }}>{(s.aliases || []).join(', ') || '—'}</td>
                   <td style={td}>{s.role_count}</td>
                   <td style={td}><SourcePill source={s.source} /></td>

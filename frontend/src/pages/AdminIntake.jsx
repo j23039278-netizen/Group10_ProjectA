@@ -156,7 +156,7 @@ function BatchDetail({ batchId, onChanged, onCreated }) {
                           {!r.course && <option value="">Choose…</option>}
                           {COURSES.map(c => <option key={c.id} value={c.id}>{c.label}</option>)}
                         </select>
-                      : <span style={{ whiteSpace: 'nowrap' }}>{courseLabel(r.course)}</span>}
+                      : <span>{courseLabel(r.course)}</span>}
                   </td>
                   <td style={td}>
                     {r.status === 'pending' && r.course

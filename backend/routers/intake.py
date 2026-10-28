@@ -3,7 +3,8 @@ SEAGAS — New student intake (how student accounts are created)
 
 1. An advisor uploads a list of new students (Excel .xlsx or .csv) with their
    full name, phone number, personal email, course (Computer Science, Business
-   or ICT) and programme (one of the course's programmes).  POST /batches
+   or Information and Communications Technology) and programme (one of the course's
+   programmes).                                             POST /batches
 2. An admin opens the list, lets the system suggest a student number and a
    school email for each student (both editable), then creates the accounts.
    Each student gets a temporary password.  POST /batches/{id}/assign,
@@ -34,7 +35,7 @@ from sqlalchemy.orm import Session
 import audit
 import notifications
 import programmes
-from advisor_scope import courses_of
+from advisor_scope import COURSE_NAMES, courses_of
 from database import get_db
 from routers.auth import ROLE_EMAIL_DOMAINS, get_current_user, hash_password, password_error
 
@@ -61,10 +62,10 @@ REQUIRED_COLUMNS = "Full Name, Phone Number, Personal Email, Course, Programme"
 COURSES = {
     "cs": "CS", "computer science": "CS",
     "business": "BUSINESS",
-    "ict": "ICT", "information and communication technology": "ICT",
-    "information & communication technology": "ICT",
+    "ict": "ICT", "information and communications technology": "ICT",
+    "information & communications technology": "ICT",
+    "information and communication technology": "ICT", "information & communication technology": "ICT",
 }
-COURSE_NAMES = {"CS": "Computer Science", "BUSINESS": "Business", "ICT": "ICT"}
 
 
 def parse_course(value):
@@ -163,7 +164,7 @@ def clean_row(cells, cols, course_programmes):
         return None, "phone number is not valid"
     course = parse_course(cell("course"))
     if not course:
-        return None, "course must be Computer Science, Business or ICT"
+        return None, "course must be Computer Science, Business or Information and Communications Technology"
     programme = course_programmes.get(course, {}).get(" ".join(cell("programme").lower().split()))
     if not programme:
         return None, f"programme must be one of the {COURSE_NAMES[course]} programmes"
@@ -177,8 +178,8 @@ TEMPLATE_ROWS = [
      "Bachelor of Computer Science (Software Development)"),
     ("Another Student", "+60 13-222 3333", "another.student@gmail.com", "Business",
      "Bachelor of Business (Marketing)"),
-    ("Third Student",   "+60 14-444 5555", "third.student@gmail.com",   "ICT",
-     "Bachelor of Information and Communication Technology (Software Systems)"),
+    ("Third Student",   "+60 14-444 5555", "third.student@gmail.com",   "Information and Communications Technology",
+     "Bachelor of Information and Communications Technology (Software Systems)"),
 ]
 
 
@@ -207,7 +208,8 @@ def download_template(current_user=Depends(get_current_user), db: Session = Depe
         ws.column_dimensions[col].width = width
 
     # A hidden sheet with each course's programmes; one named range per course
-    # (Computer_Science, Business, ICT) so the Programme list can follow the Course cell
+    # (Computer_Science, Business, Information_and_Communications_Technology) so the
+    # Programme list can follow the Course cell
     lists = wb.create_sheet("Lists")
     lists.sheet_state = "hidden"
     by = programmes.by_course(db)
@@ -467,7 +469,7 @@ def create_accounts(
     for r in rows:
         if not r.course:   # lists uploaded before the Course column existed
             failed.append({"row_id": str(r.row_id), "full_name": r.full_name,
-                           "error": "no course: choose Computer Science, Business or ICT first"})
+                           "error": "no course: choose Computer Science, Business or Information and Communications Technology first"})
             continue
         if not r.programme:   # lists uploaded before the Programme column existed
             failed.append({"row_id": str(r.row_id), "full_name": r.full_name,

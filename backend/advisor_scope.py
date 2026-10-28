@@ -17,7 +17,9 @@ courses. Admins see every course. The same table is in database/schema.sql
 from fastapi import HTTPException
 
 ALL_COURSES = ("CS", "BUSINESS", "ICT")
-COURSE_NAMES = {"CS": "Computer Science", "BUSINESS": "Business", "ICT": "ICT"}
+# Course names shown to people (emails, Excel template, messages); the codes stay CS / BUSINESS / ICT
+COURSE_NAMES = {"CS": "Computer Science", "BUSINESS": "Business", "ICT": "Information and Communications Technology"}
+COMPUTING = f"{COURSE_NAMES['CS']} and {COURSE_NAMES['ICT']}"     # the Computing office's courses
 
 # (position, courses) -> staff ID prefix. Courses are kept sorted.
 STAFF_PREFIX = {
@@ -34,7 +36,7 @@ def staff_prefix(position, courses):
     key = (position, tuple(sorted(set(courses or []))))
     if key not in STAFF_PREFIX:
         raise HTTPException(status_code=400, detail=(
-            "An advisor is the Dean of Computing (CS and ICT), the Dean of Business, "
+            f"An advisor is the Dean of Computing ({COMPUTING}), the Dean of Business, "
             "or the Head of Programme of one course."))
     return STAFF_PREFIX[key]
 
@@ -42,7 +44,7 @@ def staff_prefix(position, courses):
 def position_label(position, courses):
     courses = sorted(courses or [])
     if position == "dean":
-        return "Dean, Computing (CS and ICT)" if courses == ["CS", "ICT"] else "Dean, Business"
+        return f"Dean, Computing ({COMPUTING})" if courses == ["CS", "ICT"] else "Dean, Business"
     if position == "hop" and courses:
         return f"Head of Programme, {COURSE_NAMES[courses[0]]}"
     return None

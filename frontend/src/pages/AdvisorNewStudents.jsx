@@ -185,7 +185,7 @@ export default function AdvisorNewStudents() {
                       <td style={{ ...td, color: C.ink }}>{r.full_name}</td>
                       <td style={td}>{r.phone || '—'}</td>
                       <td style={td}>{r.personal_email}</td>
-                      <td style={{ ...td, whiteSpace: 'nowrap' }}>{courseLabel(r.course)}</td>
+                      <td style={td}>{courseLabel(r.course)}</td>
                       <td style={td}>{r.programme || '—'}</td>
                       <td style={{ ...td, fontFamily: 'Consolas, monospace' }}>{r.status === 'created' ? r.student_number : '—'}</td>
                       <td style={td} title={r.note || undefined}>
