@@ -818,6 +818,18 @@ class TestRolesByCourse:
         assert len(status) == 23
         assert (status["Recruitment"], status["Payroll"], status["Employment Law"]) == ("strong", "developing", "gap")
 
+    def test_business_roles_are_seed_managed(self, env, admin):
+        """Their skills come from seed_job_role_skills.sql, so admins can only switch them on or off"""
+        c, conn = env["client"], env["conn"]
+        rows = conn.execute("SELECT role_id::text, source FROM job_roles WHERE role_code IN "
+                            "('BUSINESS_ANALYST', 'MARKETING_EXEC', 'FINANCIAL_ANALYST', 'HR_EXEC')").fetchall()
+        assert len(rows) == 4 and {s for _, s in rows} == {"seed"}
+        rid = rows[0][0]
+        assert c.put(f"/api/admin/roles/{rid}/skills", headers=admin, json=[]).status_code == 400
+        assert c.patch(f"/api/admin/roles/{rid}", headers=admin, json={"description": "x"}).status_code == 400
+        assert c.patch(f"/api/admin/roles/{rid}", headers=admin, json={"is_active": False}).status_code == 200
+        assert c.patch(f"/api/admin/roles/{rid}", headers=admin, json={"is_active": True}).status_code == 200
+
     def test_target_role_must_suit_the_course(self, env):
         c = env["client"]
         carol = course_student(env, "carol@student.newinti.edu.my", "Carol", "BUSINESS")

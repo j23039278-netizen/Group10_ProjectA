@@ -10,7 +10,7 @@ SEAGAS — Admin Router
 Students do not register themselves (routers/intake.py); advisor and admin
 accounts can only be created here, by a signed-in admin.
 
-Who owns the library data: the 138 skills and 6 roles that come from
+Who owns the library data: the 166 skills and 10 roles that come from
 data/skills/skills_library.csv and the seed files are maintained there
 (start_backend.bat re-applies the seeds), so admins can only switch them on or
 off. Skills and roles that admins add (source = 'admin') are never touched by
