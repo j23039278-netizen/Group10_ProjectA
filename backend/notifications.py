@@ -72,10 +72,12 @@ def send_email(db, to_address, subject, body, related_user_id=None):
     return status
 
 
-def welcome_email(full_name, student_number, school_email, temp_password, course_name=None):
+def welcome_email(full_name, student_number, school_email, temp_password, course_name=None, programme=None):
     """Subject and body of the account email a new student receives"""
     subject = "Your SEAGAS student account"
     course_line = f"  Course:              {course_name}\n" if course_name else ""
+    if programme:
+        course_line += f"  Programme:           {programme}\n"
     body = f"""Dear {full_name},
 
 Your SEAGAS account has been created.
@@ -89,6 +91,29 @@ temporary password. You will be asked to choose your own password straight away;
 the temporary password stops working after that.
 
 If you did not expect this email, please contact your academic advisor.
+
+SEAGAS - Student Employability Assessment and Skill Gap Analysis System
+"""
+    return subject, body
+
+
+def staff_welcome_email(full_name, staff_number, school_email, temp_password, position=None):
+    """Subject and body of the account email a new advisor receives"""
+    subject = "Your SEAGAS advisor account"
+    position_line = f"  Position:            {position}\n" if position else ""
+    body = f"""Dear {full_name},
+
+Your SEAGAS advisor account has been created.
+
+  Staff ID:            {staff_number}
+{position_line}  School email:        {school_email}
+  Temporary password:  {temp_password}
+
+Sign in at {FRONTEND_URL}/login with your school email and the temporary
+password (leave Student ID empty). You will be asked to choose your own password
+straight away; the temporary password stops working after that.
+
+If you did not expect this email, please contact the SEAGAS administrator.
 
 SEAGAS - Student Employability Assessment and Skill Gap Analysis System
 """

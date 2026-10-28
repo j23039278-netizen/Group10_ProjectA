@@ -54,6 +54,8 @@ export const studentAPI = {
   updateProfile:   (data) => API.put('/students/profile', data),
   // GPA / CGPA did not change this semester: stops the reminder
   confirmResults:  ()     => API.post('/students/profile/results-confirmed'),
+  // Programmes (majors) of one course, or of all courses
+  programmes:      (course) => API.get('/students/programmes', { params: course ? { course } : {} }),
   getSkills:       ()     => API.get('/students/skills'),
   addSkill:        (data) => API.post('/students/skills', data),
   removeSkill:     (id)   => API.delete(`/students/skills/${id}`),

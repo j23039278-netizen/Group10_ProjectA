@@ -1,11 +1,13 @@
 // SEAGAS — Admin: User Management
 // Admins create advisor/admin accounts, rename, activate or deactivate accounts and reset passwords.
+// Each advisor has a position (Dean / Head of Programme), which sets the courses they see, and a
+// 5-digit staff ID that starts with the position's prefix (backend/advisor_scope.py).
 // Students are not created here: their accounts come from the new-student lists (Student Intake).
-import { useState, useEffect, useCallback } from 'react'
-import { authAPI } from '../api/client'
+import { useState, useEffect, useCallback, useRef } from 'react'
+import { authAPI, studentAPI } from '../api/client'
 import { adminAPI } from '../api/admin'
 import { passwordProblem } from '../utils/passwordRules'
-import { COURSES, courseLabel } from '../utils/courses'
+import { COURSES, courseLabel, ADVISOR_POSITIONS, advisorPositionOf } from '../utils/courses'
 import { C, card, th, td, input, label, btn, errorText } from './admin/adminStyles'
 import { Modal, Alert } from './admin/AdminUi'
 
@@ -20,25 +22,111 @@ const ROLE_BADGE = {
   student: { bg: '#f1f5f9', color: '#475569' },
 }
 
+// Position drop-down and staff ID. The ID is suggested for the chosen position until the
+// admin types their own; changing the position suggests a new one.
+// Each office has one Dean: the form says who holds a Dean post now.
+function AdvisorFields({ positionId, staffNumber, onChange, keepNumber, userId }) {
+  const typed = useRef(false)
+  const pos = ADVISOR_POSITIONS.find(p => p.id === positionId)
+  const [dean, setDean] = useState(null)     // current Dean of the chosen office (someone else)
+
+  useEffect(() => {
+    setDean(null)
+    if (!pos) return
+    let current = true
+    adminAPI.staffNumber(pos.position, pos.courses)
+      .then(r => {
+        if (!current) return
+        const d = r.data.current_dean
+        setDean(d && d.user_id !== userId ? d : null)
+        if (typed.current) return
+        if (keepNumber && staffNumber.startsWith(pos.prefix)) return   // editing: the current ID still fits
+        onChange({ staffNumber: r.data.staff_number })
+      })
+      .catch(() => {})
+    return () => { current = false }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [positionId])
+
+  return (
+    <>
+      <div style={{ marginBottom: '12px' }}>
+        <label style={label} htmlFor="adv-pos">Position</label>
+        <select id="adv-pos" style={input} value={positionId}
+          onChange={e => { typed.current = false; onChange({ positionId: e.target.value }) }}>
+          <option value="">Choose the position</option>
+          {ADVISOR_POSITIONS.map(p => <option key={p.id} value={p.id}>{p.label}</option>)}
+        </select>
+        {pos && (
+          <div style={{ fontSize: '12px', color: C.muted, marginTop: '4px' }}>
+            Sees and adds {pos.courses.map(courseLabel).join(' and ')} students only.
+          </div>
+        )}
+        {dean && (
+          <div role="alert" style={{ fontSize: '12px', color: C.red, marginTop: '4px' }}>
+            {dean.full_name} is already the {pos.label}. There is only one Dean per office: change their position or
+            deactivate their account first.
+          </div>
+        )}
+      </div>
+      <div style={{ marginBottom: '12px' }}>
+        <label style={label} htmlFor="adv-staff">Staff ID</label>
+        <input id="adv-staff" style={{ ...input, fontFamily: 'Consolas, monospace' }} value={staffNumber} maxLength={5}
+          inputMode="numeric" placeholder={pos ? `${pos.prefix}xxx` : '5 digits'}
+          onChange={e => { typed.current = true; onChange({ staffNumber: e.target.value.replace(/\D/g, '') }) }} />
+        <div style={{ fontSize: '12px', color: C.muted, marginTop: '4px' }}>
+          5 digits{pos ? `, starting with ${pos.prefix} for this position` : ''}. A free ID is suggested; you can change it.
+        </div>
+      </div>
+    </>
+  )
+}
+
+// Problem with the advisor fields, or '' when they are fine
+function advisorProblem(positionId, staffNumber) {
+  const pos = ADVISOR_POSITIONS.find(p => p.id === positionId)
+  if (!pos) return 'Please choose the advisor\'s position.'
+  if (!/^[0-9]{5}$/.test(staffNumber)) return 'The staff ID must be 5 digits.'
+  if (!staffNumber.startsWith(pos.prefix)) return `Staff IDs for ${pos.label} start with ${pos.prefix}.`
+  return ''
+}
+
+// Advisors: like new students, the system makes a temporary password and emails the staff ID,
+// school email and password to the advisor's personal email. Admins: the admin types them.
 function AddUserModal({ onClose, onCreated }) {
-  const [form, setForm]       = useState({ full_name: '', email: '', role: 'advisor', password: '', confirm: '' })
+  const [form, setForm]       = useState({ full_name: '', email: '', role: 'advisor', password: '', confirm: '',
+                                           personal_email: '', positionId: '', staffNumber: '' })
+  const [emailTyped, setEmailTyped] = useState(false)   // advisor school email changed by hand
   const [error, setError]     = useState('')
   const [saving, setSaving]   = useState(false)
   const set = (k) => (e) => setForm(f => ({ ...f, [k]: e.target.value }))
+  const isAdvisor = form.role === 'advisor'
+  // Advisor school email: <staff ID>@advisor.newinti.edu.my unless the admin types another one
+  const email = isAdvisor && !emailTyped
+    ? (form.staffNumber ? `${form.staffNumber}@${EMAIL_DOMAINS.advisor}` : '')
+    : form.email
 
   const submit = async (e) => {
     e.preventDefault()
     if (!form.full_name.trim())            return setError('Please enter the full name.')
-    if (!EMAIL_RE.test(form.email.trim())) return setError('Please enter a valid email address.')
-    if (!form.email.trim().toLowerCase().endsWith(`@${EMAIL_DOMAINS[form.role]}`))
-      return setError(`${form.role === 'admin' ? 'Admin' : 'Advisor'} emails must end with @${EMAIL_DOMAINS[form.role]}.`)
-    if (passwordProblem(form.password)) return setError(passwordProblem(form.password))
-    if (form.password !== form.confirm)    return setError('Passwords do not match.')
+    if (isAdvisor && !EMAIL_RE.test(form.personal_email.trim()))
+      return setError('Please enter the advisor\'s personal email: the login details are sent there.')
+    if (isAdvisor && advisorProblem(form.positionId, form.staffNumber)) return setError(advisorProblem(form.positionId, form.staffNumber))
+    if (!EMAIL_RE.test(email.trim())) return setError('Please enter a valid school email address.')
+    if (!email.trim().toLowerCase().endsWith(`@${EMAIL_DOMAINS[form.role]}`))
+      return setError(`${isAdvisor ? 'Advisor' : 'Admin'} school emails must end with @${EMAIL_DOMAINS[form.role]}.`)
+    if (!isAdvisor && passwordProblem(form.password)) return setError(passwordProblem(form.password))
+    if (!isAdvisor && form.password !== form.confirm) return setError('Passwords do not match.')
+    const pos = ADVISOR_POSITIONS.find(p => p.id === form.positionId)
     setSaving(true)
     setError('')
     try {
       const res = await adminAPI.createUser({
-        full_name: form.full_name.trim(), email: form.email.trim(), role: form.role, password: form.password,
+        full_name: form.full_name.trim(), email: email.trim(), role: form.role,
+        ...(isAdvisor
+          ? { personal_email: form.personal_email.trim(), advisor_position: pos.position,
+              advisor_courses: pos.courses, staff_number: form.staffNumber }
+          : { password: form.password }),
       })
       onCreated(res.data)
     } catch (err) {
@@ -62,21 +150,52 @@ function AddUserModal({ onClose, onCreated }) {
           <label style={label} htmlFor="nu-name">Full name</label>
           <input id="nu-name" style={input} value={form.full_name} onChange={set('full_name')} placeholder="e.g. Dr. Lim Mei Ling" autoFocus />
         </div>
+        {isAdvisor && (
+          <>
+            <div style={{ marginBottom: '12px' }}>
+              <label style={label} htmlFor="nu-personal">Personal email</label>
+              <input id="nu-personal" type="email" style={input} value={form.personal_email} onChange={set('personal_email')}
+                placeholder="e.g. lim.meiling@gmail.com" autoComplete="off" />
+              <div style={{ fontSize: '12px', color: C.muted, marginTop: '4px' }}>The login details are sent here.</div>
+            </div>
+            <AdvisorFields positionId={form.positionId} staffNumber={form.staffNumber}
+              onChange={(v) => setForm(f => ({ ...f, ...v }))} />
+          </>
+        )}
         <div style={{ marginBottom: '12px' }}>
-          <label style={label} htmlFor="nu-email">Email</label>
-          <input id="nu-email" type="email" style={input} value={form.email} onChange={set('email')} placeholder={`name@${EMAIL_DOMAINS[form.role]}`} autoComplete="off" />
+          <label style={label} htmlFor="nu-email">School email</label>
+          <input id="nu-email" type="email" style={input} value={email} autoComplete="off"
+            onChange={e => { setEmailTyped(true); setForm(f => ({ ...f, email: e.target.value })) }}
+            placeholder={isAdvisor ? `staff ID@${EMAIL_DOMAINS.advisor}` : `name@${EMAIL_DOMAINS.admin}`} />
+          {isAdvisor && (
+            <div style={{ fontSize: '12px', color: C.muted, marginTop: '4px' }}>
+              Made from the staff ID; you can change it.
+              {emailTyped && <> <button type="button" onClick={() => setEmailTyped(false)}
+                style={{ border: 'none', background: 'none', color: C.blue, cursor: 'pointer', padding: 0, fontSize: '12px', fontWeight: '600' }}>
+                Use the staff ID again</button></>}
+            </div>
+          )}
         </div>
-        <div style={{ marginBottom: '12px' }}>
-          <label style={label} htmlFor="nu-pw">Temporary password</label>
-          <input id="nu-pw" type="password" style={input} value={form.password} onChange={set('password')} placeholder="8+ characters: A-Z, a-z, 0-9 and a symbol" autoComplete="new-password" />
-        </div>
-        <div style={{ marginBottom: '18px' }}>
-          <label style={label} htmlFor="nu-confirm">Confirm password</label>
-          <input id="nu-confirm" type="password" style={input} value={form.confirm} onChange={set('confirm')} autoComplete="new-password" />
-        </div>
-        <div style={{ fontSize: '12px', color: C.muted, marginBottom: '18px' }}>
-          Share the password with the user privately. It is temporary: at their first sign-in they must choose their own password.
-        </div>
+        {isAdvisor ? (
+          <div style={{ fontSize: '12px', color: C.muted, margin: '6px 0 18px' }}>
+            The system makes a temporary password and emails the staff ID, school email and password to the personal
+            email. At the first sign-in the advisor must choose their own password.
+          </div>
+        ) : (
+          <>
+            <div style={{ marginBottom: '12px' }}>
+              <label style={label} htmlFor="nu-pw">Temporary password</label>
+              <input id="nu-pw" type="password" style={input} value={form.password} onChange={set('password')} placeholder="8+ characters: A-Z, a-z, 0-9 and a symbol" autoComplete="new-password" />
+            </div>
+            <div style={{ marginBottom: '18px' }}>
+              <label style={label} htmlFor="nu-confirm">Confirm password</label>
+              <input id="nu-confirm" type="password" style={input} value={form.confirm} onChange={set('confirm')} autoComplete="new-password" />
+            </div>
+            <div style={{ fontSize: '12px', color: C.muted, marginBottom: '18px' }}>
+              Share the password with the user privately. It is temporary: at their first sign-in they must choose their own password.
+            </div>
+          </>
+        )}
         <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
           <button type="button" style={btn('secondary')} onClick={onClose}>Cancel</button>
           <button type="submit" style={btn('primary')} disabled={saving}>{saving ? 'Creating…' : 'Create account'}</button>
@@ -87,17 +206,39 @@ function AddUserModal({ onClose, onCreated }) {
 }
 
 function EditUserModal({ user, onClose, onSaved }) {
+  const isAdvisor = user.role === 'advisor'
+  const isStudent = user.role === 'student'
   const [name, setName]     = useState(user.full_name)
+  const [programme, setProgramme] = useState(user.programme || '')
+  const [programmes, setProgrammes] = useState([])
+  useEffect(() => {
+    if (isStudent) studentAPI.programmes(user.course).then(r => setProgrammes(r.data)).catch(() => {})
+  }, [isStudent, user.course])
+  const [email, setEmail]   = useState(user.email)
+  const domain = EMAIL_DOMAINS[user.role] || 'student.newinti.edu.my'
+  const [adv, setAdv]       = useState({
+    positionId: advisorPositionOf(user.advisor_position, user.advisor_courses)?.id || '',
+    staffNumber: user.staff_number || '',
+  })
   const [error, setError]   = useState('')
   const [saving, setSaving] = useState(false)
 
   const submit = async (e) => {
     e.preventDefault()
     if (!name.trim()) return setError('Please enter the full name.')
+    if (!EMAIL_RE.test(email.trim())) return setError('Please enter a valid email address.')
+    if (!email.trim().toLowerCase().endsWith(`@${domain}`)) return setError(`The email must end with @${domain}.`)
+    if (isAdvisor && advisorProblem(adv.positionId, adv.staffNumber)) return setError(advisorProblem(adv.positionId, adv.staffNumber))
+    const pos = ADVISOR_POSITIONS.find(p => p.id === adv.positionId)
     setSaving(true)
     setError('')
     try {
-      const res = await adminAPI.updateUser(user.user_id, { full_name: name.trim() })
+      const res = await adminAPI.updateUser(user.user_id, {
+        full_name: name.trim(),
+        ...(email.trim().toLowerCase() !== user.email.toLowerCase() ? { email: email.trim() } : {}),
+        ...(isStudent && programme && programme !== user.programme ? { programme } : {}),
+        ...(isAdvisor ? { advisor_position: pos.position, advisor_courses: pos.courses, staff_number: adv.staffNumber } : {}),
+      })
       onSaved(res.data)
     } catch (err) {
       setError(errorText(err, 'Could not save the change.'))
@@ -109,15 +250,35 @@ function EditUserModal({ user, onClose, onSaved }) {
     <Modal title="Edit user" onClose={onClose}>
       <form onSubmit={submit} noValidate>
         {error && <Alert>{error}</Alert>}
-        <div style={{ fontSize: '13px', color: C.body, marginBottom: '14px' }}>
-          {user.email} · <span style={{ textTransform: 'capitalize' }}>{user.role}</span>
-        </div>
-        <div style={{ marginBottom: '18px' }}>
+        <div style={{ fontSize: '13px', color: C.body, marginBottom: '14px', textTransform: 'capitalize' }}>{user.role}</div>
+        <div style={{ marginBottom: '12px' }}>
           <label style={label} htmlFor="eu-name">Full name</label>
           <input id="eu-name" style={input} value={name} onChange={e => setName(e.target.value)} autoFocus />
         </div>
+        <div style={{ marginBottom: '12px' }}>
+          <label style={label} htmlFor="eu-email">School email</label>
+          <input id="eu-email" type="email" style={input} value={email} onChange={e => setEmail(e.target.value)} autoComplete="off" />
+          <div style={{ fontSize: '12px', color: C.muted, marginTop: '4px' }}>
+            Must end with @{domain}. The user signs in with the new email from now on.
+          </div>
+        </div>
+        {isStudent && (
+          <div style={{ marginBottom: '12px' }}>
+            <label style={label} htmlFor="eu-prog">Programme ({courseLabel(user.course)})</label>
+            <select id="eu-prog" style={input} value={programme} onChange={e => setProgramme(e.target.value)}>
+              {!programme && <option value="">Choose the programme</option>}
+              {programme && !programmes.some(p => p.programme_name === programme) &&
+                <option value={programme}>{programme}</option>}
+              {programmes.map(p => <option key={p.programme_name} value={p.programme_name}>{p.programme_name}</option>)}
+            </select>
+          </div>
+        )}
+        {isAdvisor && (
+          <AdvisorFields positionId={adv.positionId} staffNumber={adv.staffNumber} keepNumber userId={user.user_id}
+            onChange={(v) => setAdv(a => ({ ...a, ...v }))} />
+        )}
         <div style={{ fontSize: '12px', color: C.muted, marginBottom: '18px' }}>
-          The email and role cannot be changed, because the email domain matches the role.
+          The role cannot be changed. To reset the password, use Reset password in the list.
         </div>
         <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
           <button type="button" style={btn('secondary')} onClick={onClose}>Cancel</button>
@@ -281,7 +442,7 @@ export default function AdminUsers() {
       <div style={{ ...card, padding: '20px 24px' }}>
         <div style={{ display: 'flex', gap: '12px', marginBottom: '16px', flexWrap: 'wrap' }}>
           <input
-            type="search" aria-label="Search users" placeholder="Search by name, email or student ID"
+            type="search" aria-label="Search users" placeholder="Search by name, email, student ID or staff ID"
             style={{ ...input, flex: '1 1 240px', width: 'auto' }}
             value={search} onChange={e => setSearch(e.target.value)}
           />
@@ -318,7 +479,7 @@ export default function AdminUsers() {
         <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '820px' }}>
             <thead>
-              <tr>{['Name', 'Email', 'Student ID', 'Course', 'Role', 'Status', 'Created', ''].map(h => <th key={h} style={th}>{h}</th>)}</tr>
+              <tr>{['Name', 'Email', 'ID', 'Course / Position', 'Role', 'Status', 'Created', ''].map(h => <th key={h} style={th}>{h}</th>)}</tr>
             </thead>
             <tbody>
               {loading ? (
@@ -332,8 +493,11 @@ export default function AdminUsers() {
                   <tr key={u.user_id} style={{ opacity: u.is_active ? 1 : 0.6 }}>
                     <td style={{ ...td, color: C.ink, fontWeight: '600' }}>{u.full_name}{isMe && <span style={{ color: C.muted, fontWeight: '500' }}> (you)</span>}</td>
                     <td style={td}>{u.email}</td>
-                    <td style={{ ...td, fontFamily: 'Consolas, monospace' }}>{u.student_number || '—'}</td>
-                    <td style={{ ...td, whiteSpace: 'nowrap' }}>{u.course ? courseLabel(u.course) : '—'}</td>
+                    <td style={{ ...td, fontFamily: 'Consolas, monospace' }}>{u.student_number || u.staff_number || '—'}</td>
+                    <td style={td}>
+                      {u.course ? courseLabel(u.course) : (u.position_label || '—')}
+                      {u.programme && <div style={{ fontSize: '11px', color: C.muted }}>{u.programme}</div>}
+                    </td>
                     <td style={td}>
                       <span style={{ padding: '3px 9px', borderRadius: '999px', fontSize: '11px', fontWeight: '600', textTransform: 'capitalize', background: badge.bg, color: badge.color }}>{u.role}</span>
                     </td>
@@ -374,7 +538,12 @@ export default function AdminUsers() {
           onClose={() => setAdding(false)}
           onCreated={(u) => {
             setAdding(false)
-            setNotice(`${u.full_name} (${u.role}) can now sign in with ${u.email}.`)
+            setNotice(u.role === 'advisor'
+              ? `${u.full_name} (${u.position_label}, staff ID ${u.staff_number}) was created. ` +
+                (u.email_status === 'sent'
+                  ? `The login details were emailed to ${u.personal_email}.`
+                  : 'No mail server is set up, so the login email is stored: open it under Student Intake → Email outbox.')
+              : `${u.full_name} (admin) can now sign in with ${u.email}.`)
             loadStats()
             loadUsers()
           }}

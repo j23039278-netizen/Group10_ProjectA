@@ -4,7 +4,8 @@
 // account; the student receives the login details at their personal email.
 import { useState, useEffect, useRef } from 'react'
 import { intakeAPI } from '../api/intake'
-import { courseLabel } from '../utils/courses'
+import { authAPI } from '../api/client'
+import { COURSES, courseLabel } from '../utils/courses'
 
 const C = { ink: '#1a1f2e', body: '#4a5168', muted: '#8b92a8', line: '#e4e6ef',
             blue: '#2d5be3', green: '#16a34a', amber: '#d97706', red: '#dc2626' }
@@ -38,6 +39,11 @@ export default function AdvisorNewStudents() {
   const [result, setResult]     = useState(null)    // last upload result
   const [error, setError]       = useState('')
   const [busy, setBusy]         = useState(false)
+
+  // Advisors only add students of their own courses (Dean / Head of Programme)
+  const [myCourses, setMyCourses] = useState(COURSES.map(c => c.id))
+  useEffect(() => { authAPI.me().then(r => setMyCourses(r.data.advisor_courses || [])).catch(() => {}) }, [])
+  const courseNames = COURSES.filter(c => myCourses.includes(c.id)).map(c => c.label).join(', ')
 
   const load = () => intakeAPI.batches().then(r => setBatches(r.data)).catch(err => setError(errorText(err, 'Could not load your lists.')))
   useEffect(() => { load() }, [])
@@ -101,8 +107,10 @@ export default function AdvisorNewStudents() {
       <div style={card}>
         <div style={heading}>Upload a list</div>
         <div style={{ fontSize: '13px', color: C.body, marginBottom: '12px' }}>
-          Excel (.xlsx) or CSV, first row with the column names <b>Full Name</b>, <b>Phone Number</b>, <b>Personal Email</b> and
-          <b>Course</b> (Computer Science, Business or ICT — choose it from the drop-down list in the template).
+          Excel (.xlsx) or CSV, first row with the column names <b>Full Name</b>, <b>Phone Number</b>, <b>Personal Email</b>,
+          <b>Course</b> ({courseNames}) and <b>Programme</b> — in the template both are drop-down lists, and the
+          programme list follows the course chosen in the row. You can add students
+          of your own course{myCourses.length === 1 ? '' : 's'} only; rows of other courses are skipped.
           Up to 1,000 students per file, max 2 MB.{' '}
           <button onClick={downloadTemplate} style={{ border: 'none', background: 'none', color: C.blue, fontWeight: '600', cursor: 'pointer', padding: 0, fontSize: '13px' }}>
             Download the template
@@ -167,7 +175,7 @@ export default function AdvisorNewStudents() {
           <div style={heading}>{open.batch.file_name}</div>
           <div style={{ overflowX: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '720px' }}>
-              <thead><tr>{['Row', 'Name', 'Phone', 'Personal email', 'Course', 'Student ID', 'Status'].map(h => <th key={h} style={th}>{h}</th>)}</tr></thead>
+              <thead><tr>{['Row', 'Name', 'Phone', 'Personal email', 'Course', 'Programme', 'Student ID', 'Status'].map(h => <th key={h} style={th}>{h}</th>)}</tr></thead>
               <tbody>
                 {open.rows.map(r => {
                   const st = STATUS[r.status]
@@ -178,6 +186,7 @@ export default function AdvisorNewStudents() {
                       <td style={td}>{r.phone || '—'}</td>
                       <td style={td}>{r.personal_email}</td>
                       <td style={{ ...td, whiteSpace: 'nowrap' }}>{courseLabel(r.course)}</td>
+                      <td style={td}>{r.programme || '—'}</td>
                       <td style={{ ...td, fontFamily: 'Consolas, monospace' }}>{r.status === 'created' ? r.student_number : '—'}</td>
                       <td style={td} title={r.note || undefined}>
                         <span style={{ padding: '3px 9px', borderRadius: '20px', fontSize: '11px', fontWeight: '600', background: st.bg, color: st.color }}>{st.label}</span>

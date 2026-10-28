@@ -16,6 +16,7 @@ import bcrypt
 import os
 
 import audit
+from advisor_scope import courses_of, position_label
 from database import get_db
 from database import engine
 import sys
@@ -225,6 +226,11 @@ def get_me(current_user=Depends(get_current_user)):
         "role": current_user.role,
         "student_number": current_user.student_number,
         "course": current_user.course,
+        # Advisors: Dean / Head of Programme, the courses they see, 5-digit staff ID
+        "staff_number": current_user.staff_number,
+        "advisor_position": current_user.advisor_position,
+        "advisor_courses": courses_of(current_user) if current_user.role != "student" else [],
+        "position_label": position_label(current_user.advisor_position, current_user.advisor_courses),
         "must_change_password": current_user.must_change_password
     }
 

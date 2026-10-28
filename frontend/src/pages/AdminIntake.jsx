@@ -7,6 +7,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { intakeAPI } from '../api/intake'
 import { COURSES, courseLabel } from '../utils/courses'
+import { studentAPI } from '../api/client'
 import { C, card, th, td, input, btn, smallBtn, heading, errorText } from './admin/adminStyles'
 import { Alert } from './admin/AdminUi'
 
@@ -33,6 +34,9 @@ function BatchDetail({ batchId, onChanged, onCreated }) {
   const [error, setError]   = useState('')
   const [notice, setNotice] = useState('')
   const [busy, setBusy]     = useState('')
+  const [programmes, setProgrammes] = useState([])   // every course's programmes
+
+  useEffect(() => { studentAPI.programmes().then(r => setProgrammes(r.data)).catch(() => {}) }, [])
 
   const load = useCallback(() => intakeAPI.batch(batchId)
     .then(r => { setData(r.data); setEdits({}) })
@@ -69,7 +73,13 @@ function BatchDetail({ batchId, onChanged, onCreated }) {
   const changeCourse = (row, course) => run(row.row_id, async () => {
     await intakeAPI.updateRow(row.row_id, { course })
     await load()
-    setNotice(`${row.full_name}: course set to ${courseLabel(course)}.`)
+    setNotice(`${row.full_name}: course set to ${courseLabel(course)}. Check the programme.`)
+  })
+
+  const changeProgramme = (row, programme) => run(row.row_id, async () => {
+    await intakeAPI.updateRow(row.row_id, { programme })
+    await load()
+    setNotice(`${row.full_name}: programme set to ${programme}.`)
   })
 
   const reject = (row) => {
@@ -127,8 +137,8 @@ function BatchDetail({ batchId, onChanged, onCreated }) {
       {notice && <Alert type="success">{notice}</Alert>}
       {error && <Alert>{error}</Alert>}
       <div style={{ overflowX: 'auto' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '1100px' }}>
-          <thead><tr>{['Row', 'Name', 'Phone', 'Personal email', 'Course', 'Student ID', 'School email', 'Status', ''].map(h => <th key={h} style={th}>{h}</th>)}</tr></thead>
+        <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '1350px' }}>
+          <thead><tr>{['Row', 'Name', 'Phone', 'Personal email', 'Course', 'Programme', 'Student ID', 'School email', 'Status', ''].map(h => <th key={h} style={th}>{h}</th>)}</tr></thead>
           <tbody>
             {data.rows.map(r => {
               const editable = r.status === 'pending' && r.student_number
@@ -147,6 +157,16 @@ function BatchDetail({ batchId, onChanged, onCreated }) {
                           {COURSES.map(c => <option key={c.id} value={c.id}>{c.label}</option>)}
                         </select>
                       : <span style={{ whiteSpace: 'nowrap' }}>{courseLabel(r.course)}</span>}
+                  </td>
+                  <td style={td}>
+                    {r.status === 'pending' && r.course
+                      ? <select aria-label={`Programme for ${r.full_name}`} style={{ ...input, width: '260px', padding: '6px 8px' }}
+                          value={r.programme || ''} disabled={busy === r.row_id} onChange={e => changeProgramme(r, e.target.value)}>
+                          {!r.programme && <option value="">Choose…</option>}
+                          {programmes.filter(p => p.course === r.course).map(p =>
+                            <option key={p.programme_name} value={p.programme_name}>{p.programme_name}</option>)}
+                        </select>
+                      : <span>{r.programme || '—'}</span>}
                   </td>
                   <td style={td}>
                     {editable

@@ -14,7 +14,9 @@ from urllib.parse import quote
 from uuid import UUID
 
 import audit
+from advisor_scope import courses_of
 import evidence
+import programmes
 from database import get_db
 from routers.auth import get_current_user
 
@@ -25,7 +27,7 @@ router = APIRouter()
 # Limits match the database columns and CHECKs, so bad input gets a 422 with a
 # clear message instead of a database error (500).
 class ProfileCreate(BaseModel):
-    programme: Optional[str] = Field(None, max_length=255)
+    programme: Optional[str] = Field(None, max_length=255)   # ignored: set by the university (intake / admin)
     university: Optional[str] = Field(None, max_length=255)
     gpa: Optional[float] = Field(None, ge=0, le=4)    # latest semester
     cgpa: Optional[float] = Field(None, ge=0, le=4)   # cumulative
@@ -212,7 +214,6 @@ def update_profile(
     db.execute(
         text("""
             UPDATE student_profiles SET
-                programme = :prog,
                 university = :uni,
                 gpa = :gpa,
                 cgpa = :cgpa,
@@ -226,7 +227,6 @@ def update_profile(
         """),
         {
             "uid": str(current_user.user_id),
-            "prog": req.programme,
             "uni": req.university,
             "gpa": req.gpa,
             "cgpa": req.cgpa,
@@ -285,12 +285,14 @@ def add_skill(
 
     # Check skill exists in library
     skill = db.execute(
-        text("SELECT skill_id FROM skills_library WHERE skill_id = :sid"),
+        text("SELECT skill_id, courses FROM skills_library WHERE skill_id = :sid"),
         {"sid": str(req.skill_id)}
     ).fetchone()
 
     if not skill:
         raise HTTPException(status_code=404, detail="Skill not found in library")
+    if current_user.course not in (skill.courses or []):
+        raise HTTPException(status_code=400, detail="This skill is not in the skill list of your course.")
 
     # Check duplicate
     existing = db.execute(
@@ -353,29 +355,31 @@ def remove_skill(
 @router.get("/skills-library")
 def get_skills_library(
     category: Optional[str] = None,
+    current_user=Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    if category:
-        skills = db.execute(
-            text("""
-                SELECT skill_id, skill_name, category, aliases, description
-                FROM skills_library
-                WHERE is_active = TRUE AND category = :cat
-                ORDER BY skill_name
-            """),
-            {"cat": category}
-        ).fetchall()
-    else:
-        skills = db.execute(
-            text("""
-                SELECT skill_id, skill_name, category, aliases, description
-                FROM skills_library
-                WHERE is_active = TRUE
-                ORDER BY category, skill_name
-            """)
-        ).fetchall()
-
+    """Active skills. A student only gets the skills of their course (skills_library.courses);
+    advisors and admins get every skill."""
+    course = current_user.course if current_user.role == "student" else None
+    skills = db.execute(
+        text("""
+            SELECT skill_id, skill_name, category, aliases, description
+            FROM skills_library
+            WHERE is_active = TRUE
+              AND (CAST(:cat AS VARCHAR) IS NULL OR category = CAST(:cat AS VARCHAR))
+              AND (CAST(:course AS VARCHAR) IS NULL OR CAST(:course AS VARCHAR) = ANY(courses))
+            ORDER BY category, skill_name
+        """),
+        {"cat": category, "course": course}
+    ).fetchall()
     return [dict(s._mapping) for s in skills]
+
+
+@router.get("/programmes")
+def get_programmes(course: Optional[str] = None, current_user=Depends(get_current_user),
+                   db: Session = Depends(get_db)):
+    """The programmes (majors) of one course, or of all courses"""
+    return programmes.list_programmes(db, course.upper() if course else None)
 
 
 # ── Projects Endpoints ────────────────────────────────────────
@@ -661,18 +665,20 @@ def download_file(
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    """The file itself. Students get only their own; advisors and admins any (audited)."""
+    """The file itself. Students get only their own; advisors those of their courses' students,
+    admins any (staff downloads are audited)."""
     row = db.execute(
         text("""
-            SELECT f.kind, f.file_name, f.content_type, f.data, f.profile_id, sp.user_id
+            SELECT f.kind, f.file_name, f.content_type, f.data, f.profile_id, sp.user_id, u.course
             FROM student_evidence_files f
             JOIN student_profiles sp ON sp.profile_id = f.profile_id
+            JOIN users u ON u.user_id = sp.user_id
             WHERE f.file_id = :fid
         """),
         {"fid": parse_file_id(file_id)}
     ).fetchone()
     own = row is not None and str(row.user_id) == str(current_user.user_id)
-    staff = current_user.role in ("advisor", "admin")
+    staff = current_user.role in ("advisor", "admin") and row is not None and row.course in courses_of(current_user)
     if row is None or not (own or staff):
         raise HTTPException(status_code=404, detail="File not found")
     if row.kind != "file":

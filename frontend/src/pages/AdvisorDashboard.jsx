@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { advisorAPI } from '../api/advisor'
+import { authAPI } from '../api/client'
 import { COURSES, courseLabel } from '../utils/courses'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 
@@ -22,9 +23,12 @@ export default function AdvisorDashboard() {
   // One course for every tab ('' = all courses); kept when coming back from a student
   const [course,    setCourse]    = useState(location.state?.course || '')
   const [shownRows, setShownRows] = useState(PAGE_SIZE)
+  // Position (Dean / Head of Programme), staff ID and the courses this advisor sees
+  const [me,        setMe]        = useState(null)
 
   useEffect(() => {
     advisorAPI.students().then(r => setStudents(r.data)).catch(console.error)
+    authAPI.me().then(r => setMe(r.data)).catch(() => {})
   }, [])
 
   // The overview numbers and the skill gaps are worked out on the server per course
@@ -56,10 +60,12 @@ export default function AdvisorDashboard() {
 
   if (loading) return <div style={{ padding: '40px', color: '#8b92a8' }}>Loading...</div>
 
-  const cohortName = course ? `${courseLabel(course)} Students` : 'All Students'
-  const noGapsText = course === 'BUSINESS'
-    ? 'No assessment data yet. Business roles do not have their skills yet, so Business students cannot be assessed.'
-    : 'No assessment data yet.'
+  const myCourses  = COURSES.filter(c => !me || (me.advisor_courses || []).includes(c.id))
+  // With one course there is nothing to switch between
+  const courseTabs = myCourses.length > 1 ? [{ id: '', label: 'All my courses' }, ...myCourses] : []
+  const cohortName = course ? `${courseLabel(course)} Students`
+                   : myCourses.length === 1 ? `${myCourses[0].label} Students` : 'All My Students'
+  const noGapsText = 'No assessment data yet.'
 
   const q = search.trim().toLowerCase()
   const filteredStudents = students.filter(s =>
@@ -80,12 +86,14 @@ export default function AdvisorDashboard() {
         <div style={{ fontSize: '26px', fontWeight: '700', color: '#1a1f2e' }}>Advisor Dashboard</div>
         <div style={{ fontSize: '13px', color: '#4a5168', marginTop: '4px' }}>
           Cohort-level employability insights
+          {me?.position_label && <> · <b style={{ color: '#1a1f2e' }}>{me.position_label}</b></>}
+          {me?.staff_number && <> · Staff ID <span style={{ fontFamily: 'Consolas, monospace' }}>{me.staff_number}</span></>}
         </div>
       </div>
 
-      {/* Course: every tab shows only Computer Science, Business or ICT students */}
-      <div role="tablist" aria-label="Course" style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '16px' }}>
-        {[{ id: '', label: 'All courses' }, ...COURSES].map(c => {
+      {/* Course: every tab shows only one of the advisor's courses */}
+      <div role="tablist" aria-label="Course" style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: courseTabs.length ? '16px' : 0 }}>
+        {courseTabs.map(c => {
           const active = course === c.id
           const n = c.id ? students.filter(s => s.course === c.id).length : students.length
           return (

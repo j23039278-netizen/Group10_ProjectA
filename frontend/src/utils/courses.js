@@ -6,3 +6,17 @@ export const COURSES = [
 ]
 
 export const courseLabel = (id) => COURSES.find(c => c.id === id)?.label || '—'
+
+// Advisor positions (users.advisor_position + advisor_courses). The staff ID starts with
+// the prefix; must match STAFF_PREFIX in backend/advisor_scope.py.
+export const ADVISOR_POSITIONS = [
+  { id: 'dean-computing', label: 'Dean, Computing (CS and ICT)',       position: 'dean', courses: ['CS', 'ICT'], prefix: '10' },
+  { id: 'hop-cs',         label: 'Head of Programme, Computer Science', position: 'hop',  courses: ['CS'],        prefix: '11' },
+  { id: 'hop-ict',        label: 'Head of Programme, ICT',              position: 'hop',  courses: ['ICT'],       prefix: '12' },
+  { id: 'dean-business',  label: 'Dean, Business',                      position: 'dean', courses: ['BUSINESS'],  prefix: '20' },
+  { id: 'hop-business',   label: 'Head of Programme, Business',         position: 'hop',  courses: ['BUSINESS'],  prefix: '21' },
+]
+
+export const advisorPositionOf = (position, courses) =>
+  ADVISOR_POSITIONS.find(p => p.position === position &&
+    [...p.courses].sort().join() === [...(courses || [])].sort().join())

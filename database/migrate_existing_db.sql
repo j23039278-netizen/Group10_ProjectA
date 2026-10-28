@@ -398,7 +398,7 @@ WHERE u.user_id = sp.user_id
 -- ── Roles per course, Business roles, GPA + CGPA (27 October) ──
 -- job_roles.courses: which courses' students may choose the role as target role.
 -- CS: all 6 IT roles; ICT: 4 of them; Business: the Business roles below (their
--- skills are added later in Admin → Skills & Roles, so source = 'admin').
+-- skills and resources are in seed_business_skills.sql).
 -- Safe to run more than once.
 ALTER TABLE job_roles ADD COLUMN IF NOT EXISTS courses VARCHAR(10)[] NOT NULL DEFAULT ARRAY['CS']::VARCHAR(10)[];
 DO $$
@@ -416,10 +416,10 @@ UPDATE job_roles SET courses = ARRAY['CS']::VARCHAR(10)[]
 WHERE source = 'seed' AND role_code IN ('SOFTWARE_DEV', 'DATA_SCIENTIST');
 
 INSERT INTO job_roles (role_name, role_code, description, industry_level, source, courses) VALUES
-('Business Analyst',   'BUSINESS_ANALYST',  'Analyses business processes and data to recommend improvements and support decisions.', 'junior', 'admin', ARRAY['BUSINESS']::VARCHAR(10)[]),
-('Marketing Executive','MARKETING_EXEC',    'Plans and runs marketing campaigns, including digital marketing and market research.',  'junior', 'admin', ARRAY['BUSINESS']::VARCHAR(10)[]),
-('Financial Analyst',  'FINANCIAL_ANALYST', 'Prepares financial reports, budgets and forecasts to support business decisions.',       'junior', 'admin', ARRAY['BUSINESS']::VARCHAR(10)[]),
-('HR Executive',       'HR_EXEC',           'Supports recruitment, employee relations, training and other human-resources work.',    'junior', 'admin', ARRAY['BUSINESS']::VARCHAR(10)[])
+('Business Analyst',   'BUSINESS_ANALYST',  'Analyses business processes and data to recommend improvements and support decisions.', 'junior', 'seed',  ARRAY['BUSINESS']::VARCHAR(10)[]),
+('Marketing Executive','MARKETING_EXEC',    'Plans and runs marketing campaigns, including digital marketing and market research.',  'junior', 'seed',  ARRAY['BUSINESS']::VARCHAR(10)[]),
+('Financial Analyst',  'FINANCIAL_ANALYST', 'Prepares financial reports, budgets and forecasts to support business decisions.',       'junior', 'seed',  ARRAY['BUSINESS']::VARCHAR(10)[]),
+('HR Executive',       'HR_EXEC',           'Supports recruitment, employee relations, training and other human-resources work.',    'junior', 'seed',  ARRAY['BUSINESS']::VARCHAR(10)[])
 ON CONFLICT (role_code) DO NOTHING;
 
 -- Synthetic students: a target role allowed for their course. ICT students who
@@ -449,5 +449,211 @@ BEGIN
         ALTER TABLE student_profiles ADD CONSTRAINT chk_profiles_cgpa CHECK (cgpa IS NULL OR cgpa BETWEEN 0 AND 4);
     END IF;
 END $$;
+
+-- ── Advisor positions, courses and staff IDs (28 October) ─────
+-- Every advisor is a Dean or a Head of Programme (HOP):
+--   Dean, Computing  -> CS + ICT        staff ID 10xxx
+--   HOP, CS          -> CS              staff ID 11xxx
+--   HOP, ICT         -> ICT             staff ID 12xxx
+--   Dean, Business   -> BUSINESS        staff ID 20xxx
+--   HOP, Business    -> BUSINESS        staff ID 21xxx
+-- Advisors only see and add students of their courses (backend/routers/advisor.py).
+-- The admin sets all of it when creating the account. Each office has only one
+-- (active) Dean. An advisor inserted without a position (tests, scripts, older
+-- databases) becomes Dean of Computing, or Head of Programme CS if that Dean exists.
+-- Safe to run more than once.
+ALTER TABLE users ADD COLUMN IF NOT EXISTS advisor_position VARCHAR(10);
+ALTER TABLE users ADD COLUMN IF NOT EXISTS advisor_courses VARCHAR(10)[];
+ALTER TABLE users ADD COLUMN IF NOT EXISTS staff_number VARCHAR(5);
+CREATE UNIQUE INDEX IF NOT EXISTS uq_users_staff_number ON users(staff_number);
+
+-- The two-digit prefix of an advisor's staff ID
+CREATE OR REPLACE FUNCTION staff_number_prefix(p_position TEXT, p_courses VARCHAR[]) RETURNS TEXT AS $$
+    SELECT CASE
+        WHEN p_position = 'dean' AND p_courses = ARRAY['CS', 'ICT']::VARCHAR[] THEN '10'
+        WHEN p_position = 'hop'  AND p_courses = ARRAY['CS']::VARCHAR[]        THEN '11'
+        WHEN p_position = 'hop'  AND p_courses = ARRAY['ICT']::VARCHAR[]       THEN '12'
+        WHEN p_position = 'dean' AND p_courses = ARRAY['BUSINESS']::VARCHAR[]  THEN '20'
+        WHEN p_position = 'hop'  AND p_courses = ARRAY['BUSINESS']::VARCHAR[]  THEN '21'
+    END
+$$ LANGUAGE sql IMMUTABLE;
+
+-- The next free staff ID with that prefix (prefix + 001 upwards)
+CREATE OR REPLACE FUNCTION next_staff_number(p_prefix TEXT) RETURNS VARCHAR AS $$
+DECLARE
+    n INT;
+BEGIN
+    FOR n IN 1..999 LOOP
+        IF NOT EXISTS (SELECT 1 FROM users WHERE staff_number = p_prefix || lpad(n::text, 3, '0')) THEN
+            RETURN p_prefix || lpad(n::text, 3, '0');
+        END IF;
+    END LOOP;
+    RAISE EXCEPTION 'No free staff ID left with prefix %', p_prefix;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION users_advisor_defaults() RETURNS trigger AS $$
+BEGIN
+    IF NEW.role = 'advisor' THEN
+        IF NEW.advisor_position IS NULL THEN
+            IF EXISTS (SELECT 1 FROM users WHERE role = 'advisor' AND is_active AND advisor_position = 'dean'
+                       AND advisor_courses = ARRAY['CS', 'ICT']::VARCHAR(10)[] AND user_id <> NEW.user_id) THEN
+                NEW.advisor_position := 'hop';
+                NEW.advisor_courses  := ARRAY['CS']::VARCHAR(10)[];
+            ELSE
+                NEW.advisor_position := 'dean';
+                NEW.advisor_courses  := ARRAY['CS', 'ICT']::VARCHAR(10)[];
+            END IF;
+        END IF;
+        IF NEW.staff_number IS NULL THEN
+            NEW.staff_number := next_staff_number(staff_number_prefix(NEW.advisor_position, NEW.advisor_courses));
+        END IF;
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS trg_users_advisor_defaults ON users;
+CREATE TRIGGER trg_users_advisor_defaults
+    BEFORE INSERT OR UPDATE OF role, advisor_position, advisor_courses, staff_number ON users
+    FOR EACH ROW EXECUTE FUNCTION users_advisor_defaults();
+
+-- Existing advisors (one at a time, so each gets its own ID)
+DO $$
+DECLARE
+    uid UUID;
+BEGIN
+    FOR uid IN SELECT user_id FROM users WHERE role = 'advisor' AND (advisor_position IS NULL OR staff_number IS NULL)
+               ORDER BY created_at LOOP
+        -- No position yet: the trigger picks Dean of Computing or Head of Programme CS
+        UPDATE users SET advisor_position = advisor_position, staff_number = staff_number
+        WHERE user_id = uid;
+    END LOOP;
+END $$;
+
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'chk_users_advisor') THEN
+        ALTER TABLE users ADD CONSTRAINT chk_users_advisor CHECK (
+            (role = 'advisor'
+             AND staff_number ~ '^[0-9]{5}$'
+             AND staff_number_prefix(advisor_position, advisor_courses) IS NOT NULL
+             AND left(staff_number, 2) = staff_number_prefix(advisor_position, advisor_courses))
+            OR (role <> 'advisor' AND advisor_position IS NULL AND advisor_courses IS NULL AND staff_number IS NULL));
+    END IF;
+END $$;
+
+-- Only one active Dean per office. Extra Deans (older databases) become Head of
+-- Programme: CS for Computing, Business for Business, with a matching staff ID.
+DO $$
+DECLARE
+    uid UUID;
+BEGIN
+    FOR uid IN SELECT u.user_id FROM users u
+               WHERE u.role = 'advisor' AND u.is_active AND u.advisor_position = 'dean'
+                 AND EXISTS (SELECT 1 FROM users d
+                             WHERE d.role = 'advisor' AND d.is_active AND d.advisor_position = 'dean'
+                               AND d.advisor_courses = u.advisor_courses
+                               AND (d.created_at, d.user_id::text) < (u.created_at, u.user_id::text))
+    LOOP
+        UPDATE users SET advisor_position = 'hop',
+                         advisor_courses  = CASE WHEN advisor_courses = ARRAY['BUSINESS']::VARCHAR(10)[]
+                                                 THEN ARRAY['BUSINESS']::VARCHAR(10)[] ELSE ARRAY['CS']::VARCHAR(10)[] END,
+                         staff_number     = NULL
+        WHERE user_id = uid;
+    END LOOP;
+END $$;
+CREATE UNIQUE INDEX IF NOT EXISTS uq_users_one_dean ON users(advisor_courses)
+    WHERE role = 'advisor' AND advisor_position = 'dean' AND is_active;
+
+-- ── Programmes per course, skills per course (28 October) ──────
+-- Each course has its programmes (majors). The programme is set with the course
+-- when the account is created (new-student list); students cannot change it,
+-- admins can (User Management). Safe to run more than once.
+CREATE TABLE IF NOT EXISTS programmes (
+    programme_id    SERIAL PRIMARY KEY,
+    programme_name  VARCHAR(150) NOT NULL UNIQUE,
+    course          VARCHAR(10)  NOT NULL CHECK (course IN ('CS', 'BUSINESS', 'ICT')),
+    sort_order      SMALLINT     NOT NULL DEFAULT 0,
+    is_active       BOOLEAN      NOT NULL DEFAULT TRUE
+);
+INSERT INTO programmes (programme_name, course, sort_order) VALUES
+('Bachelor of Computer Science (Software Development)',                       'CS',       1),
+('Bachelor of Computer Science (Data Science)',                               'CS',       2),
+('Bachelor of Computer Science (Artificial Intelligence)',                    'CS',       3),
+('Bachelor of Computer Science (Cybersecurity)',                              'CS',       4),
+('Bachelor of Computer Science (Cloud Computing)',                            'CS',       5),
+('Bachelor of Software Engineering',                                          'CS',       6),
+('Bachelor of Information and Communication Technology (Software Systems)',   'ICT',      1),
+('Bachelor of Information and Communication Technology (Data Management)',    'ICT',      2),
+('Bachelor of Information and Communication Technology (Network Security)',   'ICT',      3),
+('Bachelor of Information and Communication Technology (Cloud and Networking)', 'ICT',    4),
+('Bachelor of Business (Business Analytics)',                                 'BUSINESS', 1),
+('Bachelor of Business (Marketing)',                                          'BUSINESS', 2),
+('Bachelor of Business (Finance)',                                            'BUSINESS', 3),
+('Bachelor of Business (Human Resource Management)',                          'BUSINESS', 4)
+ON CONFLICT (programme_name) DO UPDATE SET course = EXCLUDED.course, sort_order = EXCLUDED.sort_order;
+
+ALTER TABLE student_intake_rows ADD COLUMN IF NOT EXISTS programme VARCHAR(150);
+
+-- Synthetic Business students: the programme that fits their Business target role
+UPDATE student_profiles sp SET programme = CASE sp.target_role
+        WHEN 'Business Analyst'    THEN 'Bachelor of Business (Business Analytics)'
+        WHEN 'Marketing Executive' THEN 'Bachelor of Business (Marketing)'
+        WHEN 'Financial Analyst'   THEN 'Bachelor of Business (Finance)'
+        ELSE 'Bachelor of Business (Human Resource Management)' END,
+    updated_at = CURRENT_TIMESTAMP
+FROM users u
+WHERE u.user_id = sp.user_id
+  AND u.email LIKE '%@synthetic.example.com' AND u.course = 'BUSINESS'
+  AND sp.programme IS DISTINCT FROM CASE sp.target_role
+        WHEN 'Business Analyst'    THEN 'Bachelor of Business (Business Analytics)'
+        WHEN 'Marketing Executive' THEN 'Bachelor of Business (Marketing)'
+        WHEN 'Financial Analyst'   THEN 'Bachelor of Business (Finance)'
+        ELSE 'Bachelor of Business (Human Resource Management)' END;
+
+-- skills_library.courses: whose students see the skill when adding their skills.
+-- Set for the seed skills in seed_business_skills.sql (IT skills: CS + ICT;
+-- Business skills: Business; soft skills and tools the Business roles use: all).
+-- Skills added by admins are for every course unless the admin changes it.
+ALTER TABLE skills_library ADD COLUMN IF NOT EXISTS courses VARCHAR(10)[] NOT NULL
+    DEFAULT ARRAY['CS', 'BUSINESS', 'ICT']::VARCHAR(10)[];
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'chk_skills_courses') THEN
+        ALTER TABLE skills_library ADD CONSTRAINT chk_skills_courses CHECK (
+            cardinality(courses) >= 1
+            AND courses <@ ARRAY['CS', 'BUSINESS', 'ICT']::VARCHAR(10)[]);
+    END IF;
+END $$;
+
+
+-- Students created before the Programme column (no profile or no valid programme)
+-- get a random programme of their course, so every student has one. New students
+-- always get theirs from the new-student list. Safe to run more than once.
+INSERT INTO student_profiles (user_id)
+SELECT u.user_id FROM users u
+WHERE u.role = 'student'
+  AND NOT EXISTS (SELECT 1 FROM student_profiles sp WHERE sp.user_id = u.user_id);
+
+UPDATE student_profiles sp SET
+    programme  = (SELECT p.programme_name FROM programmes p
+                  WHERE p.course = u.course AND p.is_active AND sp.profile_id IS NOT NULL
+                  ORDER BY random() LIMIT 1),
+    updated_at = CURRENT_TIMESTAMP
+FROM users u
+WHERE u.user_id = sp.user_id AND u.role = 'student'
+  AND NOT EXISTS (SELECT 1 FROM programmes p WHERE p.programme_name = sp.programme AND p.course = u.course);
+
+-- Same rule as refresh_profile_complete() in backend/routers/students.py
+UPDATE student_profiles sp SET is_complete = (
+        COALESCE(TRIM(sp.programme), '')   <> ''
+    AND COALESCE(TRIM(sp.university), '') <> ''
+    AND sp.year_of_study IS NOT NULL
+    AND COALESCE(TRIM(sp.target_role), '') <> ''
+    AND EXISTS (SELECT 1 FROM student_skills ss WHERE ss.profile_id = sp.profile_id))
+FROM users u
+WHERE u.user_id = sp.user_id AND u.email NOT LIKE '%@synthetic.example.com';
+
 
 COMMIT;

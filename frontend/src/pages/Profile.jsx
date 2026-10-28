@@ -314,7 +314,7 @@ export default function Profile() {
             ))}
           </div>
           <div style={{ fontSize: '12px', color: '#8b92a8', marginTop: '12px' }}>
-            Name, student ID, course and school email are set by the university; contact your advisor if one is wrong.
+            Name, student ID, course, programme and school email are set by the university; contact your advisor if one is wrong.
             Edit the rest in the Info tab.
           </div>
         </>
@@ -341,7 +341,10 @@ export default function Profile() {
           {msg && <div role="status" style={{ background: msg.startsWith('Profile saved') ? '#dcfce7' : '#fee2e2', color: msg.startsWith('Profile saved') ? '#16a34a' : '#dc2626', padding: '10px', borderRadius: '8px', marginBottom: '12px', fontSize: '13px' }}>{msg}</div>}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
             <div><label style={{ fontSize: '12px', fontWeight: '600', color: '#4a5168', display: 'block', marginBottom: '5px' }}>Programme</label>
-              {inp(form.programme, v => setForm({...form, programme: v}), 'e.g. BCS Cyber Security')}
+              {/* Set with the course by the university; only an admin changes it */}
+              <div style={{ padding: '9px 12px', border: '1.5px solid #e4e6ef', borderRadius: '8px', fontSize: '13px', background: '#eef0f5', color: profile?.programme ? '#1a1f2e' : '#8b92a8' }}>
+                {profile?.programme || 'Not set yet: ask your advisor'}
+              </div>
             </div>
             <div><label style={{ fontSize: '12px', fontWeight: '600', color: '#4a5168', display: 'block', marginBottom: '5px' }}>University</label>
               {inp(form.university, v => setForm({...form, university: v}), 'e.g. Swinburne University')}

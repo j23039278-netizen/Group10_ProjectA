@@ -13,6 +13,7 @@ from sqlalchemy import text
 
 import audit
 import evidence
+from advisor_scope import ALL_COURSES, courses_of
 from database import get_db
 from routers.auth import get_current_user
 
@@ -28,24 +29,33 @@ def require_advisor(current_user):
         )
 
 
-# ── Course filter (CS | BUSINESS | ICT; none = every student) ─
-def course_param(course):
+# ── Course filter ─────────────────────────────────────────────
+# An advisor sees only the students of their courses (Dean / Head of Programme,
+# see advisor_scope.py). course narrows that to one of them; none = all of them.
+COURSE_FILTER = "u.course = ANY(CAST(:courses AS VARCHAR[]))"
+
+
+def course_param(course, current_user):
+    """The courses to include, as a list"""
+    allowed = courses_of(current_user)
     if course is None or course == "":
-        return None
+        return allowed
     c = course.upper()
-    if c not in ("CS", "BUSINESS", "ICT"):
+    if c not in ALL_COURSES:
         raise HTTPException(status_code=400, detail="course must be CS, BUSINESS or ICT")
-    return c
+    if c not in allowed:
+        raise HTTPException(status_code=403, detail="You can only see students of your own courses.")
+    return [c]
 
 
-# Each student's latest assessment, limited to one course when :course is set
-LATEST_ASSESSMENTS = """
+# Each student's latest assessment, limited to the courses in :courses
+LATEST_ASSESSMENTS = f"""
     SELECT DISTINCT ON (a.profile_id) a.assessment_id, a.profile_id, a.readiness_score
     FROM assessments a
     JOIN student_profiles sp ON sp.profile_id = a.profile_id
     JOIN users u             ON u.user_id     = sp.user_id
     WHERE u.role = 'student' AND u.is_active
-      AND (CAST(:course AS VARCHAR) IS NULL OR u.course = CAST(:course AS VARCHAR))
+      AND {COURSE_FILTER}
     ORDER BY a.profile_id, a.created_at DESC
 """
 
@@ -59,16 +69,16 @@ def get_cohort_overview(
 ):
     """Cohort-level summary for the advisor dashboard (one course, or everyone)"""
     require_advisor(current_user)
-    params = {"course": course_param(course)}
+    params = {"courses": course_param(course, current_user)}
 
     counts = db.execute(
-        text("""
+        text(f"""
             SELECT COUNT(*)                                   AS total,
                    COUNT(*) FILTER (WHERE sp.is_complete)     AS complete
             FROM users u
             LEFT JOIN student_profiles sp ON sp.user_id = u.user_id
             WHERE u.role = 'student' AND u.is_active = TRUE
-              AND (CAST(:course AS VARCHAR) IS NULL OR u.course = CAST(:course AS VARCHAR))
+              AND {COURSE_FILTER}
         """),
         params
     ).fetchone()
@@ -84,7 +94,8 @@ def get_cohort_overview(
     ).fetchone()
 
     return {
-        "course":              params["course"],
+        "course":              course.upper() if course else None,
+        "courses":             params["courses"],
         "total_students":      counts.total,
         "profiles_complete":   counts.complete,
         "students_assessed":   scores.assessed,
@@ -119,7 +130,7 @@ def get_cohort_skill_gaps(
             ORDER BY gap_percentage DESC, gap_count DESC
             LIMIT 20
         """),
-        {"course": course_param(course)}
+        {"courses": course_param(course, current_user)}
     ).fetchall()
 
     return [dict(g._mapping) for g in gaps]
@@ -131,11 +142,11 @@ def get_all_students(
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    """List all students with their latest readiness score"""
+    """The students of the advisor's courses with their latest readiness score"""
     require_advisor(current_user)
 
     students = db.execute(
-        text("""
+        text(f"""
             SELECT
                 u.user_id,
                 u.full_name,
@@ -157,9 +168,10 @@ def get_all_students(
                 LIMIT 1
             ) a ON TRUE
             LEFT JOIN job_roles jr ON jr.role_id = a.role_id
-            WHERE u.role = 'student' AND u.is_active = TRUE
+            WHERE u.role = 'student' AND u.is_active = TRUE AND {COURSE_FILTER}
             ORDER BY u.full_name
-        """)
+        """),
+        {"courses": courses_of(current_user)}
     ).fetchall()
 
     return [dict(s._mapping) for s in students]
@@ -183,13 +195,13 @@ def get_student_detail(
 
     # Basic info
     student = db.execute(
-        text("""
+        text(f"""
             SELECT u.full_name, u.email, u.student_number, u.course, sp.*
             FROM users u
             JOIN student_profiles sp ON sp.user_id = u.user_id
-            WHERE u.user_id = CAST(:uid AS uuid) AND u.role = 'student'
+            WHERE u.user_id = CAST(:uid AS uuid) AND u.role = 'student' AND {COURSE_FILTER}
         """),
-        {"uid": str(user_id)}
+        {"uid": str(user_id), "courses": courses_of(current_user)}
     ).fetchone()
 
     if not student:
@@ -314,10 +326,13 @@ def get_cohort_progress(
     require_advisor(current_user)
 
     progress = db.execute(
-        text("""
-            SELECT * FROM v_student_progress
-            ORDER BY completed_tasks DESC
-        """)
+        text(f"""
+            SELECT v.* FROM v_student_progress v
+            JOIN users u ON u.user_id = v.user_id
+            WHERE {COURSE_FILTER}
+            ORDER BY v.completed_tasks DESC
+        """),
+        {"courses": courses_of(current_user)}
     ).fetchall()
 
     return [dict(p._mapping) for p in progress]
@@ -333,32 +348,25 @@ def get_skill_gap_report(
     """Skill gap breakdown by job role — for export"""
     require_advisor(current_user)
 
-    if role_id:
-        gaps = db.execute(
-            text("""
-                SELECT sl.skill_name, sl.category,
-                       COUNT(*) FILTER (WHERE smr.match_status = 'gap') AS gap_count,
-                       COUNT(*) FILTER (WHERE smr.match_status = 'developing') AS developing_count,
-                       COUNT(*) FILTER (WHERE smr.match_status = 'strong') AS strong_count,
-                       COUNT(*) AS total
-                FROM skill_match_results smr
-                JOIN skills_library sl ON sl.skill_id = smr.skill_id
-                JOIN assessments a ON a.assessment_id = smr.assessment_id
-                WHERE a.role_id = :rid
-                GROUP BY sl.skill_name, sl.category
-                ORDER BY gap_count DESC
-            """),
-            {"rid": role_id}
-        ).fetchall()
-    else:
-        gaps = db.execute(
-            text("""
-                SELECT skill_name, category,
-                       gap_count, developing_count, strong_count,
-                       total_assessments AS total, gap_percentage
-                FROM v_cohort_skill_gaps
-                ORDER BY gap_percentage DESC
-            """)
-        ).fetchall()
+    if not role_id:
+        return get_cohort_skill_gaps(None, current_user, db)
+    gaps = db.execute(
+        text(f"""
+            SELECT sl.skill_name, sl.category,
+                   COUNT(*) FILTER (WHERE smr.match_status = 'gap') AS gap_count,
+                   COUNT(*) FILTER (WHERE smr.match_status = 'developing') AS developing_count,
+                   COUNT(*) FILTER (WHERE smr.match_status = 'strong') AS strong_count,
+                   COUNT(*) AS total
+            FROM skill_match_results smr
+            JOIN skills_library sl ON sl.skill_id = smr.skill_id
+            JOIN assessments a ON a.assessment_id = smr.assessment_id
+            JOIN student_profiles sp ON sp.profile_id = a.profile_id
+            JOIN users u ON u.user_id = sp.user_id
+            WHERE a.role_id = :rid AND {COURSE_FILTER}
+            GROUP BY sl.skill_name, sl.category
+            ORDER BY gap_count DESC
+        """),
+        {"rid": role_id, "courses": courses_of(current_user)}
+    ).fetchall()
 
     return [dict(g._mapping) for g in gaps]

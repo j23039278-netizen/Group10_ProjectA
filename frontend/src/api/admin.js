@@ -8,6 +8,9 @@ export const adminAPI = {
   users:         (params)     => API.get('/admin/users', { params }),
   createUser:    (data)       => API.post('/admin/users', data),
   updateUser:    (id, data)   => API.patch(`/admin/users/${id}`, data),
+  // Next free 5-digit staff ID for an advisor position (courses repeated: ?courses=CS&courses=ICT)
+  staffNumber:   (position, courses) =>
+    API.get(`/admin/staff-number?position=${position}&${courses.map(c => `courses=${c}`).join('&')}`),
   resetPassword: (id, pw)     => API.post(`/admin/users/${id}/reset-password`, { password: pw }),
   skills:        ()           => API.get('/admin/skills'),
   createSkill:   (data)       => API.post('/admin/skills', data),

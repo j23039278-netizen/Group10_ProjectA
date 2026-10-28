@@ -137,8 +137,8 @@ semantic and hybrid requests fall back to keyword matching and the student sees 
 ### Accounts and roles
 | Role | How the account is created | Email must end with |
 |------|----------------------------|---------------------|
-| Student | An advisor uploads the new-student list (**New Students**: Full Name, Phone Number, Personal Email, Course); an admin assigns the student ID and school email and creates the account (**Student Intake**) | `@student.newinti.edu.my` |
-| Advisor | An admin creates it in **User Management** | `@advisor.newinti.edu.my` |
+| Student | An advisor uploads the new-student list (**New Students**: Full Name, Phone Number, Personal Email, Course, Programme); an admin assigns the student ID and school email and creates the account (**Student Intake**) | `@student.newinti.edu.my` |
+| Advisor | An admin creates it in **User Management** and sets the position (Dean or Head of Programme), which decides the courses the advisor sees, and a 5-digit staff ID | `@advisor.newinti.edu.my` |
 | Admin | The first one in the backend window (`backend/create_admin.py`); more in User Management | `@admin.newinti.edu.my` |
 
 Everyone signs in on the same page; the role stored in the database decides which portal opens.
@@ -148,11 +148,34 @@ synthetic students are split evenly). Advisor and admin student lists, and the a
 and skill-gap charts, can be filtered by course. The course decides which target roles a student
 can choose: Computer Science all 6 IT roles, ICT 4 of them (Web Developer, Data Analyst, Cloud
 Engineer, Cybersecurity Analyst), Business the Business roles (Business Analyst, Marketing
-Executive, Financial Analyst, HR Executive — their skills are still to be added in Admin →
-Skills & Roles). Admins set a role's courses when adding or editing it. Students enter both
+Executive, Financial Analyst, HR Executive). The Business skills (finance, marketing, HR and
+business analysis; stored as Technical skills with the area in the subcategory), the skills of the
+Business roles and their learning resources are in `database/seed_business_skills.sql`; ICT roles
+share the IT skills and resources with Computer Science. Students only see the skills of their
+course when adding skills (soft skills and shared tools such as Excel and Power BI are in every
+list). Every student also has a programme (major) of their course, given in the new-student list
+with the course; students cannot change it, admins can in User Management. Admins set a role's courses when adding or editing it. Students enter both
 GPA and CGPA and are reminded to update them at the start of each semester (January, May,
 September). The advisor's **Download the template** gives an Excel file whose Course column is
 a drop-down list.
+
+Advisors only see and add students of their own courses:
+
+| Position | Courses | Staff ID |
+|---|---|---|
+| Dean, Computing | Computer Science and ICT | 10xxx |
+| Head of Programme, Computer Science | Computer Science | 11xxx |
+| Head of Programme, ICT | ICT | 12xxx |
+| Dean, Business | Business | 20xxx |
+| Head of Programme, Business | Business | 21xxx |
+
+The admin enters the advisor's name and personal email and chooses the position and staff ID (a
+free one is suggested). As for new students, the system makes a temporary password and emails the
+staff ID, school email (`<staff ID>@advisor.newinti.edu.my` unless the admin changes it) and password
+to the personal email; the advisor must choose a new password at first sign-in. The admin can later change the name, position and staff ID or reset the password. Each office (Computing, Business) has only one active Dean; to
+replace a Dean, change the old Dean's position or deactivate the account first. Advisors that existed
+before this change became Dean of Computing (the earliest one) or Head of Programme, CS; change them in
+User Management if needed.
 
 New students receive their student ID, school email and a temporary password at their personal
 email, and must choose their own password at first sign-in (admin password resets work the same
