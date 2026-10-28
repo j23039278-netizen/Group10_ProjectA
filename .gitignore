@@ -21,6 +21,7 @@ build/
 # ========================
 .env
 backend/.assessment_rules_version
+backend/.synthetic_data_version
 .env.local
 .env.production
 *.db
