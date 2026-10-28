@@ -9,8 +9,21 @@ matches `database/schema.sql`. No real student data is used.
 (138 skills, `data/skills/skills_library.csv`). All 138 skills appear in
 `student_skills` at least once.
 
-> **Team note:** regenerating changes UUIDs and distributions. If you loaded the
-> old data, first run `data/delete_synthetic_data.sql`, then load the new seed.
+**Courses and Business students (Sprint 3, data version `2026-10-28-business`):**
+student N is CS when N mod 3 = 1, Business when 2 and ICT when 0, the rule the database
+uses. The 1,667 Business students aim at a Business role (N mod 4: Business Analyst,
+Marketing Executive, Financial Analyst, HR Executive, as in
+`migrate_existing_db.sql`). Their skills, projects, certifications, programme and
+interests come from that role, drawn with their own random generator. The CS and ICT
+students are exactly the same as before (same UUIDs, skills and projects).
+`students_meta.csv` has a `course` column.
+
+> **Team note:** `backend/start_backend.bat` replaces the synthetic students by itself
+> when `data/output/DATA_VERSION` differs from the version your database loaded
+> (`backend/.synthetic_data_version`, not in git), and then re-assesses them. When
+> you change the generator, regenerate, and change `SYNTHETIC_DATA_VERSION` in
+> `generate_synthetic_data.py` so that everyone's data is replaced. To do it by hand,
+> run `data/delete_synthetic_data.sql`, then load the new seed.
 
 ## Load into PostgreSQL (no Python needed)
 

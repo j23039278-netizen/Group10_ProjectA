@@ -130,21 +130,27 @@ matcher only supplies `match_status` for each required skill.
 preferred, developing (2 × 0.5); Docker bonus, gap (0). That is 5.5 of 12 points, a
 readiness of **45.83**.
 
-*Representative synthetic students* (S2-11-02, `test_matcher.py`): for each role the
-student whose core-skill coverage is the median of their archetype. In both roles and
-with both methods, strong > average > weak:
+*Representative synthetic students* (S2-11-02, `test_matcher.py`): for each role and
+archetype, the student whose readiness is the median of that group. In all four roles
+and with both methods, strong > average > weak:
 
-| Role | Method | strong | average | weak |
-|---|---|---:|---:|---:|
-| Data Analyst | keyword | 70.0 | 54.0 | 23.0 |
-| Data Analyst | hybrid | 70.0 | 54.0 | 25.0 |
-| Cybersecurity Analyst | keyword | 69.0 | 51.7 | 16.4 |
-| Cybersecurity Analyst | hybrid | 71.5 | 61.2 | 22.4 |
+| Role | Method | strong | average | weak | means (strong / average / weak) |
+|---|---|---:|---:|---:|---|
+| Data Analyst | keyword | 72.0 | 48.0 | 23.0 | 70.6 / 48.3 / 24.0 |
+| Data Analyst | hybrid | 72.0 | 51.0 | 26.0 | 72.2 / 50.4 / 26.4 |
+| Cybersecurity Analyst | keyword | 69.0 | 44.8 | 19.0 | 68.7 / 44.6 / 20.1 |
+| Cybersecurity Analyst | hybrid | 73.3 | 50.9 | 25.0 | 73.5 / 50.8 / 25.5 |
+| Business Analyst | keyword | 73.5 | 49.0 | 21.4 | 72.2 / 49.5 / 22.3 |
+| Business Analyst | hybrid | 76.5 | 55.1 | 25.5 | 75.9 / 54.4 / 26.5 |
+| HR Executive | keyword | 72.5 | 51.0 | 24.5 | 72.1 / 50.1 / 24.8 |
+| HR Executive | hybrid | 73.5 | 51.0 | 26.5 | 73.4 / 51.8 / 26.4 |
 
-The archetype means over all students of each role follow the same order (Data Analyst,
-hybrid: 72.4 / 50.4 / 26.2). Figures are with rules A and C (2026-10-28); the gap between
-strong and weak students widened, because weak students hold more beginner skills backed
-by coursework only.
+Figures are with rules A and C and the synthetic data version `2026-10-28-business`
+(Business students generated for the Business roles; only IT students count for the IT
+roles). Until then the representative student was the one with the median core-skill
+coverage. That pick proved fragile: many students share the median coverage, and for HR
+Executive the first of them was a year-1 student whose skills were all beginner with
+coursework only (rule C), who scored below the weak representative.
 
 ## 7. Known limits and proposals
 

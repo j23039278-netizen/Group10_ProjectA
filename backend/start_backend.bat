@@ -110,6 +110,19 @@ if not "%DUPNAMES%"=="0" (
     if errorlevel 1 goto :fail
     set "SYN=0"
 )
+REM Data from an older generator run (e.g. before the Business students): replace it.
+REM ..\data\output\DATA_VERSION is written by data\generate_synthetic_data.py;
+REM .synthetic_data_version (not in git) is the version this machine loaded.
+set "DATA_VER="
+if exist "..\data\output\DATA_VERSION" set /p DATA_VER=<"..\data\output\DATA_VERSION"
+set "LOADED_VER=none"
+if exist ".synthetic_data_version" set /p LOADED_VER=<".synthetic_data_version"
+if defined DATA_VER if not "%SYN%"=="0" if not "%DATA_VER%"=="%LOADED_VER%" (
+    echo       synthetic data changed ^(%LOADED_VER% -^> %DATA_VER%^), replacing it ...
+    psql -d seagas_db -q -v ON_ERROR_STOP=1 -f "..\data\delete_synthetic_data.sql"
+    if errorlevel 1 goto :fail
+    set "SYN=0"
+)
 if "%SYN%"=="0" (
     echo       loading 5000 students, please wait ...
     psql -d seagas_db -q -v ON_ERROR_STOP=1 -f "..\data\output\seed_synthetic_students.sql"
@@ -120,6 +133,7 @@ if "%SYN%"=="0" (
 ) else (
     echo       %SYN% synthetic students already loaded
 )
+if defined DATA_VER (>".synthetic_data_version" echo %DATA_VER%)
 for /f "usebackq delims=" %%i in (`psql -d seagas_db -tAc "SELECT count(*) FROM users"`) do echo       users in database: %%i
 
 echo [4/4] Installing Python packages ...

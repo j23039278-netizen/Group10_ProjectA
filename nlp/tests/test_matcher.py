@@ -311,9 +311,11 @@ DATA = ROOT / "data" / "output"
 ROLE_SEED = ROOT / "database" / "seed_job_role_skills.sql"
 ROLE_NAMES = {"DATA_ANALYST": "Data Analyst", "DATA_SCIENTIST": "Data Scientist",
               "SOFTWARE_DEV": "Software Developer", "CYBER_ANALYST": "Cybersecurity Analyst",
-              "CLOUD_ENGINEER": "Cloud Engineer", "WEB_DEV": "Web Developer"}
+              "CLOUD_ENGINEER": "Cloud Engineer", "WEB_DEV": "Web Developer",
+              "BUSINESS_ANALYST": "Business Analyst", "MARKETING_EXEC": "Marketing Executive",
+              "FINANCIAL_ANALYST": "Financial Analyst", "HR_EXEC": "HR Executive"}
 ARCHETYPES = ("strong", "average", "weak")
-ROLES = ("Data Analyst", "Cybersecurity Analyst")
+ROLES = ("Data Analyst", "Cybersecurity Analyst", "Business Analyst", "HR Executive")
 
 # Weighted score as in backend/routers/assessments.py (reimplemented, not imported).
 WEIGHTS = {"required": 3, "preferred": 2, "bonus": 1}
@@ -354,23 +356,23 @@ def synthetic():
     return meta, skills
 
 
-def representative(meta, role, archetype):
-    """The student whose core-skill coverage is the median of their role and archetype."""
-    group = [m for m in meta if m["target_role"] == role and m["archetype"] == archetype]
-    median = statistics.median(float(m["core_coverage_pct"]) for m in group)
-    return min(group, key=lambda m: (abs(float(m["core_coverage_pct"]) - median), m["email"]))
+def representative(group, score):
+    """The student whose readiness is the median of the group (ties: first email).
+    Picking by median core-skill coverage instead is fragile: many students share
+    the median coverage, and the first of them can be a year-1 student whose
+    skills are all beginner with coursework only (rule C)."""
+    median = statistics.median(score[m["profile_id"]] for m in group)
+    return min(group, key=lambda m: (abs(score[m["profile_id"]] - median), m["email"]))
 
 
 def check_ranking(capsys, synthetic, role_skills, role, method):
     meta, skills = synthetic
-    picked = {a: representative(meta, role, a) for a in ARCHETYPES}
-    scores = {a: readiness(match_skills(skills[m["profile_id"]], role_skills[role], method))
-              for a, m in picked.items()}
-    means = {}
-    for a in ARCHETYPES:
-        group = [m["profile_id"] for m in meta if m["target_role"] == role and m["archetype"] == a]
-        means[a] = statistics.mean(readiness(match_skills(skills[p], role_skills[role], method))
-                                   for p in group)
+    groups = {a: [m for m in meta if m["target_role"] == role and m["archetype"] == a] for a in ARCHETYPES}
+    score = {m["profile_id"]: readiness(match_skills(skills[m["profile_id"]], role_skills[role], method))
+             for group in groups.values() for m in group}
+    picked = {a: representative(groups[a], score) for a in ARCHETYPES}
+    scores = {a: score[m["profile_id"]] for a, m in picked.items()}
+    means = {a: statistics.mean(score[m["profile_id"]] for m in groups[a]) for a in ARCHETYPES}
     with capsys.disabled():
         print(f"\n  {role} ({method}): " + ", ".join(
             f"{a} {picked[a]['email'].split('@')[0]} {scores[a]:.1f} (mean {means[a]:.1f})"
