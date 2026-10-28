@@ -135,17 +135,13 @@ if errorlevel 1 (
     echo       NLP semantic/hybrid packages found
 )
 
-REM The advisor dashboard needs assessment data: assess every synthetic student
-REM once (same code as the website). Runs only when none of them has one yet.
+REM The advisor dashboard needs assessment data: assess the synthetic students
+REM (same code as the website). Assesses students with none yet, and every
+REM synthetic student once more when the matching rules changed
+REM (nlp\config.py MATCH_RULES_VERSION); otherwise it does nothing.
 echo [4c/4] Checking synthetic assessments ...
-set "ASSESSED="
-for /f "usebackq delims=" %%i in (`psql -d seagas_db -tAc "SELECT count(DISTINCT a.profile_id) FROM assessments a JOIN student_profiles sp USING (profile_id) JOIN users u USING (user_id) WHERE u.email LIKE '%%@synthetic.example.com'"`) do set "ASSESSED=%%i"
-if "%ASSESSED%"=="0" (
-    %PY% "..\data\run_assessments.py"
-    if errorlevel 1 goto :fail
-) else (
-    echo       %ASSESSED% synthetic students already assessed
-)
+%PY% "..\data\run_assessments.py" --auto
+if errorlevel 1 goto :fail
 
 REM Advisor accounts are created by an admin, so the first admin has to exist.
 REM create_admin.py asks for the email and password; nothing is hard-coded.
