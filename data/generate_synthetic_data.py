@@ -19,10 +19,18 @@ Usage:
     python generate_synthetic_data.py --n 300 --seed 7
 
 Design notes (for the Dataset section of the report):
-  * Every student has a target role (one of the 6 job_roles) and an "archetype"
-    (strong / average / weak) that controls how many role-relevant skills they
-    have. This gives a realistic spread of readiness scores instead of every
-    student scoring the same.
+  * Every student has a target role and an "archetype" (strong / average / weak)
+    that controls how many role-relevant skills they have. This gives a
+    realistic spread of readiness scores instead of every student scoring the same.
+  * Courses (Sprint 3): student N is CS when N mod 3 = 1, Business when 2 and ICT
+    when 0, the rule the database uses (default_course() in
+    migrate_existing_db.sql). CS and ICT students aim at one of the 6 IT roles.
+    Business students aim at a Business role (N mod 4, as in the migration) and
+    their skills, projects, certifications, programme and interests come from
+    that role, drawn with their own random generator. The IT draws are still made
+    for them and thrown away, so every CS and ICT student is exactly the same as
+    before Business students existed. (The migration moves ICT students who aim
+    at a CS-only role to the closest ICT role; their skills stay as generated.)
   * Skills are sampled per role: core skills are likely, secondary skills less
     likely, plus a few random off-role skills (noise). Core / secondary skills
     are read from database/seed_job_role_skills.sql (required -> core,
@@ -85,6 +93,12 @@ ROLE_CODES = {
     "CYBER_ANALYST": "Cybersecurity Analyst",
     "CLOUD_ENGINEER": "Cloud Engineer",
     "WEB_DEV": "Web Developer",
+    # Business roles (skills library v3). Not in ROLE_WEIGHTS yet, so no student
+    # is drawn for them; their students are generated separately (Sprint 3).
+    "BUSINESS_ANALYST": "Business Analyst",
+    "MARKETING_EXEC": "Marketing Executive",
+    "FINANCIAL_ANALYST": "Financial Analyst",
+    "HR_EXEC": "HR Executive",
 }
 
 ROLES = {
@@ -122,9 +136,38 @@ ROLES = {
                        "Bachelor of Software Engineering"],
         "interests": ["Web Development", "Frontend Development", "UI/UX"],
     },
+    "Business Analyst": {
+        "programmes": ["Bachelor of Business (Business Analytics)",
+                       "Bachelor of Business (Information Systems)"],
+        "interests": ["Business Analysis", "Process Improvement", "Data Analytics"],
+    },
+    "Marketing Executive": {
+        "programmes": ["Bachelor of Business (Marketing)",
+                       "Bachelor of Business (Digital Marketing)"],
+        "interests": ["Digital Marketing", "Branding", "Social Media"],
+    },
+    "Financial Analyst": {
+        "programmes": ["Bachelor of Business (Finance)",
+                       "Bachelor of Business (Accounting)"],
+        "interests": ["Corporate Finance", "Accounting", "Financial Planning"],
+    },
+    "HR Executive": {
+        "programmes": ["Bachelor of Business (Human Resource Management)"],
+        "interests": ["Human Resources", "Talent Acquisition", "Organisational Behaviour"],
+    },
 }
 
-# Rough share of students aiming at each role (sums to 1.0)
+# Course of student N by N mod 3, and Business role by N mod 4: the same rules as
+# default_course() and the target-role update in database/migrate_existing_db.sql.
+COURSE_BY_REMAINDER = {1: "CS", 2: "BUSINESS", 0: "ICT"}
+BUSINESS_ROLE_ORDER = ["Business Analyst", "Marketing Executive", "Financial Analyst", "HR Executive"]
+
+# Version of the generated data. start_backend.bat replaces the synthetic students
+# in a local database when this differs from the version it loaded last, so change
+# it whenever the output changes.
+SYNTHETIC_DATA_VERSION = "2026-10-28-business"
+
+# Rough share of IT students aiming at each IT role (sums to 1.0)
 ROLE_WEIGHTS = {
     "Software Developer": 0.24, "Data Analyst": 0.20, "Web Developer": 0.18,
     "Data Scientist": 0.13, "Cybersecurity Analyst": 0.13, "Cloud Engineer": 0.12,
@@ -207,6 +250,37 @@ CERTIFICATIONS = [
      "https://www.coursera.org/professional-certificates/google-cybersecurity"),
     ("Splunk Core Certified User", "Splunk", ["Splunk", "Log Analysis"],
      "https://www.splunk.com/en_us/training/certification-track/splunk-core-certified-user.html"),
+]
+
+# Business certifications (Business students only; kept apart from CERTIFICATIONS
+# so the IT students' draws do not change). Links checked on 2026-10-28.
+BUSINESS_CERTIFICATIONS = [
+    ("Google Digital Marketing & E-commerce Professional Certificate", "Google / Coursera",
+     ["Digital Marketing", "Email Marketing", "Search Engine Marketing", "Google Analytics"],
+     "https://www.coursera.org/professional-certificates/google-digital-marketing-ecommerce"),
+    ("HubSpot Content Marketing Certification", "HubSpot Academy", ["Content Marketing"],
+     "https://academy.hubspot.com/courses/content-marketing"),
+    ("HubSpot Email Marketing Certification", "HubSpot Academy", ["Email Marketing"],
+     "https://academy.hubspot.com/courses/email-marketing"),
+    ("Meta Certified Digital Marketing Associate", "Meta", ["Social Media Marketing", "Digital Marketing"],
+     "https://www.facebook.com/business/learn/certification"),
+    ("Google Analytics Certification", "Google Skillshop", ["Google Analytics"],
+     "https://skillshop.withgoogle.com/"),
+    ("Entry Certificate in Business Analysis (ECBA)", "IIBA", ["Business Analysis", "Requirements Analysis"],
+     "https://www.iiba.org/business-analysis-certifications/ecba/"),
+    ("Google Project Management Professional Certificate", "Google / Coursera",
+     ["Project Management", "Agile / Scrum"],
+     "https://www.coursera.org/professional-certificates/google-project-management"),
+    ("Salesforce Certified Administrator", "Salesforce", ["CRM Software"],
+     "https://trailhead.salesforce.com/credentials/administrator"),
+    ("Financial Modeling & Valuation Analyst (FMVA)", "Corporate Finance Institute",
+     ["Financial Modelling", "Financial Analysis", "Excel"],
+     "https://corporatefinanceinstitute.com/certifications/financial-modeling-valuation-analyst-fmva-program/"),
+    ("Bloomberg Market Concepts", "Bloomberg", ["Financial Analysis"],
+     "https://portal.bloombergforeducation.com/"),
+    ("Human Resource Management: HR for People Managers Specialization", "University of Minnesota / Coursera",
+     ["Recruitment", "Performance Management", "Employee Relations"],
+     "https://www.coursera.org/specializations/human-resource-management"),
 ]
 
 # Issuers whose certifications expire (about 3 years after issue)
@@ -293,6 +367,61 @@ PROJECTS = {
     ],
 }
 
+# Business project templates (Business students only; kept apart from PROJECTS
+# so the IT students' draws do not change)
+BUSINESS_PROJECTS = {
+    "Business Analyst": [
+        ("{c} Order Process Redesign", "Mapped the order-to-delivery process and proposed a simpler one with fewer hand-offs.",
+         ["Process Mapping", "Business Process Improvement", "Business Analysis"]),
+        ("Student Portal Requirements Study", "Interviewed students and staff and wrote user stories and acceptance criteria.",
+         ["Requirements Analysis", "Stakeholder Communication", "Documentation"]),
+        ("Cafeteria Sales Analysis", "Analysed a semester of cafeteria sales and presented menu recommendations.",
+         ["Data Analysis", "Excel", "SQL", "Presentation Skills"]),
+        ("Clinic Booking System UAT", "Planned and ran user acceptance testing with test scripts and a defect log.",
+         ["User Acceptance Testing", "Documentation", "Agile / Scrum"]),
+        ("SME Performance Dashboard", "Built a dashboard of monthly KPIs for a family business.",
+         ["Power BI", "Data Visualisation", "Excel"]),
+    ],
+    "Marketing Executive": [
+        ("{c} Social Media Campaign", "Planned and ran a four-week Instagram and TikTok campaign for a student business.",
+         ["Social Media Marketing", "Content Marketing", "Creativity"]),
+        ("Cafe Website SEO Audit", "Audited a local cafe's website, researched keywords and rewrote its pages for search.",
+         ["Search Engine Optimisation", "Google Analytics", "Content Marketing"]),
+        ("Bubble Tea Market Survey", "Designed and analysed a survey of 200 students on drink preferences.",
+         ["Market Research", "Data Analysis", "Excel"]),
+        ("Charity Run Email Campaign", "Wrote and A/B-tested email invitations for a university charity run.",
+         ["Email Marketing", "A/B Testing", "Communication"]),
+        ("Student Club Rebrand", "Created a new brand identity and launch plan for a student club.",
+         ["Brand Management", "Digital Marketing", "Presentation Skills"]),
+    ],
+    "Financial Analyst": [
+        ("{c} Three-Statement Model", "Built a linked income statement, balance sheet and cash-flow model.",
+         ["Financial Modelling", "Excel", "Financial Analysis"]),
+        ("Student Society Budget", "Prepared a society's annual budget and tracked spending against it.",
+         ["Budgeting & Forecasting", "Excel", "Attention to Detail"]),
+        ("Annual Report Ratio Analysis", "Compared the financial ratios of two Bursa Malaysia listed companies.",
+         ["Financial Analysis", "Financial Reporting", "Critical Thinking"]),
+        ("Small Business Bookkeeping", "Kept a semester of accounts for a home business in cloud accounting software.",
+         ["Accounting", "Accounting Software"]),
+        ("Personal Income Tax Clinic", "Helped classmates estimate their personal income tax as a course project.",
+         ["Taxation", "Communication"]),
+    ],
+    "HR Executive": [
+        ("{c} Event Crew Recruitment", "Planned the recruitment and screening of part-time event crew.",
+         ["Recruitment", "Interpersonal Skills", "Time Management"]),
+        ("Payroll Calculation Exercise", "Calculated monthly salaries and statutory deductions for a case-study company.",
+         ["Payroll", "Excel", "Attention to Detail"]),
+        ("Employment Act Case Study", "Analysed a workplace dispute under the Employment Act 1955 and proposed a resolution.",
+         ["Employment Law", "Employee Relations", "Problem Solving"]),
+        ("Intern Onboarding Programme", "Designed a one-week onboarding and training plan for new interns.",
+         ["Training & Development", "Documentation", "Presentation Skills"]),
+        ("Society HR Records Setup", "Moved a society's member records into an HR system and set up leave tracking.",
+         ["HRIS", "Excel"]),
+        ("KPI Appraisal Form", "Designed a KPI-based appraisal form and guide for a student society.",
+         ["Performance Management", "Communication"]),
+    ],
+}
+
 PROJECT_TYPES = ["academic", "academic", "academic", "personal", "competition"]
 
 # Romanised Malaysian names (Faker has no Malaysian locale).
@@ -364,6 +493,19 @@ def load_library_skills(csv_path=SKILLS_CSV_PATH, schema_path=SCHEMA_PATH):
         with open(csv_path, newline="", encoding="utf-8") as f:
             return {r["skill_name"].strip() for r in csv.DictReader(f)}
     return load_schema_skills(schema_path)
+
+
+def load_library_skills_by_source(sources, csv_path=SKILLS_CSV_PATH):
+    """Skill names added in the given library versions, or None without the CSV.
+
+    IT students' off-role noise is drawn from v1 + v2 (the IT skills), so adding
+    the Business skills (v3) does not change any IT student; Business students'
+    noise comes from v3.
+    """
+    if not os.path.exists(csv_path):
+        return None
+    with open(csv_path, newline="", encoding="utf-8") as f:
+        return {r["skill_name"].strip() for r in csv.DictReader(f) if r.get("source") in sources}
 
 
 def load_schema_skills(path):
@@ -505,17 +647,146 @@ def pick_proficiency(rng, year, archetype, has_evidence):
 
 
 # ── Generator ──────────────────────────────────────────────────────────────
+def student_records(rng, fk, role, arch, year, profile_id, created, noise_pool, projects, certifications):
+    """Skills, projects, certifications and profile fields of one student.
+
+    The draws are made in a fixed order, so the same rng state gives the same
+    student. IT students use the main rng with PROJECTS / CERTIFICATIONS;
+    Business students their own rng with BUSINESS_PROJECTS and a Business
+    certification pool.
+    """
+    _, p_core, p_sec, _ = ARCHETYPES[arch]
+    spec = ROLES[role]
+
+    # ── Skills ──
+    chosen = set()
+    for s in spec["core"]:
+        if rng.random() < p_core:
+            chosen.add(s)
+    for s in spec["secondary"]:
+        if rng.random() < p_sec:
+            chosen.add(s)
+    for s in SOFT_SKILLS:
+        if rng.random() < 0.35 + (0.15 if arch == "strong" else 0):
+            chosen.add(s)
+    # off-role noise: 0–2 random skills
+    for s in rng.sample(noise_pool, rng.randint(0, 2)):
+        chosen.add(s)
+    if not chosen:
+        chosen.add(rng.choice(spec["core"]))
+
+    # ── Projects ──
+    projects_rows = []
+    n_proj = clamp(int(round(rng.gauss({"strong": 2.5, "average": 1.5, "weak": 0.6}[arch] + (year - 2) * 0.4, 0.8))), 0, 5)
+    proj_pool = projects[role][:]
+    other = [t for r, ts in projects.items() if r != role for t in ts]
+    proj_skill_evidence = set()
+    for k in range(n_proj):
+        tpl = proj_pool.pop(rng.randrange(len(proj_pool))) if proj_pool and rng.random() < {"strong": 0.85, "average": 0.65, "weak": 0.4}[arch] \
+            else rng.choice(other)
+        title = tpl[0].format(c=fk.company().split()[0])
+        techs = list(tpl[2])
+        ptype = "internship" if (k == 0 and rng.random() < 0.15 and year >= 3) else rng.choice(PROJECT_TYPES)
+        yr = rng.randint(max(CURRENT_YEAR - year + 1, CURRENT_YEAR - 3), CURRENT_YEAR)
+        projects_rows.append({
+            "project_id": str(uuid.UUID(int=rng.getrandbits(128))),
+            "profile_id": profile_id,
+            "project_title": title,
+            "description": tpl[1],
+            "technologies": techs,
+            "project_type": ptype,
+            "year_completed": yr,
+            "created_at": created,
+        })
+        proj_skill_evidence.update(techs)
+        chosen.update(techs)  # a student who did the project has the skill
+
+    # ── Certifications ──
+    certs_rows = []
+    n_cert = clamp(int(round(rng.gauss({"strong": 1.6, "average": 0.7, "weak": 0.1}[arch], 0.7))), 0, 4)
+    relevant = [c for c in certifications if set(c[2]) & set(spec["core"] + spec["secondary"])]
+    cert_pool = relevant + rng.sample(certifications, 2)
+    cert_skill_evidence = set()
+    seen_cert = set()
+    for _ in range(n_cert):
+        c = rng.choice(cert_pool)
+        if c[0] in seen_cert:
+            continue
+        seen_cert.add(c[0])
+        issue = date(CURRENT_YEAR, 9, 1) - timedelta(days=rng.randint(30, 365 * min(year, 3)))
+        expiry = issue + timedelta(days=365 * 3) if c[1] in EXPIRING_ISSUERS else None
+        certs_rows.append({
+            "cert_id": str(uuid.UUID(int=rng.getrandbits(128))),
+            "profile_id": profile_id,
+            "cert_name": c[0],
+            "issuer": c[1],
+            "issue_date": issue.isoformat(),
+            "expiry_date": expiry.isoformat() if expiry else None,
+            "credential_url": c[3],
+            "created_at": created,
+        })
+        cert_skill_evidence.update(c[2])
+        chosen.update(c[2])
+
+    # ── Internships ──
+    p_intern = {1: 0.02, 2: 0.10, 3: 0.40, 4: 0.65}[year] * {"strong": 1.3, "average": 1.0, "weak": 0.5}[arch]
+    n_intern = 0
+    if rng.random() < p_intern:
+        n_intern = 2 if (year == 4 and rng.random() < 0.2) else 1
+    intern_skills = set(rng.sample(sorted(chosen), min(len(chosen), 3))) if n_intern else set()
+
+    # ── student_skills rows ──
+    skills_rows = []
+    for s in sorted(chosen):
+        ev = []
+        if s in proj_skill_evidence:
+            ev.append("project")
+        if s in cert_skill_evidence:
+            ev.append("certification")
+        if s in intern_skills:
+            ev.append("internship")
+        if rng.random() < 0.5 or not ev:
+            ev.append("coursework")
+        prof = pick_proficiency(rng, year, arch, len(ev) > 1 or "coursework" not in ev)
+        notes = None
+        if "project" in ev:
+            notes = "Applied in project work."
+        elif "internship" in ev:
+            notes = "Used during internship."
+        skills_rows.append({
+            "student_skill_id": str(uuid.UUID(int=rng.getrandbits(128))),
+            "profile_id": profile_id,
+            "skill_name": s,
+            "proficiency_level": prof,
+            "evidence_type": ev,
+            "evidence_notes": notes,
+            "added_at": created,
+        })
+
+    interests = rng.sample(spec["interests"], rng.randint(1, len(spec["interests"])))
+    is_complete = rng.random() < {"strong": 0.95, "average": 0.8, "weak": 0.55}[arch]
+    programme = rng.choice(spec["programmes"])
+    return {"chosen": chosen, "projects": projects_rows, "certs": certs_rows, "skills": skills_rows,
+            "n_proj": n_proj, "n_cert": len(seen_cert), "n_intern": n_intern,
+            "interests": interests, "is_complete": is_complete, "programme": programme}
+
+
 def generate(n, seed):
     rng = random.Random(seed)
     Faker.seed(seed)
     fk = Faker("en_US")
     fk_in = Faker("en_IN")
+    # Business students' project titles: an instance with its own random state,
+    # so the shared Faker sequence (names, IT project titles) does not change
+    fk_biz = Faker("en_US")
+    fk_biz.seed_instance(f"business-{seed}")
 
     load_role_skills()
     used_skills = ({s for r in ROLES.values() for s in r["core"] + r["secondary"]}
                    | set(SOFT_SKILLS)
-                   | {s for c in CERTIFICATIONS for s in c[2]}
-                   | {s for p in PROJECTS.values() for t in p for s in t[2]})
+                   | {s for c in CERTIFICATIONS + BUSINESS_CERTIFICATIONS for s in c[2]}
+                   | {s for p in list(PROJECTS.values()) + list(BUSINESS_PROJECTS.values())
+                      for t in p for s in t[2]})
 
     known = load_library_skills()
     if known is not None:
@@ -523,8 +794,15 @@ def generate(n, seed):
         if missing:
             raise SystemExit(f"These skills are not in the skills library "
                              f"(data/skills/skills_library.csv): {missing}")
-    # off-role noise is drawn from the whole library
-    all_skills = sorted(known if known is not None else used_skills)
+    # off-role noise: IT students from the IT part of the library (v1 + v2),
+    # Business students from the Business part (v3)
+    it_skills = load_library_skills_by_source({"v1", "v2"})
+    all_skills = sorted(it_skills if it_skills is not None else known if known is not None else used_skills)
+    business_skills = load_library_skills_by_source({"v3"})
+    business_noise = sorted(business_skills) if business_skills else all_skills
+    business_skill_set = {s for r in BUSINESS_ROLE_ORDER for s in ROLES[r]["core"] + ROLES[r]["secondary"]}
+    # Business pool: the Business certifications plus IT ones on skills Business roles use (Excel, Power BI ...)
+    business_certs = BUSINESS_CERTIFICATIONS + [c for c in CERTIFICATIONS if set(c[2]) & business_skill_set]
 
     if bcrypt:
         # salt derived from the seed (own RNG, so the main sequence is unchanged)
@@ -551,8 +829,7 @@ def generate(n, seed):
     for i in range(1, n + 1):
         role = rng.choices(roles, role_w)[0]
         arch = rng.choices(arch_names, arch_w)[0]
-        _, p_core, p_sec, gpa_mean = ARCHETYPES[arch]
-        spec = ROLES[role]
+        gpa_mean = ARCHETYPES[arch][3]
 
         user_id, profile_id = str(uuid.UUID(int=rng.getrandbits(128))), str(uuid.UUID(int=rng.getrandbits(128)))
         full_name, ethnicity, gender = make_name(rng, fk_in, fk)
@@ -565,110 +842,19 @@ def generate(n, seed):
         expected_grad = f"{rng.choice(['June', 'December'])} {grad_year}"
         gpa = round(clamp(rng.gauss(gpa_mean, 0.3), 2.0, 4.0), 2)
 
-        # ── Skills ──
-        chosen = set()
-        for s in spec["core"]:
-            if rng.random() < p_core:
-                chosen.add(s)
-        for s in spec["secondary"]:
-            if rng.random() < p_sec:
-                chosen.add(s)
-        for s in SOFT_SKILLS:
-            if rng.random() < 0.35 + (0.15 if arch == "strong" else 0):
-                chosen.add(s)
-        # off-role noise: 0–2 random skills
-        for s in rng.sample(all_skills, rng.randint(0, 2)):
-            chosen.add(s)
-        if not chosen:
-            chosen.add(rng.choice(spec["core"]))
-
-        # ── Projects ──
-        n_proj = clamp(int(round(rng.gauss({"strong": 2.5, "average": 1.5, "weak": 0.6}[arch] + (year - 2) * 0.4, 0.8))), 0, 5)
-        proj_pool = PROJECTS[role][:]
-        other = [t for r, ts in PROJECTS.items() if r != role for t in ts]
-        proj_skill_evidence = set()
-        for k in range(n_proj):
-            tpl = proj_pool.pop(rng.randrange(len(proj_pool))) if proj_pool and rng.random() < {"strong": 0.85, "average": 0.65, "weak": 0.4}[arch] \
-                else rng.choice(other)
-            title = tpl[0].format(c=fk.company().split()[0])
-            techs = list(tpl[2])
-            ptype = "internship" if (k == 0 and rng.random() < 0.15 and year >= 3) else rng.choice(PROJECT_TYPES)
-            yr = rng.randint(max(CURRENT_YEAR - year + 1, CURRENT_YEAR - 3), CURRENT_YEAR)
-            projects_rows.append({
-                "project_id": str(uuid.UUID(int=rng.getrandbits(128))),
-                "profile_id": profile_id,
-                "project_title": title,
-                "description": tpl[1],
-                "technologies": techs,
-                "project_type": ptype,
-                "year_completed": yr,
-                "created_at": created,
-            })
-            proj_skill_evidence.update(techs)
-            chosen.update(techs)  # a student who did the project has the skill
-
-        # ── Certifications ──
-        n_cert = clamp(int(round(rng.gauss({"strong": 1.6, "average": 0.7, "weak": 0.1}[arch], 0.7))), 0, 4)
-        relevant = [c for c in CERTIFICATIONS if set(c[2]) & set(spec["core"] + spec["secondary"])]
-        cert_pool = relevant + rng.sample(CERTIFICATIONS, 2)
-        cert_skill_evidence = set()
-        seen_cert = set()
-        for _ in range(n_cert):
-            c = rng.choice(cert_pool)
-            if c[0] in seen_cert:
-                continue
-            seen_cert.add(c[0])
-            issue = date(CURRENT_YEAR, 9, 1) - timedelta(days=rng.randint(30, 365 * min(year, 3)))
-            expiry = issue + timedelta(days=365 * 3) if c[1] in EXPIRING_ISSUERS else None
-            certs_rows.append({
-                "cert_id": str(uuid.UUID(int=rng.getrandbits(128))),
-                "profile_id": profile_id,
-                "cert_name": c[0],
-                "issuer": c[1],
-                "issue_date": issue.isoformat(),
-                "expiry_date": expiry.isoformat() if expiry else None,
-                "credential_url": c[3],
-                "created_at": created,
-            })
-            cert_skill_evidence.update(c[2])
-            chosen.update(c[2])
-
-        # ── Internships ──
-        p_intern = {1: 0.02, 2: 0.10, 3: 0.40, 4: 0.65}[year] * {"strong": 1.3, "average": 1.0, "weak": 0.5}[arch]
-        n_intern = 0
-        if rng.random() < p_intern:
-            n_intern = 2 if (year == 4 and rng.random() < 0.2) else 1
-        intern_skills = set(rng.sample(sorted(chosen), min(len(chosen), 3))) if n_intern else set()
-
-        # ── student_skills rows ──
-        for s in sorted(chosen):
-            ev = []
-            if s in proj_skill_evidence:
-                ev.append("project")
-            if s in cert_skill_evidence:
-                ev.append("certification")
-            if s in intern_skills:
-                ev.append("internship")
-            if rng.random() < 0.5 or not ev:
-                ev.append("coursework")
-            prof = pick_proficiency(rng, year, arch, len(ev) > 1 or "coursework" not in ev)
-            notes = None
-            if "project" in ev:
-                notes = "Applied in project work."
-            elif "internship" in ev:
-                notes = "Used during internship."
-            skills_rows.append({
-                "student_skill_id": str(uuid.UUID(int=rng.getrandbits(128))),
-                "profile_id": profile_id,
-                "skill_name": s,
-                "proficiency_level": prof,
-                "evidence_type": ev,
-                "evidence_notes": notes,
-                "added_at": created,
-            })
-
-        interests = rng.sample(spec["interests"], rng.randint(1, len(spec["interests"])))
-        is_complete = rng.random() < {"strong": 0.95, "average": 0.8, "weak": 0.55}[arch]
+        # IT records with the main rng, for every student: keeps the main
+        # random sequence, and so every later student, unchanged
+        rec = student_records(rng, fk, role, arch, year, profile_id, created, all_skills,
+                              PROJECTS, CERTIFICATIONS)
+        course = COURSE_BY_REMAINDER[i % 3]
+        if course == "BUSINESS":
+            role = BUSINESS_ROLE_ORDER[i % 4]
+            rec = student_records(random.Random(f"business-{seed}-{i}"), fk_biz, role, arch, year,
+                                  profile_id, created, business_noise, BUSINESS_PROJECTS, business_certs)
+        spec = ROLES[role]
+        skills_rows += rec["skills"]
+        projects_rows += rec["projects"]
+        certs_rows += rec["certs"]
 
         users.append({
             "user_id": user_id, "email": email, "password_hash": pw_hash, "role": "student",
@@ -676,19 +862,20 @@ def generate(n, seed):
         })
         profiles.append({
             "profile_id": profile_id, "user_id": user_id,
-            "programme": rng.choice(spec["programmes"]), "university": UNIVERSITY,
+            "programme": rec["programme"], "university": UNIVERSITY,
             "gpa": gpa, "expected_graduation": expected_grad, "year_of_study": year,
-            "internship_count": n_intern, "project_count": n_proj,
-            "certification_count": len(seen_cert),
-            "target_role": role, "career_interests": interests, "is_complete": is_complete,
+            "internship_count": rec["n_intern"], "project_count": rec["n_proj"],
+            "certification_count": rec["n_cert"],
+            "target_role": role, "career_interests": rec["interests"], "is_complete": rec["is_complete"],
             "created_at": created, "updated_at": created,
         })
-        core_have = len(set(spec["core"]) & chosen)
+        core_have = len(set(spec["core"]) & rec["chosen"])
         meta.append({
             "profile_id": profile_id, "email": email, "target_role": role, "archetype": arch,
-            "year_of_study": year, "n_skills": len(chosen),
+            "year_of_study": year, "n_skills": len(rec["chosen"]),
             "core_skills_covered": core_have, "core_skills_total": len(spec["core"]),
             "core_coverage_pct": round(core_have / len(spec["core"]) * 100, 1),
+            "course": course,
         })
 
     unique_names(users, name_origins, seed)
@@ -796,6 +983,7 @@ def write_summary(path, users, profiles, skills, projects, certs, meta, n, seed)
         f"Certifications:        {len(certs)}",
         f"GPA:                   mean {sum(gpas) / n:.2f}, min {min(gpas):.2f}, max {max(gpas):.2f}",
         "",
+        "Course:", dist(Counter(m["course"] for m in meta), n), "",
         "Target role:", dist(Counter(p["target_role"] for p in profiles), n), "",
         "Archetype:", dist(Counter(m["archetype"] for m in meta), n), "",
         "Year of study:", dist(Counter(f"Year {p['year_of_study']}" for p in profiles), n), "",
@@ -831,6 +1019,9 @@ def main():
               users, profiles, skills, projects, certs, args.n, args.seed)
     write_summary(os.path.join(OUT_DIR, "summary_stats.txt"),
                   users, profiles, skills, projects, certs, meta, args.n, args.seed)
+    # read by backend/start_backend.bat to tell whether the local data is current
+    with open(os.path.join(OUT_DIR, "DATA_VERSION"), "w", encoding="utf-8", newline="\r\n") as f:
+        f.write(SYNTHETIC_DATA_VERSION + "\n")
 
     print(f"Generated {args.n} students, {len(skills)} skill rows, {len(projects)} projects, "
           f"{len(certs)} certifications -> {OUT_DIR}")

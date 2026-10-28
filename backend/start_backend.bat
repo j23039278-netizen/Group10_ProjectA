@@ -99,11 +99,11 @@ psql -d seagas_db -q -v ON_ERROR_STOP=1 -o NUL -f "..\database\seed_recommendati
 if errorlevel 1 goto :fail
 for /f "usebackq delims=" %%i in (`psql -d seagas_db -tAc "SELECT count(*) FROM recommendations_library"`) do echo       recommendations_library: %%i resources
 
-REM Business skills, the skills of the 4 Business roles and their learning resources.
-echo [2e/4] Loading Business skills, roles and resources ...
+REM Learning resources for the Business skills, and which courses see each skill.
+echo [2e/4] Loading Business learning resources ...
 psql -d seagas_db -q -v ON_ERROR_STOP=1 -o NUL -f "..\database\seed_business_skills.sql"
 if errorlevel 1 goto :fail
-for /f "usebackq delims=" %%i in (`psql -d seagas_db -tAc "SELECT count(*) FROM job_role_skills jrs JOIN job_roles jr USING (role_id) WHERE 'BUSINESS' = ANY(jr.courses)"`) do echo       Business role skills: %%i
+for /f "usebackq delims=" %%i in (`psql -d seagas_db -tAc "SELECT count(*) FROM recommendations_library r JOIN skills_library sl USING (skill_id) WHERE sl.source = 'v3'"`) do echo       Business learning resources: %%i
 
 echo [3/4] Checking synthetic students ...
 set "SYN=0"
@@ -113,6 +113,19 @@ set "DUPNAMES=0"
 for /f "usebackq delims=" %%i in (`psql -d seagas_db -tAc "SELECT count(*) - count(DISTINCT full_name) FROM users WHERE email LIKE '%%@synthetic.example.com'"`) do set "DUPNAMES=%%i"
 if not "%DUPNAMES%"=="0" (
     echo       old synthetic data found ^(%DUPNAMES% repeated names^), replacing it ...
+    psql -d seagas_db -q -v ON_ERROR_STOP=1 -f "..\data\delete_synthetic_data.sql"
+    if errorlevel 1 goto :fail
+    set "SYN=0"
+)
+REM Data from an older generator run (e.g. before the Business students): replace it.
+REM ..\data\output\DATA_VERSION is written by data\generate_synthetic_data.py;
+REM .synthetic_data_version (not in git) is the version this machine loaded.
+set "DATA_VER="
+if exist "..\data\output\DATA_VERSION" set /p DATA_VER=<"..\data\output\DATA_VERSION"
+set "LOADED_VER=none"
+if exist ".synthetic_data_version" set /p LOADED_VER=<".synthetic_data_version"
+if defined DATA_VER if not "%SYN%"=="0" if not "%DATA_VER%"=="%LOADED_VER%" (
+    echo       synthetic data changed ^(%LOADED_VER% -^> %DATA_VER%^), replacing it ...
     psql -d seagas_db -q -v ON_ERROR_STOP=1 -f "..\data\delete_synthetic_data.sql"
     if errorlevel 1 goto :fail
     set "SYN=0"
@@ -127,6 +140,7 @@ if "%SYN%"=="0" (
 ) else (
     echo       %SYN% synthetic students already loaded
 )
+if defined DATA_VER (>".synthetic_data_version" echo %DATA_VER%)
 for /f "usebackq delims=" %%i in (`psql -d seagas_db -tAc "SELECT count(*) FROM users"`) do echo       users in database: %%i
 
 echo [4/4] Installing Python packages ...

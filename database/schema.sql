@@ -772,8 +772,11 @@ WHERE u.user_id = sp.user_id
 
 -- ── Roles per course, Business roles, GPA + CGPA (27 October) ──
 -- job_roles.courses: which courses' students may choose the role as target role.
--- CS: all 6 IT roles; ICT: 4 of them; Business: the Business roles below (their
--- skills and resources are in seed_business_skills.sql).
+-- CS: all 6 IT roles; ICT: 4 of them; Business: the Business roles below. Like the
+-- IT roles they are source = 'seed': their skills come from
+-- database/seed_job_role_skills.sql (since 28 October), so they are the same in
+-- every database and admins can only switch them on or off. Their learning
+-- resources are in database/seed_business_skills.sql.
 -- Safe to run more than once.
 ALTER TABLE job_roles ADD COLUMN IF NOT EXISTS courses VARCHAR(10)[] NOT NULL DEFAULT ARRAY['CS']::VARCHAR(10)[];
 DO $$
@@ -796,6 +799,10 @@ INSERT INTO job_roles (role_name, role_code, description, industry_level, source
 ('Financial Analyst',  'FINANCIAL_ANALYST', 'Prepares financial reports, budgets and forecasts to support business decisions.',       'junior', 'seed',  ARRAY['BUSINESS']::VARCHAR(10)[]),
 ('HR Executive',       'HR_EXEC',           'Supports recruitment, employee relations, training and other human-resources work.',    'junior', 'seed',  ARRAY['BUSINESS']::VARCHAR(10)[])
 ON CONFLICT (role_code) DO NOTHING;
+-- Databases migrated on 27 October added them as source = 'admin'
+UPDATE job_roles SET source = 'seed'
+WHERE role_code IN ('BUSINESS_ANALYST', 'MARKETING_EXEC', 'FINANCIAL_ANALYST', 'HR_EXEC')
+  AND source <> 'seed';
 
 -- Synthetic students: a target role allowed for their course. ICT students who
 -- aimed at a CS-only role get the closest ICT role; Business students get a
@@ -965,28 +972,18 @@ INSERT INTO programmes (programme_name, course, sort_order) VALUES
 ('Bachelor of Information and Communication Technology (Network Security)',   'ICT',      3),
 ('Bachelor of Information and Communication Technology (Cloud and Networking)', 'ICT',    4),
 ('Bachelor of Business (Business Analytics)',                                 'BUSINESS', 1),
-('Bachelor of Business (Marketing)',                                          'BUSINESS', 2),
-('Bachelor of Business (Finance)',                                            'BUSINESS', 3),
-('Bachelor of Business (Human Resource Management)',                          'BUSINESS', 4)
+('Bachelor of Business (Information Systems)',                                'BUSINESS', 2),
+('Bachelor of Business (Marketing)',                                          'BUSINESS', 3),
+('Bachelor of Business (Digital Marketing)',                                  'BUSINESS', 4),
+('Bachelor of Business (Finance)',                                            'BUSINESS', 5),
+('Bachelor of Business (Accounting)',                                         'BUSINESS', 6),
+('Bachelor of Business (Human Resource Management)',                          'BUSINESS', 7)
 ON CONFLICT (programme_name) DO UPDATE SET course = EXCLUDED.course, sort_order = EXCLUDED.sort_order;
 
 ALTER TABLE student_intake_rows ADD COLUMN IF NOT EXISTS programme VARCHAR(150);
 
--- Synthetic Business students: the programme that fits their Business target role
-UPDATE student_profiles sp SET programme = CASE sp.target_role
-        WHEN 'Business Analyst'    THEN 'Bachelor of Business (Business Analytics)'
-        WHEN 'Marketing Executive' THEN 'Bachelor of Business (Marketing)'
-        WHEN 'Financial Analyst'   THEN 'Bachelor of Business (Finance)'
-        ELSE 'Bachelor of Business (Human Resource Management)' END,
-    updated_at = CURRENT_TIMESTAMP
-FROM users u
-WHERE u.user_id = sp.user_id
-  AND u.email LIKE '%@synthetic.example.com' AND u.course = 'BUSINESS'
-  AND sp.programme IS DISTINCT FROM CASE sp.target_role
-        WHEN 'Business Analyst'    THEN 'Bachelor of Business (Business Analytics)'
-        WHEN 'Marketing Executive' THEN 'Bachelor of Business (Marketing)'
-        WHEN 'Financial Analyst'   THEN 'Bachelor of Business (Finance)'
-        ELSE 'Bachelor of Business (Human Resource Management)' END;
+-- Synthetic Business students get their programme from the generator
+-- (data/generate_synthetic_data.py, by Business role).
 
 -- skills_library.courses: whose students see the skill when adding their skills.
 -- Set for the seed skills in seed_business_skills.sql (IT skills: CS + ICT;

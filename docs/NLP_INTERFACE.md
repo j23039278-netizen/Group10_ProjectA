@@ -348,7 +348,7 @@ add the matched skill:
 ## 7. Skill catalogue helpers
 
 ```python
-cat = load_catalogue()            # default taxonomy, cached (138 skills)
+cat = load_catalogue()            # default taxonomy, cached (166 skills)
 cat = load_catalogue(rows)        # DB rows -> real UUIDs, not cached
 
 cat.get("power bi")               # entry for a canonical name, or None

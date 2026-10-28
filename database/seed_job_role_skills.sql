@@ -2,8 +2,8 @@
 -- SEAGAS — Seed data: skills per job role (job_role_skills)
 -- Author: Ng Yong Hin
 --
--- Maps each of the 6 job_roles to skills in skills_library, with an
--- importance level:
+-- Maps each of the 10 job_roles (6 IT, 4 Business) to skills in
+-- skills_library, with an importance level:
 --   required  = core skill for an entry/junior hire in this role
 --   preferred = commonly asked for, strengthens the application
 --   bonus     = nice to have
@@ -19,6 +19,8 @@
 --
 -- v2 (Sprint 2): uses the skills library v2 (data/skills/skills_library.csv).
 -- Each role has ~8-10 required, 6-10 preferred and 4-8 bonus skills.
+-- v3 (Sprint 3): the 4 Business roles (9 required, 8 preferred, 6 bonus each),
+-- using the Business skills added to the library in v3.
 -- These lists are also read by data/generate_synthetic_data.py
 -- (required -> core, preferred + bonus -> secondary), so keep the
 -- one-row-per-line ('ROLE', 'Skill', 'importance') format.
@@ -200,7 +202,111 @@ INSERT INTO seed_role_skills (role_code, skill_name, importance) VALUES
     ('WEB_DEV',         'MongoDB',                         'bonus'),
     ('WEB_DEV',         'GraphQL',                         'bonus'),
     ('WEB_DEV',         'Docker',                          'bonus'),
-    ('WEB_DEV',         'Figma',                           'bonus');
+    ('WEB_DEV',         'Figma',                           'bonus'),
+    -- ── Business roles (v3, Sprint 3) ─────────────────────
+    -- The roles themselves are added by migrate_existing_db.sql (27 Oct).
+    -- Draft templates from expert judgement; to be checked against
+    -- Business JDs (data/jd_dataset) like the IT roles.
+
+    -- ── Business Analyst ──────────────────────────────────
+    ('BUSINESS_ANALYST', 'Business Analysis',               'required'),
+    ('BUSINESS_ANALYST', 'Requirements Analysis',           'required'),
+    ('BUSINESS_ANALYST', 'Process Mapping',                 'required'),
+    ('BUSINESS_ANALYST', 'Data Analysis',                   'required'),
+    ('BUSINESS_ANALYST', 'Excel',                           'required'),
+    ('BUSINESS_ANALYST', 'SQL',                             'required'),
+    ('BUSINESS_ANALYST', 'Stakeholder Communication',       'required'),
+    ('BUSINESS_ANALYST', 'Documentation',                   'required'),
+    ('BUSINESS_ANALYST', 'Problem Solving',                 'required'),
+    ('BUSINESS_ANALYST', 'Power BI',                        'preferred'),
+    ('BUSINESS_ANALYST', 'Data Visualisation',              'preferred'),
+    ('BUSINESS_ANALYST', 'User Acceptance Testing',         'preferred'),
+    ('BUSINESS_ANALYST', 'Agile / Scrum',                   'preferred'),
+    ('BUSINESS_ANALYST', 'Business Process Improvement',    'preferred'),
+    ('BUSINESS_ANALYST', 'Project Management',              'preferred'),
+    ('BUSINESS_ANALYST', 'Critical Thinking',               'preferred'),
+    ('BUSINESS_ANALYST', 'Presentation Skills',             'preferred'),
+    ('BUSINESS_ANALYST', 'Tableau',                         'bonus'),
+    ('BUSINESS_ANALYST', 'CRM Software',                    'bonus'),
+    ('BUSINESS_ANALYST', 'Statistical Analysis',            'bonus'),
+    ('BUSINESS_ANALYST', 'Python',                          'bonus'),
+    ('BUSINESS_ANALYST', 'Financial Analysis',              'bonus'),
+    ('BUSINESS_ANALYST', 'Decision Making',                 'bonus'),
+
+    -- ── Marketing Executive ───────────────────────────────
+    ('MARKETING_EXEC',  'Digital Marketing',               'required'),
+    ('MARKETING_EXEC',  'Social Media Marketing',          'required'),
+    ('MARKETING_EXEC',  'Content Marketing',               'required'),
+    ('MARKETING_EXEC',  'Market Research',                 'required'),
+    ('MARKETING_EXEC',  'Search Engine Optimisation',      'required'),
+    ('MARKETING_EXEC',  'Google Analytics',                'required'),
+    ('MARKETING_EXEC',  'Communication',                   'required'),
+    ('MARKETING_EXEC',  'Creativity',                      'required'),
+    ('MARKETING_EXEC',  'Presentation Skills',             'required'),
+    ('MARKETING_EXEC',  'Search Engine Marketing',         'preferred'),
+    ('MARKETING_EXEC',  'Email Marketing',                 'preferred'),
+    ('MARKETING_EXEC',  'Brand Management',                'preferred'),
+    ('MARKETING_EXEC',  'CRM Software',                    'preferred'),
+    ('MARKETING_EXEC',  'Data Analysis',                   'preferred'),
+    ('MARKETING_EXEC',  'Excel',                           'preferred'),
+    ('MARKETING_EXEC',  'A/B Testing',                     'preferred'),
+    ('MARKETING_EXEC',  'Project Management',              'preferred'),
+    ('MARKETING_EXEC',  'Customer Focus',                  'bonus'),
+    ('MARKETING_EXEC',  'Data Visualisation',              'bonus'),
+    ('MARKETING_EXEC',  'Looker',                          'bonus'),
+    ('MARKETING_EXEC',  'Figma',                           'bonus'),
+    ('MARKETING_EXEC',  'Negotiation',                     'bonus'),
+    ('MARKETING_EXEC',  'Teamwork',                        'bonus'),
+
+    -- ── Financial Analyst ─────────────────────────────────
+    ('FINANCIAL_ANALYST', 'Financial Analysis',              'required'),
+    ('FINANCIAL_ANALYST', 'Financial Modelling',             'required'),
+    ('FINANCIAL_ANALYST', 'Budgeting & Forecasting',         'required'),
+    ('FINANCIAL_ANALYST', 'Financial Reporting',             'required'),
+    ('FINANCIAL_ANALYST', 'Accounting',                      'required'),
+    ('FINANCIAL_ANALYST', 'Excel',                           'required'),
+    ('FINANCIAL_ANALYST', 'Data Analysis',                   'required'),
+    ('FINANCIAL_ANALYST', 'Critical Thinking',               'required'),
+    ('FINANCIAL_ANALYST', 'Attention to Detail',             'required'),
+    ('FINANCIAL_ANALYST', 'Accounting Software',             'preferred'),
+    ('FINANCIAL_ANALYST', 'Power BI',                        'preferred'),
+    ('FINANCIAL_ANALYST', 'Risk Analysis',                   'preferred'),
+    ('FINANCIAL_ANALYST', 'Taxation',                        'preferred'),
+    ('FINANCIAL_ANALYST', 'Statistical Analysis',            'preferred'),
+    ('FINANCIAL_ANALYST', 'Decision Making',                 'preferred'),
+    ('FINANCIAL_ANALYST', 'Presentation Skills',             'preferred'),
+    ('FINANCIAL_ANALYST', 'Stakeholder Communication',       'preferred'),
+    ('FINANCIAL_ANALYST', 'SQL',                             'bonus'),
+    ('FINANCIAL_ANALYST', 'Python',                          'bonus'),
+    ('FINANCIAL_ANALYST', 'Auditing',                        'bonus'),
+    ('FINANCIAL_ANALYST', 'Tableau',                         'bonus'),
+    ('FINANCIAL_ANALYST', 'Data Visualisation',              'bonus'),
+    ('FINANCIAL_ANALYST', 'Time Management',                 'bonus'),
+
+    -- ── HR Executive ──────────────────────────────────────
+    ('HR_EXEC',         'Recruitment',                     'required'),
+    ('HR_EXEC',         'Employee Relations',              'required'),
+    ('HR_EXEC',         'Employment Law',                  'required'),
+    ('HR_EXEC',         'Payroll',                         'required'),
+    ('HR_EXEC',         'HRIS',                            'required'),
+    ('HR_EXEC',         'Communication',                   'required'),
+    ('HR_EXEC',         'Interpersonal Skills',            'required'),
+    ('HR_EXEC',         'Attention to Detail',             'required'),
+    ('HR_EXEC',         'Time Management',                 'required'),
+    ('HR_EXEC',         'Training & Development',          'preferred'),
+    ('HR_EXEC',         'Performance Management',          'preferred'),
+    ('HR_EXEC',         'Excel',                           'preferred'),
+    ('HR_EXEC',         'Negotiation',                     'preferred'),
+    ('HR_EXEC',         'Problem Solving',                 'preferred'),
+    ('HR_EXEC',         'Documentation',                   'preferred'),
+    ('HR_EXEC',         'Teamwork',                        'preferred'),
+    ('HR_EXEC',         'Customer Focus',                  'preferred'),
+    ('HR_EXEC',         'Project Management',              'bonus'),
+    ('HR_EXEC',         'Data Analysis',                   'bonus'),
+    ('HR_EXEC',         'Power BI',                        'bonus'),
+    ('HR_EXEC',         'Presentation Skills',             'bonus'),
+    ('HR_EXEC',         'Leadership',                      'bonus'),
+    ('HR_EXEC',         'Adaptability',                    'bonus');
 
 -- Fail loudly if any role_code or skill_name is misspelled or missing,
 -- instead of silently skipping that row.

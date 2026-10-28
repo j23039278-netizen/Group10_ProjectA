@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-09-29 22:18",
+  "generated_at": "2026-10-28 18:35",
   "source": "data/skills/skills_library.csv",
-  "skill_count": 138,
+  "skill_count": 166,
   "skills": [
     {
       "skill_name": "Python",
@@ -1188,8 +1188,6 @@
       "category": "Analytical",
       "subcategory": "Analytical",
       "aliases": [
-        "Financial modelling",
-        "Budgeting",
         "Cost analysis"
       ],
       "ambiguous_aliases": [],
@@ -1797,6 +1795,411 @@
       "ambiguous_aliases": [],
       "description": "Understanding and prioritising the needs of customers and users.",
       "source": "v2"
+    },
+    {
+      "skill_name": "Digital Marketing",
+      "category": "Technical",
+      "subcategory": "Marketing",
+      "aliases": [
+        "Online marketing",
+        "Internet marketing",
+        "Performance marketing",
+        "Digital campaigns"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Planning, running and measuring marketing campaigns through online channels.",
+      "source": "v3"
+    },
+    {
+      "skill_name": "Social Media Marketing",
+      "category": "Technical",
+      "subcategory": "Marketing",
+      "aliases": [
+        "Social media management",
+        "Social media campaigns",
+        "Instagram marketing",
+        "TikTok marketing",
+        "Facebook marketing",
+        "Meta Ads"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Growing an audience and running campaigns on social media platforms.",
+      "source": "v3"
+    },
+    {
+      "skill_name": "Search Engine Optimisation",
+      "category": "Technical",
+      "subcategory": "Marketing",
+      "aliases": [
+        "SEO",
+        "On-page SEO",
+        "Off-page SEO",
+        "Keyword research"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Improving how websites rank in organic search results.",
+      "source": "v3"
+    },
+    {
+      "skill_name": "Search Engine Marketing",
+      "category": "Technical",
+      "subcategory": "Marketing",
+      "aliases": [
+        "Google Ads",
+        "Pay-per-click",
+        "PPC advertising",
+        "Paid search"
+      ],
+      "ambiguous_aliases": [
+        "SEM"
+      ],
+      "description": "Buying and optimising paid search advertising.",
+      "source": "v3"
+    },
+    {
+      "skill_name": "Content Marketing",
+      "category": "Technical",
+      "subcategory": "Marketing",
+      "aliases": [
+        "Content creation",
+        "Copywriting",
+        "Content writing",
+        "Content strategy"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Planning and writing content that attracts and engages customers.",
+      "source": "v3"
+    },
+    {
+      "skill_name": "Email Marketing",
+      "category": "Technical",
+      "subcategory": "Marketing",
+      "aliases": [
+        "Email campaigns",
+        "Mailchimp",
+        "Newsletter marketing",
+        "Marketing automation"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Designing, sending and measuring email campaigns.",
+      "source": "v3"
+    },
+    {
+      "skill_name": "Brand Management",
+      "category": "Technical",
+      "subcategory": "Marketing",
+      "aliases": [
+        "Branding",
+        "Brand strategy",
+        "Brand development",
+        "Brand guidelines"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Building and protecting a brand's identity, voice and reputation.",
+      "source": "v3"
+    },
+    {
+      "skill_name": "Market Research",
+      "category": "Analytical",
+      "subcategory": "Marketing",
+      "aliases": [
+        "Market analysis",
+        "Consumer research",
+        "Competitor analysis",
+        "Customer insights",
+        "Market surveys"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Collecting and analysing data about markets, customers and competitors.",
+      "source": "v3"
+    },
+    {
+      "skill_name": "Accounting",
+      "category": "Technical",
+      "subcategory": "Finance & Accounting",
+      "aliases": [
+        "Bookkeeping",
+        "Financial accounting",
+        "Double-entry bookkeeping",
+        "Accounts payable",
+        "Accounts receivable",
+        "Full set of accounts"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Recording, classifying and reconciling financial transactions.",
+      "source": "v3"
+    },
+    {
+      "skill_name": "Financial Reporting",
+      "category": "Technical",
+      "subcategory": "Finance & Accounting",
+      "aliases": [
+        "Financial statements",
+        "MFRS",
+        "IFRS",
+        "Month-end closing"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Preparing financial statements and reports under accounting standards such as MFRS.",
+      "source": "v3"
+    },
+    {
+      "skill_name": "Taxation",
+      "category": "Technical",
+      "subcategory": "Finance & Accounting",
+      "aliases": [
+        "Tax compliance",
+        "Corporate tax",
+        "Income tax",
+        "Tax filing",
+        "Sales and Service Tax"
+      ],
+      "ambiguous_aliases": [
+        "SST"
+      ],
+      "description": "Preparing tax computations and meeting tax filing obligations.",
+      "source": "v3"
+    },
+    {
+      "skill_name": "Auditing",
+      "category": "Technical",
+      "subcategory": "Finance & Accounting",
+      "aliases": [
+        "Internal audit",
+        "External audit",
+        "Statutory audit",
+        "Audit procedures"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Examining financial records and controls for accuracy and compliance.",
+      "source": "v3"
+    },
+    {
+      "skill_name": "Financial Modelling",
+      "category": "Analytical",
+      "subcategory": "Finance & Accounting",
+      "aliases": [
+        "Financial modeling",
+        "Financial models",
+        "DCF valuation",
+        "Valuation modelling"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Building spreadsheet models of a business's financial performance.",
+      "source": "v3"
+    },
+    {
+      "skill_name": "Budgeting & Forecasting",
+      "category": "Analytical",
+      "subcategory": "Finance & Accounting",
+      "aliases": [
+        "Budgeting",
+        "Financial forecasting",
+        "Budget planning",
+        "Variance analysis"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Planning budgets, forecasting results and explaining variances.",
+      "source": "v3"
+    },
+    {
+      "skill_name": "Recruitment",
+      "category": "Technical",
+      "subcategory": "Human Resources",
+      "aliases": [
+        "Talent acquisition",
+        "Recruitment and selection",
+        "Candidate sourcing",
+        "Candidate screening",
+        "Recruiting"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Sourcing, screening and selecting candidates for open positions.",
+      "source": "v3"
+    },
+    {
+      "skill_name": "Employee Relations",
+      "category": "Technical",
+      "subcategory": "Human Resources",
+      "aliases": [
+        "Industrial relations",
+        "Staff relations",
+        "Grievance handling",
+        "Disciplinary procedures"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Managing the relationship between an organisation and its employees, including grievances.",
+      "source": "v3"
+    },
+    {
+      "skill_name": "Employment Law",
+      "category": "Technical",
+      "subcategory": "Human Resources",
+      "aliases": [
+        "Employment Act",
+        "Employment Act 1955",
+        "Labour law",
+        "Employment legislation"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Applying labour laws such as Malaysia's Employment Act 1955 to HR practice.",
+      "source": "v3"
+    },
+    {
+      "skill_name": "Payroll",
+      "category": "Technical",
+      "subcategory": "Human Resources",
+      "aliases": [
+        "Payroll processing",
+        "Payroll administration",
+        "Statutory contributions"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Calculating salaries, deductions and statutory contributions such as EPF and SOCSO.",
+      "source": "v3"
+    },
+    {
+      "skill_name": "HRIS",
+      "category": "Technical",
+      "subcategory": "Human Resources",
+      "aliases": [
+        "HR information system",
+        "Human resource information system",
+        "HR system",
+        "Workday",
+        "SAP SuccessFactors",
+        "BambooHR"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Using HR information systems to manage employee records and HR processes.",
+      "source": "v3"
+    },
+    {
+      "skill_name": "Training & Development",
+      "category": "Technical",
+      "subcategory": "Human Resources",
+      "aliases": [
+        "Learning and development",
+        "L&D",
+        "Employee training",
+        "Training needs analysis"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Identifying training needs and organising learning for employees.",
+      "source": "v3"
+    },
+    {
+      "skill_name": "Performance Management",
+      "category": "Technical",
+      "subcategory": "Human Resources",
+      "aliases": [
+        "Performance appraisal",
+        "Performance reviews",
+        "KPI management",
+        "Appraisal process"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Setting goals, reviewing performance and supporting employee improvement.",
+      "source": "v3"
+    },
+    {
+      "skill_name": "Process Mapping",
+      "category": "Analytical",
+      "subcategory": "Business Process",
+      "aliases": [
+        "BPMN",
+        "Process modelling",
+        "Business process modelling",
+        "Flowcharting",
+        "Process flow diagrams"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Drawing how a business process works, step by step, to analyse or improve it.",
+      "source": "v3"
+    },
+    {
+      "skill_name": "Business Process Improvement",
+      "category": "Analytical",
+      "subcategory": "Business Process",
+      "aliases": [
+        "Process improvement",
+        "Six Sigma",
+        "Lean Six Sigma"
+      ],
+      "ambiguous_aliases": [
+        "Lean"
+      ],
+      "description": "Finding and removing waste or delays in business processes.",
+      "source": "v3"
+    },
+    {
+      "skill_name": "User Acceptance Testing",
+      "category": "Technical",
+      "subcategory": "Business Process",
+      "aliases": [
+        "UAT",
+        "Acceptance testing"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Checking with business users that a system meets their requirements before release.",
+      "source": "v3"
+    },
+    {
+      "skill_name": "CRM Software",
+      "category": "Technical",
+      "subcategory": "Business Software",
+      "aliases": [
+        "CRM",
+        "Salesforce",
+        "HubSpot",
+        "Zoho CRM",
+        "Customer relationship management"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Using customer relationship management systems to track customers and sales.",
+      "source": "v3"
+    },
+    {
+      "skill_name": "Accounting Software",
+      "category": "Technical",
+      "subcategory": "Business Software",
+      "aliases": [
+        "Xero",
+        "QuickBooks",
+        "AutoCount",
+        "MYOB",
+        "SAP FICO",
+        "Accounting system"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Using accounting systems to record transactions and produce reports.",
+      "source": "v3"
+    },
+    {
+      "skill_name": "Negotiation",
+      "category": "Soft",
+      "subcategory": "Soft",
+      "aliases": [
+        "Negotiation skills",
+        "Negotiating",
+        "Vendor negotiation"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Reaching agreements that work for both sides.",
+      "source": "v3"
+    },
+    {
+      "skill_name": "Creativity",
+      "category": "Soft",
+      "subcategory": "Soft",
+      "aliases": [
+        "Creative thinking",
+        "Innovative thinking",
+        "Ideation"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Coming up with original ideas and new ways to solve problems.",
+      "source": "v3"
     }
   ]
 }

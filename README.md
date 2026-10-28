@@ -148,10 +148,10 @@ synthetic students are split evenly). Advisor and admin student lists, and the a
 and skill-gap charts, can be filtered by course. The course decides which target roles a student
 can choose: Computer Science all 6 IT roles, ICT 4 of them (Web Developer, Data Analyst, Cloud
 Engineer, Cybersecurity Analyst), Business the Business roles (Business Analyst, Marketing
-Executive, Financial Analyst, HR Executive). The Business skills (finance, marketing, HR and
-business analysis; stored as Technical skills with the area in the subcategory), the skills of the
-Business roles and their learning resources are in `database/seed_business_skills.sql`; ICT roles
-share the IT skills and resources with Computer Science. Students only see the skills of their
+Executive, Financial Analyst, HR Executive). The 28 Business skills (source v3) are in the skills
+library (`data/skills/skills_library.csv`) and the Business role templates in
+`database/seed_job_role_skills.sql`; their learning resources are in
+`database/seed_business_skills.sql`. ICT roles share the IT skills and resources with Computer Science. Students only see the skills of their
 course when adding skills (soft skills and shared tools such as Excel and Power BI are in every
 list). Every student also has a programme (major) of their course, given in the new-student list
 with the course; students cannot change it, admins can in User Management. Admins set a role's courses when adding or editing it. Students enter both

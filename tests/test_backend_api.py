@@ -858,19 +858,48 @@ class TestRolesByCourse:
         assert it | {"Software Developer", "Data Scientist"} <= names("CS")
         assert names("ICT") == it
         assert names("BUSINESS") == biz
-        # Business roles have their skills (seed_business_skills.sql)
-        assert all(r["skill_count"] >= 20 for r in c.get("/api/jobs/roles?course=BUSINESS").json())
+        # Business role templates (seed_job_role_skills.sql v3): 9 required + 8 preferred + 6 bonus
+        assert all(r["skill_count"] == 23 for r in c.get("/api/jobs/roles?course=BUSINESS").json())
 
-    def test_business_student_assessment_and_resources(self, env):
+    def test_business_student_assessed_against_business_role(self, env):
+        c, conn = env["client"], env["conn"]
+        farah = course_student(env, "farah@student.newinti.edu.my", "Farah", "BUSINESS")
+        sid = lambda name: conn.execute("SELECT skill_id::text FROM skills_library WHERE skill_name = %s",
+                                        (name,)).fetchone()[0]
+        for skill, level in (("Recruitment", "advanced"), ("Payroll", "beginner")):
+            assert c.post("/api/students/skills", headers=farah,
+                          json={"skill_id": sid(skill), "proficiency_level": level}).status_code == 201
+        assert c.put("/api/students/profile", headers=farah, json={"target_role": "HR Executive"}).status_code == 200
+        hr = conn.execute("SELECT role_id::text FROM job_roles WHERE role_code = 'HR_EXEC'").fetchone()[0]
+        r = run(env, farah, role_id=hr)
+        assert r.status_code == 201, r.text
+        status = {m["skill_name"]: m["match_status"] for m in r.json()["match_results"]}
+        assert len(status) == 23
+        assert (status["Recruitment"], status["Payroll"], status["Employment Law"]) == ("strong", "developing", "gap")
+
+    def test_business_roles_are_seed_managed(self, env, admin):
+        """Their skills come from seed_job_role_skills.sql, so admins can only switch them on or off"""
+        c, conn = env["client"], env["conn"]
+        rows = conn.execute("SELECT role_id::text, source FROM job_roles WHERE role_code IN "
+                            "('BUSINESS_ANALYST', 'MARKETING_EXEC', 'FINANCIAL_ANALYST', 'HR_EXEC')").fetchall()
+        assert len(rows) == 4 and {s for _, s in rows} == {"seed"}
+        rid = rows[0][0]
+        assert c.put(f"/api/admin/roles/{rid}/skills", headers=admin, json=[]).status_code == 400
+        assert c.patch(f"/api/admin/roles/{rid}", headers=admin, json={"description": "x"}).status_code == 400
+        assert c.patch(f"/api/admin/roles/{rid}", headers=admin, json={"is_active": False}).status_code == 200
+        assert c.patch(f"/api/admin/roles/{rid}", headers=admin, json={"is_active": True}).status_code == 200
+
+    def test_business_recommendations(self, env):
+        """Business gaps get Business learning resources (seed_business_skills.sql)"""
         c, conn = env["client"], env["conn"]
         h = course_student(env, "fiona@student.newinti.edu.my", "Fiona", "BUSINESS")
         assert c.put("/api/students/profile", headers=h, json={"target_role": "Financial Analyst"}).status_code == 200
-        for skill in ("Excel", "Accounting Principles"):
+        for skill in ("Excel", "Accounting"):
             sid = conn.execute("SELECT skill_id::text FROM skills_library WHERE skill_name = %s", (skill,)).fetchone()[0]
             assert c.post("/api/students/skills", headers=h, json={"skill_id": sid}).status_code == 201
         fa = conn.execute("SELECT role_id::text FROM job_roles WHERE role_code = 'FINANCIAL_ANALYST'").fetchone()[0]
         r = run(env, h, role_id=fa)
-        assert r.status_code == 201 or r.status_code == 200, r.text
+        assert r.status_code == 201, r.text
         result = r.json()
         names = {m["skill_name"]: m["match_status"] for m in result["match_results"]}
         assert names["Excel"] != "gap" and names["Financial Modelling"] == "gap"
@@ -1123,10 +1152,10 @@ class TestSkillsAndProgrammes:
         cs = course_student(env, "hari@student.newinti.edu.my", "Hari", "CS")
         names = lambda h: {s["skill_name"] for s in c.get("/api/students/skills-library", headers=h).json()}
         biz_skills, cs_skills = names(biz), names(cs)
-        assert {"Financial Modelling", "Payroll Administration", "Excel", "Power BI", "Communication"} <= biz_skills
+        assert {"Financial Modelling", "Payroll", "Excel", "Power BI", "Communication"} <= biz_skills
         assert not {"Docker", "Kubernetes", "React", "Metasploit"} & biz_skills          # IT-only skills
         assert {"Docker", "React", "Excel", "Communication", "Negotiation"} <= cs_skills
-        assert not {"Financial Modelling", "Payroll Administration"} & cs_skills          # Business-only skills
+        assert not {"Financial Modelling", "Payroll"} & cs_skills          # Business-only skills
         docker = conn.execute("SELECT skill_id::text FROM skills_library WHERE skill_name = 'Docker'").fetchone()[0]
         r = c.post("/api/students/skills", headers=biz, json={"skill_id": docker})
         assert r.status_code == 400 and "course" in r.json()["detail"]
@@ -1134,7 +1163,7 @@ class TestSkillsAndProgrammes:
     def test_programmes_and_admin_change(self, env, admin, advisor):
         c, conn = env["client"], env["conn"]
         biz = c.get("/api/students/programmes?course=business", headers=advisor).json()
-        assert [p["programme_name"] for p in biz][:2] == ["Bachelor of Business (Business Analytics)", "Bachelor of Business (Marketing)"]
+        assert [p["programme_name"] for p in biz][:3] == ["Bachelor of Business (Business Analytics)", "Bachelor of Business (Information Systems)", "Bachelor of Business (Marketing)"]
         assert {p["course"] for p in c.get("/api/students/programmes", headers=advisor).json()} == {"CS", "BUSINESS", "ICT"}
         uid = conn.execute("SELECT user_id::text FROM users WHERE email = 'gina@student.newinti.edu.my'").fetchone()[0]
         patch = lambda body, u=uid: c.patch(f"/api/admin/users/{u}", headers=admin, json=body)
