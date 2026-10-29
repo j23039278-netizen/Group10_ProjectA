@@ -52,6 +52,9 @@ ROLES = {"DATA_ANALYST": "Data Analyst", "DATA_SCIENTIST": "Data Scientist",
 # Chosen from method_disagreements.csv by reading the JD context. found_by is
 # the method that found the skill (the other one did not). The script checks
 # that each example still occurs, so the table cannot drift from the outputs.
+# The examples fixed on 2026-10-29 (A/B Testing, Google Analytics, R, MySQL,
+# UI/UX Design, Firewall Management, Time Management, Self-Motivation, Monitoring
+# & Observability) no longer occur: see results/fixes_2026-10_before_after.md.
 KEYWORD_MISS = "Likely keyword miss (synonym / paraphrase)"
 SEMANTIC_FP = "Likely semantic false positive"
 AMBIGUOUS = "Ambiguous-term issue"
@@ -61,33 +64,15 @@ REVIEWED = [
      "note": "Paraphrase; no alias covers 'develop dashboards' (8 JDs have such a semantic-only hit)."},
     {"jd_ref": "JD-DA-0004", "skill_name": "Teamwork", "found_by": "semantic", "category": KEYWORD_MISS,
      "note": "Paraphrase; aliases are 'Collaboration', 'Team player', 'Cooperative work' (11 JDs)."},
-    {"jd_ref": "JD-DA-0005", "skill_name": "Time Management", "found_by": "semantic", "category": KEYWORD_MISS,
-     "note": "The alias is 'Meeting deadlines'; keyword matching does not lemmatise 'meet'."},
     {"jd_ref": "JD-CY-0005", "skill_name": "Vulnerability Assessment", "found_by": "semantic", "category": KEYWORD_MISS,
      "note": "Paraphrase; 0.868 is the highest semantic-only score."},
-    {"jd_ref": "JD-SD-0001", "skill_name": "A/B Testing", "found_by": "semantic", "category": SEMANTIC_FP,
-     "note": "Generic software testing mapped to the nearest skill; 14 JDs, all at 0.616."},
-    {"jd_ref": "JD-SD-0004", "skill_name": "Google Analytics", "found_by": "semantic", "category": SEMANTIC_FP,
-     "note": "Generic 'analytics' mapped to one product (6 JDs)."},
     {"jd_ref": "JD-DS-0002", "skill_name": "Business Analysis", "found_by": "semantic", "category": SEMANTIC_FP,
      "note": "Hiring boilerplate ('subject to business needs and available headcount')."},
     {"jd_ref": "JD-WD-0010", "skill_name": "Project Management", "found_by": "semantic", "category": SEMANTIC_FP,
      "note": "'Meet customer with Project Manager' names a person, not a requirement."},
-    {"jd_ref": "JD-DS-0007", "skill_name": "Self-Motivation", "found_by": "keyword", "category": AMBIGUOUS,
-     "note": "Alias 'Initiative' also means a project: 9 of the 21 keyword-only hits are 'initiatives'."},
-    {"jd_ref": "JD-CY-0006", "skill_name": "Monitoring & Observability", "found_by": "keyword", "category": AMBIGUOUS,
-     "note": "Alias 'Monitoring' also fires on security-event monitoring (SOC / SIEM work)."},
-    {"jd_ref": "JD-WD-0001", "skill_name": "R", "found_by": "semantic", "category": AMBIGUOUS,
-     "note": "A one-letter skill embeds as 'programming / language', so generic phrases land on R (7 JDs)."},
     {"jd_ref": "JD-CE-0002", "skill_name": "Prompt Engineering", "found_by": "semantic", "category": AMBIGUOUS,
      "note": "'prompt resolution' means quick. Keyword reads 'user experience' in the same phrase as "
              "UI/UX Design; hybrid keeps that and drops this overlapping semantic hit."},
-    {"jd_ref": "JD-SD-0007", "skill_name": "UI/UX Design", "found_by": "semantic", "category": CATALOGUE_GAP,
-     "note": "'UI/UX' is not an alias (aliases: UI design, UX design, User experience, ...)."},
-    {"jd_ref": "JD-CY-0007", "skill_name": "Firewall Management", "found_by": "semantic", "category": CATALOGUE_GAP,
-     "note": "Plain 'firewalls' is not an alias (Firewall config, Network firewall, pfSense); 5 JDs."},
-    {"jd_ref": "JD-WD-0004", "skill_name": "MySQL", "found_by": "semantic", "category": CATALOGUE_GAP,
-     "note": "No generic database skill, so 'database' maps to MySQL (4 JDs); this JD's backend is Supabase."},
 ]
 
 

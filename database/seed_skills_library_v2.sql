@@ -7,7 +7,7 @@
 --     psql -U postgres -d seagas_db -f database/seed_skills_library_v2.sql
 --
 -- Total skills : 166  (AI_Digital 21, Analytical 20, Soft 16, Technical 109)
--- Generated at : 2026-10-28 18:35
+-- Generated at : 2026-10-29 13:17
 --
 -- Run AFTER schema.sql. Idempotent: ON CONFLICT (skill_name) DO UPDATE, so
 -- alias / category / subcategory / description fixes to the 32 v1 skills
@@ -88,7 +88,7 @@ INSERT INTO skills_library (skill_name, category, subcategory, aliases, descript
 ('Nessus', 'Technical', 'Security Tool', ARRAY['Nessus scanner', 'Tenable']::TEXT[], 'Vulnerability scanning tool.', 'v2'),
 ('Kali Linux', 'Technical', 'Security Tool', ARRAY['Kali', 'Kali OS']::TEXT[], 'Linux distribution for penetration testing.', 'v2'),
 ('Snort', 'Technical', 'Security Tool', ARRAY['Snort IDS']::TEXT[], 'Open-source intrusion detection system.', 'v2'),
-('Firewall Management', 'Technical', 'Security Tool', ARRAY['Firewall config', 'Network firewall', 'pfSense']::TEXT[], 'Configuring and managing network firewalls.', 'v2'),
+('Firewall Management', 'Technical', 'Security Tool', ARRAY['Firewall', 'Firewall config', 'Network firewall', 'pfSense']::TEXT[], 'Configuring and managing network firewalls.', 'v2'),
 ('VPN', 'Technical', 'Security Tool', ARRAY['Virtual Private Network', 'OpenVPN', 'VPN setup']::TEXT[], 'Secure encrypted network tunnelling.', 'v2'),
 ('GCP', 'AI_Digital', 'Cloud', ARRAY['Google Cloud', 'Google Cloud Platform', 'BigQuery']::TEXT[], 'Google cloud computing platform.', 'v2'),
 ('MLOps', 'AI_Digital', 'ML/AI', ARRAY['ML Operations', 'Model deployment', 'ML pipeline']::TEXT[], 'Deploying and managing ML models in production.', 'v2'),
@@ -113,13 +113,13 @@ INSERT INTO skills_library (skill_name, category, subcategory, aliases, descript
 ('Risk Analysis', 'Analytical', 'Analytical', ARRAY['Risk assessment', 'Risk management']::TEXT[], 'Identifying and evaluating potential risks.', 'v2'),
 ('Data Modelling', 'Analytical', 'Analytical', ARRAY['ER diagram', 'Database modelling', 'Schema design']::TEXT[], 'Designing data structures and relationships.', 'v2'),
 ('Systems Thinking', 'Analytical', 'Analytical', ARRAY['Systems analysis', 'Holistic thinking']::TEXT[], 'Understanding how components interact in a system.', 'v2'),
-('A/B Testing', 'Analytical', 'Analytical', ARRAY['Split testing', 'Experimentation']::TEXT[], 'Comparing two versions to determine which performs better.', 'v2'),
+('A/B Testing', 'Analytical', 'Analytical', ARRAY['Split testing']::TEXT[], 'Comparing two versions to determine which performs better.', 'v2'),
 ('Financial Analysis', 'Analytical', 'Analytical', ARRAY['Cost analysis']::TEXT[], 'Evaluating financial data to support decisions.', 'v2'),
 ('Adaptability', 'Soft', 'Soft', ARRAY['Agility', 'Adaptable']::TEXT[], 'Adjusting to new conditions and challenges.', 'v2'),
 ('Presentation Skills', 'Soft', 'Soft', ARRAY['Public speaking', 'Presenting', 'Slide presentation']::TEXT[], 'Delivering clear and engaging presentations.', 'v2'),
 ('Project Management', 'Soft', 'Soft', ARRAY['Project planning', 'Project coordination']::TEXT[], 'Planning and executing projects on time.', 'v2'),
 ('Attention to Detail', 'Soft', 'Soft', ARRAY['Detail-oriented', 'Thoroughness']::TEXT[], 'Carefully checking work for accuracy.', 'v2'),
-('Self-Motivation', 'Soft', 'Soft', ARRAY['Self-driven', 'Initiative', 'Proactive']::TEXT[], 'Taking initiative without external prompting.', 'v2'),
+('Self-Motivation', 'Soft', 'Soft', ARRAY['Self-driven', 'Proactive']::TEXT[], 'Taking initiative without external prompting.', 'v2'),
 ('Interpersonal Skills', 'Soft', 'Soft', ARRAY['People skills', 'Relationship building', 'Stakeholder management']::TEXT[], 'Building and maintaining professional relationships.', 'v2'),
 ('Documentation', 'Soft', 'Soft', ARRAY['Technical writing', 'Report writing', 'Technical documentation']::TEXT[], 'Creating clear written records and guides.', 'v2'),
 ('TypeScript', 'Technical', 'Programming Language', ARRAY['TypeScript programming']::TEXT[], 'Typed superset of JavaScript used for large-scale web applications.', 'v2'),
@@ -133,7 +133,7 @@ INSERT INTO skills_library (skill_name, category, subcategory, aliases, descript
 ('Unit Testing', 'Technical', 'Software Engineering', ARRAY['Unit tests', 'Automated testing', 'pytest', 'JUnit', 'Jest', 'Test-driven development', 'TDD']::TEXT[], 'Writing automated tests that verify individual units of code.', 'v2'),
 ('Microservices', 'Technical', 'Software Engineering', ARRAY['Microservice architecture', 'Microservices architecture']::TEXT[], 'Architecting applications as small, independently deployable services.', 'v2'),
 ('Agile / Scrum', 'Soft', 'Soft', ARRAY['Agile', 'Scrum', 'Kanban', 'Sprint planning', 'Agile methodology', 'Scrum methodology']::TEXT[], 'Working in iterative Agile teams using practices such as Scrum and Kanban.', 'v2'),
-('UI/UX Design', 'Technical', 'Design', ARRAY['UI design', 'UX design', 'User experience', 'User interface design', 'Wireframing']::TEXT[], 'Designing usable and accessible user interfaces and experiences.', 'v2'),
+('UI/UX Design', 'Technical', 'Design', ARRAY['UI/UX', 'UX/UI', 'UI design', 'UX design', 'User experience', 'User interface design', 'Wireframing']::TEXT[], 'Designing usable and accessible user interfaces and experiences.', 'v2'),
 ('Figma', 'Technical', 'Design', ARRAY['Figma design']::TEXT[], 'Collaborative interface design and prototyping tool.', 'v2'),
 ('PostgreSQL', 'Technical', 'Database', ARRAY['Postgres', 'PostgresSQL', 'psql']::TEXT[], 'Advanced open-source relational database.', 'v2'),
 ('Data Cleaning', 'Analytical', 'Data & BI', ARRAY['Data cleansing', 'Data wrangling', 'Data preprocessing', 'Data preparation']::TEXT[], 'Detecting and correcting errors and inconsistencies in datasets.', 'v2'),
@@ -143,7 +143,7 @@ INSERT INTO skills_library (skill_name, category, subcategory, aliases, descript
 ('Google Analytics', 'Technical', 'Data & BI', ARRAY['GA4', 'Web analytics']::TEXT[], 'Web analytics service for tracking and reporting website traffic.', 'v2'),
 ('Jupyter', 'Technical', 'Data & BI', ARRAY['Jupyter Notebook', 'JupyterLab', 'Google Colab']::TEXT[], 'Interactive notebook environment for data analysis and ML.', 'v2'),
 ('Serverless', 'AI_Digital', 'Cloud', ARRAY['Serverless computing', 'AWS Lambda', 'Azure Functions', 'Cloud Functions']::TEXT[], 'Running code on managed cloud functions without managing servers.', 'v2'),
-('Monitoring & Observability', 'Technical', 'DevOps', ARRAY['Monitoring', 'Observability', 'Prometheus', 'Grafana', 'Datadog', 'CloudWatch']::TEXT[], 'Collecting metrics, logs and traces to monitor system health.', 'v2'),
+('Monitoring & Observability', 'Technical', 'DevOps', ARRAY['Observability', 'Prometheus', 'Grafana', 'Datadog', 'CloudWatch']::TEXT[], 'Collecting metrics, logs and traces to monitor system health.', 'v2'),
 ('Networking', 'Technical', 'Infrastructure', ARRAY['Computer networking', 'TCP/IP', 'DNS', 'DHCP', 'Routing and switching', 'LAN/WAN', 'OSI model']::TEXT[], 'Fundamentals of computer networks, protocols and network configuration.', 'v2'),
 ('Identity & Access Management', 'Technical', 'Security Practice', ARRAY['IAM', 'Access control', 'Active Directory', 'Single sign-on', 'SSO', 'RBAC']::TEXT[], 'Managing digital identities, authentication and access permissions.', 'v2'),
 ('Windows Server', 'Technical', 'Infrastructure', ARRAY['Windows Server administration', 'Windows administration']::TEXT[], 'Administering Microsoft Windows Server environments.', 'v2'),

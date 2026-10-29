@@ -15,6 +15,8 @@ How it works:
      UK spelling, singular, separators removed) and looked up in an index of
      every catalogue name and alias. Whole tokens are compared, so "Java" never
      matches inside "JavaScript" and "SQL" never matches inside "MySQL".
+     Terms that start with an "-ing" verb are also indexed in the base form
+     ("Meeting deadlines" matches "meet deadlines" and "meets deadlines").
   3. When candidate spans overlap, the longest one wins ("Power BI" over "BI",
      "Kali Linux" over "Linux").
   4. Ambiguous aliases (R, Go, Excel, CV, REST, Shell, ...) are kept only when
@@ -30,7 +32,7 @@ from functools import lru_cache
 from typing import NamedTuple
 
 from nlp import config
-from nlp.normalise import normalise_text, singularise, uk_spelling
+from nlp.normalise import normalise_text, singularise, uk_spelling, verb_base_forms
 from nlp.types import ExtractedSkill
 
 # Confidence for a canonical name or safe alias, and for an ambiguous alias
@@ -140,6 +142,46 @@ _CONTEXT_RULES = {
         "support": (r"<> ?(?:ui|programming|language|developers?)\b",
                     r"\b(?:ios|xcode|swiftui|objective-?c|cocoa)\b"),
     },
+    # Self-Motivation. "initiatives" is usually a project ("Digital
+    # Transformation initiatives", 9 of 65 JDs); the quality is something a
+    # person takes or shows ("take initiative", "demonstrates initiative").
+    "initiative": {
+        "support": (r"\b(?:take|takes|taking|took|show|shows|showing|showed|demonstrates?|demonstrated"
+                    r"|demonstrating|display|displays|displaying|use|uses|using|exercise|with|own|personal"
+                    r"|self)[ -](?:the |your |own |some |more )?<>",
+                    r"\b(?:sense|level|spirit) of <>",
+                    r"<> and (?:ownership|drive|creativity|responsibility|accountability)\b"),
+    },
+    # A/B Testing. On its own "experimentation" is any trying out
+    # ("product development and experimentation", JD-SD-0012).
+    "experimentation": {
+        "support": (r"\b(?:a/b|ab|split|controlled|online|multivariate|growth) <>",
+                    r"<> (?:design|platforms?|frameworks?|results)\b",
+                    r"\b(?:a/b|split|multivariate) test",
+                    r"\b(?:conversion rates?|control groups?|statistical significance|hypothesis testing)\b"),
+    },
+    # Monitoring & Observability: watching systems and infrastructure. Security
+    # event monitoring is SOC / SIEM work (Security Operations), and monitoring a
+    # business, a campaign or a machine is not this skill either.
+    "monitoring": {
+        "veto": (r"\b(?:security|siem|soc|threat|event|events|fraud|compliance|transaction|social media"
+                 r"|media|brand|campaign|student|progress|budget|quality|market|price|competitor"
+                 r"|intelligent|employee|staff) <>",
+                 r"<> (?:of|for) (?:the |all |daily )?(?:security|threats?|siem|events?|alerts?|fraud"
+                 r"|compliance|transactions?|campaigns?|progress|budgets?|kpis?|competitors?|social media"
+                 r"|students?|employees?|staff)\b",
+                 r"<> (?:dashboards?|and control)\b"),
+        "support": (r"\b(?:infrastructure|system|systems|server|servers|resource|performance|site"
+                    r"|application|applications|cloud|network|uptime|health|service|platform|database|it)"
+                    r" <>",
+                    r"<> (?:and|&) (?:alerting|observability|logging|troubleshooting|maintenance)\b",
+                    r"<> (?:of|for) (?:the )?(?:supported |digital |cloud |it |our )?(?:infrastructure|systems?"
+                    r"|servers?|instances?|applications?|services?|networks?|resources|workloads|uptime|cloud)\b",
+                    r"<> (?:systems?|infrastructure|stack)\b",
+                    r"\b(?:deployment|provisioning|patching|configuration),? (?:and )?<>",
+                    r"\b(?:prometheus|grafana|datadog|cloudwatch|zabbix|nagios|new relic|kibana|observability"
+                    r"|alerting)\b"),
+    },
 }
 
 # Stands for the alias inside the context string. It is not a word character,
@@ -178,9 +220,26 @@ class _Index(NamedTuple):
     max_tokens: int        # longest name / alias, in tokens
 
 
+def _verb_variant_keys(term):
+    """Keys of a term that starts with an "-ing" verb, in the base form:
+    "Meeting deadlines" -> "meetdeadline" (and "meetedeadline", which no JD has).
+
+    Only "-ing word ... plural object" reads as verb + object. Nouns ending in
+    "-ing" are left alone: "Accounting system" must not match "account system",
+    nor "Training & Development" "train & development".
+    """
+    tokens = [m.group().lower() for m in _TOKEN_RE.finditer(term)]
+    if (len(tokens) < 2 or singularise(tokens[-1]) == tokens[-1]
+            or any(t in ("&", "and", "or", "/") for t in tokens)):
+        return []
+    rest = "".join(_token_key(t) for t in tokens[1:])
+    return [_token_key(base) + rest for base in verb_base_forms(tokens[0])]
+
+
 def _build_index(catalogue):
     claims = {}            # term key -> {skill_name: set of ambiguous spellings}
     name_owner = {}        # key of a canonical name -> skill_name (None if two names share it)
+    variants = {}          # base-form key of a verb-led term -> {skill_name: spellings}
     max_tokens = 1
     for e in catalogue:
         name = e["skill_name"]
@@ -193,7 +252,13 @@ def _build_index(catalogue):
             spellings = claims.setdefault(key, {}).setdefault(name, set())
             if term in e["ambiguous_aliases"]:
                 spellings.add(term)
+            for vkey in _verb_variant_keys(term):
+                variants.setdefault(vkey, {}).setdefault(name, set()).update(
+                    {term} if term in e["ambiguous_aliases"] else set())
             max_tokens = max(max_tokens, len(_TOKEN_RE.findall(term)))
+    # A base form never takes a key that a real name or alias already has.
+    for vkey, owners in variants.items():
+        claims.setdefault(vkey, owners)
 
     terms = {}
     for key, owners in claims.items():
@@ -421,7 +486,24 @@ _GENERIC_LEMMAS = {
     "responsibility", "requirement", "team", "member", "time", "day", "week",
     "plus", "advantage", "basic", "good", "strong", "excellent", "solid",
     "relevant", "related", "field", "area", "environment", "level", "other",
+    # Words that name a whole field or an object of work, not one skill. Alone
+    # their nearest skill is one specific tool or sub-skill: "testing" -> A/B
+    # Testing (14 of 65 JDs), "analytics" -> Google Analytics (5), "database" ->
+    # MySQL (4), "programming languages" -> R (7), "logs" -> Log Analysis,
+    # "scripts" -> Bash, "administration" -> Windows Server, "brands" / "markets"
+    # (nlp/experiments/results/method_disagreements.csv, 2026-10-29). With a real
+    # term they stay: "unit testing", "analyse logs", "relational databases".
+    "test", "testing", "analytic", "analytics", "database", "programming", "language",
+    "log", "logging", "script", "scripting", "system", "administration", "administrator",
+    "brand", "market",
 }
+
+
+def _is_generic(token):
+    """True for a word in _GENERIC_LEMMAS. Checks the lemma and the plain
+    singular, because spaCy keeps the plural in some headings ("Requirements")."""
+    return (token.lemma_.lower() in _GENERIC_LEMMAS
+            or singularise(normalise_text(token.text)) in _GENERIC_LEMMAS)
 
 # Verb-phrase children that are kept: the object ("analyse data"); without
 # one, the first adverb / prepositional phrase ("communicates well",
@@ -451,8 +533,12 @@ def _verb_phrases(doc):
         if not kids:
             continue
         start = tok.i
-        if tok.dep_ == "conj" and tok.head.pos_ == "VERB" and tok.head.i < tok.i:
-            start = tok.head.i                 # "clean and analyse data"
+        if (tok.dep_ == "conj" and tok.head.pos_ == "VERB" and tok.head.i < tok.i
+                and not any(c.dep_ in _VP_OBJ_DEPS | _VP_MOD_DEPS for c in tok.head.children
+                            if c.i < tok.i)):
+            # "clean and analyse data"; not "work under pressure and meeting
+            # tight deadlines", where the first verb has its own complement.
+            start = tok.head.i
         end = max(c.right_edge.i for c in kids) + 1
         yield doc[start:end]
 
@@ -462,7 +548,7 @@ def _is_junk(span, catalogue):
         return True
     content = [t for t in span if not (t.is_stop or t.is_punct or t.is_space
                                        or t.pos_ in {"PRON", "NUM", "DET", "SYM"})]
-    if not content or all(t.lemma_.lower() in _GENERIC_LEMMAS for t in content):
+    if not content or all(_is_generic(t) for t in content):
         return True
     if all(t.like_num for t in content) or _YEAR_RE.search(span.text):
         return True

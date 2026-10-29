@@ -106,6 +106,29 @@ def singularise(word):
     return word[:-1]
 
 
+# ── Verb forms ────────────────────────────────────────────────
+def verb_base_forms(word):
+    """Possible base forms of a lower-case "-ing" word, for catalogue terms
+    that start with a verb ("Meeting deadlines" is also "meet deadlines").
+
+    Rule-based, so some forms are not real words ("creat"); they are only
+    used as extra index keys, where a form that is not a word matches nothing.
+    singularise() already turns the third person ("meets") into the base form.
+
+    >>> verb_base_forms("meeting"), verb_base_forms("creating"), verb_base_forms("running")
+    (['meet', 'meete'], ['creat', 'create'], ['runn', 'runne', 'run'])
+    >>> verb_base_forms("string")
+    []
+    """
+    stem = word[:-3]
+    if len(word) <= 5 or not word.endswith("ing") or not any(c in "aeiouy" for c in stem):
+        return []                              # "bring", "string" are not "-ing" forms
+    forms = [stem, stem + "e"]
+    if stem[-1] == stem[-2] and stem[-1] not in "aeiousl":
+        forms.append(stem[:-1])                # running -> run, planning -> plan
+    return forms
+
+
 # ── Matching key ──────────────────────────────────────────────
 # Separators that do not change the meaning of a skill term.
 # "+", "#", "/" and "&" are kept: C++, C#, CI/CD, A/B, R&D.

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-28 18:35",
+  "generated_at": "2026-10-29 13:17",
   "source": "data/skills/skills_library.csv",
   "skill_count": 166,
   "skills": [
@@ -852,6 +852,7 @@
       "category": "Technical",
       "subcategory": "Security Tool",
       "aliases": [
+        "Firewall",
         "Firewall config",
         "Network firewall",
         "pfSense"
@@ -1176,10 +1177,11 @@
       "category": "Analytical",
       "subcategory": "Analytical",
       "aliases": [
-        "Split testing",
+        "Split testing"
+      ],
+      "ambiguous_aliases": [
         "Experimentation"
       ],
-      "ambiguous_aliases": [],
       "description": "Comparing two versions to determine which performs better.",
       "source": "v2"
     },
@@ -1256,10 +1258,11 @@
       "subcategory": "Soft",
       "aliases": [
         "Self-driven",
-        "Initiative",
         "Proactive"
       ],
-      "ambiguous_aliases": [],
+      "ambiguous_aliases": [
+        "Initiative"
+      ],
       "description": "Taking initiative without external prompting.",
       "source": "v2"
     },
@@ -1446,6 +1449,8 @@
       "category": "Technical",
       "subcategory": "Design",
       "aliases": [
+        "UI/UX",
+        "UX/UI",
         "UI design",
         "UX design",
         "User experience",
@@ -1580,14 +1585,15 @@
       "category": "Technical",
       "subcategory": "DevOps",
       "aliases": [
-        "Monitoring",
         "Observability",
         "Prometheus",
         "Grafana",
         "Datadog",
         "CloudWatch"
       ],
-      "ambiguous_aliases": [],
+      "ambiguous_aliases": [
+        "Monitoring"
+      ],
       "description": "Collecting metrics, logs and traces to monitor system health.",
       "source": "v2"
     },
