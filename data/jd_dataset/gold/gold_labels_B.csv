@@ -1,0 +1,163 @@
+jd_ref,skill_name,importance,evidence_text
+JD-CE-0001,Azure,required,Support Microsoft Azure infrastructure activities
+JD-CE-0001,Cloud Computing,bonus,Basic knowledge of Microsoft Azure or other cloud platforms is an added advantage
+JD-CE-0001,Networking,required,"Assist with network troubleshooting, including IP addressing, DNS, connectivity and basic routing concepts"
+JD-CE-0001,Windows Server,required,Support Windows Server and/or Linux system administration tasks
+JD-CE-0001,Linux,required,Windows Server and/or Linux system administration tasks
+JD-CE-0001,Monitoring & Observability,required,"Assist in monitoring infrastructure performance, reviewing alerts"
+JD-CE-0001,Documentation,required,Prepare and maintain technical documentation
+JD-CE-0001,Identity & Access Management,preferred,"Learn and follow IT security practices, access control procedures?"
+JD-CE-0001,PowerShell,bonus,"Familiarity with PowerShell, Bash, scripting or infrastructure monitoring tools is a plus"
+JD-CE-0001,Bash,bonus,"Familiarity with PowerShell, Bash, scripting or infrastructure monitoring tools is a plus"
+JD-CE-0001,Problem Solving,required,Good analytical and problem-solving skills
+JD-CE-0001,Teamwork,required,work collaboratively with the technical team
+JD-CE-0001,Communication,required,Good communication skills
+JD-CE-0001,Attention to Detail,required,attention to detail
+JD-CE-0002,NEW: Technical Support,required,"Provide first-level technical support for hardware, software and network issues"
+JD-CE-0002,NEW: IT Asset Management,required,"IT asset management, inventory tracking"
+JD-CE-0002,Documentation,required,Maintain accurate and up-to-date documentation of IT systems
+JD-CE-0002,Generative AI,required,"introduce emerging technologies and solutions, including Generative AI"
+JD-CE-0002,Communication,required,Strong communication and interpersonal abilities.
+JD-CE-0002,Interpersonal Skills,required,Strong communication and interpersonal abilities.
+JD-CE-0002,Time Management,required,Effective time management
+JD-CE-0002,Problem Solving,required,problem-solving skills
+JD-CE-0002,Teamwork,required,Enjoy collaborating with individuals from diverse backgrounds
+JD-CE-0002,Self-Motivation,required,Self-motivated
+JD-CE-0002,NEW: Microsoft 365,required,"Proficient in Microsoft technologies, including Microsoft 365"
+JD-CE-0002,NEW: Microsoft Copilot,required,Microsoft Copilot
+JD-CE-0002,NEW: Power Automate,required,Microsoft Power Automate
+JD-CE-0002,Cloud Computing,bonus,"Familiarity with public cloud platforms (AWS, Azure, GCP)"
+JD-CE-0002,AWS,bonus,"public cloud platforms (AWS, Azure, GCP)"
+JD-CE-0002,Azure,bonus,"public cloud platforms (AWS, Azure, GCP)"
+JD-CE-0002,GCP,bonus,"public cloud platforms (AWS, Azure, GCP)"
+JD-CE-0002,NEW: UiPath,bonus,UiPath (RPA)
+JD-CE-0002,SQL,bonus,database technologies such as SQL is an advantage
+JD-CY-0004,Incident Response,required,"assisting with containment, evidence collection, forensic analysis, and reporting"
+JD-CY-0004,Digital Forensics,required,Acquire and triage forensic artifacts
+JD-CY-0004,Linux,required,"Acquire and triage forensic artifacts across Windows, Linux, macOS, and cloud environments"
+JD-CY-0004,NEW: Windows,required,"Acquire and triage forensic artifacts across Windows, Linux, macOS, and cloud environments"
+JD-CY-0004,NEW: macOS,required,"Acquire and triage forensic artifacts across Windows, Linux, macOS, and cloud environments"
+JD-CY-0004,Cloud Computing,required,"Windows, Linux, macOS, and cloud environments"
+JD-CY-0004,Log Analysis,required,"Analyse logs, endpoint telemetry, network data"
+JD-CY-0004,Malware Analysis,required,malware artifacts
+JD-CY-0004,Python,required,"Basic scripting ability in Python, Bash, or PowerShell"
+JD-CY-0004,Bash,required,"Basic scripting ability in Python, Bash, or PowerShell"
+JD-CY-0004,PowerShell,required,"Basic scripting ability in Python, Bash, or PowerShell"
+JD-CY-0004,Documentation,required,Document findings clearly and accurately
+JD-CY-0004,NEW: Chain of Custody,required,chain-of-custody requirements
+JD-CY-0004,Communication,required,communicate professionally with teammates and clients
+JD-CY-0004,NEW: EDR,preferred,"Hands-on exposure to EDR, SIEM, or forensic tooling"
+JD-CY-0004,SIEM,preferred,"Hands-on exposure to EDR, SIEM, or forensic tooling"
+JD-CY-0005,SIEM,required,Monitor security alerts and logs from various security tools such as SIEM
+JD-CY-0005,Log Analysis,required,Monitor security alerts and logs
+JD-CY-0005,Firewall Management,required,firewalls
+JD-CY-0005,NEW: Intrusion Detection/Prevention,required,intrusion detection/prevention systems
+JD-CY-0005,NEW: Antivirus,required,antivirus
+JD-CY-0005,Incident Response,required,Investigate and analyze potential security incidents
+JD-CY-0005,Vulnerability Assessment,required,Perform routine security assessments and vulnerability scans
+JD-CY-0005,Risk Analysis,required,identify and report risks
+JD-CY-0005,Documentation,required,"maintaining and updating security documentation, policies, and procedures"
+JD-CY-0005,Security Frameworks,required,"Support compliance efforts with relevant regulations and standards (e.g., GDPR, HIPAA, PCI-DSS)"
+JD-CY-0005,Teamwork,required,Collaborate with IT teams
+JD-CY-0005,Networking,required,Basic understanding of network protocols
+JD-CY-0005,NEW: Operating Systems,required,"Basic understanding of network protocols, operating systems"
+JD-CY-0005,Cybersecurity,required,security concepts
+JD-CY-0005,Problem Solving,required,Strong analytical and problem-solving skills
+JD-CY-0005,Communication,required,Good communication skills
+JD-DA-0003,SQL,required,Strong SQL fundamentals
+JD-DA-0003,NEW: Google BigQuery,required,Google BigQuery
+JD-DA-0003,Data Warehousing,required,cloud data warehouse
+JD-DA-0003,ETL,required,"extract, validate, and transform multi-source business data"
+JD-DA-0003,Data Cleaning,required,data hygiene checks
+JD-DA-0003,Data Analysis,required,Basic understanding of data analysis
+JD-DA-0003,Statistical Analysis,required,"data analysis, statistics, and data visualisation"
+JD-DA-0003,Data Visualisation,required,interactive dashboards
+JD-DA-0003,Stakeholder Communication,required,partner with cross-functional teams
+JD-DA-0003,Python,required,Foundational Python knowledge
+JD-DA-0003,Pandas,preferred,familiarity with Python for data manipulation using tools such as pandas and NumPy
+JD-DA-0003,NumPy,preferred,familiarity with Python for data manipulation using tools such as pandas and NumPy
+JD-DA-0003,AI Literacy,preferred,Familiarity with AI tools and LLM-based assistants
+JD-DA-0003,Problem Solving,required,Strong problem-solving and analytical thinking
+JD-DA-0003,Critical Thinking,required,Ability to validate assumptions and question data
+JD-DA-0003,Attention to Detail,required,High attention to detail
+JD-DA-0003,Communication,required,Good communication skills
+JD-DA-0004,Data Cleaning,required,"collecting, cleaning, and organising data"
+JD-DA-0004,Data Analysis,required,Conduct exploratory data analysis
+JD-DA-0004,Data Visualisation,required,Intermediate experience with SQL and data visualisation tools
+JD-DA-0004,Looker,required,data visualisation tools (e.g. Looker Studio)
+JD-DA-0004,SQL,required,Intermediate experience with SQL
+JD-DA-0004,Excel,required,"Proficiency in Microsoft Office suite (Word, Excel, PowerPoint)"
+JD-DA-0004,NEW: Microsoft Office,required,Proficiency in Microsoft Office suite
+JD-DA-0004,Statistical Analysis,bonus,"Experience with statistical analysis software (e.g., R, Python) is an advantage"
+JD-DA-0004,R,bonus,"statistical analysis software (e.g., R, Python) is an advantage"
+JD-DA-0004,Python,bonus,"statistical analysis software (e.g., R, Python) is an advantage"
+JD-DA-0004,Teamwork,required,Collaborate with cross-functional teams
+JD-DA-0004,Problem Solving,required,Strong analytical and problem-solving skills
+JD-DA-0004,Attention to Detail,required,keen attention to detail
+JD-DA-0004,Communication,required,Excellent communication and interpersonal skills
+JD-DA-0004,Interpersonal Skills,required,Excellent communication and interpersonal skills
+JD-DS-0002,NEW: RPA,required,building RPA pipelines
+JD-DS-0002,Model Evaluation,required,AI model evaluation
+JD-DS-0002,Data Visualisation,required,Building monitoring dashboards
+JD-DS-0002,NEW: Data Labelling,required,Helping build labelled datasets for model evaluation
+JD-DS-0002,Python,preferred,Python coding
+JD-DS-0002,Cloud Computing,preferred,Cloud infrastructure
+JD-DS-0002,SQL,preferred,SQL querying
+JD-DS-0002,Data Cleaning,preferred,Data manipulation tasks?
+JD-DS-0009,ETL,required,Support the development and maintenance of data pipelines
+JD-DS-0009,Python,required,Write and maintain Python and SQL code
+JD-DS-0009,SQL,required,Write and maintain Python and SQL code
+JD-DS-0009,NEW: Relational Databases,required,"Fundamental knowledge of Python, SQL, relational databases"
+JD-DS-0009,REST API,preferred,"integrating data from databases, APIs?"
+JD-DS-0009,Data Analysis,required,"data extraction, transformation, validation and analysis"
+JD-DS-0009,Data Cleaning,required,"Perform data validation, reconciliation and troubleshooting"
+JD-DS-0009,Data Visualisation,required,dashboards and reports
+JD-DS-0009,Documentation,required,Prepare technical documentation
+JD-DS-0009,Teamwork,required,collaborate with cross-functional teams
+JD-DS-0009,Problem Solving,required,Strong analytical and problem-solving skills
+JD-DS-0009,Communication,required,good communication
+JD-DS-0009,Cloud Computing,bonus,cloud technologies
+JD-DS-0009,Power BI,bonus,"exposure to Power BI, Tableau or Git, are advantageous"
+JD-DS-0009,Tableau,bonus,"exposure to Power BI, Tableau or Git, are advantageous"
+JD-DS-0009,Git,bonus,"exposure to Power BI, Tableau or Git, are advantageous"
+JD-SD-0003,HTML,required,"develop in HTML, CSS, Javascript, ASP.net & C#"
+JD-SD-0003,CSS,required,"develop in HTML, CSS, Javascript, ASP.net & C#"
+JD-SD-0003,JavaScript,required,"develop in HTML, CSS, Javascript, ASP.net & C#"
+JD-SD-0003,NEW: ASP.NET,required,"develop in HTML, CSS, Javascript, ASP.net & C#"
+JD-SD-0003,C#,required,"develop in HTML, CSS, Javascript, ASP.net & C#"
+JD-SD-0003,NEW: SDLC,required,Involve in whole Software Development Life Cycle (SDLC)
+JD-SD-0003,Documentation,required,Maintain good documentation
+JD-SD-0003,Problem Solving,required,enthusiastic problem-solver
+JD-SD-0003,Critical Thinking,required,Good logical thinking
+JD-SD-0009,Java,required,Solid foundational knowledge of Java
+JD-SD-0009,NEW: Backend Development,required,Java-based backend services and APIs
+JD-SD-0009,REST API,preferred,Java-based backend services and APIs?
+JD-SD-0009,NEW: SDLC,required,Participate in the full software development lifecycle
+JD-SD-0009,Documentation,required,well-documented code
+JD-SD-0009,Agile / Scrum,required,in an Agile environment
+JD-SD-0009,Teamwork,required,"Collaborate with cross-functional teams (PM, QA, DevOps)"
+JD-SD-0009,NEW: Debugging,required,Debug and troubleshoot application issues
+JD-SD-0009,CI/CD,required,CI/CD pipelines
+JD-SD-0009,Spring Boot,preferred,Familiarity with Spring Boot
+JD-SD-0009,SQL,required,Basic understanding of SQL / relational databases
+JD-SD-0009,NEW: Relational Databases,required,Basic understanding of SQL / relational databases
+JD-SD-0009,Problem Solving,required,Good problem-solving mindset
+JD-WD-0001,Java,required,Basic knowledge in programming languages such as Java and JavaScript
+JD-WD-0001,JavaScript,required,Basic knowledge in programming languages such as Java and JavaScript
+JD-WD-0001,Vue.js,required,Vue.js ecosystem
+JD-WD-0001,NEW: Tailwind CSS,required,UI styling with Tailwind CSS
+JD-WD-0001,Documentation,required,preparing software and product documentation
+JD-WD-0001,NEW: Software Testing,required,Perform testing and debugging
+JD-WD-0001,NEW: Debugging,required,Perform testing and debugging
+JD-WD-0001,Problem Solving,required,strong analytical and problem-solving skills
+JD-WD-0001,Self-Motivation,required,Self-Driven
+JD-WD-0011,PHP,required,"Must Have: PHP, HTML, CSS, JavaScript."
+JD-WD-0011,HTML,required,"Must Have: PHP, HTML, CSS, JavaScript."
+JD-WD-0011,CSS,required,"Must Have: PHP, HTML, CSS, JavaScript."
+JD-WD-0011,JavaScript,required,"Must Have: PHP, HTML, CSS, JavaScript."
+JD-WD-0011,NEW: Backend Development,required,Expand and enhance existing backend services
+JD-WD-0011,MySQL,required,Experience with MySQL
+JD-WD-0011,NEW: Sourcetree,preferred,"Familiarity with Sourcetree, Bootstrap, and CodeIgniter Framework"
+JD-WD-0011,NEW: Bootstrap,preferred,"Familiarity with Sourcetree, Bootstrap, and CodeIgniter Framework"
+JD-WD-0011,NEW: CodeIgniter,preferred,"Familiarity with Sourcetree, Bootstrap, and CodeIgniter Framework"
+JD-WD-0011,Time Management,required,deliver projects within deadlines

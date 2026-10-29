@@ -1,0 +1,50 @@
+jd_ref,skill,A,B,evidence
+JD-CE-0001,Cloud Computing,required,bonus,A: Support Microsoft Azure infrastructure activities | B: Basic knowledge of Microsoft Azure or other cloud platforms is an added advantage
+JD-CE-0001,Cybersecurity,preferred,absent,A: Learn and follow IT security practices?
+JD-CE-0001,Identity & Access Management,absent,preferred,"B: Learn and follow IT security practices, access control procedures?"
+JD-CE-0001,NEW: Virtualisation,bonus,absent,A: virtual machines or networking technologies is an advantage
+JD-CE-0001,Self-Motivation,required,absent,"A: * Willingness to learn, take initiative and work collaboratively with the technical team"
+JD-CE-0002,NEW: IT Asset Management,absent,required,"B: IT asset management, inventory tracking"
+JD-CE-0002,NEW: IT Support,required,absent,"A: Provide first-level technical support for hardware, software and network issues"
+JD-CE-0002,NEW: Robotic Process Automation,bonus,absent,A: UiPath (RPA)
+JD-CE-0002,NEW: Technical Support,absent,required,"B: Provide first-level technical support for hardware, software and network issues"
+JD-CE-0002,NEW: UiPath,absent,bonus,B: UiPath (RPA)
+JD-CE-0002,Research Skills,required,absent,"A: Research, evaluate and introduce emerging technologies"
+JD-CY-0004,Adaptability,required,absent,"A: Coachable, curious, and resilient"
+JD-CY-0004,Cloud Computing,absent,required,"B: Windows, Linux, macOS, and cloud environments"
+JD-CY-0004,Cybersecurity,required,absent,"A: * 1+ year of experience in cybersecurity, IT, or an adjacent technical field (e"
+JD-CY-0004,NEW: Chain of Custody,absent,required,B: chain-of-custody requirements
+JD-CY-0004,NEW: Working Under Pressure,required,absent,A: Calm under pressure
+JD-CY-0004,Self-Motivation,required,absent,A: Take ownership of your own development
+JD-CY-0005,Firewall Management,preferred,required,"A: Familiarity with security tools like SIEM, firewalls | B: firewalls"
+JD-CY-0005,NEW: Antivirus,absent,required,B: antivirus
+JD-CY-0005,NEW: Intrusion Detection,required,absent,A: intrusion detection/prevention systems
+JD-CY-0005,NEW: Intrusion Detection/Prevention,absent,required,B: intrusion detection/prevention systems
+JD-CY-0005,NEW: Operating Systems,absent,required,"B: Basic understanding of network protocols, operating systems"
+JD-CY-0005,Security Operations (SOC),required,absent,A: Monitor security alerts and logs from various security tools
+JD-DA-0003,AI Literacy,absent,preferred,B: Familiarity with AI tools and LLM-based assistants
+JD-DA-0003,GCP,required,absent,"A: * Data Extraction & Wrangling — write efficient SQL queries across our cloud data warehouse (Google BigQuery) to extract, validate, and transform multi-source business data"
+JD-DA-0003,Generative AI,preferred,absent,"A: * Familiarity with AI tools and LLM-based assistants for coding, analysis, prototyping, or productivity"
+JD-DA-0003,NEW: BigQuery,required,absent,A: Google BigQuery
+JD-DA-0003,NEW: Google BigQuery,absent,required,B: Google BigQuery
+JD-DA-0003,NEW: Root Cause Analysis,required,absent,A: diagnose root causes
+JD-DA-0004,Self-Motivation,required,absent,A: Eagerness to learn
+JD-DS-0002,AI Literacy,required,absent,A: Assist the team to develop and deploy AI use cases
+JD-DS-0002,Data Cleaning,absent,preferred,B: Data manipulation tasks?
+JD-DS-0002,NEW: Robotic Process Automation,required,absent,A: building RPA pipelines
+JD-DS-0002,NEW: RPA,absent,required,B: building RPA pipelines
+JD-DS-0002,Research Skills,required,absent,A: research and development (R&D)
+JD-DS-0009,Monitoring & Observability,required,absent,"A: * Participate in the development, testing, deployment and monitoring of digital applications and planning-system capabilities"
+JD-DS-0009,REST API,required,preferred,"A: Assist with integrating data from databases, APIs | B: integrating data from databases, APIs?"
+JD-DS-0009,Self-Motivation,required,absent,"A: * Strong analytical and problem-solving skills, with good communication, teamwork and a proactive, ownership-oriented attitude"
+JD-SD-0009,CI/CD,preferred,required,A: Learn and contribute to internal tooling and CI/CD pipelines | B: CI/CD pipelines
+JD-SD-0009,Documentation,absent,required,B: well-documented code
+JD-SD-0009,NEW: Backend Development,absent,required,B: Java-based backend services and APIs
+JD-SD-0009,NEW: Debugging,absent,required,B: Debug and troubleshoot application issues
+JD-SD-0009,REST API,required,preferred,A: Java-based backend services and APIs | B: Java-based backend services and APIs?
+JD-SD-0009,Self-Motivation,required,absent,A: willingness to learn
+JD-WD-0001,CSS,required,absent,A: js ecosystem and UI styling with Tailwind CSS
+JD-WD-0001,NEW: Debugging,absent,required,B: Perform testing and debugging
+JD-WD-0001,Teamwork,required,absent,A: working together with software development team
+JD-WD-0011,NEW: Backend Development,absent,required,B: Expand and enhance existing backend services
+JD-WD-0011,NEW: Web Development,required,absent,A: Build and maintain high-quality web applications
