@@ -188,7 +188,8 @@ def test_validation_errors_and_warnings(files):
             row(14, "Excel", keep=""),                                      # A: not reviewed
             row(15, "Python 3", evidence="Python"),                         # error: alias
             row(16, "SQL", "must have", "SQL"),                             # error: importance
-            row(17, "NEW: Postgres", evidence="SQL"),                       # error: in library
+            row(17, "NEW: PostgreSQL", evidence="SQL"),                     # error: canonical name
+            row(20, "NEW: Postgres", "bonus", "SQL"),                       # warning: alias
             row(18, "NEW: Data storytelling", "preferred", ""),             # ok, warning: no evidence
             row(19, "Git", keep="maybe"),                                   # error: keep value
         ],
@@ -199,20 +200,40 @@ def test_validation_errors_and_warnings(files):
     warnings = "\n".join(f"{r} {n} {m}" for r, n, m in res.warnings)
     assert "15 'Python 3' is not a canonical name (did you mean 'Python'?)" in errors
     assert "16 importance must be one of" in errors
-    assert "17 'NEW: Postgres' is already in the library as 'PostgreSQL'" in errors
+    assert "17 'NEW: PostgreSQL' is a library skill: use 'PostgreSQL'" in errors
+    assert "20 'NEW: Postgres' is an alias of 'PostgreSQL'" in warnings
     assert "19 keep must be Y or N" in errors
     assert "JD-XX-9999 None sheet name is not a jd_ref" in errors
     assert "12 evidence for Tableau not found" in warnings
     assert res.unreviewed == {"JD-DA-0001": 1}
     assert "18 no evidence_text" in warnings
     assert not any(n in (10, 11, 13) for _, n, _ in res.warnings)
-    assert res.labels == []  # errors block the output
-
-    res = collect_workbook.collect(sheets, "A", texts(), catalogue(files), skip_invalid=True)
-    got = {r["skill_name"]: r["importance"] for r in res.labels}
+    got = {r["skill_name"]: r["importance"] for r in res.labels}  # rows with errors left out
     assert got == {"SQL": "required", "Python": "preferred", "Tableau": "bonus",
-                   "NEW: Data storytelling": "preferred"}
+                   "NEW: Data storytelling": "preferred", "NEW: Postgres": "bonus"}
     assert res.merged == 1
+
+
+def test_errors_block_the_csv_unless_skip_invalid(files):
+    wb_path = files["dir"] / "wb_b.xlsx"
+    make_workbook.main(["--annotator", "B", "--refs", "JD-SD-0001", "--sample", str(files["sample"]),
+                        "--skills", str(files["skills"]), "--out", str(wb_path)])
+    wb = load_workbook(wb_path)
+    ws = wb["JD-SD-0001"]
+    h = header_row(ws)
+    for c, v in enumerate(["Docker", "required", "We use Docker daily"], start=1):
+        ws.cell(row=h + 1, column=c, value=v)
+    for c, v in enumerate(["Kubernetes", "required", "k8s"], start=1):  # not canonical
+        ws.cell(row=h + 2, column=c, value=v)
+    wb.save(wb_path)
+
+    out = files["dir"] / "labels_b.csv"
+    args = [str(wb_path), "--annotator", "B", "--sample", str(files["sample"]),
+            "--draft", str(files["draft"]), "--skills", str(files["skills"]), "--out", str(out)]
+    assert collect_workbook.main(args) == 1 and not out.exists()
+    assert collect_workbook.main(args + ["--skip-invalid"]) == 0
+    with open(out, newline="", encoding="utf-8") as f:
+        assert [r["skill_name"] for r in csv.DictReader(f)] == ["Docker"]
 
 
 def test_annotator_b_keeps_all_non_empty_rows(files):

@@ -10,10 +10,13 @@ Read a filled gold workbook (from make_workbook.py) back into a label CSV.
 Checks on every kept row:
   errors   (the CSV is not written unless --skip-invalid drops these rows):
            unknown jd_ref, skill_name that is not a canonical library name or
-           "NEW: <term>", NEW: term that is already in the library, bad
+           "NEW: <term>", NEW: term that is a canonical library name, bad
            importance, bad keep value
   warnings (reported only): evidence_text missing or not found in the JD text
-           (case and whitespace ignored, a trailing '?' ignored)
+           (case and whitespace ignored, a trailing '?' ignored); NEW: term
+           that is an alias of a library skill (often right, e.g. the guide's
+           "NEW: Infrastructure as Code" when Terraform is not meant, but
+           worth a second look)
 Rows for the same skill in one JD are merged, keeping the strongest
 importance (required > preferred > bonus) and its evidence.
 
@@ -65,26 +68,29 @@ def read_workbook(path):
 
 
 def normalise_skill(name, catalogue):
-    """(skill_name, error) - canonical spelling or 'NEW: <term>'."""
+    """(skill_name, error, warning) - canonical spelling or 'NEW: <term>'."""
     if name.upper().startswith(NEW_PREFIX):
         term = " ".join(name[len(NEW_PREFIX):].split())
         if not term:
-            return None, "NEW: with no term"
-        known = catalogue.lookup(term)
-        if known:
-            return None, f"'{name}' is already in the library as '{known}'"
-        return f"{NEW_PREFIX} {term}", None
+            return None, "NEW: with no term", None
+        canonical = catalogue.by_key.get(skill_key(term))
+        if canonical:
+            return None, f"'{name}' is a library skill: use '{canonical}'", None
+        alias_of = catalogue.lookup(term)
+        warning = (f"'{name}' is an alias of '{alias_of}' in the library: "
+                   f"keep NEW: only if a different skill is meant") if alias_of else None
+        return f"{NEW_PREFIX} {term}", None, warning
     canonical = catalogue.by_key.get(skill_key(name))
     if canonical:
-        return canonical, None
+        return canonical, None, None
     hint = catalogue.lookup(name)
     return None, (f"'{name}' is not a canonical name"
-                  + (f" (did you mean '{hint}'?)" if hint else " (use a name from the list or NEW: <term>)"))
+                  + (f" (did you mean '{hint}'?)" if hint else " (use a name from the list or NEW: <term>)")), None
 
 
 @dataclass
 class Result:
-    labels: list = field(default_factory=list)    # rows for the output CSV
+    labels: list = field(default_factory=list)    # valid rows for the output CSV
     errors: list = field(default_factory=list)    # (jd_ref, excel_row, message)
     warnings: list = field(default_factory=list)  # (jd_ref, excel_row, message)
     labelled: set = field(default_factory=set)    # jd_refs with at least one decision
@@ -92,8 +98,9 @@ class Result:
     merged: int = 0
 
 
-def collect(sheets, annotator, jd_texts, catalogue, skip_invalid=False):
-    """Turn workbook rows into gold label rows. `jd_texts` = {jd_ref: raw_text}."""
+def collect(sheets, annotator, jd_texts, catalogue):
+    """Turn workbook rows into gold label rows. `jd_texts` = {jd_ref: raw_text}.
+    Rows with errors are left out of `labels`; the caller decides whether to write."""
     res = Result()
     for ref, rows in sheets.items():
         if ref not in jd_texts:
@@ -119,8 +126,8 @@ def collect(sheets, annotator, jd_texts, catalogue, skip_invalid=False):
                 res.labelled.add(ref)
 
             problems = []
-            skill, err = (normalise_skill(row["skill_name"], catalogue) if row["skill_name"]
-                          else (None, "skill_name is empty"))
+            skill, err, warn = (normalise_skill(row["skill_name"], catalogue) if row["skill_name"]
+                                else (None, "skill_name is empty", None))
             if err:
                 problems.append(err)
             importance = row["importance"].lower()
@@ -131,6 +138,8 @@ def collect(sheets, annotator, jd_texts, catalogue, skip_invalid=False):
                 res.errors += [(*where, p) for p in problems]
                 continue
 
+            if warn:
+                res.warnings.append((*where, warn))
             evidence = " ".join(row["evidence_text"].split())
             if not evidence:
                 res.warnings.append((*where, f"no evidence_text for {skill}"))
@@ -148,8 +157,6 @@ def collect(sheets, annotator, jd_texts, catalogue, skip_invalid=False):
             else:
                 best[key] = label
         res.labels += best.values()
-    if res.errors and not skip_invalid:
-        res.labels = []
     res.labels.sort(key=lambda r: r["jd_ref"])  # stable: keeps the sheet order inside a JD
     return res
 
@@ -208,7 +215,7 @@ def main(argv=None):
     sample = read_csv(args.sample)
     sheets = read_workbook(args.workbook or WORKBOOK_PATH[args.annotator])
     res = collect(sheets, args.annotator, {r["jd_ref"]: r["raw_text"] for r in sample},
-                  Catalogue(load_skills(args.skills)), skip_invalid=args.skip_invalid)
+                  Catalogue(load_skills(args.skills)))
 
     print_issues("Warnings", res.warnings)
     started = {ref: n for ref, n in res.unreviewed.items() if ref in res.labelled}
