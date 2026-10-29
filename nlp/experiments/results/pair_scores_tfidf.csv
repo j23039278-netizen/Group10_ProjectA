@@ -1,0 +1,61 @@
+phrase,skill_name,label,tfidf_word,tfidf_char_wb
+Strong interest,Self-Motivation,0,0.000,0.000
+security findings,Vulnerability Assessment,0,0.000,0.066
+modern frontend,Linux,0,0.000,0.000
+multicultural team,Leadership,0,0.241,0.126
+"e.g., Splunk",Splunk,1,0.764,0.861
+Team Collaboration,Teamwork,1,0.413,0.629
+React or similar frameworks,React,1,0.481,0.406
+transparency,Communication,0,0.000,0.000
+database design,Data Modelling,1,0.334,0.527
+visualization software,Data Visualisation,1,0.162,0.271
+integration,CI/CD,0,0.259,0.371
+"backend, APIs",REST API,0,0.000,0.209
+Support solution integration,MLOps,0,0.000,0.056
+running bash scripts,Bash,1,0.567,0.651
+Docker and containerized environments,Docker,1,0.667,0.745
+cybersecurity basics,Cybersecurity,1,0.318,0.578
+services delivery,Microservices,0,0.000,0.335
+entire data extraction requirement,ETL,0,0.183,0.246
+Strong problem-solving and analytical thinking,Critical Thinking,1,0.310,0.433
+security platforms,Security Operations (SOC),0,0.274,0.431
+Microsoft Power Automate,Power BI,0,0.553,0.641
+JavaScript / TypeScript,TypeScript,1,0.547,0.709
+Understanding of cybersecurity fundamentals and common attack techniq,Cybersecurity,1,0.225,0.341
+Perform basic threat intelligence lookups,Threat Intelligence,1,0.724,0.640
+PowerShell or scripts,PowerShell,1,0.312,0.626
+enquirer,Communication,0,0.000,0.000
+Free gym access,VPN,0,0.000,0.000
+blend great design with robust architecture,Figma,0,0.193,0.185
+conducting penetration testing and vulnerability assessments,Vulnerability Assessment,1,0.354,0.655
+perform bulk data extraction,ETL,0,0.183,0.337
+business growth,Business Analysis,0,0.471,0.524
+Leadership potential,Leadership,1,0.782,0.770
+understand data,Data Analysis,1,0.480,0.315
+real cybersecurity threats,Cybersecurity,1,0.318,0.525
+Participate in the full software development lifecycle,Project Management,0,0.000,0.008
+Communicate with stakeholders,Stakeholder Communication,1,0.000,0.774
+community involvement,Teamwork,0,0.000,0.011
+Learning & Development Plan,Project Management,0,0.000,0.071
+understand business requirements,Business Analysis,1,0.727,0.833
+user acceptance test script,PowerShell,0,0.000,0.246
+PHP / Laravel,PHP,1,0.730,0.811
+logs,Splunk,0,0.000,0.000
+Scripting in Bash,Bash,1,0.791,0.866
+work independently,Teamwork,0,0.304,0.187
+ask questions,Research Skills,0,0.000,0.000
+Building monitoring dashboards,Monitoring & Observability,1,0.119,0.156
+private and public cloud infrastructure,AWS,0,0.144,0.143
+project leads,Leadership,0,0.241,0.387
+Git/version control and software development practices,Git,1,0.562,0.392
+building RESTful APIs,REST API,1,0.257,0.535
+Effective time management and problem-solving skills,Time Management,1,0.340,0.260
+vulnerability scanners,Vulnerability Assessment,1,0.676,0.814
+Continuous Security Monitoring Execute 24/7,Monitoring & Observability,0,0.108,0.162
+ethical hacking and vulnerability assessment,Ethical Hacking,1,0.309,0.286
+AI technologies,Responsible AI,0,0.654,0.120
+testing,Unit Testing,0,0.307,0.529
+vulnerability scans,Vulnerability Assessment,1,0.676,0.876
+building React-based web applications,React,1,0.415,0.297
+ownership,Interpersonal Skills,0,0.000,0.121
+Strong interpersonal & presentation skills,Presentation Skills,1,0.501,0.528

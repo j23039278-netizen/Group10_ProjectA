@@ -39,6 +39,19 @@ RELATED_THRESHOLD = 0.50
 # Candidate phrases longer than this (in tokens) are not embedded.
 MAX_PHRASE_TOKENS = 8
 
+# TF-IDF extraction (method="tfidf", for the method comparison only). The same
+# candidate phrases as semantic extraction, compared with the catalogue skill
+# texts (SKILL_TEXT_MODE) as TF-IDF vectors instead of embeddings:
+#   "word"    -> word 1-2-grams
+#   "char_wb" -> character 3-5-grams inside word boundaries
+# Chosen with `python nlp/experiments/threshold_sweep.py --method tfidf` on the
+# same 60 hand-labelled pairs; see nlp/experiments/THRESHOLDS.md.
+# F1-best: char_wb at 0.25 (P 0.784, R 0.967, F1 0.866); word 1-2-grams peak at
+# 0.30 (F1 0.833). TF-IDF cosines run lower than embedding cosines, so this is
+# not comparable with MATCH_THRESHOLD.
+TFIDF_ANALYZER = "char_wb"
+TFIDF_MATCH_THRESHOLD = 0.25
+
 # Hybrid extraction only: coordinated skill lists such as "good analytical,
 # communication and problem-solving skills". Items that keyword extraction did
 # not resolve are read with the shared head noun ("analytical skills") and

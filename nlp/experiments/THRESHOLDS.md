@@ -111,3 +111,78 @@ Communication 0.656) are both wrong.
 was chosen on the same 65 JDs it is reported on. Re-check it on the gold set
 (Sprint 4). Setting `LIST_ITEM_THRESHOLD` above 1.0 switches the similarity part
 of this step off; catalogue-term lookups such as "interpersonal skills" stay.
+
+## TF-IDF extraction (added 2026-10-29)
+
+**Chosen:** `TFIDF_ANALYZER = "char_wb"` (character 3-5-grams inside word
+boundaries), `TFIDF_MATCH_THRESHOLD = 0.25` (set in `nlp/config.py`). The
+values above are unchanged.
+
+**What it is.** `extract_skills(method="tfidf")` is the third L2 option named
+in the brief (TF-IDF + cosine), kept for the method comparison, not for the
+backend. It uses the same candidate phrases as semantic extraction, so only the
+representation differs: a scikit-learn `TfidfVectorizer` is fitted on the
+catalogue skill texts (`SKILL_TEXT_MODE = "name_aliases"`, one text per skill;
+IDF from the 166 skills), and each phrase counts as its most similar skill when
+the TF-IDF cosine is at least the threshold. Both sides go through
+`normalise_text()` and `uk_spelling()` first, as in keyword extraction.
+
+**Sweep.** `python nlp/experiments/threshold_sweep.py --method tfidf`, the same
+60 hand-labelled pairs (labels unchanged), thresholds 0.05-0.90 in 0.05 steps
+(`results/threshold_sweep_tfidf.csv`, `results/pair_scores_tfidf.csv`, figure
+`results/threshold_sweep_tfidf.png`). Word analyzer: 1-2-grams, English stop
+words removed, tokens keep "+" and "#" ("c++", "c#").
+
+| Threshold | word P | word R | word F1 | char_wb P | char_wb R | char_wb F1 |
+|---:|---:|---:|---:|---:|---:|---:|
+| 0.05 | 0.674 | 0.967 | 0.795 | 0.588 | 1.000 | 0.741 |
+| 0.10 | 0.674 | 0.967 | 0.795 | 0.625 | 1.000 | 0.769 |
+| 0.15 | 0.700 | 0.933 | 0.800 | 0.682 | 1.000 | 0.811 |
+| 0.20 | 0.750 | 0.900 | 0.818 | 0.725 | 0.967 | 0.829 |
+| **0.25** | 0.788 | 0.867 | 0.825 | **0.784** | **0.967** | **0.866** |
+| 0.30 | **0.833** | **0.833** | **0.833** | 0.758 | 0.833 | 0.794 |
+| 0.35 | 0.857 | 0.600 | 0.706 | 0.793 | 0.767 | 0.780 |
+| 0.40 | 0.850 | 0.567 | 0.680 | 0.846 | 0.733 | 0.786 |
+| 0.45 | 0.833 | 0.500 | 0.625 | 0.870 | 0.667 | 0.755 |
+| 0.50 | 0.867 | 0.433 | 0.578 | 0.870 | 0.667 | 0.755 |
+| 0.55 | 0.846 | 0.367 | 0.512 | 0.941 | 0.533 | 0.681 |
+| 0.60 | 0.900 | 0.300 | 0.450 | 0.938 | 0.500 | 0.652 |
+| 0.65 | 0.900 | 0.300 | 0.450 | 1.000 | 0.400 | 0.571 |
+| 0.70 | 1.000 | 0.200 | 0.333 | 1.000 | 0.333 | 0.500 |
+| 0.75 | 1.000 | 0.100 | 0.182 | 1.000 | 0.267 | 0.421 |
+| 0.80 | 0.000 | 0.000 | 0.000 | 1.000 | 0.200 | 0.333 |
+| 0.85 | 0.000 | 0.000 | 0.000 | 1.000 | 0.100 | 0.182 |
+| 0.90 | 0.000 | 0.000 | 0.000 | 0.000 | 0.000 | 0.000 |
+
+Best per analyzer (F1, ties to the higher threshold): word 0.30 (P 0.833,
+R 0.833, F1 0.833); **char_wb 0.25 (P 0.784, R 0.967, F1 0.866)**. char_wb wins
+by 0.033 because sub-word n-grams match word forms that word n-grams miss: of
+the positive pairs, char_wb (at 0.25) keeps and word (at 0.30) loses
+"Communicate with stakeholders" → Stakeholder Communication (word 0.000, char_wb
+0.774), "building RESTful APIs" → REST API (0.257 vs 0.535) and "visualization
+software" → Data Visualisation (0.162 vs 0.271). For comparison, embeddings
+(`name_aliases`) reach F1 0.929 at 0.60 on the same pairs. TF-IDF cosines run
+much lower than embedding cosines, so the two thresholds are not comparable.
+
+**Caveat: the pairs favour TF-IDF less than the JDs punish it.** The 60 pairs
+were sampled by embedding similarity and score only the labelled skill, while
+extraction keeps a phrase's *best* skill out of 166. On the 65 JDs, TF-IDF at
+0.25 finds 25.6 skills per JD (hybrid 10.8, keyword 9.4), and only 34% of its
+JD-skill pairs are also hybrid results. Most of the rest are surface look-alikes:
+"deployment" → Employment Law (0.54), "restore" → REST API (0.32), "backend
+developers" → Training & Development (0.72), "Computer Science" → Computer
+Vision (0.29). Raising the threshold does not fix this, it only removes skills:
+
+| TF-IDF threshold | Skills per JD | Share also found by hybrid |
+|---:|---:|---:|
+| 0.25 | 25.6 | 0.34 |
+| 0.40 | 15.9 | 0.50 |
+| 0.50 | 11.0 | 0.62 |
+| 0.60 | 7.1 | 0.72 |
+
+(Read from `results/method_comparison.csv`: a skill's confidence is its best
+phrase score, so the counts at a higher threshold are exact.) The F1-best value
+is kept as asked, so the comparison shows TF-IDF at its best on the labelled
+pairs; re-check it on the gold set once `gold_labels.csv` has rows. On the POC004
+brief example TF-IDF finds 6 of 7 (Critical Thinking missing; extra Data
+Analysis from the title "junior data analyst").

@@ -40,6 +40,31 @@ JD-CE-0001,CLOUD_ENGINEER,hybrid,Self-Motivation,initiative,0.8,keyword
 JD-CE-0001,CLOUD_ENGINEER,hybrid,Teamwork,work collaboratively,0.734,semantic
 JD-CE-0001,CLOUD_ENGINEER,hybrid,Communication,communication skills,1.0,keyword
 JD-CE-0001,CLOUD_ENGINEER,hybrid,Attention to Detail,attention to detail,1.0,keyword
+JD-CE-0001,CLOUD_ENGINEER,tfidf,Terraform,assisting the Infrastructure team,0.449,tfidf
+JD-CE-0001,CLOUD_ENGINEER,tfidf,Problem Solving,troubleshooting,0.636,tfidf
+JD-CE-0001,CLOUD_ENGINEER,tfidf,Azure,Microsoft Azure infrastructure activities,0.794,tfidf
+JD-CE-0001,CLOUD_ENGINEER,tfidf,VPN,virtual machines,0.478,tfidf
+JD-CE-0001,CLOUD_ENGINEER,tfidf,Malware Analysis,senior engineers,0.331,tfidf
+JD-CE-0001,CLOUD_ENGINEER,tfidf,Incident Response,Key responsibilities,0.393,tfidf
+JD-CE-0001,CLOUD_ENGINEER,tfidf,Natural Language Processing,IP addressing,0.321,tfidf
+JD-CE-0001,CLOUD_ENGINEER,tfidf,Windows Server,Support Windows Server and/or Linux system administration tasks,0.769,tfidf
+JD-CE-0001,CLOUD_ENGINEER,tfidf,Performance Management,Assist in monitoring infrastructure performance,0.484,tfidf
+JD-CE-0001,CLOUD_ENGINEER,tfidf,Documentation,technical documentation,0.865,tfidf
+JD-CE-0001,CLOUD_ENGINEER,tfidf,Security Operations (SOC),security practices,0.497,tfidf
+JD-CE-0001,CLOUD_ENGINEER,tfidf,Identity & Access Management,access control procedures,0.358,tfidf
+JD-CE-0001,CLOUD_ENGINEER,tfidf,Requirements Analysis,assignments,0.322,tfidf
+JD-CE-0001,CLOUD_ENGINEER,tfidf,HRIS,Information Technology,0.303,tfidf
+JD-CE-0001,CLOUD_ENGINEER,tfidf,Networking,Computer Networking,0.599,tfidf
+JD-CE-0001,CLOUD_ENGINEER,tfidf,Cloud Computing,Cloud Computing,0.659,tfidf
+JD-CE-0001,CLOUD_ENGINEER,tfidf,Training & Development,industrial training placement,0.43,tfidf
+JD-CE-0001,CLOUD_ENGINEER,tfidf,Systems Thinking,operating systems,0.477,tfidf
+JD-CE-0001,CLOUD_ENGINEER,tfidf,Linux,Linux,0.515,tfidf
+JD-CE-0001,CLOUD_ENGINEER,tfidf,Power BI,PowerShell,0.442,tfidf
+JD-CE-0001,CLOUD_ENGINEER,tfidf,Bash,Bash,0.491,tfidf
+JD-CE-0001,CLOUD_ENGINEER,tfidf,Process Mapping,Willingness,0.302,tfidf
+JD-CE-0001,CLOUD_ENGINEER,tfidf,Teamwork,work collaboratively,0.577,tfidf
+JD-CE-0001,CLOUD_ENGINEER,tfidf,Communication,Good communication skills,0.801,tfidf
+JD-CE-0001,CLOUD_ENGINEER,tfidf,Attention to Detail,attention,0.528,tfidf
 JD-CE-0002,CLOUD_ENGINEER,keyword,UI/UX Design,user experience,1.0,keyword
 JD-CE-0002,CLOUD_ENGINEER,keyword,Documentation,documentation,1.0,keyword
 JD-CE-0002,CLOUD_ENGINEER,keyword,Generative AI,Generative AI,1.0,keyword
@@ -69,6 +94,40 @@ JD-CE-0002,CLOUD_ENGINEER,hybrid,AWS,AWS,1.0,keyword
 JD-CE-0002,CLOUD_ENGINEER,hybrid,Azure,Azure,1.0,keyword
 JD-CE-0002,CLOUD_ENGINEER,hybrid,GCP,GCP,1.0,keyword
 JD-CE-0002,CLOUD_ENGINEER,hybrid,SQL,SQL,1.0,keyword
+JD-CE-0002,CLOUD_ENGINEER,tfidf,Documentation,level technical support,0.527,tfidf
+JD-CE-0002,CLOUD_ENGINEER,tfidf,Network Security,"hardware, software and network issues",0.379,tfidf
+JD-CE-0002,CLOUD_ENGINEER,tfidf,Prompt Engineering,ensuring prompt resolution and positive user experience,0.616,tfidf
+JD-CE-0002,CLOUD_ENGINEER,tfidf,UI/UX Design,positive user experience,0.39,tfidf
+JD-CE-0002,CLOUD_ENGINEER,tfidf,Incident Response,incidents,0.561,tfidf
+JD-CE-0002,CLOUD_ENGINEER,tfidf,Security Operations (SOC),Support daily operations,0.527,tfidf
+JD-CE-0002,CLOUD_ENGINEER,tfidf,Risk Analysis,asset management,0.351,tfidf
+JD-CE-0002,CLOUD_ENGINEER,tfidf,CRM Software,software,0.268,tfidf
+JD-CE-0002,CLOUD_ENGINEER,tfidf,Terraform,infrastructure components,0.401,tfidf
+JD-CE-0002,CLOUD_ENGINEER,tfidf,Process Mapping,processes,0.526,tfidf
+JD-CE-0002,CLOUD_ENGINEER,tfidf,Employee Relations,procedures,0.294,tfidf
+JD-CE-0002,CLOUD_ENGINEER,tfidf,Data Mining,support transparency and knowledge sharing,0.426,tfidf
+JD-CE-0002,CLOUD_ENGINEER,tfidf,Apache Spark,transparency,0.261,tfidf
+JD-CE-0002,CLOUD_ENGINEER,tfidf,Systems Thinking,developing and implementing new or improved systems,0.591,tfidf
+JD-CE-0002,CLOUD_ENGINEER,tfidf,Communication,telecommunications bills,0.723,tfidf
+JD-CE-0002,CLOUD_ENGINEER,tfidf,Bash,software subscriptions,0.299,tfidf
+JD-CE-0002,CLOUD_ENGINEER,tfidf,Content Marketing,maintenance contracts,0.259,tfidf
+JD-CE-0002,CLOUD_ENGINEER,tfidf,OWASP Top 10,applications,0.351,tfidf
+JD-CE-0002,CLOUD_ENGINEER,tfidf,Business Analysis,ensure quality and business alignment,0.359,tfidf
+JD-CE-0002,CLOUD_ENGINEER,tfidf,Research Skills,Research,0.675,tfidf
+JD-CE-0002,CLOUD_ENGINEER,tfidf,Generative AI,Generative AI,0.51,tfidf
+JD-CE-0002,CLOUD_ENGINEER,tfidf,Ansible,automation,0.455,tfidf
+JD-CE-0002,CLOUD_ENGINEER,tfidf,Google Analytics,robotics,0.292,tfidf
+JD-CE-0002,CLOUD_ENGINEER,tfidf,Business Process Improvement,drive organizational improvement,0.486,tfidf
+JD-CE-0002,CLOUD_ENGINEER,tfidf,Problem Solving,Effective time management and problem-solving skills,0.472,tfidf
+JD-CE-0002,CLOUD_ENGINEER,tfidf,Teamwork,collaborating with individuals from diverse backgrounds and disciplines,0.26,tfidf
+JD-CE-0002,CLOUD_ENGINEER,tfidf,Time Management,managing multiple priorities,0.423,tfidf
+JD-CE-0002,CLOUD_ENGINEER,tfidf,FastAPI,fast-paced environment,0.423,tfidf
+JD-CE-0002,CLOUD_ENGINEER,tfidf,Azure,Microsoft technologies,0.782,tfidf
+JD-CE-0002,CLOUD_ENGINEER,tfidf,Power BI,Microsoft Power Automate,0.641,tfidf
+JD-CE-0002,CLOUD_ENGINEER,tfidf,Cloud Computing,public cloud platforms,0.536,tfidf
+JD-CE-0002,CLOUD_ENGINEER,tfidf,AWS,AWS,0.319,tfidf
+JD-CE-0002,CLOUD_ENGINEER,tfidf,R,programming or database technologies,0.375,tfidf
+JD-CE-0002,CLOUD_ENGINEER,tfidf,SQL,SQL,0.394,tfidf
 JD-CE-0003,CLOUD_ENGINEER,keyword,Cloud Computing,cloud infrastructure,1.0,keyword
 JD-CE-0003,CLOUD_ENGINEER,keyword,Monitoring & Observability,monitoring,1.0,keyword
 JD-CE-0003,CLOUD_ENGINEER,keyword,Incident Response,incident response,1.0,keyword
@@ -143,6 +202,67 @@ JD-CE-0003,CLOUD_ENGINEER,hybrid,Documentation,documentation,1.0,keyword
 JD-CE-0003,CLOUD_ENGINEER,hybrid,Critical Thinking,analytical,0.77,semantic
 JD-CE-0003,CLOUD_ENGINEER,hybrid,Terraform,Infrastructure as code,1.0,keyword
 JD-CE-0003,CLOUD_ENGINEER,hybrid,Ansible,Ansible,1.0,keyword
+JD-CE-0003,CLOUD_ENGINEER,tfidf,Incident Response,Key Responsibilities,0.665,tfidf
+JD-CE-0003,CLOUD_ENGINEER,tfidf,Cloud Computing,cloud infrastructure,0.773,tfidf
+JD-CE-0003,CLOUD_ENGINEER,tfidf,GCP,platforms,0.722,tfidf
+JD-CE-0003,CLOUD_ENGINEER,tfidf,UI/UX Design,designs,0.464,tfidf
+JD-CE-0003,CLOUD_ENGINEER,tfidf,Malware Analysis,senior engineers,0.499,tfidf
+JD-CE-0003,CLOUD_ENGINEER,tfidf,Microservices,architects,0.47,tfidf
+JD-CE-0003,CLOUD_ENGINEER,tfidf,Security Operations (SOC),Run day-to-day operations,0.667,tfidf
+JD-CE-0003,CLOUD_ENGINEER,tfidf,Project Management,migration and deployment projects,0.604,tfidf
+JD-CE-0003,CLOUD_ENGINEER,tfidf,Documentation,Document,0.631,tfidf
+JD-CE-0003,CLOUD_ENGINEER,tfidf,Network Security,network diagrams,0.494,tfidf
+JD-CE-0003,CLOUD_ENGINEER,tfidf,Business Analysis,Learn the platform and the business behind it,0.539,tfidf
+JD-CE-0003,CLOUD_ENGINEER,tfidf,Requirements Analysis,owning environments,0.318,tfidf
+JD-CE-0003,CLOUD_ENGINEER,tfidf,Decision Making,Provision,0.266,tfidf
+JD-CE-0003,CLOUD_ENGINEER,tfidf,Networking,networking and identity services,0.567,tfidf
+JD-CE-0003,CLOUD_ENGINEER,tfidf,AWS,AWS,0.319,tfidf
+JD-CE-0003,CLOUD_ENGINEER,tfidf,Azure,Azure,0.782,tfidf
+JD-CE-0003,CLOUD_ENGINEER,tfidf,Terraform,infrastructure baselines,0.734,tfidf
+JD-CE-0003,CLOUD_ENGINEER,tfidf,User Acceptance Testing,instance sizing,0.281,tfidf
+JD-CE-0003,CLOUD_ENGINEER,tfidf,Financial Analysis,Track cost,0.294,tfidf
+JD-CE-0003,CLOUD_ENGINEER,tfidf,Docker,Containers,0.643,tfidf
+JD-CE-0003,CLOUD_ENGINEER,tfidf,OWASP Top 10,applications,0.351,tfidf
+JD-CE-0003,CLOUD_ENGINEER,tfidf,Kubernetes,Kubernetes,0.786,tfidf
+JD-CE-0003,CLOUD_ENGINEER,tfidf,Employment Law,deployments,0.442,tfidf
+JD-CE-0003,CLOUD_ENGINEER,tfidf,PostgreSQL,ingress,0.255,tfidf
+JD-CE-0003,CLOUD_ENGINEER,tfidf,ETL,Work with CI/CD pipelines,0.484,tfidf
+JD-CE-0003,CLOUD_ENGINEER,tfidf,Training & Development,"builds through development, staging and production",0.476,tfidf
+JD-CE-0003,CLOUD_ENGINEER,tfidf,Problem Solving,Troubleshoot container and cluster problems,0.495,tfidf
+JD-CE-0003,CLOUD_ENGINEER,tfidf,Computer Vision,image pulls,0.29,tfidf
+JD-CE-0003,CLOUD_ENGINEER,tfidf,Systems Thinking,Systems and Networking,0.566,tfidf
+JD-CE-0003,CLOUD_ENGINEER,tfidf,Linux,Administer Linux servers,0.647,tfidf
+JD-CE-0003,CLOUD_ENGINEER,tfidf,VPN,VPN,0.41,tfidf
+JD-CE-0003,CLOUD_ENGINEER,tfidf,Firewall Management,firewall rules,0.809,tfidf
+JD-CE-0003,CLOUD_ENGINEER,tfidf,Performance Management,performance problems,0.567,tfidf
+JD-CE-0003,CLOUD_ENGINEER,tfidf,MySQL,routine MySQL tasks,0.731,tfidf
+JD-CE-0003,CLOUD_ENGINEER,tfidf,Time Management,privilege management,0.284,tfidf
+JD-CE-0003,CLOUD_ENGINEER,tfidf,Log Analysis,log checks,0.646,tfidf
+JD-CE-0003,CLOUD_ENGINEER,tfidf,Hadoop,Apache,0.343,tfidf
+JD-CE-0003,CLOUD_ENGINEER,tfidf,PHP,PHP-based stacks,0.343,tfidf
+JD-CE-0003,CLOUD_ENGINEER,tfidf,Communication,post-release verification,0.27,tfidf
+JD-CE-0003,CLOUD_ENGINEER,tfidf,Teamwork,QA teams,0.33,tfidf
+JD-CE-0003,CLOUD_ENGINEER,tfidf,Security Frameworks,Security and Compliance,0.48,tfidf
+JD-CE-0003,CLOUD_ENGINEER,tfidf,Git,v4.0 control environment,0.461,tfidf
+JD-CE-0003,CLOUD_ENGINEER,tfidf,Identity & Access Management,access control,0.481,tfidf
+JD-CE-0003,CLOUD_ENGINEER,tfidf,Risk Analysis,change management,0.269,tfidf
+JD-CE-0003,CLOUD_ENGINEER,tfidf,Vulnerability Assessment,vulnerability remediation,0.796,tfidf
+JD-CE-0003,CLOUD_ENGINEER,tfidf,Ethical Hacking,penetration test findings,0.495,tfidf
+JD-CE-0003,CLOUD_ENGINEER,tfidf,Auditing,Produce evidence for internal and external audits,0.623,tfidf
+JD-CE-0003,CLOUD_ENGINEER,tfidf,SQL,SQL,0.394,tfidf
+JD-CE-0003,CLOUD_ENGINEER,tfidf,REST API,restore,0.315,tfidf
+JD-CE-0003,CLOUD_ENGINEER,tfidf,Bash,Scripting in Bash,0.866,tfidf
+JD-CE-0003,CLOUD_ENGINEER,tfidf,Python,ideally Python,0.635,tfidf
+JD-CE-0003,CLOUD_ENGINEER,tfidf,Stakeholder Communication,internal stakeholders,0.378,tfidf
+JD-CE-0003,CLOUD_ENGINEER,tfidf,Employee Relations,discipline,0.257,tfidf
+JD-CE-0003,CLOUD_ENGINEER,tfidf,HRIS,Information Technology,0.303,tfidf
+JD-CE-0003,CLOUD_ENGINEER,tfidf,Ansible,Ansible,0.831,tfidf
+JD-CE-0003,CLOUD_ENGINEER,tfidf,HTML,Hyper,0.301,tfidf
+JD-CE-0003,CLOUD_ENGINEER,tfidf,Prompt Engineering,Proxmox,0.256,tfidf
+JD-CE-0003,CLOUD_ENGINEER,tfidf,Monitoring & Observability,observability tooling,0.603,tfidf
+JD-CE-0003,CLOUD_ENGINEER,tfidf,Financial Modelling,financial services,0.451,tfidf
+JD-CE-0003,CLOUD_ENGINEER,tfidf,Windows Server,scheduled maintenance windows,0.462,tfidf
+JD-CE-0003,CLOUD_ENGINEER,tfidf,Data Cleaning,data centres,0.324,tfidf
 JD-CE-0004,CLOUD_ENGINEER,keyword,Linux,Linux,1.0,keyword
 JD-CE-0004,CLOUD_ENGINEER,keyword,Bash,bash,1.0,keyword
 JD-CE-0004,CLOUD_ENGINEER,keyword,Communication,communication skills,1.0,keyword
@@ -154,9 +274,30 @@ JD-CE-0004,CLOUD_ENGINEER,hybrid,Linux,Linux,1.0,keyword
 JD-CE-0004,CLOUD_ENGINEER,hybrid,Bash,bash,1.0,keyword
 JD-CE-0004,CLOUD_ENGINEER,hybrid,Communication,communication skills,1.0,keyword
 JD-CE-0004,CLOUD_ENGINEER,hybrid,Agile / Scrum,agile,1.0,keyword
+JD-CE-0004,CLOUD_ENGINEER,tfidf,Performance Management,high-performance computing,0.508,tfidf
+JD-CE-0004,CLOUD_ENGINEER,tfidf,Systems Thinking,digging deep into Linux systems,0.491,tfidf
+JD-CE-0004,CLOUD_ENGINEER,tfidf,Terraform,working with cutting-edge infrastructure,0.401,tfidf
+JD-CE-0004,CLOUD_ENGINEER,tfidf,FastAPI,fast-paced environment,0.423,tfidf
+JD-CE-0004,CLOUD_ENGINEER,tfidf,Windows Server,Junior System Administrator,0.341,tfidf
+JD-CE-0004,CLOUD_ENGINEER,tfidf,Security Operations (SOC),join our global IT operations team,0.421,tfidf
+JD-CE-0004,CLOUD_ENGINEER,tfidf,Computer Vision,compute clusters,0.29,tfidf
+JD-CE-0004,CLOUD_ENGINEER,tfidf,Network Security,high-speed networks,0.559,tfidf
+JD-CE-0004,CLOUD_ENGINEER,tfidf,Linux,diving into Linux internals,0.515,tfidf
+JD-CE-0004,CLOUD_ENGINEER,tfidf,Documentation,writing,0.384,tfidf
+JD-CE-0004,CLOUD_ENGINEER,tfidf,Bash,running bash scripts,0.651,tfidf
+JD-CE-0004,CLOUD_ENGINEER,tfidf,Malware Analysis,Computer Engineering,0.378,tfidf
+JD-CE-0004,CLOUD_ENGINEER,tfidf,Flask,flavour,0.326,tfidf
+JD-CE-0004,CLOUD_ENGINEER,tfidf,Communication,Excellent communication skills,0.725,tfidf
+JD-CE-0004,CLOUD_ENGINEER,tfidf,Adaptability,ability to multitask and be agile,0.303,tfidf
 JD-CE-0005,CLOUD_ENGINEER,keyword,Cybersecurity,Cybersecurity,1.0,keyword
 JD-CE-0005,CLOUD_ENGINEER,semantic,Cybersecurity,Cybersecurity or System Administraion field,0.614,semantic
 JD-CE-0005,CLOUD_ENGINEER,hybrid,Cybersecurity,Cybersecurity,1.0,keyword
+JD-CE-0005,CLOUD_ENGINEER,tfidf,Looker,students,0.487,tfidf
+JD-CE-0005,CLOUD_ENGINEER,tfidf,Computer Vision,Computer Science,0.327,tfidf
+JD-CE-0005,CLOUD_ENGINEER,tfidf,HRIS,Information Technology,0.303,tfidf
+JD-CE-0005,CLOUD_ENGINEER,tfidf,Employee Relations,relevant discipline,0.321,tfidf
+JD-CE-0005,CLOUD_ENGINEER,tfidf,Cybersecurity,Cybersecurity or System Administraion field,0.444,tfidf
+JD-CE-0005,CLOUD_ENGINEER,tfidf,Data Mining,minimum,0.363,tfidf
 JD-CE-0006,CLOUD_ENGINEER,keyword,Cloud Computing,cloud service,1.0,keyword
 JD-CE-0006,CLOUD_ENGINEER,keyword,Problem Solving,troubleshooting,1.0,keyword
 JD-CE-0006,CLOUD_ENGINEER,keyword,Customer Focus,customer service,1.0,keyword
@@ -178,6 +319,28 @@ JD-CE-0006,CLOUD_ENGINEER,hybrid,Excel,Excel,0.8,keyword
 JD-CE-0006,CLOUD_ENGINEER,hybrid,Networking,networking,1.0,keyword
 JD-CE-0006,CLOUD_ENGINEER,hybrid,Critical Thinking,analytical,0.77,semantic
 JD-CE-0006,CLOUD_ENGINEER,hybrid,Communication,communication,1.0,keyword
+JD-CE-0006,CLOUD_ENGINEER,tfidf,Cloud Computing,Cloud Delivery Support Engineer,0.667,tfidf
+JD-CE-0006,CLOUD_ENGINEER,tfidf,Employment Law,Employment,0.881,tfidf
+JD-CE-0006,CLOUD_ENGINEER,tfidf,Git,conversion,0.368,tfidf
+JD-CE-0006,CLOUD_ENGINEER,tfidf,Performance Management,Permanent,0.311,tfidf
+JD-CE-0006,CLOUD_ENGINEER,tfidf,Network Security,Work Mode,0.252,tfidf
+JD-CE-0006,CLOUD_ENGINEER,tfidf,REST API,Rest Days,0.331,tfidf
+JD-CE-0006,CLOUD_ENGINEER,tfidf,Microservices,service delivery,0.301,tfidf
+JD-CE-0006,CLOUD_ENGINEER,tfidf,Accounting,account provisioning,0.481,tfidf
+JD-CE-0006,CLOUD_ENGINEER,tfidf,Self-Motivation,service activation,0.266,tfidf
+JD-CE-0006,CLOUD_ENGINEER,tfidf,Documentation,L1 technical support,0.565,tfidf
+JD-CE-0006,CLOUD_ENGINEER,tfidf,Problem Solving,basic troubleshooting,0.433,tfidf
+JD-CE-0006,CLOUD_ENGINEER,tfidf,Customer Focus,customer service requests,0.621,tfidf
+JD-CE-0006,CLOUD_ENGINEER,tfidf,Incident Response,incidents,0.561,tfidf
+JD-CE-0006,CLOUD_ENGINEER,tfidf,AWS,AWS,0.319,tfidf
+JD-CE-0006,CLOUD_ENGINEER,tfidf,Azure,Azure,0.782,tfidf
+JD-CE-0006,CLOUD_ENGINEER,tfidf,Security Operations (SOC),operational data,0.548,tfidf
+JD-CE-0006,CLOUD_ENGINEER,tfidf,Excel,Excel and Google Sheets,0.436,tfidf
+JD-CE-0006,CLOUD_ENGINEER,tfidf,GCP,Google Sheets,0.387,tfidf
+JD-CE-0006,CLOUD_ENGINEER,tfidf,Training & Development,training,0.715,tfidf
+JD-CE-0006,CLOUD_ENGINEER,tfidf,Risk Analysis,quarterly assessments,0.297,tfidf
+JD-CE-0006,CLOUD_ENGINEER,tfidf,FastAPI,fast-paced environment,0.423,tfidf
+JD-CE-0006,CLOUD_ENGINEER,tfidf,Communication,direct communication,0.754,tfidf
 JD-CE-0007,CLOUD_ENGINEER,keyword,Monitoring & Observability,monitoring,0.8,keyword
 JD-CE-0007,CLOUD_ENGINEER,keyword,CI/CD,CI/CD,1.0,keyword
 JD-CE-0007,CLOUD_ENGINEER,keyword,Self-Motivation,Proactive,1.0,keyword
@@ -198,6 +361,24 @@ JD-CE-0007,CLOUD_ENGINEER,hybrid,Teamwork,teamwork,1.0,keyword
 JD-CE-0007,CLOUD_ENGINEER,hybrid,Time Management,time-management,1.0,keyword
 JD-CE-0007,CLOUD_ENGINEER,hybrid,Interpersonal Skills,interpersonal,1.0,keyword
 JD-CE-0007,CLOUD_ENGINEER,hybrid,Communication,communication skills,1.0,keyword
+JD-CE-0007,CLOUD_ENGINEER,tfidf,Malware Analysis,enthusiastic DevOps Engineer,0.273,tfidf
+JD-CE-0007,CLOUD_ENGINEER,tfidf,Incident Response,following qualities and responsibilities,0.266,tfidf
+JD-CE-0007,CLOUD_ENGINEER,tfidf,OWASP Top 10,Application support,0.332,tfidf
+JD-CE-0007,CLOUD_ENGINEER,tfidf,Performance Management,Perform site performance monitoring,0.738,tfidf
+JD-CE-0007,CLOUD_ENGINEER,tfidf,Security Operations (SOC),Manage operation,0.457,tfidf
+JD-CE-0007,CLOUD_ENGINEER,tfidf,ETL,Support the application CI/CD pipeline,0.38,tfidf
+JD-CE-0007,CLOUD_ENGINEER,tfidf,CRM Software,software,0.268,tfidf
+JD-CE-0007,CLOUD_ENGINEER,tfidf,Requirements Analysis,higher environments,0.329,tfidf
+JD-CE-0007,CLOUD_ENGINEER,tfidf,Terraform,Infrastructure maintenance support,0.337,tfidf
+JD-CE-0007,CLOUD_ENGINEER,tfidf,Self-Motivation,Proactive learner,0.367,tfidf
+JD-CE-0007,CLOUD_ENGINEER,tfidf,Research Skills,research and quickly utilize new technologies,0.366,tfidf
+JD-CE-0007,CLOUD_ENGINEER,tfidf,Documentation,new technologies,0.516,tfidf
+JD-CE-0007,CLOUD_ENGINEER,tfidf,Cybersecurity,Computer Science / Information Technology,0.271,tfidf
+JD-CE-0007,CLOUD_ENGINEER,tfidf,Critical Thinking,Critical thinker,0.516,tfidf
+JD-CE-0007,CLOUD_ENGINEER,tfidf,Problem Solving,Critical thinker and problem-solving skills,0.629,tfidf
+JD-CE-0007,CLOUD_ENGINEER,tfidf,Teamwork,Good teamwork,0.468,tfidf
+JD-CE-0007,CLOUD_ENGINEER,tfidf,Interpersonal Skills,Good time-management skills,0.354,tfidf
+JD-CE-0007,CLOUD_ENGINEER,tfidf,Communication,Good interpersonal and communication skills,0.593,tfidf
 JD-CE-0008,CLOUD_ENGINEER,keyword,Cloud Computing,cloud infrastructure,1.0,keyword
 JD-CE-0008,CLOUD_ENGINEER,keyword,Linux,Linux,1.0,keyword
 JD-CE-0008,CLOUD_ENGINEER,keyword,Self-Motivation,Proactive,1.0,keyword
@@ -235,6 +416,29 @@ JD-CE-0008,CLOUD_ENGINEER,hybrid,SQL,SQL,1.0,keyword
 JD-CE-0008,CLOUD_ENGINEER,hybrid,Communication,verbal communication,1.0,keyword
 JD-CE-0008,CLOUD_ENGINEER,hybrid,Teamwork,collaborate effectively,0.62,semantic
 JD-CE-0008,CLOUD_ENGINEER,hybrid,Stakeholder Communication,stakeholders,0.668,semantic
+JD-CE-0008,CLOUD_ENGINEER,tfidf,Cloud Computing,Cloud System Engineer,0.773,tfidf
+JD-CE-0008,CLOUD_ENGINEER,tfidf,Linux,Linux server management,0.515,tfidf
+JD-CE-0008,CLOUD_ENGINEER,tfidf,Documentation,implementation,0.296,tfidf
+JD-CE-0008,CLOUD_ENGINEER,tfidf,Project Management,planning,0.45,tfidf
+JD-CE-0008,CLOUD_ENGINEER,tfidf,OWASP Top 10,applications,0.351,tfidf
+JD-CE-0008,CLOUD_ENGINEER,tfidf,Serverless,servers,0.323,tfidf
+JD-CE-0008,CLOUD_ENGINEER,tfidf,Data Cleaning,global data centres,0.307,tfidf
+JD-CE-0008,CLOUD_ENGINEER,tfidf,Network Security,server and network-related issues,0.372,tfidf
+JD-CE-0008,CLOUD_ENGINEER,tfidf,Auditing,internal and external users,0.338,tfidf
+JD-CE-0008,CLOUD_ENGINEER,tfidf,Self-Motivation,Proactive monitoring,0.313,tfidf
+JD-CE-0008,CLOUD_ENGINEER,tfidf,VPN,virtualization,0.274,tfidf
+JD-CE-0008,CLOUD_ENGINEER,tfidf,Problem Solving,troubleshooting virtual machine instances,0.309,tfidf
+JD-CE-0008,CLOUD_ENGINEER,tfidf,Incident Response,Experience with monitoring systems and incident management,0.535,tfidf
+JD-CE-0008,CLOUD_ENGINEER,tfidf,Systems Thinking,monitoring systems,0.449,tfidf
+JD-CE-0008,CLOUD_ENGINEER,tfidf,Requirements Analysis,Technical requirements,0.678,tfidf
+JD-CE-0008,CLOUD_ENGINEER,tfidf,Monitoring & Observability,Monitoring - Prometheus,0.501,tfidf
+JD-CE-0008,CLOUD_ENGINEER,tfidf,Ansible,Automation - Salt,0.831,tfidf
+JD-CE-0008,CLOUD_ENGINEER,tfidf,Windows Server,Windows Server,0.775,tfidf
+JD-CE-0008,CLOUD_ENGINEER,tfidf,Azure,Microsoft SQL,0.365,tfidf
+JD-CE-0008,CLOUD_ENGINEER,tfidf,Looker,looking,0.351,tfidf
+JD-CE-0008,CLOUD_ENGINEER,tfidf,Teamwork,collaborate effectively,0.396,tfidf
+JD-CE-0008,CLOUD_ENGINEER,tfidf,Stakeholder Communication,stakeholders,0.47,tfidf
+JD-CE-0008,CLOUD_ENGINEER,tfidf,FastAPI,Comfortable working in a fast paced environment,0.49,tfidf
 JD-CE-0009,CLOUD_ENGINEER,keyword,Problem Solving,troubleshooting,1.0,keyword
 JD-CE-0009,CLOUD_ENGINEER,keyword,PHP,PHP,1.0,keyword
 JD-CE-0009,CLOUD_ENGINEER,keyword,Node.js,Node.js,1.0,keyword
@@ -254,6 +458,23 @@ JD-CE-0009,CLOUD_ENGINEER,hybrid,React,React,1.0,keyword
 JD-CE-0009,CLOUD_ENGINEER,hybrid,JavaScript,JavaScript,1.0,keyword
 JD-CE-0009,CLOUD_ENGINEER,hybrid,HTML,HTML,1.0,keyword
 JD-CE-0009,CLOUD_ENGINEER,hybrid,CSS,CSS,1.0,keyword
+JD-CE-0009,CLOUD_ENGINEER,tfidf,GCP,ticketing platform,0.316,tfidf
+JD-CE-0009,CLOUD_ENGINEER,tfidf,Project Management,coordination,0.745,tfidf
+JD-CE-0009,CLOUD_ENGINEER,tfidf,Documentation,Technical Support,0.565,tfidf
+JD-CE-0009,CLOUD_ENGINEER,tfidf,Problem Solving,troubleshooting procedures,0.398,tfidf
+JD-CE-0009,CLOUD_ENGINEER,tfidf,Identity & Access Management,Directives,0.259,tfidf
+JD-CE-0009,CLOUD_ENGINEER,tfidf,Research Skills,Academic Credentials,0.321,tfidf
+JD-CE-0009,CLOUD_ENGINEER,tfidf,Data Mining,Minimum,0.363,tfidf
+JD-CE-0009,CLOUD_ENGINEER,tfidf,Computer Vision,Computer Science,0.29,tfidf
+JD-CE-0009,CLOUD_ENGINEER,tfidf,Malware Analysis,Software Engineering,0.473,tfidf
+JD-CE-0009,CLOUD_ENGINEER,tfidf,HRIS,Information Technology,0.303,tfidf
+JD-CE-0009,CLOUD_ENGINEER,tfidf,Metasploit,frameworks,0.317,tfidf
+JD-CE-0009,CLOUD_ENGINEER,tfidf,PHP,PHP Laravel,0.829,tfidf
+JD-CE-0009,CLOUD_ENGINEER,tfidf,Node.js,Node.js,0.8,tfidf
+JD-CE-0009,CLOUD_ENGINEER,tfidf,React,React.ks,0.802,tfidf
+JD-CE-0009,CLOUD_ENGINEER,tfidf,JavaScript,JavaScript,0.743,tfidf
+JD-CE-0009,CLOUD_ENGINEER,tfidf,HTML,HTML,0.502,tfidf
+JD-CE-0009,CLOUD_ENGINEER,tfidf,CSS,CSS,0.447,tfidf
 JD-CE-0010,CLOUD_ENGINEER,keyword,Identity & Access Management,Active Directory,1.0,keyword
 JD-CE-0010,CLOUD_ENGINEER,keyword,Documentation,documentation,1.0,keyword
 JD-CE-0010,CLOUD_ENGINEER,keyword,Monitoring & Observability,monitoring,0.8,keyword
@@ -292,6 +513,36 @@ JD-CE-0010,CLOUD_ENGINEER,hybrid,Azure,Azure,1.0,keyword
 JD-CE-0010,CLOUD_ENGINEER,hybrid,AWS,AWS,1.0,keyword
 JD-CE-0010,CLOUD_ENGINEER,hybrid,GCP,GCP,1.0,keyword
 JD-CE-0010,CLOUD_ENGINEER,hybrid,Cybersecurity,cybersecurity,1.0,keyword
+JD-CE-0010,CLOUD_ENGINEER,tfidf,Teamwork,Delivery team,0.308,tfidf
+JD-CE-0010,CLOUD_ENGINEER,tfidf,Cloud Computing,Enterprise Cloud,0.659,tfidf
+JD-CE-0010,CLOUD_ENGINEER,tfidf,Terraform,ITO Infrastructure,0.435,tfidf
+JD-CE-0010,CLOUD_ENGINEER,tfidf,Identity & Access Management,Active Directory,0.393,tfidf
+JD-CE-0010,CLOUD_ENGINEER,tfidf,Serverless,Servers,0.323,tfidf
+JD-CE-0010,CLOUD_ENGINEER,tfidf,Malware Analysis,Middleware,0.499,tfidf
+JD-CE-0010,CLOUD_ENGINEER,tfidf,Microservices,services,0.427,tfidf
+JD-CE-0010,CLOUD_ENGINEER,tfidf,Systems Thinking,new things,0.443,tfidf
+JD-CE-0010,CLOUD_ENGINEER,tfidf,Requirements Analysis,elements,0.457,tfidf
+JD-CE-0010,CLOUD_ENGINEER,tfidf,AI Literacy,AI,0.457,tfidf
+JD-CE-0010,CLOUD_ENGINEER,tfidf,Business Process Improvement,improve our services delivery,0.323,tfidf
+JD-CE-0010,CLOUD_ENGINEER,tfidf,Incident Response,Key Responsibilities,0.352,tfidf
+JD-CE-0010,CLOUD_ENGINEER,tfidf,Research Skills,research,0.675,tfidf
+JD-CE-0010,CLOUD_ENGINEER,tfidf,Documentation,documentation,0.631,tfidf
+JD-CE-0010,CLOUD_ENGINEER,tfidf,OWASP Top 10,applications,0.351,tfidf
+JD-CE-0010,CLOUD_ENGINEER,tfidf,Problem Solving,basic troubleshooting,0.636,tfidf
+JD-CE-0010,CLOUD_ENGINEER,tfidf,Machine Learning,supervision,0.638,tfidf
+JD-CE-0010,CLOUD_ENGINEER,tfidf,Windows Server,Windows,0.718,tfidf
+JD-CE-0010,CLOUD_ENGINEER,tfidf,VPN,basic setup,0.271,tfidf
+JD-CE-0010,CLOUD_ENGINEER,tfidf,Ansible,automation workflows,0.455,tfidf
+JD-CE-0010,CLOUD_ENGINEER,tfidf,Presentation Skills,Prepare reports and presentations on findings and progress,0.739,tfidf
+JD-CE-0010,CLOUD_ENGINEER,tfidf,Data Mining,Required Skills & Knowledge,0.341,tfidf
+JD-CE-0010,CLOUD_ENGINEER,tfidf,Network Security,Backups Networks,0.536,tfidf
+JD-CE-0010,CLOUD_ENGINEER,tfidf,GCP,multiple OS platform,0.285,tfidf
+JD-CE-0010,CLOUD_ENGINEER,tfidf,Scikit-learn,learn quickly,0.361,tfidf
+JD-CE-0010,CLOUD_ENGINEER,tfidf,Python,Python,0.842,tfidf
+JD-CE-0010,CLOUD_ENGINEER,tfidf,Azure,Azure,0.782,tfidf
+JD-CE-0010,CLOUD_ENGINEER,tfidf,Cybersecurity,Understanding of cybersecurity basics,0.578,tfidf
+JD-CE-0010,CLOUD_ENGINEER,tfidf,Vulnerability Assessment,Eligibility,0.396,tfidf
+JD-CE-0010,CLOUD_ENGINEER,tfidf,Computer Vision,Computer Science,0.29,tfidf
 JD-CY-0001,CYBER_ANALYST,keyword,Cybersecurity,cybersecurity,1.0,keyword
 JD-CY-0001,CYBER_ANALYST,keyword,Communication,communication,1.0,keyword
 JD-CY-0001,CYBER_ANALYST,keyword,Networking,networking,1.0,keyword
@@ -303,6 +554,23 @@ JD-CY-0001,CYBER_ANALYST,hybrid,Communication,communication,1.0,keyword
 JD-CY-0001,CYBER_ANALYST,hybrid,Networking,networking,1.0,keyword
 JD-CY-0001,CYBER_ANALYST,hybrid,Critical Thinking,analytical,0.765,semantic
 JD-CY-0001,CYBER_ANALYST,hybrid,Time Management,time management,1.0,keyword
+JD-CY-0001,CYBER_ANALYST,tfidf,Cybersecurity,providing technical support for the assigned cybersecurity products,0.609,tfidf
+JD-CY-0001,CYBER_ANALYST,tfidf,Documentation,technical support,0.565,tfidf
+JD-CY-0001,CYBER_ANALYST,tfidf,Teamwork,assist the team,0.295,tfidf
+JD-CY-0001,CYBER_ANALYST,tfidf,Risk Analysis,case management,0.266,tfidf
+JD-CY-0001,CYBER_ANALYST,tfidf,Security Operations (SOC),perform support operations,0.667,tfidf
+JD-CY-0001,CYBER_ANALYST,tfidf,Performance Management,Perform any other duties deemed relevant as assigned,0.28,tfidf
+JD-CY-0001,CYBER_ANALYST,tfidf,Training & Development,hands-on training,0.604,tfidf
+JD-CY-0001,CYBER_ANALYST,tfidf,Employee Relations,simulations,0.408,tfidf
+JD-CY-0001,CYBER_ANALYST,tfidf,Communication,Improving communication and customer engagement skills,0.927,tfidf
+JD-CY-0001,CYBER_ANALYST,tfidf,Customer Focus,customer engagement skills,0.644,tfidf
+JD-CY-0001,CYBER_ANALYST,tfidf,Computer Vision,computer science,0.29,tfidf
+JD-CY-0001,CYBER_ANALYST,tfidf,Network Security,Attended courses related to networking and security,0.44,tfidf
+JD-CY-0001,CYBER_ANALYST,tfidf,Networking,networking,0.567,tfidf
+JD-CY-0001,CYBER_ANALYST,tfidf,Scikit-learn,Quick learner,0.298,tfidf
+JD-CY-0001,CYBER_ANALYST,tfidf,Business Process Improvement,look for ways to improve own self,0.423,tfidf
+JD-CY-0001,CYBER_ANALYST,tfidf,Self-Motivation,self,0.448,tfidf
+JD-CY-0001,CYBER_ANALYST,tfidf,Time Management,Strong organizational and time management skills,0.366,tfidf
 JD-CY-0002,CYBER_ANALYST,keyword,Communication,Communication,1.0,keyword
 JD-CY-0002,CYBER_ANALYST,keyword,SIEM,SIEM,1.0,keyword
 JD-CY-0002,CYBER_ANALYST,keyword,React,React,1.0,keyword
@@ -335,6 +603,37 @@ JD-CY-0002,CYBER_ANALYST,hybrid,Cybersecurity,cybersecurity,1.0,keyword
 JD-CY-0002,CYBER_ANALYST,hybrid,Security Operations (SOC),SOC analyst,1.0,keyword
 JD-CY-0002,CYBER_ANALYST,hybrid,Customer Focus,customer service,1.0,keyword
 JD-CY-0002,CYBER_ANALYST,hybrid,Interpersonal Skills,interpersonal skills,1.0,keyword
+JD-CY-0002,CYBER_ANALYST,tfidf,Research Skills,research,0.675,tfidf
+JD-CY-0002,CYBER_ANALYST,tfidf,Threat Intelligence,internet threats,0.508,tfidf
+JD-CY-0002,CYBER_ANALYST,tfidf,Communication,Communication,0.927,tfidf
+JD-CY-0002,CYBER_ANALYST,tfidf,Docker,contact,0.347,tfidf
+JD-CY-0002,CYBER_ANALYST,tfidf,Security Operations (SOC),security incident notifications,0.775,tfidf
+JD-CY-0002,CYBER_ANALYST,tfidf,Customer Focus,customers,0.644,tfidf
+JD-CY-0002,CYBER_ANALYST,tfidf,Microservices,service desks,0.331,tfidf
+JD-CY-0002,CYBER_ANALYST,tfidf,Employee Relations,Develop a professional working relationship with fellow analysts,0.329,tfidf
+JD-CY-0002,CYBER_ANALYST,tfidf,Financial Analysis,fellow analysts,0.715,tfidf
+JD-CY-0002,CYBER_ANALYST,tfidf,Content Marketing,content development,0.545,tfidf
+JD-CY-0002,CYBER_ANALYST,tfidf,Systems Thinking,defense systems,0.458,tfidf
+JD-CY-0002,CYBER_ANALYST,tfidf,Snort,IDS,0.344,tfidf
+JD-CY-0002,CYBER_ANALYST,tfidf,Network Security,endpoint protection,0.655,tfidf
+JD-CY-0002,CYBER_ANALYST,tfidf,Incident Response,analyze and respond to alerts,0.739,tfidf
+JD-CY-0002,CYBER_ANALYST,tfidf,Log Analysis,log retrieval,0.441,tfidf
+JD-CY-0002,CYBER_ANALYST,tfidf,Documentation,documentation,0.631,tfidf
+JD-CY-0002,CYBER_ANALYST,tfidf,GCP,platforms,0.304,tfidf
+JD-CY-0002,CYBER_ANALYST,tfidf,Problem Solving,iv) Troubleshoot,0.401,tfidf
+JD-CY-0002,CYBER_ANALYST,tfidf,UI/UX Design,design,0.503,tfidf
+JD-CY-0002,CYBER_ANALYST,tfidf,Model Evaluation,evaluation,0.396,tfidf
+JD-CY-0002,CYBER_ANALYST,tfidf,Malware Analysis,malware analysis,0.688,tfidf
+JD-CY-0002,CYBER_ANALYST,tfidf,Business Process Improvement,improve processes,0.587,tfidf
+JD-CY-0002,CYBER_ANALYST,tfidf,Process Mapping,processes,0.526,tfidf
+JD-CY-0002,CYBER_ANALYST,tfidf,Computer Vision,multiple detection sets,0.37,tfidf
+JD-CY-0002,CYBER_ANALYST,tfidf,Cybersecurity,Analyze cybersecurity alerts and data,0.598,tfidf
+JD-CY-0002,CYBER_ANALYST,tfidf,Data Cleaning,data,0.655,tfidf
+JD-CY-0002,CYBER_ANALYST,tfidf,Data Visualisation,dashboards,0.584,tfidf
+JD-CY-0002,CYBER_ANALYST,tfidf,Financial Reporting,v) Reporting,0.314,tfidf
+JD-CY-0002,CYBER_ANALYST,tfidf,Attention to Detail,Compile detailed investigation,0.287,tfidf
+JD-CY-0002,CYBER_ANALYST,tfidf,Risk Analysis,management,0.325,tfidf
+JD-CY-0002,CYBER_ANALYST,tfidf,Interpersonal Skills,interpersonal skills,0.565,tfidf
 JD-CY-0003,CYBER_ANALYST,keyword,Ethical Hacking,penetration testing,1.0,keyword
 JD-CY-0003,CYBER_ANALYST,keyword,Vulnerability Assessment,vulnerability assessments,1.0,keyword
 JD-CY-0003,CYBER_ANALYST,keyword,Documentation,documentation,1.0,keyword
@@ -363,6 +662,25 @@ JD-CY-0003,CYBER_ANALYST,hybrid,Burp Suite,Burp Suite,1.0,keyword
 JD-CY-0003,CYBER_ANALYST,hybrid,Nmap,Nmap,1.0,keyword
 JD-CY-0003,CYBER_ANALYST,hybrid,Critical Thinking,analytical,0.77,semantic
 JD-CY-0003,CYBER_ANALYST,hybrid,Problem Solving,problem-solving,1.0,keyword
+JD-CY-0003,CYBER_ANALYST,tfidf,Incident Response,Key responsibilities,0.352,tfidf
+JD-CY-0003,CYBER_ANALYST,tfidf,Security Operations (SOC),Assist the Security Assessment team,0.536,tfidf
+JD-CY-0003,CYBER_ANALYST,tfidf,Vulnerability Assessment,conducting penetration testing and vulnerability assessments,0.87,tfidf
+JD-CY-0003,CYBER_ANALYST,tfidf,Ethical Hacking,penetration testing,0.671,tfidf
+JD-CY-0003,CYBER_ANALYST,tfidf,OWASP Top 10,web applications,0.395,tfidf
+JD-CY-0003,CYBER_ANALYST,tfidf,Network Security,networks,0.644,tfidf
+JD-CY-0003,CYBER_ANALYST,tfidf,Documentation,Help prepare technical reports and documentation,0.747,tfidf
+JD-CY-0003,CYBER_ANALYST,tfidf,Research Skills,research,0.675,tfidf
+JD-CY-0003,CYBER_ANALYST,tfidf,Metasploit,exploits,0.291,tfidf
+JD-CY-0003,CYBER_ANALYST,tfidf,Cybersecurity,cybersecurity tools,0.658,tfidf
+JD-CY-0003,CYBER_ANALYST,tfidf,Networking,networking,0.567,tfidf
+JD-CY-0003,CYBER_ANALYST,tfidf,Systems Thinking,operating systems,0.477,tfidf
+JD-CY-0003,CYBER_ANALYST,tfidf,Kali Linux,Kali Linux,0.763,tfidf
+JD-CY-0003,CYBER_ANALYST,tfidf,Burp Suite,Burp Suite,0.848,tfidf
+JD-CY-0003,CYBER_ANALYST,tfidf,Nmap,Nmap,0.635,tfidf
+JD-CY-0003,CYBER_ANALYST,tfidf,Problem Solving,Good analytical and problem-solving skills,0.636,tfidf
+JD-CY-0003,CYBER_ANALYST,tfidf,Process Mapping,willingness,0.302,tfidf
+JD-CY-0003,CYBER_ANALYST,tfidf,Apache Spark,Parking,0.255,tfidf
+JD-CY-0003,CYBER_ANALYST,tfidf,Computer Vision,Vision,0.327,tfidf
 JD-CY-0004,CYBER_ANALYST,keyword,Incident Response,incident response,1.0,keyword
 JD-CY-0004,CYBER_ANALYST,keyword,Linux,Linux,1.0,keyword
 JD-CY-0004,CYBER_ANALYST,keyword,Python,Python,1.0,keyword
@@ -387,6 +705,46 @@ JD-CY-0004,CYBER_ANALYST,hybrid,Bash,Bash,1.0,keyword
 JD-CY-0004,CYBER_ANALYST,hybrid,PowerShell,PowerShell,1.0,keyword
 JD-CY-0004,CYBER_ANALYST,hybrid,Cybersecurity,cybersecurity,1.0,keyword
 JD-CY-0004,CYBER_ANALYST,hybrid,SIEM,SIEM,1.0,keyword
+JD-CY-0004,CYBER_ANALYST,tfidf,Incident Response,Mission: Junior Incident Responder,0.873,tfidf
+JD-CY-0004,CYBER_ANALYST,tfidf,Requirements Analysis,live engagements,0.836,tfidf
+JD-CY-0004,CYBER_ANALYST,tfidf,Cybersecurity,real cyber attacks,0.658,tfidf
+JD-CY-0004,CYBER_ANALYST,tfidf,Scikit-learn,learn the craft,0.414,tfidf
+JD-CY-0004,CYBER_ANALYST,tfidf,Leadership,direct mentorship,0.495,tfidf
+JD-CY-0004,CYBER_ANALYST,tfidf,Project Management,projects,0.745,tfidf
+JD-CY-0004,CYBER_ANALYST,tfidf,Looker,study,0.428,tfidf
+JD-CY-0004,CYBER_ANALYST,tfidf,Communication,community involvement,0.672,tfidf
+JD-CY-0004,CYBER_ANALYST,tfidf,FastAPI,learn fast,0.503,tfidf
+JD-CY-0004,CYBER_ANALYST,tfidf,Docker,containment,0.525,tfidf
+JD-CY-0004,CYBER_ANALYST,tfidf,Digital Forensics,forensic analysis,0.666,tfidf
+JD-CY-0004,CYBER_ANALYST,tfidf,Windows Server,Windows,0.718,tfidf
+JD-CY-0004,CYBER_ANALYST,tfidf,Linux,Linux,0.515,tfidf
+JD-CY-0004,CYBER_ANALYST,tfidf,Log Analysis,Analyse logs,0.533,tfidf
+JD-CY-0004,CYBER_ANALYST,tfidf,Network Security,network data,0.738,tfidf
+JD-CY-0004,CYBER_ANALYST,tfidf,Malware Analysis,malware artifacts,0.529,tfidf
+JD-CY-0004,CYBER_ANALYST,tfidf,Python,Python,0.842,tfidf
+JD-CY-0004,CYBER_ANALYST,tfidf,Bash,Bash,0.491,tfidf
+JD-CY-0004,CYBER_ANALYST,tfidf,Power BI,PowerShell,0.442,tfidf
+JD-CY-0004,CYBER_ANALYST,tfidf,Documentation,Document findings,0.524,tfidf
+JD-CY-0004,CYBER_ANALYST,tfidf,Payroll,contributing sections,0.291,tfidf
+JD-CY-0004,CYBER_ANALYST,tfidf,Security Operations (SOC),sections,0.608,tfidf
+JD-CY-0004,CYBER_ANALYST,tfidf,Customer Focus,custody,0.552,tfidf
+JD-CY-0004,CYBER_ANALYST,tfidf,Machine Learning,Learning,0.664,tfidf
+JD-CY-0004,CYBER_ANALYST,tfidf,Training & Development,ownership of your own development,0.498,tfidf
+JD-CY-0004,CYBER_ANALYST,tfidf,Auditing,internal exercises,0.289,tfidf
+JD-CY-0004,CYBER_ANALYST,tfidf,Monitoring & Observability,observations,0.392,tfidf
+JD-CY-0004,CYBER_ANALYST,tfidf,Business Process Improvement,improvements,0.577,tfidf
+JD-CY-0004,CYBER_ANALYST,tfidf,Creativity,innovation,0.332,tfidf
+JD-CY-0004,CYBER_ANALYST,tfidf,Financial Analysis,e.g. SOC analysis,0.564,tfidf
+JD-CY-0004,CYBER_ANALYST,tfidf,Networking,Working comfort,0.344,tfidf
+JD-CY-0004,CYBER_ANALYST,tfidf,Process Mapping,willingness,0.302,tfidf
+JD-CY-0004,CYBER_ANALYST,tfidf,Adaptability,read and adapt scripts,0.33,tfidf
+JD-CY-0004,CYBER_ANALYST,tfidf,Teamwork,teammates,0.307,tfidf
+JD-CY-0004,CYBER_ANALYST,tfidf,Express.js,pressure,0.304,tfidf
+JD-CY-0004,CYBER_ANALYST,tfidf,PostgreSQL,professional posture,0.271,tfidf
+JD-CY-0004,CYBER_ANALYST,tfidf,Splunk,SIEM,0.356,tfidf
+JD-CY-0004,CYBER_ANALYST,tfidf,Interpersonal Skills,personal labs,0.291,tfidf
+JD-CY-0004,CYBER_ANALYST,tfidf,Threat Intelligence,intelligence analysis,0.464,tfidf
+JD-CY-0004,CYBER_ANALYST,tfidf,Go,Additional languages,0.388,tfidf
 JD-CY-0005,CYBER_ANALYST,keyword,SIEM,SIEM,1.0,keyword
 JD-CY-0005,CYBER_ANALYST,keyword,Firewall Management,firewalls,1.0,keyword
 JD-CY-0005,CYBER_ANALYST,keyword,Incident Response,incident response,1.0,keyword
@@ -413,6 +771,29 @@ JD-CY-0005,CYBER_ANALYST,hybrid,Cybersecurity,cybersecurity,1.0,keyword
 JD-CY-0005,CYBER_ANALYST,hybrid,Critical Thinking,analytical,0.77,semantic
 JD-CY-0005,CYBER_ANALYST,hybrid,Problem Solving,problem-solving,1.0,keyword
 JD-CY-0005,CYBER_ANALYST,hybrid,Communication,communication skills,1.0,keyword
+JD-CY-0005,CYBER_ANALYST,tfidf,Incident Response,Key Responsibilities,0.787,tfidf
+JD-CY-0005,CYBER_ANALYST,tfidf,Security Operations (SOC),Monitor security alerts,0.522,tfidf
+JD-CY-0005,CYBER_ANALYST,tfidf,Firewall Management,firewalls,0.813,tfidf
+JD-CY-0005,CYBER_ANALYST,tfidf,Systems Thinking,intrusion detection/prevention systems,0.477,tfidf
+JD-CY-0005,CYBER_ANALYST,tfidf,React,breaches,0.297,tfidf
+JD-CY-0005,CYBER_ANALYST,tfidf,Financial Analysis,senior analysts,0.325,tfidf
+JD-CY-0005,CYBER_ANALYST,tfidf,Vulnerability Assessment,Perform routine security assessments and vulnerability scans,0.876,tfidf
+JD-CY-0005,CYBER_ANALYST,tfidf,Risk Analysis,identify and report risks,0.663,tfidf
+JD-CY-0005,CYBER_ANALYST,tfidf,Documentation,security documentation,0.522,tfidf
+JD-CY-0005,CYBER_ANALYST,tfidf,Employee Relations,procedures,0.345,tfidf
+JD-CY-0005,CYBER_ANALYST,tfidf,Training & Development,Participate in security awareness training programs,0.409,tfidf
+JD-CY-0005,CYBER_ANALYST,tfidf,Employment Law,employees,0.467,tfidf
+JD-CY-0005,CYBER_ANALYST,tfidf,Security Frameworks,compliance efforts,0.477,tfidf
+JD-CY-0005,CYBER_ANALYST,tfidf,Teamwork,Collaborate with IT teams,0.532,tfidf
+JD-CY-0005,CYBER_ANALYST,tfidf,Cybersecurity,latest cybersecurity trends,0.658,tfidf
+JD-CY-0005,CYBER_ANALYST,tfidf,Threat Intelligence,threats,0.577,tfidf
+JD-CY-0005,CYBER_ANALYST,tfidf,Computer Vision,Computer Science,0.29,tfidf
+JD-CY-0005,CYBER_ANALYST,tfidf,HRIS,Information Technology,0.303,tfidf
+JD-CY-0005,CYBER_ANALYST,tfidf,Network Security,network protocols,0.654,tfidf
+JD-CY-0005,CYBER_ANALYST,tfidf,Splunk,SIEM,0.356,tfidf
+JD-CY-0005,CYBER_ANALYST,tfidf,Problem Solving,Strong analytical and problem-solving skills,0.651,tfidf
+JD-CY-0005,CYBER_ANALYST,tfidf,Communication,Good communication skills,0.801,tfidf
+JD-CY-0005,CYBER_ANALYST,tfidf,Apache Spark,Parking,0.255,tfidf
 JD-CY-0006,CYBER_ANALYST,keyword,Security Operations (SOC),Security Monitoring,1.0,keyword
 JD-CY-0006,CYBER_ANALYST,keyword,SIEM,SIEM,1.0,keyword
 JD-CY-0006,CYBER_ANALYST,keyword,Incident Response,Incident Response,1.0,keyword
@@ -427,6 +808,30 @@ JD-CY-0006,CYBER_ANALYST,hybrid,SIEM,SIEM,1.0,keyword
 JD-CY-0006,CYBER_ANALYST,hybrid,Incident Response,Incident Response,1.0,keyword
 JD-CY-0006,CYBER_ANALYST,hybrid,Threat Intelligence,threat intelligence,1.0,keyword
 JD-CY-0006,CYBER_ANALYST,hybrid,Firewall Management,firewalls,1.0,keyword
+JD-CY-0006,CYBER_ANALYST,tfidf,Security Operations (SOC),Continuous Security Monitoring Execute,0.556,tfidf
+JD-CY-0006,CYBER_ANALYST,tfidf,CI/CD,Continuous monitoring,0.315,tfidf
+JD-CY-0006,CYBER_ANALYST,tfidf,Terraform,enterprise infrastructure,0.398,tfidf
+JD-CY-0006,CYBER_ANALYST,tfidf,GCP,SIEM platforms,0.252,tfidf
+JD-CY-0006,CYBER_ANALYST,tfidf,Threat Intelligence,active threats,0.737,tfidf
+JD-CY-0006,CYBER_ANALYST,tfidf,Systems Thinking,system traffic patterns,0.27,tfidf
+JD-CY-0006,CYBER_ANALYST,tfidf,Incident Response,Incident Triage,0.873,tfidf
+JD-CY-0006,CYBER_ANALYST,tfidf,Performance Management,Escalation Perform,0.39,tfidf
+JD-CY-0006,CYBER_ANALYST,tfidf,Digital Forensics,Initial investigation,0.251,tfidf
+JD-CY-0006,CYBER_ANALYST,tfidf,Financial Analysis,analysis,0.715,tfidf
+JD-CY-0006,CYBER_ANALYST,tfidf,Employee Relations,policy violations,0.253,tfidf
+JD-CY-0006,CYBER_ANALYST,tfidf,Documentation,Document comprehensive triage findings,0.325,tfidf
+JD-CY-0006,CYBER_ANALYST,tfidf,Content Marketing,context,0.4,tfidf
+JD-CY-0006,CYBER_ANALYST,tfidf,Risk Analysis,impact assessments,0.3,tfidf
+JD-CY-0006,CYBER_ANALYST,tfidf,Malware Analysis,Engineering units,0.432,tfidf
+JD-CY-0006,CYBER_ANALYST,tfidf,Process Mapping,host processes,0.454,tfidf
+JD-CY-0006,CYBER_ANALYST,tfidf,Network Security,enterprise network traffic,0.516,tfidf
+JD-CY-0006,CYBER_ANALYST,tfidf,SQL,targeted environment queries,0.338,tfidf
+JD-CY-0006,CYBER_ANALYST,tfidf,Log Analysis,Log Lifecycle,0.637,tfidf
+JD-CY-0006,CYBER_ANALYST,tfidf,A/B Testing,ingestion,0.273,tfidf
+JD-CY-0006,CYBER_ANALYST,tfidf,Firewall Management,firewalls,0.813,tfidf
+JD-CY-0006,CYBER_ANALYST,tfidf,Identity & Access Management,identity providers,0.26,tfidf
+JD-CY-0006,CYBER_ANALYST,tfidf,Requirements Analysis,Support compliance-mandated log retention requirements,0.562,tfidf
+JD-CY-0006,CYBER_ANALYST,tfidf,Auditing,assist with routine security audit reviews,0.348,tfidf
 JD-CY-0007,CYBER_ANALYST,keyword,SIEM,SIEM,1.0,keyword
 JD-CY-0007,CYBER_ANALYST,keyword,Incident Response,Incident Response,1.0,keyword
 JD-CY-0007,CYBER_ANALYST,keyword,Threat Intelligence,threat intelligence,1.0,keyword
@@ -458,6 +863,23 @@ JD-CY-0007,CYBER_ANALYST,hybrid,Networking,networking,1.0,keyword
 JD-CY-0007,CYBER_ANALYST,hybrid,Firewall Management,firewalls,1.0,keyword
 JD-CY-0007,CYBER_ANALYST,hybrid,Splunk,Splunk,1.0,keyword
 JD-CY-0007,CYBER_ANALYST,hybrid,Linux,Linux,1.0,keyword
+JD-CY-0007,CYBER_ANALYST,tfidf,Incident Response,Key Responsibilities,0.79,tfidf
+JD-CY-0007,CYBER_ANALYST,tfidf,Security Operations (SOC),Monitor security events,0.517,tfidf
+JD-CY-0007,CYBER_ANALYST,tfidf,Splunk,SIEM tools,0.861,tfidf
+JD-CY-0007,CYBER_ANALYST,tfidf,Financial Analysis,initial analysis,0.715,tfidf
+JD-CY-0007,CYBER_ANALYST,tfidf,Documentation,Document alerts,0.478,tfidf
+JD-CY-0007,CYBER_ANALYST,tfidf,Digital Forensics,investigations,0.251,tfidf
+JD-CY-0007,CYBER_ANALYST,tfidf,Systems Thinking,ticketing systems,0.522,tfidf
+JD-CY-0007,CYBER_ANALYST,tfidf,Threat Intelligence,Perform basic threat intelligence lookups,0.722,tfidf
+JD-CY-0007,CYBER_ANALYST,tfidf,Log Analysis,log analysis,0.793,tfidf
+JD-CY-0007,CYBER_ANALYST,tfidf,Cybersecurity,Maintain awareness of current cybersecurity threats and trends,0.658,tfidf
+JD-CY-0007,CYBER_ANALYST,tfidf,Communication,Education,0.318,tfidf
+JD-CY-0007,CYBER_ANALYST,tfidf,HRIS,Information Technology,0.303,tfidf
+JD-CY-0007,CYBER_ANALYST,tfidf,Computer Vision,Computer Science,0.29,tfidf
+JD-CY-0007,CYBER_ANALYST,tfidf,Azure,Microsoft SC-200,0.403,tfidf
+JD-CY-0007,CYBER_ANALYST,tfidf,Networking,networking concepts,0.409,tfidf
+JD-CY-0007,CYBER_ANALYST,tfidf,Firewall Management,firewalls,0.813,tfidf
+JD-CY-0007,CYBER_ANALYST,tfidf,Windows Server,Basic knowledge of Windows and Linux operating systems,0.718,tfidf
 JD-CY-0008,CYBER_ANALYST,keyword,Teamwork,team work,1.0,keyword
 JD-CY-0008,CYBER_ANALYST,keyword,SIEM,SIEM,1.0,keyword
 JD-CY-0008,CYBER_ANALYST,semantic,Security Frameworks,new security-related project,0.603,semantic
@@ -466,6 +888,17 @@ JD-CY-0008,CYBER_ANALYST,hybrid,Teamwork,team work,1.0,keyword
 JD-CY-0008,CYBER_ANALYST,hybrid,Security Frameworks,new security-related project,0.603,semantic
 JD-CY-0008,CYBER_ANALYST,hybrid,SIEM,SIEM,1.0,keyword
 JD-CY-0008,CYBER_ANALYST,hybrid,Network Security,Security and Network related concept,0.604,semantic
+JD-CY-0008,CYBER_ANALYST,tfidf,Security Operations (SOC),overall security posture,0.636,tfidf
+JD-CY-0008,CYBER_ANALYST,tfidf,Threat Intelligence,security and threat aspects,0.45,tfidf
+JD-CY-0008,CYBER_ANALYST,tfidf,Documentation,implementation,0.296,tfidf
+JD-CY-0008,CYBER_ANALYST,tfidf,Project Management,new security-related project,0.506,tfidf
+JD-CY-0008,CYBER_ANALYST,tfidf,Log Analysis,daily monitoring,0.296,tfidf
+JD-CY-0008,CYBER_ANALYST,tfidf,Email Marketing,Enhance email,0.487,tfidf
+JD-CY-0008,CYBER_ANALYST,tfidf,Auditing,internal staffs,0.28,tfidf
+JD-CY-0008,CYBER_ANALYST,tfidf,Computer Vision,computer,0.377,tfidf
+JD-CY-0008,CYBER_ANALYST,tfidf,Time Management,Priority,0.36,tfidf
+JD-CY-0008,CYBER_ANALYST,tfidf,Network Security,Security and Network related concept,0.493,tfidf
+JD-CY-0008,CYBER_ANALYST,tfidf,FastAPI,Able to work independently and fast learner,0.405,tfidf
 JD-CY-0009,CYBER_ANALYST,keyword,Problem Solving,troubleshooting,1.0,keyword
 JD-CY-0009,CYBER_ANALYST,keyword,Network Security,network security,1.0,keyword
 JD-CY-0009,CYBER_ANALYST,keyword,Customer Focus,customer service,1.0,keyword
@@ -481,6 +914,25 @@ JD-CY-0009,CYBER_ANALYST,hybrid,Customer Focus,customer service,1.0,keyword
 JD-CY-0009,CYBER_ANALYST,hybrid,PHP,PHP,1.0,keyword
 JD-CY-0009,CYBER_ANALYST,hybrid,Java,Java,1.0,keyword
 JD-CY-0009,CYBER_ANALYST,hybrid,Teamwork,work both independently and collaboratively,0.672,semantic
+JD-CY-0009,CYBER_ANALYST,tfidf,Vulnerability Assessment,remote work flexibility,0.319,tfidf
+JD-CY-0009,CYBER_ANALYST,tfidf,Training & Development,assist in software development,0.344,tfidf
+JD-CY-0009,CYBER_ANALYST,tfidf,A/B Testing,software testing,0.46,tfidf
+JD-CY-0009,CYBER_ANALYST,tfidf,Windows Server,network administration,0.475,tfidf
+JD-CY-0009,CYBER_ANALYST,tfidf,Problem Solving,perform troubleshooting,0.729,tfidf
+JD-CY-0009,CYBER_ANALYST,tfidf,Security Operations (SOC),ensure systems' reliability and security,0.667,tfidf
+JD-CY-0009,CYBER_ANALYST,tfidf,Systems Thinking,systems' reliability,0.381,tfidf
+JD-CY-0009,CYBER_ANALYST,tfidf,Network Security,support network security initiatives,0.644,tfidf
+JD-CY-0009,CYBER_ANALYST,tfidf,Customer Focus,provide customer service,0.719,tfidf
+JD-CY-0009,CYBER_ANALYST,tfidf,Employee Relations,related inquiries,0.307,tfidf
+JD-CY-0009,CYBER_ANALYST,tfidf,Incident Response,Key responsibilities,0.352,tfidf
+JD-CY-0009,CYBER_ANALYST,tfidf,Performance Management,Perform,0.482,tfidf
+JD-CY-0009,CYBER_ANALYST,tfidf,Documentation,resolve technical issues,0.556,tfidf
+JD-CY-0009,CYBER_ANALYST,tfidf,PHP,PHP,0.766,tfidf
+JD-CY-0009,CYBER_ANALYST,tfidf,Java,Java,0.891,tfidf
+JD-CY-0009,CYBER_ANALYST,tfidf,Communication,communicate effectively,0.728,tfidf
+JD-CY-0009,CYBER_ANALYST,tfidf,Teamwork,work both independently and collaboratively,0.495,tfidf
+JD-CY-0009,CYBER_ANALYST,tfidf,HRIS,Information Technology,0.303,tfidf
+JD-CY-0009,CYBER_ANALYST,tfidf,Computer Vision,Computer Science,0.29,tfidf
 JD-CY-0010,CYBER_ANALYST,keyword,Cybersecurity,cybersecurity,1.0,keyword
 JD-CY-0010,CYBER_ANALYST,keyword,Security Operations (SOC),Security Operations Center,1.0,keyword
 JD-CY-0010,CYBER_ANALYST,keyword,Vulnerability Assessment,vulnerability scanning,1.0,keyword
@@ -515,6 +967,24 @@ JD-CY-0010,CYBER_ANALYST,hybrid,Firewall Management,firewalls,1.0,keyword
 JD-CY-0010,CYBER_ANALYST,hybrid,Malware Analysis,malware analysis,1.0,keyword
 JD-CY-0010,CYBER_ANALYST,hybrid,Communication,communication,1.0,keyword
 JD-CY-0010,CYBER_ANALYST,hybrid,Teamwork,teamwork,1.0,keyword
+JD-CY-0010,CYBER_ANALYST,tfidf,Cybersecurity,Passionate about cybersecurity,0.658,tfidf
+JD-CY-0010,CYBER_ANALYST,tfidf,Documentation,tech,0.416,tfidf
+JD-CY-0010,CYBER_ANALYST,tfidf,Security Operations (SOC),join our Security Operations Center (SOC,0.872,tfidf
+JD-CY-0010,CYBER_ANALYST,tfidf,Financial Analysis,SOC Analysts,0.311,tfidf
+JD-CY-0010,CYBER_ANALYST,tfidf,Incident Response,"track alerts, logs, and security incidents",0.437,tfidf
+JD-CY-0010,CYBER_ANALYST,tfidf,Risk Analysis,escalate potential risks,0.428,tfidf
+JD-CY-0010,CYBER_ANALYST,tfidf,Vulnerability Assessment,vulnerability scanning,0.905,tfidf
+JD-CY-0010,CYBER_ANALYST,tfidf,Ethical Hacking,penetration testing,0.671,tfidf
+JD-CY-0010,CYBER_ANALYST,tfidf,Security Frameworks,compliance checks,0.494,tfidf
+JD-CY-0010,CYBER_ANALYST,tfidf,Training & Development,Training,0.715,tfidf
+JD-CY-0010,CYBER_ANALYST,tfidf,Threat Intelligence,emerging threats,0.483,tfidf
+JD-CY-0010,CYBER_ANALYST,tfidf,Looker,Looking,0.351,tfidf
+JD-CY-0010,CYBER_ANALYST,tfidf,Computer Vision,Computer Science,0.29,tfidf
+JD-CY-0010,CYBER_ANALYST,tfidf,Network Security,networking & security concepts,0.447,tfidf
+JD-CY-0010,CYBER_ANALYST,tfidf,Firewall Management,firewalls,0.813,tfidf
+JD-CY-0010,CYBER_ANALYST,tfidf,Malware Analysis,malware analysis,0.637,tfidf
+JD-CY-0010,CYBER_ANALYST,tfidf,Systems Thinking,operating systems,0.477,tfidf
+JD-CY-0010,CYBER_ANALYST,tfidf,Data Mining,absorb knowledge,0.482,tfidf
 JD-DA-0001,DATA_ANALYST,keyword,AI Literacy,artificial intelligence,1.0,keyword
 JD-DA-0001,DATA_ANALYST,keyword,SQL,SQL,1.0,keyword
 JD-DA-0001,DATA_ANALYST,keyword,Python,Python,1.0,keyword
@@ -536,6 +1006,35 @@ JD-DA-0001,DATA_ANALYST,hybrid,Excel,Excel,0.8,keyword
 JD-DA-0001,DATA_ANALYST,hybrid,R,R,0.8,keyword
 JD-DA-0001,DATA_ANALYST,hybrid,Power BI,Power BI,1.0,keyword
 JD-DA-0001,DATA_ANALYST,hybrid,Machine Learning,machine learning,1.0,keyword
+JD-DA-0001,DATA_ANALYST,tfidf,Decision Making,making the same report,0.73,tfidf
+JD-DA-0001,DATA_ANALYST,tfidf,Accounting,country,0.381,tfidf
+JD-DA-0001,DATA_ANALYST,tfidf,Data Visualisation,build our own dashboards and tools,0.584,tfidf
+JD-DA-0001,DATA_ANALYST,tfidf,AI Literacy,AI,0.567,tfidf
+JD-DA-0001,DATA_ANALYST,tfidf,Statistical Analysis,statistician,0.655,tfidf
+JD-DA-0001,DATA_ANALYST,tfidf,Data Cleaning,use that data,0.655,tfidf
+JD-DA-0001,DATA_ANALYST,tfidf,Customer Focus,customers,0.644,tfidf
+JD-DA-0001,DATA_ANALYST,tfidf,NumPy,numbers,0.309,tfidf
+JD-DA-0001,DATA_ANALYST,tfidf,MongoDB,money,0.358,tfidf
+JD-DA-0001,DATA_ANALYST,tfidf,Log Analysis,monitoring tools,0.254,tfidf
+JD-DA-0001,DATA_ANALYST,tfidf,Problem Solving,catch problems,0.5,tfidf
+JD-DA-0001,DATA_ANALYST,tfidf,Prompt Engineering,promotion,0.333,tfidf
+JD-DA-0001,DATA_ANALYST,tfidf,Python,write SQL and Python,0.842,tfidf
+JD-DA-0001,DATA_ANALYST,tfidf,SQL,SQL,0.394,tfidf
+JD-DA-0001,DATA_ANALYST,tfidf,Networking,working tool,0.284,tfidf
+JD-DA-0001,DATA_ANALYST,tfidf,Interpersonal Skills,people,0.3,tfidf
+JD-DA-0001,DATA_ANALYST,tfidf,Teamwork,sales team,0.277,tfidf
+JD-DA-0001,DATA_ANALYST,tfidf,Risk Analysis,management,0.325,tfidf
+JD-DA-0001,DATA_ANALYST,tfidf,Business Analysis,business,0.539,tfidf
+JD-DA-0001,DATA_ANALYST,tfidf,Go,plain language,0.536,tfidf
+JD-DA-0001,DATA_ANALYST,tfidf,Looker,days could look,0.362,tfidf
+JD-DA-0001,DATA_ANALYST,tfidf,Budgeting & Forecasting,forecast,0.448,tfidf
+JD-DA-0001,DATA_ANALYST,tfidf,Data Analysis,Data analyst,0.61,tfidf
+JD-DA-0001,DATA_ANALYST,tfidf,Research Skills,research,0.675,tfidf
+JD-DA-0001,DATA_ANALYST,tfidf,Accounting Software,count,0.433,tfidf
+JD-DA-0001,DATA_ANALYST,tfidf,Power BI,R. Power BI,0.81,tfidf
+JD-DA-0001,DATA_ANALYST,tfidf,Flask,"ask ""why",0.288,tfidf
+JD-DA-0001,DATA_ANALYST,tfidf,Identity & Access Management,Direct access,0.504,tfidf
+JD-DA-0001,DATA_ANALYST,tfidf,Machine Learning,machine learning,0.638,tfidf
 JD-DA-0002,DATA_ANALYST,keyword,Customer Focus,Customer Service,1.0,keyword
 JD-DA-0002,DATA_ANALYST,keyword,Data Visualisation,Data Visualization,1.0,keyword
 JD-DA-0002,DATA_ANALYST,keyword,Power BI,PowerBI,1.0,keyword
@@ -565,6 +1064,43 @@ JD-DA-0002,DATA_ANALYST,hybrid,Python,Python,1.0,keyword
 JD-DA-0002,DATA_ANALYST,hybrid,SQL,SQL,1.0,keyword
 JD-DA-0002,DATA_ANALYST,hybrid,Problem Solving,problem-solving,1.0,keyword
 JD-DA-0002,DATA_ANALYST,hybrid,Communication,communication skills,1.0,keyword
+JD-DA-0002,DATA_ANALYST,tfidf,Customer Focus,Customer Service,0.719,tfidf
+JD-DA-0002,DATA_ANALYST,tfidf,Documentation,technology,0.473,tfidf
+JD-DA-0002,DATA_ANALYST,tfidf,Security Operations (SOC),solve real-world operational challenges,0.548,tfidf
+JD-DA-0002,DATA_ANALYST,tfidf,Network Security,"manages a massive, complex supply chain network",0.49,tfidf
+JD-DA-0002,DATA_ANALYST,tfidf,Teamwork,CS&L team,0.406,tfidf
+JD-DA-0002,DATA_ANALYST,tfidf,Financial Reporting,reporting,0.314,tfidf
+JD-DA-0002,DATA_ANALYST,tfidf,Process Mapping,processes,0.608,tfidf
+JD-DA-0002,DATA_ANALYST,tfidf,Systems Thinking,maintaining systems,0.442,tfidf
+JD-DA-0002,DATA_ANALYST,tfidf,Incident Response,Key Responsibilities,0.352,tfidf
+JD-DA-0002,DATA_ANALYST,tfidf,Unit Testing,develop automated solutions,0.284,tfidf
+JD-DA-0002,DATA_ANALYST,tfidf,Power BI,Power Automate,0.725,tfidf
+JD-DA-0002,DATA_ANALYST,tfidf,Data Cleaning,reduce manual data entry,0.368,tfidf
+JD-DA-0002,DATA_ANALYST,tfidf,Digital Marketing,Digitalizing Workflows,0.34,tfidf
+JD-DA-0002,DATA_ANALYST,tfidf,Data Visualisation,Data Visualization,0.521,tfidf
+JD-DA-0002,DATA_ANALYST,tfidf,UI/UX Design,Design,0.503,tfidf
+JD-DA-0002,DATA_ANALYST,tfidf,Tableau,"DOMO, PowerBI, or Tableau",0.872,tfidf
+JD-DA-0002,DATA_ANALYST,tfidf,Project Management,Digital Transformation Projects,0.379,tfidf
+JD-DA-0002,DATA_ANALYST,tfidf,Negotiation,new digitalization initiatives,0.265,tfidf
+JD-DA-0002,DATA_ANALYST,tfidf,User Acceptance Testing,user acceptance testing,0.941,tfidf
+JD-DA-0002,DATA_ANALYST,tfidf,Employment Law,deployment,0.54,tfidf
+JD-DA-0002,DATA_ANALYST,tfidf,Business Analysis,Business,0.539,tfidf
+JD-DA-0002,DATA_ANALYST,tfidf,Requirements Analysis,Requirements & Qualifications,0.691,tfidf
+JD-DA-0002,DATA_ANALYST,tfidf,Communication,Qualifications,0.725,tfidf
+JD-DA-0002,DATA_ANALYST,tfidf,Computer Vision,Computer Science,0.29,tfidf
+JD-DA-0002,DATA_ANALYST,tfidf,HRIS,Information Technology,0.303,tfidf
+JD-DA-0002,DATA_ANALYST,tfidf,AI Literacy,Artificial Intelligence,0.559,tfidf
+JD-DA-0002,DATA_ANALYST,tfidf,Malware Analysis,Software Engineering,0.473,tfidf
+JD-DA-0002,DATA_ANALYST,tfidf,Threat Intelligence,Business Intelligence tools,0.397,tfidf
+JD-DA-0002,DATA_ANALYST,tfidf,Data Modelling,database querying,0.367,tfidf
+JD-DA-0002,DATA_ANALYST,tfidf,Python,Python,0.842,tfidf
+JD-DA-0002,DATA_ANALYST,tfidf,SQL,SQL,0.394,tfidf
+JD-DA-0002,DATA_ANALYST,tfidf,Ansible,automation platforms,0.31,tfidf
+JD-DA-0002,DATA_ANALYST,tfidf,GCP,Google Workspace,0.395,tfidf
+JD-DA-0002,DATA_ANALYST,tfidf,Problem Solving,strong problem-solving mindset,0.656,tfidf
+JD-DA-0002,DATA_ANALYST,tfidf,Vulnerability Assessment,specifically the ability,0.365,tfidf
+JD-DA-0002,DATA_ANALYST,tfidf,Stakeholder Communication,non-technical business stakeholders,0.447,tfidf
+JD-DA-0002,DATA_ANALYST,tfidf,Leadership,Mentorship,0.353,tfidf
 JD-DA-0003,DATA_ANALYST,keyword,SQL,SQL,1.0,keyword
 JD-DA-0003,DATA_ANALYST,keyword,Data Warehousing,data warehouse,1.0,keyword
 JD-DA-0003,DATA_ANALYST,keyword,GCP,BigQuery,1.0,keyword
@@ -607,6 +1143,42 @@ JD-DA-0003,DATA_ANALYST,hybrid,Problem Solving,problem-solving,1.0,keyword
 JD-DA-0003,DATA_ANALYST,hybrid,Critical Thinking,analytical thinking,1.0,keyword
 JD-DA-0003,DATA_ANALYST,hybrid,Attention to Detail,attention to detail,1.0,keyword
 JD-DA-0003,DATA_ANALYST,hybrid,Communication,communication skills,1.0,keyword
+JD-DA-0003,DATA_ANALYST,tfidf,Data Cleaning,real data,0.655,tfidf
+JD-DA-0003,DATA_ANALYST,tfidf,Problem Solving,real business problems,0.634,tfidf
+JD-DA-0003,DATA_ANALYST,tfidf,Looker,look,0.362,tfidf
+JD-DA-0003,DATA_ANALYST,tfidf,SQL,SQL,0.452,tfidf
+JD-DA-0003,DATA_ANALYST,tfidf,Machine Learning,curiosity to keep learning,0.664,tfidf
+JD-DA-0003,DATA_ANALYST,tfidf,Incident Response,Key responsibilities,0.352,tfidf
+JD-DA-0003,DATA_ANALYST,tfidf,ETL,Data Extraction,0.406,tfidf
+JD-DA-0003,DATA_ANALYST,tfidf,Data Warehousing,cloud data warehouse,0.565,tfidf
+JD-DA-0003,DATA_ANALYST,tfidf,GCP,Google BigQuery,0.67,tfidf
+JD-DA-0003,DATA_ANALYST,tfidf,Business Analysis,multi-source business data,0.368,tfidf
+JD-DA-0003,DATA_ANALYST,tfidf,Data Analysis,Exploratory,0.706,tfidf
+JD-DA-0003,DATA_ANALYST,tfidf,Financial Analysis,Diagnostic Analysis,0.715,tfidf
+JD-DA-0003,DATA_ANALYST,tfidf,Security Operations (SOC),operational workflows,0.548,tfidf
+JD-DA-0003,DATA_ANALYST,tfidf,Unit Testing,unit economics,0.302,tfidf
+JD-DA-0003,DATA_ANALYST,tfidf,Financial Reporting,Reporting,0.314,tfidf
+JD-DA-0003,DATA_ANALYST,tfidf,Data Visualisation,Visualisation,0.623,tfidf
+JD-DA-0003,DATA_ANALYST,tfidf,Performance Management,performance tracking scorecards,0.504,tfidf
+JD-DA-0003,DATA_ANALYST,tfidf,Financial Modelling,monitor key operational and financial metrics,0.374,tfidf
+JD-DA-0003,DATA_ANALYST,tfidf,Stakeholder Communication,Stakeholder Collaboration,0.412,tfidf
+JD-DA-0003,DATA_ANALYST,tfidf,Serverless,cross-functional teams,0.437,tfidf
+JD-DA-0003,DATA_ANALYST,tfidf,Documentation,Tech,0.513,tfidf
+JD-DA-0003,DATA_ANALYST,tfidf,Ansible,Workflow Automation,0.358,tfidf
+JD-DA-0003,DATA_ANALYST,tfidf,Python,leverage Python,0.842,tfidf
+JD-DA-0003,DATA_ANALYST,tfidf,Computer Vision,Computer Science,0.29,tfidf
+JD-DA-0003,DATA_ANALYST,tfidf,Statistical Analysis,Statistics,0.655,tfidf
+JD-DA-0003,DATA_ANALYST,tfidf,Malware Analysis,Engineering,0.499,tfidf
+JD-DA-0003,DATA_ANALYST,tfidf,Training & Development,"strong data, analytical, or quantitative training",0.476,tfidf
+JD-DA-0003,DATA_ANALYST,tfidf,AI Literacy,Strong SQL fundamentals,0.402,tfidf
+JD-DA-0003,DATA_ANALYST,tfidf,Tableau,multi-table joins,0.372,tfidf
+JD-DA-0003,DATA_ANALYST,tfidf,Data Mining,Foundational Python knowledge,0.368,tfidf
+JD-DA-0003,DATA_ANALYST,tfidf,Pandas,tools such as pandas and NumPy,0.861,tfidf
+JD-DA-0003,DATA_ANALYST,tfidf,NumPy,NumPy,0.838,tfidf
+JD-DA-0003,DATA_ANALYST,tfidf,OWASP Top 10,coding,0.295,tfidf
+JD-DA-0003,DATA_ANALYST,tfidf,Attention to Detail,High attention,0.528,tfidf
+JD-DA-0003,DATA_ANALYST,tfidf,Communication,Good communication skills,0.801,tfidf
+JD-DA-0003,DATA_ANALYST,tfidf,Go,"clear, simple language",0.42,tfidf
 JD-DA-0004,DATA_ANALYST,keyword,Data Analysis,exploratory data analysis,1.0,keyword
 JD-DA-0004,DATA_ANALYST,keyword,Statistical Analysis,Statistics,1.0,keyword
 JD-DA-0004,DATA_ANALYST,keyword,Problem Solving,problem-solving,1.0,keyword
@@ -645,6 +1217,31 @@ JD-DA-0004,DATA_ANALYST,hybrid,Data Visualisation,data visualisation,1.0,keyword
 JD-DA-0004,DATA_ANALYST,hybrid,Looker,Looker Studio,1.0,keyword
 JD-DA-0004,DATA_ANALYST,hybrid,R,R,0.8,keyword
 JD-DA-0004,DATA_ANALYST,hybrid,Python,Python,1.0,keyword
+JD-DA-0004,DATA_ANALYST,tfidf,Data Cleaning,cleaning,0.655,tfidf
+JD-DA-0004,DATA_ANALYST,tfidf,Data Analysis,Conduct exploratory data analysis,0.771,tfidf
+JD-DA-0004,DATA_ANALYST,tfidf,Data Mining,patterns,0.352,tfidf
+JD-DA-0004,DATA_ANALYST,tfidf,Training & Development,development,0.476,tfidf
+JD-DA-0004,DATA_ANALYST,tfidf,Data Visualisation,dashboards,0.584,tfidf
+JD-DA-0004,DATA_ANALYST,tfidf,Stakeholder Communication,internal stakeholders,0.378,tfidf
+JD-DA-0004,DATA_ANALYST,tfidf,Teamwork,Collaborate with cross-functional teams,0.653,tfidf
+JD-DA-0004,DATA_ANALYST,tfidf,Serverless,cross-functional teams,0.301,tfidf
+JD-DA-0004,DATA_ANALYST,tfidf,Google Analytics,provide analytical solutions,0.428,tfidf
+JD-DA-0004,DATA_ANALYST,tfidf,Performance Management,Perform data validation and quality checks,0.269,tfidf
+JD-DA-0004,DATA_ANALYST,tfidf,Vulnerability Assessment,ensure accuracy and reliability of data,0.461,tfidf
+JD-DA-0004,DATA_ANALYST,tfidf,Business Process Improvement,improve business processes,0.639,tfidf
+JD-DA-0004,DATA_ANALYST,tfidf,Process Mapping,business processes,0.556,tfidf
+JD-DA-0004,DATA_ANALYST,tfidf,Time Management,team meetings,0.285,tfidf
+JD-DA-0004,DATA_ANALYST,tfidf,Statistical Analysis,Statistics,0.655,tfidf
+JD-DA-0004,DATA_ANALYST,tfidf,Computer Vision,Computer Science,0.29,tfidf
+JD-DA-0004,DATA_ANALYST,tfidf,Problem Solving,Strong analytical and problem-solving skills,0.651,tfidf
+JD-DA-0004,DATA_ANALYST,tfidf,Attention to Detail,keen attention,0.528,tfidf
+JD-DA-0004,DATA_ANALYST,tfidf,Communication,Excellent communication,0.737,tfidf
+JD-DA-0004,DATA_ANALYST,tfidf,Interpersonal Skills,interpersonal skills,0.565,tfidf
+JD-DA-0004,DATA_ANALYST,tfidf,Power BI,PowerPoint,0.625,tfidf
+JD-DA-0004,DATA_ANALYST,tfidf,Looker,e.g. Looker Studio,0.875,tfidf
+JD-DA-0004,DATA_ANALYST,tfidf,Python,Python,0.842,tfidf
+JD-DA-0004,DATA_ANALYST,tfidf,Scikit-learn,learn and take on new challenges,0.301,tfidf
+JD-DA-0004,DATA_ANALYST,tfidf,FastAPI,fast-paced environment,0.423,tfidf
 JD-DA-0005,DATA_ANALYST,keyword,Statistical Analysis,Statistics,1.0,keyword
 JD-DA-0005,DATA_ANALYST,keyword,Excel,Excel,0.8,keyword
 JD-DA-0005,DATA_ANALYST,keyword,Python,Python,1.0,keyword
@@ -670,6 +1267,37 @@ JD-DA-0005,DATA_ANALYST,hybrid,Time Management,meet deadlines,1.0,keyword
 JD-DA-0005,DATA_ANALYST,hybrid,Communication,communication,1.0,keyword
 JD-DA-0005,DATA_ANALYST,hybrid,Interpersonal Skills,interpersonal skills,1.0,keyword
 JD-DA-0005,DATA_ANALYST,hybrid,Attention to Detail,attention to details,1.0,keyword
+JD-DA-0005,DATA_ANALYST,tfidf,Creativity,innovative solution,0.43,tfidf
+JD-DA-0005,DATA_ANALYST,tfidf,Business Analysis,personal and business financial managements,0.379,tfidf
+JD-DA-0005,DATA_ANALYST,tfidf,GCP,platform,0.316,tfidf
+JD-DA-0005,DATA_ANALYST,tfidf,Malware Analysis,diverse range,0.271,tfidf
+JD-DA-0005,DATA_ANALYST,tfidf,Financial Modelling,supply chain financing,0.543,tfidf
+JD-DA-0005,DATA_ANALYST,tfidf,Security Operations (SOC),robust security,0.565,tfidf
+JD-DA-0005,DATA_ANALYST,tfidf,Identity & Access Management,easy accessibility,0.314,tfidf
+JD-DA-0005,DATA_ANALYST,tfidf,Power BI,empower our users,0.42,tfidf
+JD-DA-0005,DATA_ANALYST,tfidf,Git,control,0.388,tfidf
+JD-DA-0005,DATA_ANALYST,tfidf,Incident Response,Key Duties & Responsibilities,0.317,tfidf
+JD-DA-0005,DATA_ANALYST,tfidf,Stakeholder Communication,Communicate with stakeholders,0.774,tfidf
+JD-DA-0005,DATA_ANALYST,tfidf,Requirements Analysis,understand the entire data extraction requirement,0.56,tfidf
+JD-DA-0005,DATA_ANALYST,tfidf,Data Cleaning,Clean input data,0.589,tfidf
+JD-DA-0005,DATA_ANALYST,tfidf,ETL,perform bulk data extraction,0.361,tfidf
+JD-DA-0005,DATA_ANALYST,tfidf,Data Analysis,conduct analysis of the output data,0.504,tfidf
+JD-DA-0005,DATA_ANALYST,tfidf,Financial Analysis,analysis,0.715,tfidf
+JD-DA-0005,DATA_ANALYST,tfidf,Digital Marketing,marketing,0.72,tfidf
+JD-DA-0005,DATA_ANALYST,tfidf,Risk Analysis,management,0.331,tfidf
+JD-DA-0005,DATA_ANALYST,tfidf,HRIS,credit information,0.361,tfidf
+JD-DA-0005,DATA_ANALYST,tfidf,Auditing,external and internal stakeholders,0.305,tfidf
+JD-DA-0005,DATA_ANALYST,tfidf,Project Management,project and software team,0.473,tfidf
+JD-DA-0005,DATA_ANALYST,tfidf,Business Process Improvement,improve end-to-end process,0.568,tfidf
+JD-DA-0005,DATA_ANALYST,tfidf,Python,Python,0.842,tfidf
+JD-DA-0005,DATA_ANALYST,tfidf,SQL,SQL,0.394,tfidf
+JD-DA-0005,DATA_ANALYST,tfidf,Vulnerability Assessment,Capability,0.497,tfidf
+JD-DA-0005,DATA_ANALYST,tfidf,Statistical Analysis,Statistic,0.67,tfidf
+JD-DA-0005,DATA_ANALYST,tfidf,Interpersonal Skills,Strong organizational skills,0.565,tfidf
+JD-DA-0005,DATA_ANALYST,tfidf,Time Management,meet deadlines,0.542,tfidf
+JD-DA-0005,DATA_ANALYST,tfidf,Communication,Good communication,0.841,tfidf
+JD-DA-0005,DATA_ANALYST,tfidf,Attention to Detail,attention,0.555,tfidf
+JD-DA-0005,DATA_ANALYST,tfidf,Responsible AI,strong work ethic,0.402,tfidf
 JD-DA-0006,DATA_ANALYST,keyword,Decision Making,decision-making,1.0,keyword
 JD-DA-0006,DATA_ANALYST,keyword,Data Structures & Algorithms,data structures,1.0,keyword
 JD-DA-0006,DATA_ANALYST,keyword,Documentation,documentation,1.0,keyword
@@ -711,6 +1339,48 @@ JD-DA-0006,DATA_ANALYST,hybrid,Critical Thinking,Analytical,0.87,semantic
 JD-DA-0006,DATA_ANALYST,hybrid,Problem Solving,problem-solving,1.0,keyword
 JD-DA-0006,DATA_ANALYST,hybrid,Teamwork,Ability to work independently and collaboratively,0.693,semantic
 JD-DA-0006,DATA_ANALYST,hybrid,Communication,communication,1.0,keyword
+JD-DA-0006,DATA_ANALYST,tfidf,Windows Server,Data Administrator,0.456,tfidf
+JD-DA-0006,DATA_ANALYST,tfidf,Security Operations (SOC),operational data,0.667,tfidf
+JD-DA-0006,DATA_ANALYST,tfidf,Data Cleaning,data entry,0.655,tfidf
+JD-DA-0006,DATA_ANALYST,tfidf,Project Management,process coordination,0.369,tfidf
+JD-DA-0006,DATA_ANALYST,tfidf,Financial Reporting,reporting,0.314,tfidf
+JD-DA-0006,DATA_ANALYST,tfidf,Research Skills,operational research activities,0.406,tfidf
+JD-DA-0006,DATA_ANALYST,tfidf,Decision Making,supporting decision-making,0.834,tfidf
+JD-DA-0006,DATA_ANALYST,tfidf,Business Process Improvement,continuous operational improvement,0.749,tfidf
+JD-DA-0006,DATA_ANALYST,tfidf,Incident Response,Key Responsibilities,0.352,tfidf
+JD-DA-0006,DATA_ANALYST,tfidf,Performance Management,Data Management & Maintenance,0.345,tfidf
+JD-DA-0006,DATA_ANALYST,tfidf,GCP,multiple platforms,0.296,tfidf
+JD-DA-0006,DATA_ANALYST,tfidf,Auditing,regular data audits,0.481,tfidf
+JD-DA-0006,DATA_ANALYST,tfidf,Stakeholder Communication,relevant stakeholders,0.42,tfidf
+JD-DA-0006,DATA_ANALYST,tfidf,Documentation,Assist in maintaining data structures and documentation,0.631,tfidf
+JD-DA-0006,DATA_ANALYST,tfidf,Data Structures & Algorithms,data structures,0.639,tfidf
+JD-DA-0006,DATA_ANALYST,tfidf,Financial Analysis,Reporting & Analysis Support,0.518,tfidf
+JD-DA-0006,DATA_ANALYST,tfidf,Generative AI,Generate,0.398,tfidf
+JD-DA-0006,DATA_ANALYST,tfidf,Data Visualisation,Generate scheduled operational reports and dashboards,0.584,tfidf
+JD-DA-0006,DATA_ANALYST,tfidf,Data Analysis,Support Data Analysts,0.458,tfidf
+JD-DA-0006,DATA_ANALYST,tfidf,Responsible AI,Data Governance,0.381,tfidf
+JD-DA-0006,DATA_ANALYST,tfidf,Security Frameworks,Compliance,0.279,tfidf
+JD-DA-0006,DATA_ANALYST,tfidf,Employee Relations,procedures,0.266,tfidf
+JD-DA-0006,DATA_ANALYST,tfidf,Cybersecurity,Maintain confidentiality and security of sensitive information,0.383,tfidf
+JD-DA-0006,DATA_ANALYST,tfidf,HRIS,sensitive information,0.568,tfidf
+JD-DA-0006,DATA_ANALYST,tfidf,Microservices,archival,0.273,tfidf
+JD-DA-0006,DATA_ANALYST,tfidf,Requirements Analysis,record management requirements,0.715,tfidf
+JD-DA-0006,DATA_ANALYST,tfidf,Training & Development,developing and maintaining data standards and SOPs,0.421,tfidf
+JD-DA-0006,DATA_ANALYST,tfidf,Systems Thinking,system enhancement,0.344,tfidf
+JD-DA-0006,DATA_ANALYST,tfidf,Teamwork,Collaborate with business users,0.506,tfidf
+JD-DA-0006,DATA_ANALYST,tfidf,Business Analysis,business users,0.429,tfidf
+JD-DA-0006,DATA_ANALYST,tfidf,Communication,Education,0.629,tfidf
+JD-DA-0006,DATA_ANALYST,tfidf,Data Mining,Minimum SPM,0.413,tfidf
+JD-DA-0006,DATA_ANALYST,tfidf,Computer Vision,Computer Science,0.29,tfidf
+JD-DA-0006,DATA_ANALYST,tfidf,Statistical Analysis,Statistics,0.655,tfidf
+JD-DA-0006,DATA_ANALYST,tfidf,Excel,Advanced Microsoft Excel skills,0.517,tfidf
+JD-DA-0006,DATA_ANALYST,tfidf,Tableau,Pivot Tables,0.872,tfidf
+JD-DA-0006,DATA_ANALYST,tfidf,Power BI,Power Query,0.81,tfidf
+JD-DA-0006,DATA_ANALYST,tfidf,CRM Software,CRM,0.354,tfidf
+JD-DA-0006,DATA_ANALYST,tfidf,Interpersonal Skills,Soft Skills,0.299,tfidf
+JD-DA-0006,DATA_ANALYST,tfidf,Attention to Detail,Strong attention,0.54,tfidf
+JD-DA-0006,DATA_ANALYST,tfidf,Time Management,Excellent organizational and time management skills,0.329,tfidf
+JD-DA-0006,DATA_ANALYST,tfidf,Problem Solving,Analytical and problem-solving mindset,0.702,tfidf
 JD-DA-0007,DATA_ANALYST,keyword,Decision Making,decision making,1.0,keyword
 JD-DA-0007,DATA_ANALYST,keyword,Excel,Excel,0.8,keyword
 JD-DA-0007,DATA_ANALYST,keyword,Power BI,Power BI,1.0,keyword
@@ -726,6 +1396,20 @@ JD-DA-0007,DATA_ANALYST,hybrid,Excel,Excel,0.8,keyword
 JD-DA-0007,DATA_ANALYST,hybrid,Power BI,Power BI,1.0,keyword
 JD-DA-0007,DATA_ANALYST,hybrid,Market Research,market research,1.0,keyword
 JD-DA-0007,DATA_ANALYST,hybrid,Statistical Analysis,Statistics,1.0,keyword
+JD-DA-0007,DATA_ANALYST,tfidf,Decision Making,strengthen our operations and decision,0.73,tfidf
+JD-DA-0007,DATA_ANALYST,tfidf,Security Operations (SOC),operations,0.548,tfidf
+JD-DA-0007,DATA_ANALYST,tfidf,Power BI,power,0.81,tfidf
+JD-DA-0007,DATA_ANALYST,tfidf,Data Cleaning,data,0.655,tfidf
+JD-DA-0007,DATA_ANALYST,tfidf,Data Analysis,Data Analyst,0.61,tfidf
+JD-DA-0007,DATA_ANALYST,tfidf,Training & Development,support business optimization and strategy development,0.366,tfidf
+JD-DA-0007,DATA_ANALYST,tfidf,Business Analysis,business optimization,0.426,tfidf
+JD-DA-0007,DATA_ANALYST,tfidf,Data Visualisation,build basic dashboard,0.535,tfidf
+JD-DA-0007,DATA_ANALYST,tfidf,Market Research,Support market research,0.554,tfidf
+JD-DA-0007,DATA_ANALYST,tfidf,Performance Management,Support market research and performance tracking,0.587,tfidf
+JD-DA-0007,DATA_ANALYST,tfidf,Google Analytics,Business Analytics,0.573,tfidf
+JD-DA-0007,DATA_ANALYST,tfidf,HRIS,Information Technology,0.303,tfidf
+JD-DA-0007,DATA_ANALYST,tfidf,Network Security,coursework,0.276,tfidf
+JD-DA-0007,DATA_ANALYST,tfidf,Statistical Analysis,Statistics,0.655,tfidf
 JD-DA-0008,DATA_ANALYST,keyword,Data Analysis,Data Analysis,1.0,keyword
 JD-DA-0008,DATA_ANALYST,keyword,Data Mining,Data Mining,1.0,keyword
 JD-DA-0008,DATA_ANALYST,keyword,Data Modelling,Data Modelling,1.0,keyword
@@ -761,6 +1445,35 @@ JD-DA-0008,DATA_ANALYST,hybrid,Critical Thinking,analytical,0.77,semantic
 JD-DA-0008,DATA_ANALYST,hybrid,Problem Solving,problem-solving,1.0,keyword
 JD-DA-0008,DATA_ANALYST,hybrid,Communication,Communication Skills,1.0,keyword
 JD-DA-0008,DATA_ANALYST,hybrid,Adaptability,Adaptability,1.0,keyword
+JD-DA-0008,DATA_ANALYST,tfidf,Data Analysis,Data Analysis,0.706,tfidf
+JD-DA-0008,DATA_ANALYST,tfidf,Research Skills,Review,0.297,tfidf
+JD-DA-0008,DATA_ANALYST,tfidf,Communication,analyze telecommunication data,0.857,tfidf
+JD-DA-0008,DATA_ANALYST,tfidf,Business Process Improvement,improvement,0.615,tfidf
+JD-DA-0008,DATA_ANALYST,tfidf,Data Mining,Data Mining,0.54,tfidf
+JD-DA-0008,DATA_ANALYST,tfidf,ETL,Extract,0.323,tfidf
+JD-DA-0008,DATA_ANALYST,tfidf,Generative AI,large volumes,0.348,tfidf
+JD-DA-0008,DATA_ANALYST,tfidf,Data Cleaning,data,0.655,tfidf
+JD-DA-0008,DATA_ANALYST,tfidf,Statistical Analysis,statistical models,0.702,tfidf
+JD-DA-0008,DATA_ANALYST,tfidf,Customer Focus,understand and predict customer behavior or market trends,0.73,tfidf
+JD-DA-0008,DATA_ANALYST,tfidf,Market Research,market trends,0.448,tfidf
+JD-DA-0008,DATA_ANALYST,tfidf,Data Structures & Algorithms,structure,0.498,tfidf
+JD-DA-0008,DATA_ANALYST,tfidf,Financial Analysis,analysis,0.715,tfidf
+JD-DA-0008,DATA_ANALYST,tfidf,Decision Making,business decisions,0.491,tfidf
+JD-DA-0008,DATA_ANALYST,tfidf,Data Visualisation,visualizations,0.329,tfidf
+JD-DA-0008,DATA_ANALYST,tfidf,Stakeholder Communication,communicate data-driven insights to internal stakeholders,0.532,tfidf
+JD-DA-0008,DATA_ANALYST,tfidf,Security Frameworks,compliance,0.279,tfidf
+JD-DA-0008,DATA_ANALYST,tfidf,Documentation,Technical Skills,0.478,tfidf
+JD-DA-0008,DATA_ANALYST,tfidf,Python,Python,0.842,tfidf
+JD-DA-0008,DATA_ANALYST,tfidf,SQL,SQL,0.394,tfidf
+JD-DA-0008,DATA_ANALYST,tfidf,Tableau,Tableau,0.872,tfidf
+JD-DA-0008,DATA_ANALYST,tfidf,Go,coding languages,0.393,tfidf
+JD-DA-0008,DATA_ANALYST,tfidf,Machine Learning,machine learning,0.638,tfidf
+JD-DA-0008,DATA_ANALYST,tfidf,Training & Development,software development,0.344,tfidf
+JD-DA-0008,DATA_ANALYST,tfidf,Google Analytics,Analytical Skills,0.42,tfidf
+JD-DA-0008,DATA_ANALYST,tfidf,Problem Solving,Strong analytical and problem-solving skills,0.651,tfidf
+JD-DA-0008,DATA_ANALYST,tfidf,Adaptability,Adaptability,0.816,tfidf
+JD-DA-0008,DATA_ANALYST,tfidf,Express.js,pressure,0.304,tfidf
+JD-DA-0008,DATA_ANALYST,tfidf,FastAPI,fast-paced environment,0.423,tfidf
 JD-DA-0009,DATA_ANALYST,keyword,Business Analysis,requirements gathering,1.0,keyword
 JD-DA-0009,DATA_ANALYST,keyword,Statistical Analysis,statistical modelling,1.0,keyword
 JD-DA-0009,DATA_ANALYST,keyword,Data Analysis,data analysis,1.0,keyword
@@ -784,6 +1497,35 @@ JD-DA-0009,DATA_ANALYST,hybrid,Interpersonal Skills,interpersonal,1.0,keyword
 JD-DA-0009,DATA_ANALYST,hybrid,Presentation Skills,presentation skills,1.0,keyword
 JD-DA-0009,DATA_ANALYST,hybrid,Teamwork,collaborate effectively,0.62,semantic
 JD-DA-0009,DATA_ANALYST,hybrid,SQL,SQL,1.0,keyword
+JD-DA-0009,DATA_ANALYST,tfidf,Business Analysis,business requirements,0.913,tfidf
+JD-DA-0009,DATA_ANALYST,tfidf,Object-Oriented Programming,objectives,0.4,tfidf
+JD-DA-0009,DATA_ANALYST,tfidf,Threat Intelligence,business intelligence,0.438,tfidf
+JD-DA-0009,DATA_ANALYST,tfidf,Statistical Analysis,statistical modelling projects,0.759,tfidf
+JD-DA-0009,DATA_ANALYST,tfidf,Requirements Analysis,ensure data elements required,0.682,tfidf
+JD-DA-0009,DATA_ANALYST,tfidf,Data Cleaning,data elements,0.368,tfidf
+JD-DA-0009,DATA_ANALYST,tfidf,Risk Analysis,data readiness assessment,0.325,tfidf
+JD-DA-0009,DATA_ANALYST,tfidf,Serverless,functional and appealing web-based applications,0.296,tfidf
+JD-DA-0009,DATA_ANALYST,tfidf,Vulnerability Assessment,based on usability,0.509,tfidf
+JD-DA-0009,DATA_ANALYST,tfidf,Data Analysis,Data exploration,0.502,tfidf
+JD-DA-0009,DATA_ANALYST,tfidf,UI/UX Design,designed data solution ETL,0.339,tfidf
+JD-DA-0009,DATA_ANALYST,tfidf,ETL,extract,0.368,tfidf
+JD-DA-0009,DATA_ANALYST,tfidf,Data Warehousing,multi-dimensional cubes,0.317,tfidf
+JD-DA-0009,DATA_ANALYST,tfidf,Data Visualisation,dashboards,0.584,tfidf
+JD-DA-0009,DATA_ANALYST,tfidf,Documentation,based on functional and technical specifications,0.661,tfidf
+JD-DA-0009,DATA_ANALYST,tfidf,Unit Testing,test plans,0.321,tfidf
+JD-DA-0009,DATA_ANALYST,tfidf,Performance Management,Monitor and tune data solution process performance,0.506,tfidf
+JD-DA-0009,DATA_ANALYST,tfidf,Computer Vision,Computer Science,0.29,tfidf
+JD-DA-0009,DATA_ANALYST,tfidf,HRIS,Information Technology,0.303,tfidf
+JD-DA-0009,DATA_ANALYST,tfidf,Google Analytics,"analytical minded, meticulous, versatile",0.373,tfidf
+JD-DA-0009,DATA_ANALYST,tfidf,Attention to Detail,detail,0.528,tfidf
+JD-DA-0009,DATA_ANALYST,tfidf,Bash,data related script writing skill,0.297,tfidf
+JD-DA-0009,DATA_ANALYST,tfidf,Presentation Skills,Strong interpersonal & presentation skills,0.528,tfidf
+JD-DA-0009,DATA_ANALYST,tfidf,Teamwork,collaborate effectively,0.396,tfidf
+JD-DA-0009,DATA_ANALYST,tfidf,Azure,Microsoft SQL,0.365,tfidf
+JD-DA-0009,DATA_ANALYST,tfidf,Critical Thinking,Good & reasonable command,0.262,tfidf
+JD-DA-0009,DATA_ANALYST,tfidf,Machine Learning,learning with positive team and family spirit,0.379,tfidf
+JD-DA-0009,DATA_ANALYST,tfidf,Interpersonal Skills,Personal mentoring,0.321,tfidf
+JD-DA-0009,DATA_ANALYST,tfidf,Model Evaluation,practice hybrid work model,0.33,tfidf
 JD-DA-0010,DATA_ANALYST,keyword,Power BI,Power BI,1.0,keyword
 JD-DA-0010,DATA_ANALYST,keyword,Data Modelling,data modelling,1.0,keyword
 JD-DA-0010,DATA_ANALYST,keyword,Data Visualisation,data visualisation,1.0,keyword
@@ -810,6 +1552,27 @@ JD-DA-0010,DATA_ANALYST,hybrid,PowerShell,PowerShell,1.0,keyword
 JD-DA-0010,DATA_ANALYST,hybrid,Python,Python,1.0,keyword
 JD-DA-0010,DATA_ANALYST,hybrid,Data Analysis,data analysis,1.0,keyword
 JD-DA-0010,DATA_ANALYST,hybrid,Attention to Detail,detail-oriented,1.0,keyword
+JD-DA-0010,DATA_ANALYST,tfidf,Incident Response,Key Responsibilities,0.352,tfidf
+JD-DA-0010,DATA_ANALYST,tfidf,Power BI,Power BI Development - Assist,0.81,tfidf
+JD-DA-0010,DATA_ANALYST,tfidf,Data Visualisation,building and maintaining Power BI dashboards and reports,0.584,tfidf
+JD-DA-0010,DATA_ANALYST,tfidf,Data Modelling,basic data modelling,0.654,tfidf
+JD-DA-0010,DATA_ANALYST,tfidf,Employee Relations,DAX calculations,0.271,tfidf
+JD-DA-0010,DATA_ANALYST,tfidf,Data Cleaning,Data Preparation,0.655,tfidf
+JD-DA-0010,DATA_ANALYST,tfidf,Financial Analysis,Analysis - Help,0.685,tfidf
+JD-DA-0010,DATA_ANALYST,tfidf,ETL,data extraction,0.366,tfidf
+JD-DA-0010,DATA_ANALYST,tfidf,Hugging Face,transformation,0.284,tfidf
+JD-DA-0010,DATA_ANALYST,tfidf,Ansible,Automation Support - Support simple automation tasks,0.389,tfidf
+JD-DA-0010,DATA_ANALYST,tfidf,PowerShell,PowerShell or scripts,0.626,tfidf
+JD-DA-0010,DATA_ANALYST,tfidf,Business Process Improvement,improve reporting and data processes,0.422,tfidf
+JD-DA-0010,DATA_ANALYST,tfidf,Financial Reporting,reporting,0.314,tfidf
+JD-DA-0010,DATA_ANALYST,tfidf,Python,Programming & Integration - Use Python,0.622,tfidf
+JD-DA-0010,DATA_ANALYST,tfidf,Data Analysis,data analysis,0.706,tfidf
+JD-DA-0010,DATA_ANALYST,tfidf,CI/CD,API integrations,0.337,tfidf
+JD-DA-0010,DATA_ANALYST,tfidf,Excel,Microsoft Excel,0.679,tfidf
+JD-DA-0010,DATA_ANALYST,tfidf,Tableau,Pivot Tables,0.482,tfidf
+JD-DA-0010,DATA_ANALYST,tfidf,Data Mining,Basic knowledge of DAX or data modelling,0.397,tfidf
+JD-DA-0010,DATA_ANALYST,tfidf,Project Management,school projects,0.595,tfidf
+JD-DA-0010,DATA_ANALYST,tfidf,Vulnerability Assessment,Eligibility,0.396,tfidf
 JD-DA-0011,DATA_ANALYST,keyword,Data Analysis,Data Analytics,1.0,keyword
 JD-DA-0011,DATA_ANALYST,keyword,Excel,Excel,0.8,keyword
 JD-DA-0011,DATA_ANALYST,keyword,SQL,SQL,1.0,keyword
@@ -844,6 +1607,41 @@ JD-DA-0011,DATA_ANALYST,hybrid,Time Management,prioritization,1.0,keyword
 JD-DA-0011,DATA_ANALYST,hybrid,Business Process Improvement,Business Process Improvement,1.0,keyword
 JD-DA-0011,DATA_ANALYST,hybrid,Statistical Analysis,Statistics,1.0,keyword
 JD-DA-0011,DATA_ANALYST,hybrid,Python,Python,1.0,keyword
+JD-DA-0011,DATA_ANALYST,tfidf,Incident Response,Key Responsibilities,0.352,tfidf
+JD-DA-0011,DATA_ANALYST,tfidf,Google Analytics,Manufacturing Data Analytics,0.686,tfidf
+JD-DA-0011,DATA_ANALYST,tfidf,ETL,Extract,0.323,tfidf
+JD-DA-0011,DATA_ANALYST,tfidf,Data Analysis,analyze data,0.706,tfidf
+JD-DA-0011,DATA_ANALYST,tfidf,Data Cleaning,data,0.655,tfidf
+JD-DA-0011,DATA_ANALYST,tfidf,Systems Thinking,manufacturing systems,0.525,tfidf
+JD-DA-0011,DATA_ANALYST,tfidf,Data Visualisation,operational dashboards,0.478,tfidf
+JD-DA-0011,DATA_ANALYST,tfidf,SQL,SQL,0.394,tfidf
+JD-DA-0011,DATA_ANALYST,tfidf,Power BI,Power BI,0.81,tfidf
+JD-DA-0011,DATA_ANALYST,tfidf,Time Management,lead time,0.531,tfidf
+JD-DA-0011,DATA_ANALYST,tfidf,Performance Management,delivery performance,0.63,tfidf
+JD-DA-0011,DATA_ANALYST,tfidf,Risk Analysis,potential risks,0.428,tfidf
+JD-DA-0011,DATA_ANALYST,tfidf,Vulnerability Assessment,reliability,0.461,tfidf
+JD-DA-0011,DATA_ANALYST,tfidf,Process Mapping,ERP manufacturing processes,0.526,tfidf
+JD-DA-0011,DATA_ANALYST,tfidf,Data Structures & Algorithms,data structures,0.639,tfidf
+JD-DA-0011,DATA_ANALYST,tfidf,Business Analysis,business logic,0.411,tfidf
+JD-DA-0011,DATA_ANALYST,tfidf,Financial Analysis,analysis,0.715,tfidf
+JD-DA-0011,DATA_ANALYST,tfidf,Business Process Improvement,improvement,0.766,tfidf
+JD-DA-0011,DATA_ANALYST,tfidf,Networking,routings,0.257,tfidf
+JD-DA-0011,DATA_ANALYST,tfidf,Decision Making,affecting production visibility and operational decision-making,0.834,tfidf
+JD-DA-0011,DATA_ANALYST,tfidf,Requirements Analysis,Support user requirement analysis,0.8,tfidf
+JD-DA-0011,DATA_ANALYST,tfidf,Documentation,implementation,0.296,tfidf
+JD-DA-0011,DATA_ANALYST,tfidf,Customer Focus,analyzing customer orders,0.683,tfidf
+JD-DA-0011,DATA_ANALYST,tfidf,Employee Relations,simulation,0.266,tfidf
+JD-DA-0011,DATA_ANALYST,tfidf,Data Warehousing,Warehouse,0.577,tfidf
+JD-DA-0011,DATA_ANALYST,tfidf,Security Operations (SOC),operational and production issues,0.363,tfidf
+JD-DA-0011,DATA_ANALYST,tfidf,Digital Marketing,digital transformation initiatives,0.255,tfidf
+JD-DA-0011,DATA_ANALYST,tfidf,Malware Analysis,Industrial Engineering,0.439,tfidf
+JD-DA-0011,DATA_ANALYST,tfidf,Research Skills,Operations Research,0.494,tfidf
+JD-DA-0011,DATA_ANALYST,tfidf,HRIS,Information Systems,0.568,tfidf
+JD-DA-0011,DATA_ANALYST,tfidf,Statistical Analysis,Statistics / Mathematics,0.476,tfidf
+JD-DA-0011,DATA_ANALYST,tfidf,Computer Vision,Computer Science,0.29,tfidf
+JD-DA-0011,DATA_ANALYST,tfidf,Project Management,production planning,0.265,tfidf
+JD-DA-0011,DATA_ANALYST,tfidf,Python,Python,0.842,tfidf
+JD-DA-0011,DATA_ANALYST,tfidf,R,analytical/programming tools,0.403,tfidf
 JD-DS-0001,DATA_SCIENTIST,keyword,Statistical Analysis,Statistics,1.0,keyword
 JD-DS-0001,DATA_SCIENTIST,keyword,Python,Python,1.0,keyword
 JD-DS-0001,DATA_SCIENTIST,keyword,Pandas,pandas,1.0,keyword
@@ -872,6 +1670,42 @@ JD-DS-0001,DATA_SCIENTIST,hybrid,Data Cleaning,data cleaning,1.0,keyword
 JD-DS-0001,DATA_SCIENTIST,hybrid,Data Analysis,exploratory data analysis,1.0,keyword
 JD-DS-0001,DATA_SCIENTIST,hybrid,Data Visualisation,visualisation,0.644,semantic
 JD-DS-0001,DATA_SCIENTIST,hybrid,Leadership,leadership,1.0,keyword
+JD-DS-0001,DATA_SCIENTIST,tfidf,AI Literacy,AI,0.401,tfidf
+JD-DS-0001,DATA_SCIENTIST,tfidf,Training & Development,model development,0.476,tfidf
+JD-DS-0001,DATA_SCIENTIST,tfidf,Employment Law,deployment,0.54,tfidf
+JD-DS-0001,DATA_SCIENTIST,tfidf,CI/CD,integration,0.373,tfidf
+JD-DS-0001,DATA_SCIENTIST,tfidf,Search Engine Optimisation,long-term optimisation,0.301,tfidf
+JD-DS-0001,DATA_SCIENTIST,tfidf,Malware Analysis,engineers,0.499,tfidf
+JD-DS-0001,DATA_SCIENTIST,tfidf,ETL,pipelines,0.591,tfidf
+JD-DS-0001,DATA_SCIENTIST,tfidf,REST API,APIs,0.382,tfidf
+JD-DS-0001,DATA_SCIENTIST,tfidf,Terraform,infrastructure,0.449,tfidf
+JD-DS-0001,DATA_SCIENTIST,tfidf,Vulnerability Assessment,reliability,0.461,tfidf
+JD-DS-0001,DATA_SCIENTIST,tfidf,Performance Management,performance,0.738,tfidf
+JD-DS-0001,DATA_SCIENTIST,tfidf,Data Cleaning,data,0.655,tfidf
+JD-DS-0001,DATA_SCIENTIST,tfidf,Systems Thinking,feeds our internal systems and tooling,0.591,tfidf
+JD-DS-0001,DATA_SCIENTIST,tfidf,Computer Vision,Computer Science,0.29,tfidf
+JD-DS-0001,DATA_SCIENTIST,tfidf,Statistical Analysis,Statistics,0.655,tfidf
+JD-DS-0001,DATA_SCIENTIST,tfidf,Time Management,priorities,0.429,tfidf
+JD-DS-0001,DATA_SCIENTIST,tfidf,Critical Thinking,explain your reasoning and your results,0.575,tfidf
+JD-DS-0001,DATA_SCIENTIST,tfidf,Interpersonal Skills,people,0.3,tfidf
+JD-DS-0001,DATA_SCIENTIST,tfidf,Docker,flag a blocker,0.414,tfidf
+JD-DS-0001,DATA_SCIENTIST,tfidf,Python,Python,0.842,tfidf
+JD-DS-0001,DATA_SCIENTIST,tfidf,Pandas,pandas,0.861,tfidf
+JD-DS-0001,DATA_SCIENTIST,tfidf,NumPy,numpy,0.838,tfidf
+JD-DS-0001,DATA_SCIENTIST,tfidf,Hugging Face,ML library,0.335,tfidf
+JD-DS-0001,DATA_SCIENTIST,tfidf,Data Mining,Working knowledge of SQL,0.366,tfidf
+JD-DS-0001,DATA_SCIENTIST,tfidf,SQL,SQL,0.394,tfidf
+JD-DS-0001,DATA_SCIENTIST,tfidf,Communication,classification,0.329,tfidf
+JD-DS-0001,DATA_SCIENTIST,tfidf,Model Evaluation,evaluate a model,0.533,tfidf
+JD-DS-0001,DATA_SCIENTIST,tfidf,Data Analysis,exploratory data analysis,0.771,tfidf
+JD-DS-0001,DATA_SCIENTIST,tfidf,Data Visualisation,visualisation,0.594,tfidf
+JD-DS-0001,DATA_SCIENTIST,tfidf,Leadership,communicated to the team and leadership,0.907,tfidf
+JD-DS-0001,DATA_SCIENTIST,tfidf,Jupyter,notebook,0.272,tfidf
+JD-DS-0001,DATA_SCIENTIST,tfidf,Looker,Looks,0.362,tfidf
+JD-DS-0001,DATA_SCIENTIST,tfidf,Machine Learning,minimal supervision,0.355,tfidf
+JD-DS-0001,DATA_SCIENTIST,tfidf,Stakeholder Communication,walk a non-technical internal stakeholder,0.385,tfidf
+JD-DS-0001,DATA_SCIENTIST,tfidf,Financial Analysis,analysis,0.715,tfidf
+JD-DS-0001,DATA_SCIENTIST,tfidf,Problem Solving,problem,0.606,tfidf
 JD-DS-0002,DATA_SCIENTIST,keyword,Model Evaluation,model evaluation,1.0,keyword
 JD-DS-0002,DATA_SCIENTIST,keyword,Python,Python,1.0,keyword
 JD-DS-0002,DATA_SCIENTIST,keyword,Cloud Computing,Cloud infrastructure,1.0,keyword
@@ -886,6 +1720,25 @@ JD-DS-0002,DATA_SCIENTIST,hybrid,Cloud Computing,Cloud infrastructure,1.0,keywor
 JD-DS-0002,DATA_SCIENTIST,hybrid,SQL,SQL,1.0,keyword
 JD-DS-0002,DATA_SCIENTIST,hybrid,Data Cleaning,Data manipulation tasks,0.607,semantic
 JD-DS-0002,DATA_SCIENTIST,hybrid,Business Analysis,business needs,0.616,semantic
+JD-DS-0002,DATA_SCIENTIST,tfidf,Teamwork,Assist the team,0.295,tfidf
+JD-DS-0002,DATA_SCIENTIST,tfidf,Training & Development,develop and deploy AI use cases,0.523,tfidf
+JD-DS-0002,DATA_SCIENTIST,tfidf,Business Analysis,business users,0.429,tfidf
+JD-DS-0002,DATA_SCIENTIST,tfidf,Research Skills,research,0.675,tfidf
+JD-DS-0002,DATA_SCIENTIST,tfidf,Feature Engineering,features,0.678,tfidf
+JD-DS-0002,DATA_SCIENTIST,tfidf,Systems Thinking,larger AI system,0.303,tfidf
+JD-DS-0002,DATA_SCIENTIST,tfidf,Natural Language Processing,data processing,0.543,tfidf
+JD-DS-0002,DATA_SCIENTIST,tfidf,Model Evaluation,chatbot evaluation,0.588,tfidf
+JD-DS-0002,DATA_SCIENTIST,tfidf,ETL,building RPA pipelines,0.591,tfidf
+JD-DS-0002,DATA_SCIENTIST,tfidf,Project Management,projects,0.745,tfidf
+JD-DS-0002,DATA_SCIENTIST,tfidf,Data Visualisation,Building monitoring dashboards,0.454,tfidf
+JD-DS-0002,DATA_SCIENTIST,tfidf,Employment Law,deployment,0.54,tfidf
+JD-DS-0002,DATA_SCIENTIST,tfidf,Scikit-learn,Learn and gain exposure,0.332,tfidf
+JD-DS-0002,DATA_SCIENTIST,tfidf,Python,Python coding,0.561,tfidf
+JD-DS-0002,DATA_SCIENTIST,tfidf,Cloud Computing,Cloud infrastructure,0.667,tfidf
+JD-DS-0002,DATA_SCIENTIST,tfidf,SQL,SQL,0.562,tfidf
+JD-DS-0002,DATA_SCIENTIST,tfidf,Data Cleaning,Data manipulation tasks,0.404,tfidf
+JD-DS-0002,DATA_SCIENTIST,tfidf,Performance Management,strong performance,0.682,tfidf
+JD-DS-0002,DATA_SCIENTIST,tfidf,Accounting,available headcount,0.341,tfidf
 JD-DS-0003,DATA_SCIENTIST,keyword,Teamwork,team works,1.0,keyword
 JD-DS-0003,DATA_SCIENTIST,keyword,UI/UX Design,user experiences,1.0,keyword
 JD-DS-0003,DATA_SCIENTIST,keyword,Computer Vision,Computer Vision,1.0,keyword
@@ -954,6 +1807,55 @@ JD-DS-0003,DATA_SCIENTIST,hybrid,Cloud Computing,cloud platforms,1.0,keyword
 JD-DS-0003,DATA_SCIENTIST,hybrid,AWS,AWS,1.0,keyword
 JD-DS-0003,DATA_SCIENTIST,hybrid,Azure,Azure,1.0,keyword
 JD-DS-0003,DATA_SCIENTIST,hybrid,GCP,Google Cloud,1.0,keyword
+JD-DS-0003,DATA_SCIENTIST,tfidf,Customer Focus,global customers,0.644,tfidf
+JD-DS-0003,DATA_SCIENTIST,tfidf,OWASP Top 10,AI-powered applications,0.304,tfidf
+JD-DS-0003,DATA_SCIENTIST,tfidf,Business Analysis,create real business value,0.913,tfidf
+JD-DS-0003,DATA_SCIENTIST,tfidf,UI/UX Design,enhance user experiences,0.353,tfidf
+JD-DS-0003,DATA_SCIENTIST,tfidf,Project Management,real-world AI projects,0.674,tfidf
+JD-DS-0003,DATA_SCIENTIST,tfidf,Computer Vision,Computer Vision,0.573,tfidf
+JD-DS-0003,DATA_SCIENTIST,tfidf,AI Literacy,Multimodal AI,0.559,tfidf
+JD-DS-0003,DATA_SCIENTIST,tfidf,Generative AI,Retrieval-Augmented Generation,0.51,tfidf
+JD-DS-0003,DATA_SCIENTIST,tfidf,Malware Analysis,AI engineers,0.473,tfidf
+JD-DS-0003,DATA_SCIENTIST,tfidf,Microservices,solution architects,0.402,tfidf
+JD-DS-0003,DATA_SCIENTIST,tfidf,Training & Development,development,0.476,tfidf
+JD-DS-0003,DATA_SCIENTIST,tfidf,Incident Response,Key responsibilities,0.395,tfidf
+JD-DS-0003,DATA_SCIENTIST,tfidf,Stakeholder Communication,internal stakeholders,0.47,tfidf
+JD-DS-0003,DATA_SCIENTIST,tfidf,Documentation,Multimodal RAG technologies,0.707,tfidf
+JD-DS-0003,DATA_SCIENTIST,tfidf,ETL,Build data pipelines,0.575,tfidf
+JD-DS-0003,DATA_SCIENTIST,tfidf,Model Evaluation,model evaluation workflows,0.503,tfidf
+JD-DS-0003,DATA_SCIENTIST,tfidf,Financial Modelling,AI models,0.341,tfidf
+JD-DS-0003,DATA_SCIENTIST,tfidf,Performance Management,"improve performance, accuracy, and user experience",0.738,tfidf
+JD-DS-0003,DATA_SCIENTIST,tfidf,CI/CD,Support solution integration,0.28,tfidf
+JD-DS-0003,DATA_SCIENTIST,tfidf,Employment Law,deployment activities,0.454,tfidf
+JD-DS-0003,DATA_SCIENTIST,tfidf,Research Skills,Conduct research,0.675,tfidf
+JD-DS-0003,DATA_SCIENTIST,tfidf,Metasploit,frameworks,0.317,tfidf
+JD-DS-0003,DATA_SCIENTIST,tfidf,Requirements Analysis,Required Qualifications,0.696,tfidf
+JD-DS-0003,DATA_SCIENTIST,tfidf,Data Cleaning,Data Science,0.368,tfidf
+JD-DS-0003,DATA_SCIENTIST,tfidf,Python,Solid programming skills in Python,0.842,tfidf
+JD-DS-0003,DATA_SCIENTIST,tfidf,Machine Learning,Familiarity with machine learning and deep learning fundamentals,0.638,tfidf
+JD-DS-0003,DATA_SCIENTIST,tfidf,Data Modelling,vector databases,0.328,tfidf
+JD-DS-0003,DATA_SCIENTIST,tfidf,Prompt Engineering,prompt engineering,0.791,tfidf
+JD-DS-0003,DATA_SCIENTIST,tfidf,PyTorch,PyTorch,0.915,tfidf
+JD-DS-0003,DATA_SCIENTIST,tfidf,TensorFlow,TensorFlow,0.909,tfidf
+JD-DS-0003,DATA_SCIENTIST,tfidf,Hugging Face,Hugging Face,0.662,tfidf
+JD-DS-0003,DATA_SCIENTIST,tfidf,Go,LangChain,0.338,tfidf
+JD-DS-0003,DATA_SCIENTIST,tfidf,Problem Solving,Strong problem-solving and analytical skills,0.651,tfidf
+JD-DS-0003,DATA_SCIENTIST,tfidf,Vulnerability Assessment,demonstrated capability,0.346,tfidf
+JD-DS-0003,DATA_SCIENTIST,tfidf,Network Security,work effectively,0.279,tfidf
+JD-DS-0003,DATA_SCIENTIST,tfidf,FastAPI,fast-paced environment,0.423,tfidf
+JD-DS-0003,DATA_SCIENTIST,tfidf,Communication,Good communication skills,0.801,tfidf
+JD-DS-0003,DATA_SCIENTIST,tfidf,Teamwork,collaborate within cross-functional teams,0.394,tfidf
+JD-DS-0003,DATA_SCIENTIST,tfidf,Serverless,cross-functional teams,0.301,tfidf
+JD-DS-0003,DATA_SCIENTIST,tfidf,Google Analytics,Video Analytics,0.747,tfidf
+JD-DS-0003,DATA_SCIENTIST,tfidf,Natural Language Processing,Text,0.478,tfidf
+JD-DS-0003,DATA_SCIENTIST,tfidf,Data Mining,Knowledge Graphs,0.397,tfidf
+JD-DS-0003,DATA_SCIENTIST,tfidf,Search Engine Marketing,Semantic Search,0.397,tfidf
+JD-DS-0003,DATA_SCIENTIST,tfidf,Cloud Computing,cloud platforms,0.659,tfidf
+JD-DS-0003,DATA_SCIENTIST,tfidf,AWS,AWS,0.319,tfidf
+JD-DS-0003,DATA_SCIENTIST,tfidf,Azure,Azure,0.782,tfidf
+JD-DS-0003,DATA_SCIENTIST,tfidf,GCP,Google Cloud,0.722,tfidf
+JD-DS-0003,DATA_SCIENTIST,tfidf,Payroll,open-source contributions,0.283,tfidf
+JD-DS-0003,DATA_SCIENTIST,tfidf,Leadership,Mentorship,0.353,tfidf
 JD-DS-0004,DATA_SCIENTIST,keyword,Model Evaluation,Model Evaluation,1.0,keyword
 JD-DS-0004,DATA_SCIENTIST,keyword,Data Analysis,Data Analysis,1.0,keyword
 JD-DS-0004,DATA_SCIENTIST,keyword,Business Process Improvement,Process Improvement,1.0,keyword
@@ -988,6 +1890,34 @@ JD-DS-0004,DATA_SCIENTIST,hybrid,Problem Solving,problem-solving,1.0,keyword
 JD-DS-0004,DATA_SCIENTIST,hybrid,Communication,communication skills,1.0,keyword
 JD-DS-0004,DATA_SCIENTIST,hybrid,Stakeholder Communication,stakeholders,0.668,semantic
 JD-DS-0004,DATA_SCIENTIST,hybrid,Machine Learning,machine learning,1.0,keyword
+JD-DS-0004,DATA_SCIENTIST,tfidf,Incident Response,Key Responsibilities,0.352,tfidf
+JD-DS-0004,DATA_SCIENTIST,tfidf,Employee Relations,Simulation,0.25,tfidf
+JD-DS-0004,DATA_SCIENTIST,tfidf,Financial Modelling,Develop simulation models,0.443,tfidf
+JD-DS-0004,DATA_SCIENTIST,tfidf,Model Evaluation,Develop simulation models to evaluate business scenarios,0.588,tfidf
+JD-DS-0004,DATA_SCIENTIST,tfidf,Business Analysis,evaluate business scenarios,0.539,tfidf
+JD-DS-0004,DATA_SCIENTIST,tfidf,Search Engine Optimisation,Allocation Optimization,0.277,tfidf
+JD-DS-0004,DATA_SCIENTIST,tfidf,Data Modelling,Design optimization models,0.265,tfidf
+JD-DS-0004,DATA_SCIENTIST,tfidf,Vulnerability Assessment,stock availability,0.418,tfidf
+JD-DS-0004,DATA_SCIENTIST,tfidf,Data Visualisation,Dashboarding,0.594,tfidf
+JD-DS-0004,DATA_SCIENTIST,tfidf,Google Analytics,Dashboarding and Analytics,0.463,tfidf
+JD-DS-0004,DATA_SCIENTIST,tfidf,GCP,platform eg,0.316,tfidf
+JD-DS-0004,DATA_SCIENTIST,tfidf,Budgeting & Forecasting,Prediction and Forecast Models,0.562,tfidf
+JD-DS-0004,DATA_SCIENTIST,tfidf,Data Analysis,Data Analysis,0.706,tfidf
+JD-DS-0004,DATA_SCIENTIST,tfidf,Data Cleaning,cleans,0.655,tfidf
+JD-DS-0004,DATA_SCIENTIST,tfidf,Data Mining,patterns,0.352,tfidf
+JD-DS-0004,DATA_SCIENTIST,tfidf,Business Process Improvement,improve procurement strategies,0.749,tfidf
+JD-DS-0004,DATA_SCIENTIST,tfidf,Process Mapping,Identifies process gaps,0.424,tfidf
+JD-DS-0004,DATA_SCIENTIST,tfidf,Network Security,work efficiency,0.252,tfidf
+JD-DS-0004,DATA_SCIENTIST,tfidf,Malware Analysis,Engineering,0.499,tfidf
+JD-DS-0004,DATA_SCIENTIST,tfidf,SQL,SQL,0.394,tfidf
+JD-DS-0004,DATA_SCIENTIST,tfidf,Python,Python,0.842,tfidf
+JD-DS-0004,DATA_SCIENTIST,tfidf,Data Structures & Algorithms,structured-thinking skills,0.315,tfidf
+JD-DS-0004,DATA_SCIENTIST,tfidf,Communication,Good communication skills,0.801,tfidf
+JD-DS-0004,DATA_SCIENTIST,tfidf,Presentation Skills,present data insights and recommendations,0.366,tfidf
+JD-DS-0004,DATA_SCIENTIST,tfidf,Stakeholder Communication,stakeholders,0.47,tfidf
+JD-DS-0004,DATA_SCIENTIST,tfidf,Machine Learning,machine learning,0.638,tfidf
+JD-DS-0004,DATA_SCIENTIST,tfidf,Problem Solving,translate business problems,0.371,tfidf
+JD-DS-0004,DATA_SCIENTIST,tfidf,Decision Making,data-driven solutions,0.265,tfidf
 JD-DS-0005,DATA_SCIENTIST,keyword,Machine Learning,machine learning,1.0,keyword
 JD-DS-0005,DATA_SCIENTIST,keyword,R,R,0.8,keyword
 JD-DS-0005,DATA_SCIENTIST,keyword,Python,Python,1.0,keyword
@@ -1012,6 +1942,28 @@ JD-DS-0005,DATA_SCIENTIST,hybrid,Statistical Analysis,statistical modelling,1.0,
 JD-DS-0005,DATA_SCIENTIST,hybrid,Communication,verbal communication,1.0,keyword
 JD-DS-0005,DATA_SCIENTIST,hybrid,Attention to Detail,attention to detail,1.0,keyword
 JD-DS-0005,DATA_SCIENTIST,hybrid,Recruitment,Recruitment,1.0,keyword
+JD-DS-0005,DATA_SCIENTIST,tfidf,Power BI,technology powerhouse,0.382,tfidf
+JD-DS-0005,DATA_SCIENTIST,tfidf,Creativity,innovative initiatives,0.439,tfidf
+JD-DS-0005,DATA_SCIENTIST,tfidf,FastAPI,thrive in a fast paced and challenging environment,0.517,tfidf
+JD-DS-0005,DATA_SCIENTIST,tfidf,Teamwork,multicultural team,0.295,tfidf
+JD-DS-0005,DATA_SCIENTIST,tfidf,Incident Response,Key Responsibilities,0.352,tfidf
+JD-DS-0005,DATA_SCIENTIST,tfidf,Performance Management,Perform analyses,0.594,tfidf
+JD-DS-0005,DATA_SCIENTIST,tfidf,Financial Analysis,analyses,0.492,tfidf
+JD-DS-0005,DATA_SCIENTIST,tfidf,Business Process Improvement,improve our products,0.443,tfidf
+JD-DS-0005,DATA_SCIENTIST,tfidf,Data Cleaning,based on data,0.655,tfidf
+JD-DS-0005,DATA_SCIENTIST,tfidf,Data Visualisation,Develop dashboards,0.584,tfidf
+JD-DS-0005,DATA_SCIENTIST,tfidf,Security Operations (SOC),regular maintenance/BAU operations,0.347,tfidf
+JD-DS-0005,DATA_SCIENTIST,tfidf,Machine Learning,new machine learning initiatives,0.638,tfidf
+JD-DS-0005,DATA_SCIENTIST,tfidf,Communication,Communicate findings,0.822,tfidf
+JD-DS-0005,DATA_SCIENTIST,tfidf,Stakeholder Communication,stakeholders,0.47,tfidf
+JD-DS-0005,DATA_SCIENTIST,tfidf,Statistical Analysis,quantitative field,0.727,tfidf
+JD-DS-0005,DATA_SCIENTIST,tfidf,Computer Vision,computer science,0.29,tfidf
+JD-DS-0005,DATA_SCIENTIST,tfidf,Python,Python,0.842,tfidf
+JD-DS-0005,DATA_SCIENTIST,tfidf,Google Analytics,predictive analytics,0.6,tfidf
+JD-DS-0005,DATA_SCIENTIST,tfidf,Attention to Detail,high attention,0.528,tfidf
+JD-DS-0005,DATA_SCIENTIST,tfidf,Recruitment,Recruitment process,0.565,tfidf
+JD-DS-0005,DATA_SCIENTIST,tfidf,Documentation,Online Technical Test,0.437,tfidf
+JD-DS-0005,DATA_SCIENTIST,tfidf,Risk Analysis,Home Assessment,0.368,tfidf
 JD-DS-0006,DATA_SCIENTIST,keyword,Tableau,Tableau,1.0,keyword
 JD-DS-0006,DATA_SCIENTIST,keyword,Business Analysis,business requirements,1.0,keyword
 JD-DS-0006,DATA_SCIENTIST,keyword,SQL,SQL,1.0,keyword
@@ -1042,6 +1994,22 @@ JD-DS-0006,DATA_SCIENTIST,hybrid,C++,C++,1.0,keyword
 JD-DS-0006,DATA_SCIENTIST,hybrid,C#,C#,1.0,keyword
 JD-DS-0006,DATA_SCIENTIST,hybrid,Problem Solving,problem solving,1.0,keyword
 JD-DS-0006,DATA_SCIENTIST,hybrid,Teamwork,Able to work collaboratively with others,0.734,semantic
+JD-DS-0006,DATA_SCIENTIST,tfidf,Process Mapping,process team,0.524,tfidf
+JD-DS-0006,DATA_SCIENTIST,tfidf,Google Analytics,analytical needs,0.518,tfidf
+JD-DS-0006,DATA_SCIENTIST,tfidf,Data Visualisation,dashboard development,0.594,tfidf
+JD-DS-0006,DATA_SCIENTIST,tfidf,Tableau,Tableau,0.872,tfidf
+JD-DS-0006,DATA_SCIENTIST,tfidf,Feature Engineering,extraction,0.341,tfidf
+JD-DS-0006,DATA_SCIENTIST,tfidf,Data Cleaning,data,0.655,tfidf
+JD-DS-0006,DATA_SCIENTIST,tfidf,Business Analysis,address business requirements,0.913,tfidf
+JD-DS-0006,DATA_SCIENTIST,tfidf,Vulnerability Assessment,availability,0.48,tfidf
+JD-DS-0006,DATA_SCIENTIST,tfidf,Data Mining,Strong knowledge - SQL,0.426,tfidf
+JD-DS-0006,DATA_SCIENTIST,tfidf,Python,Python,0.842,tfidf
+JD-DS-0006,DATA_SCIENTIST,tfidf,Power BI,PowerBI,0.725,tfidf
+JD-DS-0006,DATA_SCIENTIST,tfidf,Hadoop,Hadoop,0.647,tfidf
+JD-DS-0006,DATA_SCIENTIST,tfidf,Looker,RStudio,0.554,tfidf
+JD-DS-0006,DATA_SCIENTIST,tfidf,Interpersonal Skills,Good hands-on skills,0.264,tfidf
+JD-DS-0006,DATA_SCIENTIST,tfidf,Problem Solving,solving capabilities,0.434,tfidf
+JD-DS-0006,DATA_SCIENTIST,tfidf,Teamwork,Able to work collaboratively with others,0.577,tfidf
 JD-DS-0007,DATA_SCIENTIST,keyword,Leadership,leadership,1.0,keyword
 JD-DS-0007,DATA_SCIENTIST,keyword,Project Management,Project Management,1.0,keyword
 JD-DS-0007,DATA_SCIENTIST,keyword,Cloud Computing,Cloud Computing,1.0,keyword
@@ -1083,6 +2051,46 @@ JD-DS-0007,DATA_SCIENTIST,hybrid,Communication,communication skills,1.0,keyword
 JD-DS-0007,DATA_SCIENTIST,hybrid,Creativity,think creatively,0.701,semantic
 JD-DS-0007,DATA_SCIENTIST,hybrid,Adaptability,Adaptable,1.0,keyword
 JD-DS-0007,DATA_SCIENTIST,hybrid,Self-Motivation,initiative,0.8,keyword
+JD-DS-0007,DATA_SCIENTIST,tfidf,Digital Marketing,join our Digital team,0.378,tfidf
+JD-DS-0007,DATA_SCIENTIST,tfidf,Research Skills,strong academic record,0.331,tfidf
+JD-DS-0007,DATA_SCIENTIST,tfidf,Project Management,innovation-driven projects,0.767,tfidf
+JD-DS-0007,DATA_SCIENTIST,tfidf,Incident Response,Key Responsibilities,0.352,tfidf
+JD-DS-0007,DATA_SCIENTIST,tfidf,Data Structures & Algorithms,structured rotation,0.393,tfidf
+JD-DS-0007,DATA_SCIENTIST,tfidf,Training & Development,Software Development,0.564,tfidf
+JD-DS-0007,DATA_SCIENTIST,tfidf,Data Cleaning,Data Science,0.655,tfidf
+JD-DS-0007,DATA_SCIENTIST,tfidf,Malware Analysis,Data Engineer,0.338,tfidf
+JD-DS-0007,DATA_SCIENTIST,tfidf,Cloud Computing,Cloud Technologies,0.656,tfidf
+JD-DS-0007,DATA_SCIENTIST,tfidf,AI Literacy,conception,0.401,tfidf
+JD-DS-0007,DATA_SCIENTIST,tfidf,Time Management,timelines,0.424,tfidf
+JD-DS-0007,DATA_SCIENTIST,tfidf,Budgeting & Forecasting,budgets,0.566,tfidf
+JD-DS-0007,DATA_SCIENTIST,tfidf,Creativity,Innovation,0.693,tfidf
+JD-DS-0007,DATA_SCIENTIST,tfidf,Business Analysis,drive business growth,0.524,tfidf
+JD-DS-0007,DATA_SCIENTIST,tfidf,Data Analysis,Data Analysis,0.706,tfidf
+JD-DS-0007,DATA_SCIENTIST,tfidf,Financial Reporting,Reporting,0.314,tfidf
+JD-DS-0007,DATA_SCIENTIST,tfidf,Systems Thinking,generate insights from digital platforms and systems,0.279,tfidf
+JD-DS-0007,DATA_SCIENTIST,tfidf,Decision Making,drive decisions,0.647,tfidf
+JD-DS-0007,DATA_SCIENTIST,tfidf,Performance Management,optimize digital performance,0.57,tfidf
+JD-DS-0007,DATA_SCIENTIST,tfidf,Teamwork,Collaboration,0.528,tfidf
+JD-DS-0007,DATA_SCIENTIST,tfidf,Serverless,cross-functional teams,0.301,tfidf
+JD-DS-0007,DATA_SCIENTIST,tfidf,Auditing,external partners,0.291,tfidf
+JD-DS-0007,DATA_SCIENTIST,tfidf,Leadership,Leadership Development,0.836,tfidf
+JD-DS-0007,DATA_SCIENTIST,tfidf,Machine Learning,Continuous Learning,0.4,tfidf
+JD-DS-0007,DATA_SCIENTIST,tfidf,CI/CD,integrating them,0.3,tfidf
+JD-DS-0007,DATA_SCIENTIST,tfidf,Problem Solving,troubleshooting,0.571,tfidf
+JD-DS-0007,DATA_SCIENTIST,tfidf,Documentation,digital and technical challenges,0.489,tfidf
+JD-DS-0007,DATA_SCIENTIST,tfidf,Communication,Education,0.725,tfidf
+JD-DS-0007,DATA_SCIENTIST,tfidf,Computer Vision,Computer Science,0.29,tfidf
+JD-DS-0007,DATA_SCIENTIST,tfidf,HRIS,Information Technology,0.303,tfidf
+JD-DS-0007,DATA_SCIENTIST,tfidf,GCP,platforms,0.304,tfidf
+JD-DS-0007,DATA_SCIENTIST,tfidf,Threat Intelligence,business intelligence,0.438,tfidf
+JD-DS-0007,DATA_SCIENTIST,tfidf,SQL,SQL,0.394,tfidf
+JD-DS-0007,DATA_SCIENTIST,tfidf,Google Analytics,data analytics tools,0.582,tfidf
+JD-DS-0007,DATA_SCIENTIST,tfidf,Tableau,Tableau,0.872,tfidf
+JD-DS-0007,DATA_SCIENTIST,tfidf,Power BI,Power BI,0.81,tfidf
+JD-DS-0007,DATA_SCIENTIST,tfidf,Adaptability,adapt to new digital technologies,0.255,tfidf
+JD-DS-0007,DATA_SCIENTIST,tfidf,FastAPI,fast-paced environment,0.423,tfidf
+JD-DS-0007,DATA_SCIENTIST,tfidf,Employee Relations,interdisciplinary teams,0.277,tfidf
+JD-DS-0007,DATA_SCIENTIST,tfidf,Feature Engineering,future,0.361,tfidf
 JD-DS-0008,DATA_SCIENTIST,keyword,Documentation,documentation,1.0,keyword
 JD-DS-0008,DATA_SCIENTIST,keyword,Python,Python,1.0,keyword
 JD-DS-0008,DATA_SCIENTIST,keyword,R,R,0.8,keyword
@@ -1116,6 +2124,32 @@ JD-DS-0008,DATA_SCIENTIST,hybrid,Tableau,Tableau,1.0,keyword
 JD-DS-0008,DATA_SCIENTIST,hybrid,Communication,communication,1.0,keyword
 JD-DS-0008,DATA_SCIENTIST,hybrid,Teamwork,teamwork,1.0,keyword
 JD-DS-0008,DATA_SCIENTIST,hybrid,Self-Motivation,initiative,0.8,keyword
+JD-DS-0008,DATA_SCIENTIST,tfidf,Data Cleaning,manual data compilation,0.423,tfidf
+JD-DS-0008,DATA_SCIENTIST,tfidf,Process Mapping,Factory Quality Assurance Process,0.33,tfidf
+JD-DS-0008,DATA_SCIENTIST,tfidf,Looker,students,0.299,tfidf
+JD-DS-0008,DATA_SCIENTIST,tfidf,Data Mining,apply their academic knowledge,0.363,tfidf
+JD-DS-0008,DATA_SCIENTIST,tfidf,Incident Response,Essential Duties and Responsibilities,0.288,tfidf
+JD-DS-0008,DATA_SCIENTIST,tfidf,ETL,basic data extraction,0.326,tfidf
+JD-DS-0008,DATA_SCIENTIST,tfidf,Documentation,cleaning techniques,0.57,tfidf
+JD-DS-0008,DATA_SCIENTIST,tfidf,Data Visualisation,create simple reports or dashboards,0.584,tfidf
+JD-DS-0008,DATA_SCIENTIST,tfidf,Ansible,automated outputs,0.455,tfidf
+JD-DS-0008,DATA_SCIENTIST,tfidf,Time Management,team meetings,0.285,tfidf
+JD-DS-0008,DATA_SCIENTIST,tfidf,Requirements Analysis,Required,0.604,tfidf
+JD-DS-0008,DATA_SCIENTIST,tfidf,Computer Vision,Computer Science,0.29,tfidf
+JD-DS-0008,DATA_SCIENTIST,tfidf,HRIS,Information Technology,0.303,tfidf
+JD-DS-0008,DATA_SCIENTIST,tfidf,Python,Python,0.842,tfidf
+JD-DS-0008,DATA_SCIENTIST,tfidf,Financial Analysis,analysis concepts,0.56,tfidf
+JD-DS-0008,DATA_SCIENTIST,tfidf,Project Management,coursework or personal projects,0.414,tfidf
+JD-DS-0008,DATA_SCIENTIST,tfidf,Tableau,pivot tables,0.872,tfidf
+JD-DS-0008,DATA_SCIENTIST,tfidf,SQL,SQL,0.394,tfidf
+JD-DS-0008,DATA_SCIENTIST,tfidf,Network Security,coursework,0.276,tfidf
+JD-DS-0008,DATA_SCIENTIST,tfidf,Business Process Improvement,Interest in automation or process improvement,0.749,tfidf
+JD-DS-0008,DATA_SCIENTIST,tfidf,AI Literacy,Fundamental data,0.37,tfidf
+JD-DS-0008,DATA_SCIENTIST,tfidf,Excel,Microsoft Excel,0.679,tfidf
+JD-DS-0008,DATA_SCIENTIST,tfidf,Power BI,Power BI,0.81,tfidf
+JD-DS-0008,DATA_SCIENTIST,tfidf,Communication,Good communication,0.841,tfidf
+JD-DS-0008,DATA_SCIENTIST,tfidf,Teamwork,teamwork,0.531,tfidf
+JD-DS-0008,DATA_SCIENTIST,tfidf,Scikit-learn,Eager to learn and take initiative,0.282,tfidf
 JD-DS-0009,DATA_SCIENTIST,keyword,ETL,data pipelines,1.0,keyword
 JD-DS-0009,DATA_SCIENTIST,keyword,Python,Python,1.0,keyword
 JD-DS-0009,DATA_SCIENTIST,keyword,SQL,SQL,1.0,keyword
@@ -1152,6 +2186,40 @@ JD-DS-0009,DATA_SCIENTIST,hybrid,Cloud Computing,cloud technologies,0.63,semanti
 JD-DS-0009,DATA_SCIENTIST,hybrid,Power BI,Power BI,1.0,keyword
 JD-DS-0009,DATA_SCIENTIST,hybrid,Tableau,Tableau,1.0,keyword
 JD-DS-0009,DATA_SCIENTIST,hybrid,Git,Git,1.0,keyword
+JD-DS-0009,DATA_SCIENTIST,tfidf,Documentation,strong technical foundations,0.865,tfidf
+JD-DS-0009,DATA_SCIENTIST,tfidf,Malware Analysis,data engineering,0.473,tfidf
+JD-DS-0009,DATA_SCIENTIST,tfidf,Ansible,automation,0.455,tfidf
+JD-DS-0009,DATA_SCIENTIST,tfidf,Digital Marketing,digital transformation,0.294,tfidf
+JD-DS-0009,DATA_SCIENTIST,tfidf,Problem Solving,supply-chain problems,0.651,tfidf
+JD-DS-0009,DATA_SCIENTIST,tfidf,ETL,data pipelines,0.677,tfidf
+JD-DS-0009,DATA_SCIENTIST,tfidf,Google Analytics,analytical solutions,0.693,tfidf
+JD-DS-0009,DATA_SCIENTIST,tfidf,Incident Response,Key responsibilities,0.352,tfidf
+JD-DS-0009,DATA_SCIENTIST,tfidf,Training & Development,development,0.476,tfidf
+JD-DS-0009,DATA_SCIENTIST,tfidf,Natural Language Processing,data-processing workflows,0.402,tfidf
+JD-DS-0009,DATA_SCIENTIST,tfidf,Python,Python and SQL code,0.842,tfidf
+JD-DS-0009,DATA_SCIENTIST,tfidf,Hugging Face,transformation,0.284,tfidf
+JD-DS-0009,DATA_SCIENTIST,tfidf,Financial Analysis,analysis,0.715,tfidf
+JD-DS-0009,DATA_SCIENTIST,tfidf,Data Cleaning,integrating data,0.655,tfidf
+JD-DS-0009,DATA_SCIENTIST,tfidf,REST API,APIs,0.382,tfidf
+JD-DS-0009,DATA_SCIENTIST,tfidf,Systems Thinking,enterprise systems,0.496,tfidf
+JD-DS-0009,DATA_SCIENTIST,tfidf,Data Visualisation,dashboards,0.584,tfidf
+JD-DS-0009,DATA_SCIENTIST,tfidf,Project Management,supply-chain and manufacturing projects,0.486,tfidf
+JD-DS-0009,DATA_SCIENTIST,tfidf,Employment Law,deployment,0.54,tfidf
+JD-DS-0009,DATA_SCIENTIST,tfidf,Vulnerability Assessment,planning-system capabilities,0.269,tfidf
+JD-DS-0009,DATA_SCIENTIST,tfidf,Serverless,cross-functional teams,0.301,tfidf
+JD-DS-0009,DATA_SCIENTIST,tfidf,Computer Vision,Computer Science,0.29,tfidf
+JD-DS-0009,DATA_SCIENTIST,tfidf,HRIS,Information Systems,0.568,tfidf
+JD-DS-0009,DATA_SCIENTIST,tfidf,Employee Relations,related discipline,0.415,tfidf
+JD-DS-0009,DATA_SCIENTIST,tfidf,Data Mining,Fundamental knowledge,0.346,tfidf
+JD-DS-0009,DATA_SCIENTIST,tfidf,SQL,SQL,0.394,tfidf
+JD-DS-0009,DATA_SCIENTIST,tfidf,R,programming concepts,0.463,tfidf
+JD-DS-0009,DATA_SCIENTIST,tfidf,Communication,good communication,0.841,tfidf
+JD-DS-0009,DATA_SCIENTIST,tfidf,Teamwork,teamwork,0.531,tfidf
+JD-DS-0009,DATA_SCIENTIST,tfidf,Object-Oriented Programming,"proactive, ownership-oriented attitude",0.354,tfidf
+JD-DS-0009,DATA_SCIENTIST,tfidf,Cloud Computing,cloud technologies,0.451,tfidf
+JD-DS-0009,DATA_SCIENTIST,tfidf,Power BI,Power BI,0.81,tfidf
+JD-DS-0009,DATA_SCIENTIST,tfidf,Tableau,Tableau,0.872,tfidf
+JD-DS-0009,DATA_SCIENTIST,tfidf,Git,Git,0.461,tfidf
 JD-DS-0010,DATA_SCIENTIST,keyword,Data Analysis,data analysis,1.0,keyword
 JD-DS-0010,DATA_SCIENTIST,keyword,AI Literacy,Artificial Intelligence,1.0,keyword
 JD-DS-0010,DATA_SCIENTIST,keyword,Power BI,Power BI,1.0,keyword
@@ -1164,6 +2232,17 @@ JD-DS-0010,DATA_SCIENTIST,hybrid,AI Literacy,Artificial Intelligence,1.0,keyword
 JD-DS-0010,DATA_SCIENTIST,hybrid,Power BI,Power BI,1.0,keyword
 JD-DS-0010,DATA_SCIENTIST,hybrid,Teamwork,team,0.738,semantic
 JD-DS-0010,DATA_SCIENTIST,hybrid,Communication,communication skills,1.0,keyword
+JD-DS-0010,DATA_SCIENTIST,tfidf,Project Management,undertake specific projects,0.588,tfidf
+JD-DS-0010,DATA_SCIENTIST,tfidf,Data Analysis,data analysis,0.706,tfidf
+JD-DS-0010,DATA_SCIENTIST,tfidf,Statistical Analysis,strengthen the statistical back,0.706,tfidf
+JD-DS-0010,DATA_SCIENTIST,tfidf,Training & Development,development works,0.409,tfidf
+JD-DS-0010,DATA_SCIENTIST,tfidf,Machine Learning,supervisor,0.443,tfidf
+JD-DS-0010,DATA_SCIENTIST,tfidf,Requirements Analysis,Execute assignments,0.287,tfidf
+JD-DS-0010,DATA_SCIENTIST,tfidf,AI Literacy,Artificial Intelligence/ Computer Science/Data Science,0.433,tfidf
+JD-DS-0010,DATA_SCIENTIST,tfidf,Power BI,Knowledge in Power BI is advantage,0.81,tfidf
+JD-DS-0010,DATA_SCIENTIST,tfidf,Communication,work in a team and good communication skills,0.801,tfidf
+JD-DS-0010,DATA_SCIENTIST,tfidf,Google Analytics,Strong observation & analytical skills,0.307,tfidf
+JD-DS-0010,DATA_SCIENTIST,tfidf,Network Security,Hybrid Work,0.286,tfidf
 JD-SD-0001,SOFTWARE_DEV,keyword,Unit Testing,unit tests,1.0,keyword
 JD-SD-0001,SOFTWARE_DEV,keyword,User Acceptance Testing,user acceptance testing,1.0,keyword
 JD-SD-0001,SOFTWARE_DEV,keyword,Documentation,technical documentation,1.0,keyword
@@ -1182,6 +2261,32 @@ JD-SD-0001,SOFTWARE_DEV,hybrid,Documentation,technical documentation,1.0,keyword
 JD-SD-0001,SOFTWARE_DEV,hybrid,Project Management,project meetings,0.661,semantic
 JD-SD-0001,SOFTWARE_DEV,hybrid,Agile / Scrum,sprint planning,1.0,keyword
 JD-SD-0001,SOFTWARE_DEV,hybrid,Cybersecurity,information security,1.0,keyword
+JD-SD-0001,SOFTWARE_DEV,tfidf,Computer Vision,Protégé Computer Technology/IT,0.252,tfidf
+JD-SD-0001,SOFTWARE_DEV,tfidf,Training & Development,developing,0.476,tfidf
+JD-SD-0001,SOFTWARE_DEV,tfidf,Systems Thinking,maintaining software applications and systems,0.291,tfidf
+JD-SD-0001,SOFTWARE_DEV,tfidf,OWASP Top 10,software applications,0.273,tfidf
+JD-SD-0001,SOFTWARE_DEV,tfidf,Feature Engineering,software features,0.633,tfidf
+JD-SD-0001,SOFTWARE_DEV,tfidf,Serverless,functionalities,0.421,tfidf
+JD-SD-0001,SOFTWARE_DEV,tfidf,Business Analysis,based on business and technical requirements,0.716,tfidf
+JD-SD-0001,SOFTWARE_DEV,tfidf,Accounting,accordance,0.308,tfidf
+JD-SD-0001,SOFTWARE_DEV,tfidf,Problem Solving,Troubleshoot,0.401,tfidf
+JD-SD-0001,SOFTWARE_DEV,tfidf,Documentation,technical issues,0.865,tfidf
+JD-SD-0001,SOFTWARE_DEV,tfidf,Unit Testing,identified during development and testing,0.6,tfidf
+JD-SD-0001,SOFTWARE_DEV,tfidf,Attention to Detail,detailed test cases,0.389,tfidf
+JD-SD-0001,SOFTWARE_DEV,tfidf,HRIS,system integration,0.306,tfidf
+JD-SD-0001,SOFTWARE_DEV,tfidf,User Acceptance Testing,user acceptance testing activities,0.815,tfidf
+JD-SD-0001,SOFTWARE_DEV,tfidf,Business Process Improvement,improvements,0.577,tfidf
+JD-SD-0001,SOFTWARE_DEV,tfidf,Teamwork,senior team members,0.284,tfidf
+JD-SD-0001,SOFTWARE_DEV,tfidf,Requirements Analysis,user requirements,0.812,tfidf
+JD-SD-0001,SOFTWARE_DEV,tfidf,Performance Management,performance feedback,0.663,tfidf
+JD-SD-0001,SOFTWARE_DEV,tfidf,Employment Law,system deployment,0.437,tfidf
+JD-SD-0001,SOFTWARE_DEV,tfidf,Security Operations (SOC),operating manuals,0.33,tfidf
+JD-SD-0001,SOFTWARE_DEV,tfidf,Project Management,project meetings,0.617,tfidf
+JD-SD-0001,SOFTWARE_DEV,tfidf,Spring Boot,sprint planning sessions,0.334,tfidf
+JD-SD-0001,SOFTWARE_DEV,tfidf,Metasploit,frameworks,0.317,tfidf
+JD-SD-0001,SOFTWARE_DEV,tfidf,Agile / Scrum,software development methodologies,0.319,tfidf
+JD-SD-0001,SOFTWARE_DEV,tfidf,Employee Relations,procedures,0.266,tfidf
+JD-SD-0001,SOFTWARE_DEV,tfidf,Risk Analysis,Management,0.325,tfidf
 JD-SD-0002,SOFTWARE_DEV,keyword,Accounting,Accounting,1.0,keyword
 JD-SD-0002,SOFTWARE_DEV,keyword,Documentation,documentation,1.0,keyword
 JD-SD-0002,SOFTWARE_DEV,keyword,React,React,1.0,keyword
@@ -1212,6 +2317,37 @@ JD-SD-0002,SOFTWARE_DEV,hybrid,JavaScript,Javascript,1.0,keyword
 JD-SD-0002,SOFTWARE_DEV,hybrid,REST API,RESTful APIs,1.0,keyword
 JD-SD-0002,SOFTWARE_DEV,hybrid,Azure,Azure,1.0,keyword
 JD-SD-0002,SOFTWARE_DEV,hybrid,UI/UX Design,UI/UX,1.0,keyword
+JD-SD-0002,SOFTWARE_DEV,tfidf,Looker,looking,0.351,tfidf
+JD-SD-0002,SOFTWARE_DEV,tfidf,Teamwork,join our growing tech team,0.307,tfidf
+JD-SD-0002,SOFTWARE_DEV,tfidf,Accounting,Accounting Team,0.574,tfidf
+JD-SD-0002,SOFTWARE_DEV,tfidf,R,new software programmes,0.322,tfidf
+JD-SD-0002,SOFTWARE_DEV,tfidf,Performance Management,Maintain and improve the performance of existing software,0.738,tfidf
+JD-SD-0002,SOFTWARE_DEV,tfidf,Accounting Software,existing software,0.251,tfidf
+JD-SD-0002,SOFTWARE_DEV,tfidf,Serverless,ensure strong functionality and optimization,0.38,tfidf
+JD-SD-0002,SOFTWARE_DEV,tfidf,Search Engine Optimisation,optimization,0.319,tfidf
+JD-SD-0002,SOFTWARE_DEV,tfidf,Data Modelling,Design and update software database,0.389,tfidf
+JD-SD-0002,SOFTWARE_DEV,tfidf,Requirements Analysis,Analyze user needs and software requirement,0.493,tfidf
+JD-SD-0002,SOFTWARE_DEV,tfidf,UI/UX Design,determine feasibility of design,0.503,tfidf
+JD-SD-0002,SOFTWARE_DEV,tfidf,Vulnerability Assessment,feasibility,0.375,tfidf
+JD-SD-0002,SOFTWARE_DEV,tfidf,Problem Solving,Troubleshoot,0.401,tfidf
+JD-SD-0002,SOFTWARE_DEV,tfidf,Documentation,Prepare design documentation,0.865,tfidf
+JD-SD-0002,SOFTWARE_DEV,tfidf,Training & Development,programme development,0.715,tfidf
+JD-SD-0002,SOFTWARE_DEV,tfidf,OWASP Top 10,coding,0.325,tfidf
+JD-SD-0002,SOFTWARE_DEV,tfidf,Communication,Collaborate and communicate effectively,0.488,tfidf
+JD-SD-0002,SOFTWARE_DEV,tfidf,Leadership,Team Lead,0.407,tfidf
+JD-SD-0002,SOFTWARE_DEV,tfidf,Risk Analysis,management,0.325,tfidf
+JD-SD-0002,SOFTWARE_DEV,tfidf,Computer Vision,Computer Science,0.29,tfidf
+JD-SD-0002,SOFTWARE_DEV,tfidf,HTML,HTML5,0.548,tfidf
+JD-SD-0002,SOFTWARE_DEV,tfidf,CSS,CSS,0.447,tfidf
+JD-SD-0002,SOFTWARE_DEV,tfidf,React,Razor/React.js,0.655,tfidf
+JD-SD-0002,SOFTWARE_DEV,tfidf,JavaScript,Javascript,0.743,tfidf
+JD-SD-0002,SOFTWARE_DEV,tfidf,REST API,RESTful APIs,0.751,tfidf
+JD-SD-0002,SOFTWARE_DEV,tfidf,CI/CD,integration,0.371,tfidf
+JD-SD-0002,SOFTWARE_DEV,tfidf,Microservices,backend services,0.34,tfidf
+JD-SD-0002,SOFTWARE_DEV,tfidf,Content Marketing,Context API,0.333,tfidf
+JD-SD-0002,SOFTWARE_DEV,tfidf,Azure,Experience in Azure will be an added advantage,0.782,tfidf
+JD-SD-0002,SOFTWARE_DEV,tfidf,Networking,working days,0.338,tfidf
+JD-SD-0002,SOFTWARE_DEV,tfidf,Social Media Marketing,Medical,0.279,tfidf
 JD-SD-0003,SOFTWARE_DEV,keyword,HTML,HTML,1.0,keyword
 JD-SD-0003,SOFTWARE_DEV,keyword,CSS,CSS,1.0,keyword
 JD-SD-0003,SOFTWARE_DEV,keyword,JavaScript,Javascript,1.0,keyword
@@ -1225,6 +2361,18 @@ JD-SD-0003,SOFTWARE_DEV,hybrid,CSS,CSS,1.0,keyword
 JD-SD-0003,SOFTWARE_DEV,hybrid,JavaScript,Javascript,1.0,keyword
 JD-SD-0003,SOFTWARE_DEV,hybrid,C#,C#,1.0,keyword
 JD-SD-0003,SOFTWARE_DEV,hybrid,Documentation,documentation,1.0,keyword
+JD-SD-0003,SOFTWARE_DEV,tfidf,Looker,looking,0.351,tfidf
+JD-SD-0003,SOFTWARE_DEV,tfidf,Training & Development,software development,0.344,tfidf
+JD-SD-0003,SOFTWARE_DEV,tfidf,Generative AI,build our next generation system,0.338,tfidf
+JD-SD-0003,SOFTWARE_DEV,tfidf,Malware Analysis,Assisting Software Engineers,0.378,tfidf
+JD-SD-0003,SOFTWARE_DEV,tfidf,HTML,HTML,0.502,tfidf
+JD-SD-0003,SOFTWARE_DEV,tfidf,CSS,CSS,0.447,tfidf
+JD-SD-0003,SOFTWARE_DEV,tfidf,JavaScript,Javascript,0.743,tfidf
+JD-SD-0003,SOFTWARE_DEV,tfidf,Documentation,Maintain good documentation and maintenance practice,0.419,tfidf
+JD-SD-0003,SOFTWARE_DEV,tfidf,Computer Vision,taking Computer Science or Computer Engineering,0.29,tfidf
+JD-SD-0003,SOFTWARE_DEV,tfidf,Critical Thinking,Good logical thinking,0.548,tfidf
+JD-SD-0003,SOFTWARE_DEV,tfidf,Project Management,involved in the real-life project,0.786,tfidf
+JD-SD-0003,SOFTWARE_DEV,tfidf,R,possess certain standard of programming & logical skill,0.428,tfidf
 JD-SD-0004,SOFTWARE_DEV,keyword,Generative AI,Generative AI,1.0,keyword
 JD-SD-0004,SOFTWARE_DEV,keyword,Adaptability,adaptability,1.0,keyword
 JD-SD-0004,SOFTWARE_DEV,keyword,Teamwork,collaboration,1.0,keyword
@@ -1234,6 +2382,28 @@ JD-SD-0004,SOFTWARE_DEV,semantic,Teamwork,collaboration,0.727,semantic
 JD-SD-0004,SOFTWARE_DEV,hybrid,Generative AI,Generative AI,1.0,keyword
 JD-SD-0004,SOFTWARE_DEV,hybrid,Adaptability,adaptability,1.0,keyword
 JD-SD-0004,SOFTWARE_DEV,hybrid,Teamwork,collaboration,1.0,keyword
+JD-SD-0004,SOFTWARE_DEV,tfidf,Documentation,technology,0.478,tfidf
+JD-SD-0004,SOFTWARE_DEV,tfidf,Machine Learning,structured learning,0.439,tfidf
+JD-SD-0004,SOFTWARE_DEV,tfidf,Google Analytics,Technology and Analytics teams,0.462,tfidf
+JD-SD-0004,SOFTWARE_DEV,tfidf,Project Management,contributing to real business projects,0.493,tfidf
+JD-SD-0004,SOFTWARE_DEV,tfidf,Teamwork,multiple teams,0.485,tfidf
+JD-SD-0004,SOFTWARE_DEV,tfidf,Leadership,Mentorship,0.353,tfidf
+JD-SD-0004,SOFTWARE_DEV,tfidf,Interpersonal Skills,Build Skills,0.44,tfidf
+JD-SD-0004,SOFTWARE_DEV,tfidf,Feature Engineering,Future,0.361,tfidf
+JD-SD-0004,SOFTWARE_DEV,tfidf,R,program,0.422,tfidf
+JD-SD-0004,SOFTWARE_DEV,tfidf,AI Literacy,AI,0.401,tfidf
+JD-SD-0004,SOFTWARE_DEV,tfidf,Generative AI,Generative AI,0.51,tfidf
+JD-SD-0004,SOFTWARE_DEV,tfidf,Data Cleaning,data,0.655,tfidf
+JD-SD-0004,SOFTWARE_DEV,tfidf,Training & Development,participate in specialized training,0.519,tfidf
+JD-SD-0004,SOFTWARE_DEV,tfidf,Power BI,GenAI-powered tools,0.295,tfidf
+JD-SD-0004,SOFTWARE_DEV,tfidf,Digital Marketing,digital fluency,0.409,tfidf
+JD-SD-0004,SOFTWARE_DEV,tfidf,Adaptability,adaptability,0.816,tfidf
+JD-SD-0004,SOFTWARE_DEV,tfidf,Creativity,innovation,0.332,tfidf
+JD-SD-0004,SOFTWARE_DEV,tfidf,Looker,Looking,0.351,tfidf
+JD-SD-0004,SOFTWARE_DEV,tfidf,Computer Vision,Computer Science,0.29,tfidf
+JD-SD-0004,SOFTWARE_DEV,tfidf,Malware Analysis,Engineering,0.499,tfidf
+JD-SD-0004,SOFTWARE_DEV,tfidf,Financial Reporting,Reporting to a Manager,0.258,tfidf
+JD-SD-0004,SOFTWARE_DEV,tfidf,Performance Management,Manager,0.253,tfidf
 JD-SD-0005,SOFTWARE_DEV,keyword,Documentation,Documentation,1.0,keyword
 JD-SD-0005,SOFTWARE_DEV,keyword,Data Mining,Data Mining,1.0,keyword
 JD-SD-0005,SOFTWARE_DEV,keyword,Communication,Communication,1.0,keyword
@@ -1245,6 +2415,18 @@ JD-SD-0005,SOFTWARE_DEV,hybrid,Documentation,Documentation,1.0,keyword
 JD-SD-0005,SOFTWARE_DEV,hybrid,Data Mining,Data Mining,1.0,keyword
 JD-SD-0005,SOFTWARE_DEV,hybrid,Communication,Communication,1.0,keyword
 JD-SD-0005,SOFTWARE_DEV,hybrid,Teamwork,Teamwork,1.0,keyword
+JD-SD-0005,SOFTWARE_DEV,tfidf,Training & Development,Software Development Life Cycle,0.332,tfidf
+JD-SD-0005,SOFTWARE_DEV,tfidf,UI/UX Design,Design,0.503,tfidf
+JD-SD-0005,SOFTWARE_DEV,tfidf,Documentation,Documentation,0.631,tfidf
+JD-SD-0005,SOFTWARE_DEV,tfidf,CRM Software,Enterprise Management Software,0.316,tfidf
+JD-SD-0005,SOFTWARE_DEV,tfidf,Vulnerability Assessment,Mobility,0.459,tfidf
+JD-SD-0005,SOFTWARE_DEV,tfidf,Data Mining,Data Mining,0.54,tfidf
+JD-SD-0005,SOFTWARE_DEV,tfidf,Data Visualisation,Dashboard,0.594,tfidf
+JD-SD-0005,SOFTWARE_DEV,tfidf,Cybersecurity,Computer Science/ Information Technology,0.255,tfidf
+JD-SD-0005,SOFTWARE_DEV,tfidf,Requirements Analysis,Required skill(s,0.51,tfidf
+JD-SD-0005,SOFTWARE_DEV,tfidf,Communication,"Required skill(s): Communication, Adaptive, Teamwork",0.927,tfidf
+JD-SD-0005,SOFTWARE_DEV,tfidf,Adaptability,Adaptive,0.478,tfidf
+JD-SD-0005,SOFTWARE_DEV,tfidf,Teamwork,Teamwork,0.531,tfidf
 JD-SD-0006,SOFTWARE_DEV,keyword,Business Analysis,business requirement,1.0,keyword
 JD-SD-0006,SOFTWARE_DEV,keyword,Time Management,organization,0.8,keyword
 JD-SD-0006,SOFTWARE_DEV,keyword,Problem Solving,problem-solving,1.0,keyword
@@ -1268,6 +2450,25 @@ JD-SD-0006,SOFTWARE_DEV,hybrid,Java,Java,1.0,keyword
 JD-SD-0006,SOFTWARE_DEV,hybrid,JavaScript,Javascript,1.0,keyword
 JD-SD-0006,SOFTWARE_DEV,hybrid,SQL,SQL,1.0,keyword
 JD-SD-0006,SOFTWARE_DEV,hybrid,MySQL,MySQL,1.0,keyword
+JD-SD-0006,SOFTWARE_DEV,tfidf,UI/UX Design,Design,0.503,tfidf
+JD-SD-0006,SOFTWARE_DEV,tfidf,Training & Development,development,0.476,tfidf
+JD-SD-0006,SOFTWARE_DEV,tfidf,Employment Law,deployment,0.54,tfidf
+JD-SD-0006,SOFTWARE_DEV,tfidf,CRM Software,software,0.268,tfidf
+JD-SD-0006,SOFTWARE_DEV,tfidf,OWASP Top 10,application,0.393,tfidf
+JD-SD-0006,SOFTWARE_DEV,tfidf,Business Analysis,meet business objective,0.781,tfidf
+JD-SD-0006,SOFTWARE_DEV,tfidf,Negotiation,initiatives,0.306,tfidf
+JD-SD-0006,SOFTWARE_DEV,tfidf,Requirements Analysis,meet user’s & compliance requirements,0.653,tfidf
+JD-SD-0006,SOFTWARE_DEV,tfidf,Research Skills,Research,0.675,tfidf
+JD-SD-0006,SOFTWARE_DEV,tfidf,Project Management,planning,0.53,tfidf
+JD-SD-0006,SOFTWARE_DEV,tfidf,HRIS,Information Technology,0.303,tfidf
+JD-SD-0006,SOFTWARE_DEV,tfidf,Malware Analysis,Software Engineering,0.473,tfidf
+JD-SD-0006,SOFTWARE_DEV,tfidf,Communication,good communication,0.841,tfidf
+JD-SD-0006,SOFTWARE_DEV,tfidf,Interpersonal Skills,stakeholder management skills,0.597,tfidf
+JD-SD-0006,SOFTWARE_DEV,tfidf,JavaScript,C#/ Java/ Javascript,0.657,tfidf
+JD-SD-0006,SOFTWARE_DEV,tfidf,SQL,SQL,0.394,tfidf
+JD-SD-0006,SOFTWARE_DEV,tfidf,Data Modelling,Relational Database,0.321,tfidf
+JD-SD-0006,SOFTWARE_DEV,tfidf,MySQL,MS SQL / MySQL,0.698,tfidf
+JD-SD-0006,SOFTWARE_DEV,tfidf,Natural Language Processing,text editor,0.335,tfidf
 JD-SD-0007,SOFTWARE_DEV,keyword,Business Analysis,business requirements,1.0,keyword
 JD-SD-0007,SOFTWARE_DEV,keyword,UI/UX Design,UI/UX,1.0,keyword
 JD-SD-0007,SOFTWARE_DEV,keyword,Problem Solving,problem-solving,1.0,keyword
@@ -1283,6 +2484,34 @@ JD-SD-0007,SOFTWARE_DEV,hybrid,Project Management,established project structure,
 JD-SD-0007,SOFTWARE_DEV,hybrid,Problem Solving,problem-solving,1.0,keyword
 JD-SD-0007,SOFTWARE_DEV,hybrid,Linux,Linux,1.0,keyword
 JD-SD-0007,SOFTWARE_DEV,hybrid,Networking,networking,1.0,keyword
+JD-SD-0007,SOFTWARE_DEV,tfidf,Malware Analysis,Join our KL engineering team,0.418,tfidf
+JD-SD-0007,SOFTWARE_DEV,tfidf,OWASP Top 10,web applications,0.395,tfidf
+JD-SD-0007,SOFTWARE_DEV,tfidf,Content Marketing,frontend,0.396,tfidf
+JD-SD-0007,SOFTWARE_DEV,tfidf,CI/CD,integrations,0.373,tfidf
+JD-SD-0007,SOFTWARE_DEV,tfidf,AI Literacy,AI output,0.416,tfidf
+JD-SD-0007,SOFTWARE_DEV,tfidf,Network Security,work spec,0.256,tfidf
+JD-SD-0007,SOFTWARE_DEV,tfidf,Requirements Analysis,clear written requirements,0.66,tfidf
+JD-SD-0007,SOFTWARE_DEV,tfidf,Business Analysis,Turn business requirements and UI/UX,0.913,tfidf
+JD-SD-0007,SOFTWARE_DEV,tfidf,UI/UX Design,UI/UX,0.371,tfidf
+JD-SD-0007,SOFTWARE_DEV,tfidf,Feature Engineering,"clean, secure, production-ready features",0.678,tfidf
+JD-SD-0007,SOFTWARE_DEV,tfidf,Documentation,AI tools the right technical and business context,0.364,tfidf
+JD-SD-0007,SOFTWARE_DEV,tfidf,Project Management,established project structure,0.501,tfidf
+JD-SD-0007,SOFTWARE_DEV,tfidf,Security Operations (SOC),security,0.667,tfidf
+JD-SD-0007,SOFTWARE_DEV,tfidf,Performance Management,performance,0.738,tfidf
+JD-SD-0007,SOFTWARE_DEV,tfidf,Vulnerability Assessment,maintainability,0.363,tfidf
+JD-SD-0007,SOFTWARE_DEV,tfidf,Serverless,servers,0.323,tfidf
+JD-SD-0007,SOFTWARE_DEV,tfidf,Employment Law,features from development through deployment and support,0.54,tfidf
+JD-SD-0007,SOFTWARE_DEV,tfidf,Training & Development,development,0.476,tfidf
+JD-SD-0007,SOFTWARE_DEV,tfidf,Microservices,web architecture,0.52,tfidf
+JD-SD-0007,SOFTWARE_DEV,tfidf,Problem Solving,Strong debugging and logical problem-solving skills,0.499,tfidf
+JD-SD-0007,SOFTWARE_DEV,tfidf,REST API,APIs,0.382,tfidf
+JD-SD-0007,SOFTWARE_DEV,tfidf,Attention to Detail,UI/UX detail,0.376,tfidf
+JD-SD-0007,SOFTWARE_DEV,tfidf,Linux,Linux,0.515,tfidf
+JD-SD-0007,SOFTWARE_DEV,tfidf,Data Mining,"Linux, server, database and networking knowledge",0.38,tfidf
+JD-SD-0007,SOFTWARE_DEV,tfidf,Windows Server,server,0.346,tfidf
+JD-SD-0007,SOFTWARE_DEV,tfidf,Leadership,Able to work independently and take ownership,0.495,tfidf
+JD-SD-0007,SOFTWARE_DEV,tfidf,Teamwork,Small team,0.351,tfidf
+JD-SD-0007,SOFTWARE_DEV,tfidf,Ansible,visible impact,0.328,tfidf
 JD-SD-0008,SOFTWARE_DEV,keyword,Self-Motivation,self-driven,1.0,keyword
 JD-SD-0008,SOFTWARE_DEV,keyword,Teamwork,team player,1.0,keyword
 JD-SD-0008,SOFTWARE_DEV,keyword,Problem Solving,trouble-shooting,1.0,keyword
@@ -1303,6 +2532,30 @@ JD-SD-0008,SOFTWARE_DEV,hybrid,C#,C#,1.0,keyword
 JD-SD-0008,SOFTWARE_DEV,hybrid,SQL,SQL,1.0,keyword
 JD-SD-0008,SOFTWARE_DEV,hybrid,Python,Python,1.0,keyword
 JD-SD-0008,SOFTWARE_DEV,hybrid,Machine Learning,Machine Learning,1.0,keyword
+JD-SD-0008,SOFTWARE_DEV,tfidf,Recruitment,Ideal Candidate(s,0.406,tfidf
+JD-SD-0008,SOFTWARE_DEV,tfidf,Self-Motivation,"Technically competent, self-driven individual(s",0.394,tfidf
+JD-SD-0008,SOFTWARE_DEV,tfidf,CRM Software,software field,0.264,tfidf
+JD-SD-0008,SOFTWARE_DEV,tfidf,Teamwork,good team player,0.451,tfidf
+JD-SD-0008,SOFTWARE_DEV,tfidf,UI/UX Design,strong design skills,0.322,tfidf
+JD-SD-0008,SOFTWARE_DEV,tfidf,Problem Solving,good trouble-shooting acumen,0.329,tfidf
+JD-SD-0008,SOFTWARE_DEV,tfidf,OWASP Top 10,I4.0 applications,0.351,tfidf
+JD-SD-0008,SOFTWARE_DEV,tfidf,Data Cleaning,collect data,0.655,tfidf
+JD-SD-0008,SOFTWARE_DEV,tfidf,Google Analytics,provide analytics,0.664,tfidf
+JD-SD-0008,SOFTWARE_DEV,tfidf,Threat Intelligence,enable intelligent monitoring and control,0.357,tfidf
+JD-SD-0008,SOFTWARE_DEV,tfidf,Git,control,0.388,tfidf
+JD-SD-0008,SOFTWARE_DEV,tfidf,Customer Focus,local and overseas customer sites,0.542,tfidf
+JD-SD-0008,SOFTWARE_DEV,tfidf,Project Management,project implementation,0.617,tfidf
+JD-SD-0008,SOFTWARE_DEV,tfidf,Communication,Engineering(Computer/Electronics/Telecommunication,0.535,tfidf
+JD-SD-0008,SOFTWARE_DEV,tfidf,Computer Vision,Computer Science/IT,0.299,tfidf
+JD-SD-0008,SOFTWARE_DEV,tfidf,R,following technologies/ programming languages,0.621,tfidf
+JD-SD-0008,SOFTWARE_DEV,tfidf,C#,.NET,0.332,tfidf
+JD-SD-0008,SOFTWARE_DEV,tfidf,Microservices,Web Services,0.368,tfidf
+JD-SD-0008,SOFTWARE_DEV,tfidf,Windows Server,MS SQL Server,0.264,tfidf
+JD-SD-0008,SOFTWARE_DEV,tfidf,Python,Python,0.842,tfidf
+JD-SD-0008,SOFTWARE_DEV,tfidf,Data Visualisation,Dashboards,0.584,tfidf
+JD-SD-0008,SOFTWARE_DEV,tfidf,Machine Learning,Machine Learning,0.638,tfidf
+JD-SD-0008,SOFTWARE_DEV,tfidf,Training & Development,development,0.476,tfidf
+JD-SD-0008,SOFTWARE_DEV,tfidf,Hugging Face,debugging,0.483,tfidf
 JD-SD-0009,SOFTWARE_DEV,keyword,Java,Java,1.0,keyword
 JD-SD-0009,SOFTWARE_DEV,keyword,Agile / Scrum,Agile,1.0,keyword
 JD-SD-0009,SOFTWARE_DEV,keyword,CI/CD,CI/CD,1.0,keyword
@@ -1318,6 +2571,24 @@ JD-SD-0009,SOFTWARE_DEV,hybrid,CI/CD,CI/CD,1.0,keyword
 JD-SD-0009,SOFTWARE_DEV,hybrid,Spring Boot,Spring Boot,1.0,keyword
 JD-SD-0009,SOFTWARE_DEV,hybrid,SQL,SQL,1.0,keyword
 JD-SD-0009,SOFTWARE_DEV,hybrid,Problem Solving,problem-solving,1.0,keyword
+JD-SD-0009,SOFTWARE_DEV,tfidf,Malware Analysis,join our growing engineering team,0.473,tfidf
+JD-SD-0009,SOFTWARE_DEV,tfidf,Project Management,real-world projects,0.684,tfidf
+JD-SD-0009,SOFTWARE_DEV,tfidf,MongoDB,Mon–Fri,0.291,tfidf
+JD-SD-0009,SOFTWARE_DEV,tfidf,Java,Java-based backend services,0.891,tfidf
+JD-SD-0009,SOFTWARE_DEV,tfidf,REST API,APIs,0.382,tfidf
+JD-SD-0009,SOFTWARE_DEV,tfidf,Training & Development,Participate in the full software development lifecycle,0.335,tfidf
+JD-SD-0009,SOFTWARE_DEV,tfidf,Serverless,cross-functional teams,0.301,tfidf
+JD-SD-0009,SOFTWARE_DEV,tfidf,Agile / Scrum,Agile environment,0.424,tfidf
+JD-SD-0009,SOFTWARE_DEV,tfidf,Problem Solving,Debug and troubleshoot application issues,0.635,tfidf
+JD-SD-0009,SOFTWARE_DEV,tfidf,Auditing,internal tooling,0.255,tfidf
+JD-SD-0009,SOFTWARE_DEV,tfidf,ETL,CI/CD pipelines,0.484,tfidf
+JD-SD-0009,SOFTWARE_DEV,tfidf,Looker,Looking,0.351,tfidf
+JD-SD-0009,SOFTWARE_DEV,tfidf,Computer Vision,Computer Science,0.29,tfidf
+JD-SD-0009,SOFTWARE_DEV,tfidf,Data Mining,Solid foundational knowledge,0.379,tfidf
+JD-SD-0009,SOFTWARE_DEV,tfidf,Spring Boot,Spring Boot,0.8,tfidf
+JD-SD-0009,SOFTWARE_DEV,tfidf,Process Mapping,willingness,0.302,tfidf
+JD-SD-0009,SOFTWARE_DEV,tfidf,Scikit-learn,learn quickly,0.361,tfidf
+JD-SD-0009,SOFTWARE_DEV,tfidf,Employee Relations,SQL / relational,0.398,tfidf
 JD-SD-0010,SOFTWARE_DEV,keyword,Problem Solving,troubleshooting,1.0,keyword
 JD-SD-0010,SOFTWARE_DEV,keyword,Teamwork,teamwork,1.0,keyword
 JD-SD-0010,SOFTWARE_DEV,keyword,Object-Oriented Programming,Object-oriented design,1.0,keyword
@@ -1347,12 +2618,49 @@ JD-SD-0010,SOFTWARE_DEV,hybrid,React,React,1.0,keyword
 JD-SD-0010,SOFTWARE_DEV,hybrid,Kubernetes,Kubernetes,1.0,keyword
 JD-SD-0010,SOFTWARE_DEV,hybrid,Docker,Docker,1.0,keyword
 JD-SD-0010,SOFTWARE_DEV,hybrid,Microservices,Microservices,1.0,keyword
+JD-SD-0010,SOFTWARE_DEV,tfidf,Financial Reporting,supports the development of enterprise financial applications,0.281,tfidf
+JD-SD-0010,SOFTWARE_DEV,tfidf,Training & Development,development,0.476,tfidf
+JD-SD-0010,SOFTWARE_DEV,tfidf,Financial Modelling,enterprise financial applications,0.361,tfidf
+JD-SD-0010,SOFTWARE_DEV,tfidf,A/B Testing,"assisting in coding, testing, and troubleshooting",0.372,tfidf
+JD-SD-0010,SOFTWARE_DEV,tfidf,OWASP Top 10,coding,0.295,tfidf
+JD-SD-0010,SOFTWARE_DEV,tfidf,Problem Solving,troubleshooting,0.466,tfidf
+JD-SD-0010,SOFTWARE_DEV,tfidf,Documentation,build technical and teamwork skills,0.376,tfidf
+JD-SD-0010,SOFTWARE_DEV,tfidf,Project Management,Undertake project assignments,0.668,tfidf
+JD-SD-0010,SOFTWARE_DEV,tfidf,Communication,specifications,0.279,tfidf
+JD-SD-0010,SOFTWARE_DEV,tfidf,Object-Oriented Programming,Object-oriented design,0.782,tfidf
+JD-SD-0010,SOFTWARE_DEV,tfidf,Performance Management,perform changes,0.413,tfidf
+JD-SD-0010,SOFTWARE_DEV,tfidf,Business Analysis,Assist Business team,0.539,tfidf
+JD-SD-0010,SOFTWARE_DEV,tfidf,User Acceptance Testing,preparing functional specification and user acceptance test script,0.743,tfidf
+JD-SD-0010,SOFTWARE_DEV,tfidf,Serverless,functional specification,0.35,tfidf
+JD-SD-0010,SOFTWARE_DEV,tfidf,Process Mapping,domain knowledge and process flow,0.698,tfidf
+JD-SD-0010,SOFTWARE_DEV,tfidf,Teamwork,Collaborate with team and across teams,0.536,tfidf
+JD-SD-0010,SOFTWARE_DEV,tfidf,Spring Boot,Spring framework,0.726,tfidf
+JD-SD-0010,SOFTWARE_DEV,tfidf,Angular,Angular,0.887,tfidf
+JD-SD-0010,SOFTWARE_DEV,tfidf,React,React,0.765,tfidf
+JD-SD-0010,SOFTWARE_DEV,tfidf,Kubernetes,Kubernetes,0.786,tfidf
+JD-SD-0010,SOFTWARE_DEV,tfidf,Docker,Docker,0.576,tfidf
+JD-SD-0010,SOFTWARE_DEV,tfidf,Computer Vision,Computer Science,0.29,tfidf
+JD-SD-0010,SOFTWARE_DEV,tfidf,Malware Analysis,Software Engineering,0.473,tfidf
+JD-SD-0010,SOFTWARE_DEV,tfidf,HRIS,Information Technology,0.303,tfidf
+JD-SD-0010,SOFTWARE_DEV,tfidf,Requirements Analysis,Open to travel as required,0.376,tfidf
+JD-SD-0010,SOFTWARE_DEV,tfidf,Data Mining,enhance knowledge and skills,0.37,tfidf
+JD-SD-0010,SOFTWARE_DEV,tfidf,Microservices,service management,0.28,tfidf
+JD-SD-0010,SOFTWARE_DEV,tfidf,Interpersonal Skills,personal strengths,0.278,tfidf
+JD-SD-0010,SOFTWARE_DEV,tfidf,Apache Spark,Parking,0.255,tfidf
 JD-SD-0011,SOFTWARE_DEV,keyword,Problem Solving,problem-solving,1.0,keyword
 JD-SD-0011,SOFTWARE_DEV,keyword,Communication,communication skills,1.0,keyword
 JD-SD-0011,SOFTWARE_DEV,semantic,Communication,communication skills,0.738,semantic
 JD-SD-0011,SOFTWARE_DEV,hybrid,Critical Thinking,analytical,0.77,semantic
 JD-SD-0011,SOFTWARE_DEV,hybrid,Problem Solving,problem-solving,1.0,keyword
 JD-SD-0011,SOFTWARE_DEV,hybrid,Communication,communication skills,1.0,keyword
+JD-SD-0011,SOFTWARE_DEV,tfidf,Unit Testing,Junior Tester,0.403,tfidf
+JD-SD-0011,SOFTWARE_DEV,tfidf,A/B Testing,manual testing,0.672,tfidf
+JD-SD-0011,SOFTWARE_DEV,tfidf,Data Cleaning,test case preparation,0.289,tfidf
+JD-SD-0011,SOFTWARE_DEV,tfidf,Financial Reporting,defect reporting,0.314,tfidf
+JD-SD-0011,SOFTWARE_DEV,tfidf,Financial Modelling,Banking/Financial Services domain experience,0.273,tfidf
+JD-SD-0011,SOFTWARE_DEV,tfidf,Communication,communication skills,0.857,tfidf
+JD-SD-0011,SOFTWARE_DEV,tfidf,Network Security,work effectively,0.279,tfidf
+JD-SD-0011,SOFTWARE_DEV,tfidf,Project Management,meet project timelines,0.584,tfidf
 JD-SD-0012,SOFTWARE_DEV,keyword,Attention to Detail,detail-oriented,1.0,keyword
 JD-SD-0012,SOFTWARE_DEV,keyword,Business Analysis,business requirements,1.0,keyword
 JD-SD-0012,SOFTWARE_DEV,keyword,Documentation,technical documentation,1.0,keyword
@@ -1394,6 +2702,48 @@ JD-SD-0012,SOFTWARE_DEV,hybrid,C++,C++,1.0,keyword
 JD-SD-0012,SOFTWARE_DEV,hybrid,Machine Learning,Machine Learning,1.0,keyword
 JD-SD-0012,SOFTWARE_DEV,hybrid,Data Analysis,data analysis,1.0,keyword
 JD-SD-0012,SOFTWARE_DEV,hybrid,Git,Git,1.0,keyword
+JD-SD-0012,SOFTWARE_DEV,tfidf,Attention to Detail,motivated and detail-oriented Junior Software Engineer,0.401,tfidf
+JD-SD-0012,SOFTWARE_DEV,tfidf,Malware Analysis,join our growing engineering team,0.473,tfidf
+JD-SD-0012,SOFTWARE_DEV,tfidf,Incident Response,primary responsibility,0.352,tfidf
+JD-SD-0012,SOFTWARE_DEV,tfidf,OWASP Top 10,existing mobile applications,0.306,tfidf
+JD-SD-0012,SOFTWARE_DEV,tfidf,GCP,web platforms,0.272,tfidf
+JD-SD-0012,SOFTWARE_DEV,tfidf,Interpersonal Skills,expand your skills,0.282,tfidf
+JD-SD-0012,SOFTWARE_DEV,tfidf,Training & Development,AI development,0.476,tfidf
+JD-SD-0012,SOFTWARE_DEV,tfidf,Natural Language Processing,data processing,0.543,tfidf
+JD-SD-0012,SOFTWARE_DEV,tfidf,AI Literacy,AI,0.401,tfidf
+JD-SD-0012,SOFTWARE_DEV,tfidf,Docker,Maintain,0.309,tfidf
+JD-SD-0012,SOFTWARE_DEV,tfidf,Problem Solving,troubleshoot,0.636,tfidf
+JD-SD-0012,SOFTWARE_DEV,tfidf,CRM Software,software bugs,0.268,tfidf
+JD-SD-0012,SOFTWARE_DEV,tfidf,Performance Management,performance issues,0.696,tfidf
+JD-SD-0012,SOFTWARE_DEV,tfidf,Documentation,implementation,0.865,tfidf
+JD-SD-0012,SOFTWARE_DEV,tfidf,Feature Engineering,new features,0.633,tfidf
+JD-SD-0012,SOFTWARE_DEV,tfidf,Business Process Improvement,improvements,0.577,tfidf
+JD-SD-0012,SOFTWARE_DEV,tfidf,Business Analysis,based on product and business requirements,0.837,tfidf
+JD-SD-0012,SOFTWARE_DEV,tfidf,Requirements Analysis,required for system maintenance and development,0.393,tfidf
+JD-SD-0012,SOFTWARE_DEV,tfidf,Systems Thinking,system maintenance,0.593,tfidf
+JD-SD-0012,SOFTWARE_DEV,tfidf,Data Cleaning,data collection,0.47,tfidf
+JD-SD-0012,SOFTWARE_DEV,tfidf,Data Modelling,labelling,0.3,tfidf
+JD-SD-0012,SOFTWARE_DEV,tfidf,Financial Modelling,AI models,0.341,tfidf
+JD-SD-0012,SOFTWARE_DEV,tfidf,Serverless,integrate AI-related functions,0.441,tfidf
+JD-SD-0012,SOFTWARE_DEV,tfidf,UI/UX Design,user experience,0.353,tfidf
+JD-SD-0012,SOFTWARE_DEV,tfidf,Hugging Face,debugging,0.483,tfidf
+JD-SD-0012,SOFTWARE_DEV,tfidf,CI/CD,integration,0.371,tfidf
+JD-SD-0012,SOFTWARE_DEV,tfidf,TensorFlow,sensors,0.349,tfidf
+JD-SD-0012,SOFTWARE_DEV,tfidf,A/B Testing,product testing,0.65,tfidf
+JD-SD-0012,SOFTWARE_DEV,tfidf,Leadership,ownership,0.495,tfidf
+JD-SD-0012,SOFTWARE_DEV,tfidf,Computer Vision,Computer Science,0.29,tfidf
+JD-SD-0012,SOFTWARE_DEV,tfidf,Network Security,coursework,0.279,tfidf
+JD-SD-0012,SOFTWARE_DEV,tfidf,Project Management,personal projects,0.475,tfidf
+JD-SD-0012,SOFTWARE_DEV,tfidf,Google Analytics,robotics,0.292,tfidf
+JD-SD-0012,SOFTWARE_DEV,tfidf,Communication,Good communication skills,0.801,tfidf
+JD-SD-0012,SOFTWARE_DEV,tfidf,Employee Relations,multidisciplinary team,0.296,tfidf
+JD-SD-0012,SOFTWARE_DEV,tfidf,Kotlin,"iOS, Android",0.397,tfidf
+JD-SD-0012,SOFTWARE_DEV,tfidf,Python,Python,0.842,tfidf
+JD-SD-0012,SOFTWARE_DEV,tfidf,TypeScript,JavaScript / TypeScript,0.709,tfidf
+JD-SD-0012,SOFTWARE_DEV,tfidf,R,similar programming languages,0.759,tfidf
+JD-SD-0012,SOFTWARE_DEV,tfidf,Machine Learning,Exposure to AI or Machine Learning,0.638,tfidf
+JD-SD-0012,SOFTWARE_DEV,tfidf,Data Analysis,data analysis,0.706,tfidf
+JD-SD-0012,SOFTWARE_DEV,tfidf,Git,Experience with Git or other version control systems,0.461,tfidf
 JD-SD-0013,SOFTWARE_DEV,keyword,Problem Solving,troubleshooting,1.0,keyword
 JD-SD-0013,SOFTWARE_DEV,keyword,REST API,API development,1.0,keyword
 JD-SD-0013,SOFTWARE_DEV,keyword,Git,Git,1.0,keyword
@@ -1452,6 +2802,50 @@ JD-SD-0013,SOFTWARE_DEV,hybrid,Critical Thinking,analytical,0.77,semantic
 JD-SD-0013,SOFTWARE_DEV,hybrid,Communication,communication,1.0,keyword
 JD-SD-0013,SOFTWARE_DEV,hybrid,Interpersonal Skills,interpersonal skills,1.0,keyword
 JD-SD-0013,SOFTWARE_DEV,hybrid,Self-Motivation,Proactive,1.0,keyword
+JD-SD-0013,SOFTWARE_DEV,tfidf,Training & Development,Software Development Support,0.518,tfidf
+JD-SD-0013,SOFTWARE_DEV,tfidf,OWASP Top 10,software applications,0.295,tfidf
+JD-SD-0013,SOFTWARE_DEV,tfidf,Content Marketing,Support frontend,0.28,tfidf
+JD-SD-0013,SOFTWARE_DEV,tfidf,REST API,"backend, mobile or API development",0.372,tfidf
+JD-SD-0013,SOFTWARE_DEV,tfidf,Requirements Analysis,based on project requirements,0.743,tfidf
+JD-SD-0013,SOFTWARE_DEV,tfidf,Data Modelling,basic database queries,0.31,tfidf
+JD-SD-0013,SOFTWARE_DEV,tfidf,Git,Git/version control and software development practices,0.665,tfidf
+JD-SD-0013,SOFTWARE_DEV,tfidf,Documentation,technical discussions,0.865,tfidf
+JD-SD-0013,SOFTWARE_DEV,tfidf,A/B Testing,Software Testing,0.46,tfidf
+JD-SD-0013,SOFTWARE_DEV,tfidf,Teamwork,Assist the QA team,0.629,tfidf
+JD-SD-0013,SOFTWARE_DEV,tfidf,Unit Testing,test cases,0.427,tfidf
+JD-SD-0013,SOFTWARE_DEV,tfidf,Serverless,"functional, regression",0.363,tfidf
+JD-SD-0013,SOFTWARE_DEV,tfidf,Data Cleaning,test data,0.437,tfidf
+JD-SD-0013,SOFTWARE_DEV,tfidf,Systems Thinking,System Support,0.328,tfidf
+JD-SD-0013,SOFTWARE_DEV,tfidf,HRIS,system configuration,0.317,tfidf
+JD-SD-0013,SOFTWARE_DEV,tfidf,Employee Relations,procedures,0.266,tfidf
+JD-SD-0013,SOFTWARE_DEV,tfidf,Cloud Computing,DevOps & Cloud Exposure,0.656,tfidf
+JD-SD-0013,SOFTWARE_DEV,tfidf,Employment Law,application deployment and environment-related activities,0.451,tfidf
+JD-SD-0013,SOFTWARE_DEV,tfidf,Docker,Docker,0.576,tfidf
+JD-SD-0013,SOFTWARE_DEV,tfidf,CI/CD,CI/CD,0.295,tfidf
+JD-SD-0013,SOFTWARE_DEV,tfidf,Problem Solving,"basic deployment, configuration and troubleshooting tasks",0.636,tfidf
+JD-SD-0013,SOFTWARE_DEV,tfidf,Machine Learning,supervision,0.664,tfidf
+JD-SD-0013,SOFTWARE_DEV,tfidf,Security Operations (SOC),security,0.667,tfidf
+JD-SD-0013,SOFTWARE_DEV,tfidf,Hugging Face,debugging,0.483,tfidf
+JD-SD-0013,SOFTWARE_DEV,tfidf,Research Skills,research,0.675,tfidf
+JD-SD-0013,SOFTWARE_DEV,tfidf,AI Literacy,concept,0.401,tfidf
+JD-SD-0013,SOFTWARE_DEV,tfidf,Project Management,Project,0.838,tfidf
+JD-SD-0013,SOFTWARE_DEV,tfidf,Time Management,agreed timelines,0.288,tfidf
+JD-SD-0013,SOFTWARE_DEV,tfidf,Communication,Communicate progress,0.841,tfidf
+JD-SD-0013,SOFTWARE_DEV,tfidf,Business Process Improvement,Continuous Learning & Improvement,0.615,tfidf
+JD-SD-0013,SOFTWARE_DEV,tfidf,Data Mining,knowledge sharing,0.426,tfidf
+JD-SD-0013,SOFTWARE_DEV,tfidf,Computer Vision,Computer Science,0.29,tfidf
+JD-SD-0013,SOFTWARE_DEV,tfidf,Malware Analysis,Software Engineering,0.473,tfidf
+JD-SD-0013,SOFTWARE_DEV,tfidf,PHP,PHP,0.766,tfidf
+JD-SD-0013,SOFTWARE_DEV,tfidf,Java,Java,0.891,tfidf
+JD-SD-0013,SOFTWARE_DEV,tfidf,JavaScript,JavaScript,0.743,tfidf
+JD-SD-0013,SOFTWARE_DEV,tfidf,Python,Python,0.842,tfidf
+JD-SD-0013,SOFTWARE_DEV,tfidf,SQL,SQL,0.394,tfidf
+JD-SD-0013,SOFTWARE_DEV,tfidf,Cybersecurity,cybersecurity,0.658,tfidf
+JD-SD-0013,SOFTWARE_DEV,tfidf,Process Mapping,Willingness,0.302,tfidf
+JD-SD-0013,SOFTWARE_DEV,tfidf,Interpersonal Skills,interpersonal skills,0.565,tfidf
+JD-SD-0013,SOFTWARE_DEV,tfidf,Self-Motivation,Proactive,0.442,tfidf
+JD-SD-0013,SOFTWARE_DEV,tfidf,Social Media Marketing,Medical,0.279,tfidf
+JD-SD-0013,SOFTWARE_DEV,tfidf,Apache Spark,Parking,0.255,tfidf
 JD-WD-0001,WEB_DEV,keyword,Documentation,documentation,1.0,keyword
 JD-WD-0001,WEB_DEV,keyword,Problem Solving,troubleshooting,1.0,keyword
 JD-WD-0001,WEB_DEV,keyword,Java,Java,1.0,keyword
@@ -1473,6 +2867,24 @@ JD-WD-0001,WEB_DEV,hybrid,Vue.js,Vue.js,1.0,keyword
 JD-WD-0001,WEB_DEV,hybrid,CSS,Tailwind CSS,1.0,keyword
 JD-WD-0001,WEB_DEV,hybrid,Self-Motivation,Self-Driven,1.0,keyword
 JD-WD-0001,WEB_DEV,hybrid,Critical Thinking,analytical,0.77,semantic
+JD-WD-0001,WEB_DEV,tfidf,Interpersonal Skills,practical skills,0.274,tfidf
+JD-WD-0001,WEB_DEV,tfidf,Training & Development,software development,0.715,tfidf
+JD-WD-0001,WEB_DEV,tfidf,Scikit-learn,learn,0.509,tfidf
+JD-WD-0001,WEB_DEV,tfidf,Project Management,support ongoing projects,0.687,tfidf
+JD-WD-0001,WEB_DEV,tfidf,OWASP Top 10,software applications,0.326,tfidf
+JD-WD-0001,WEB_DEV,tfidf,Documentation,Assist in preparing software and product documentation,0.583,tfidf
+JD-WD-0001,WEB_DEV,tfidf,CRM Software,software,0.268,tfidf
+JD-WD-0001,WEB_DEV,tfidf,Hugging Face,debugging,0.483,tfidf
+JD-WD-0001,WEB_DEV,tfidf,Problem Solving,troubleshooting and modifying existing applications,0.651,tfidf
+JD-WD-0001,WEB_DEV,tfidf,Computer Vision,computer science,0.29,tfidf
+JD-WD-0001,WEB_DEV,tfidf,HRIS,information technology,0.303,tfidf
+JD-WD-0001,WEB_DEV,tfidf,Java,Java,0.891,tfidf
+JD-WD-0001,WEB_DEV,tfidf,JavaScript,JavaScript,0.743,tfidf
+JD-WD-0001,WEB_DEV,tfidf,Vue.js,Vue.js ecosystem,0.507,tfidf
+JD-WD-0001,WEB_DEV,tfidf,CSS,Tailwind CSS,0.543,tfidf
+JD-WD-0001,WEB_DEV,tfidf,Machine Learning,Strong learning aptitude,0.509,tfidf
+JD-WD-0001,WEB_DEV,tfidf,Leadership,Mentorship,0.353,tfidf
+JD-WD-0001,WEB_DEV,tfidf,Performance Management,based on performance,0.738,tfidf
 JD-WD-0002,WEB_DEV,keyword,PHP,PHP,1.0,keyword
 JD-WD-0002,WEB_DEV,keyword,Git,Git,1.0,keyword
 JD-WD-0002,WEB_DEV,keyword,Teamwork,teamwork,1.0,keyword
@@ -1503,6 +2915,28 @@ JD-WD-0002,WEB_DEV,hybrid,React,React,1.0,keyword
 JD-WD-0002,WEB_DEV,hybrid,Docker,Docker,1.0,keyword
 JD-WD-0002,WEB_DEV,hybrid,Linux,Linux,1.0,keyword
 JD-WD-0002,WEB_DEV,hybrid,Networking,networking,1.0,keyword
+JD-WD-0002,WEB_DEV,tfidf,Systems Thinking,build and improve in-house web systems,0.477,tfidf
+JD-WD-0002,WEB_DEV,tfidf,Training & Development,development team,0.572,tfidf
+JD-WD-0002,WEB_DEV,tfidf,FastAPI,work faster and smarter,0.347,tfidf
+JD-WD-0002,WEB_DEV,tfidf,Incident Response,Key responsibilities,0.352,tfidf
+JD-WD-0002,WEB_DEV,tfidf,Teamwork,dev team,0.531,tfidf
+JD-WD-0002,WEB_DEV,tfidf,PHP,PHP / Laravel,0.811,tfidf
+JD-WD-0002,WEB_DEV,tfidf,Metasploit,modern web framework,0.284,tfidf
+JD-WD-0002,WEB_DEV,tfidf,Git,Git,0.461,tfidf
+JD-WD-0002,WEB_DEV,tfidf,Brand Management,branches,0.556,tfidf
+JD-WD-0002,WEB_DEV,tfidf,Requirements Analysis,requests,0.341,tfidf
+JD-WD-0002,WEB_DEV,tfidf,Ansible,automation,0.455,tfidf
+JD-WD-0002,WEB_DEV,tfidf,Negotiation,Takes initiative,0.269,tfidf
+JD-WD-0002,WEB_DEV,tfidf,Creativity,Innovative mindset,0.423,tfidf
+JD-WD-0002,WEB_DEV,tfidf,Tableau,table,0.556,tfidf
+JD-WD-0002,WEB_DEV,tfidf,Scikit-learn,Curious learner,0.331,tfidf
+JD-WD-0002,WEB_DEV,tfidf,Vue.js,Nice to have: Vue,0.351,tfidf
+JD-WD-0002,WEB_DEV,tfidf,React,Nice to have: Vue or React,0.765,tfidf
+JD-WD-0002,WEB_DEV,tfidf,Docker,Docker,0.576,tfidf
+JD-WD-0002,WEB_DEV,tfidf,Linux,Linux,0.515,tfidf
+JD-WD-0002,WEB_DEV,tfidf,Documentation,Nice to have: Basic technical support skills,0.419,tfidf
+JD-WD-0002,WEB_DEV,tfidf,Networking,networking,0.567,tfidf
+JD-WD-0002,WEB_DEV,tfidf,Project Management,projects,0.745,tfidf
 JD-WD-0003,WEB_DEV,keyword,React,React.js,1.0,keyword
 JD-WD-0003,WEB_DEV,keyword,JavaScript,js,1.0,keyword
 JD-WD-0003,WEB_DEV,keyword,Node.js,Node.js,1.0,keyword
@@ -1545,6 +2979,28 @@ JD-WD-0003,WEB_DEV,hybrid,Docker,Docker,1.0,keyword
 JD-WD-0003,WEB_DEV,hybrid,Agile / Scrum,Agile methodologies,1.0,keyword
 JD-WD-0003,WEB_DEV,hybrid,CI/CD,CI/CD,1.0,keyword
 JD-WD-0003,WEB_DEV,hybrid,Unit Testing,unit testing,1.0,keyword
+JD-WD-0003,WEB_DEV,tfidf,Training & Development,join our growing application development team,0.437,tfidf
+JD-WD-0003,WEB_DEV,tfidf,React,React.js,0.792,tfidf
+JD-WD-0003,WEB_DEV,tfidf,Node.js,Node.js,0.8,tfidf
+JD-WD-0003,WEB_DEV,tfidf,MySQL,managing databases in MS SQL and MySQL,0.894,tfidf
+JD-WD-0003,WEB_DEV,tfidf,SQL,MS SQL,0.452,tfidf
+JD-WD-0003,WEB_DEV,tfidf,UI/UX Design,design and write efficient queries,0.272,tfidf
+JD-WD-0003,WEB_DEV,tfidf,Teamwork,Collaborate with senior developers,0.324,tfidf
+JD-WD-0003,WEB_DEV,tfidf,Hugging Face,debugging,0.483,tfidf
+JD-WD-0003,WEB_DEV,tfidf,Documentation,Contribute to system documentation and knowledge sharing,0.524,tfidf
+JD-WD-0003,WEB_DEV,tfidf,Data Mining,knowledge sharing,0.426,tfidf
+JD-WD-0003,WEB_DEV,tfidf,JavaScript,JavaScript/TypeScript,0.674,tfidf
+JD-WD-0003,WEB_DEV,tfidf,Employee Relations,relational databases,0.332,tfidf
+JD-WD-0003,WEB_DEV,tfidf,REST API,Understanding of RESTful API design,0.626,tfidf
+JD-WD-0003,WEB_DEV,tfidf,Git,Familiarity with Git and version control systems,0.538,tfidf
+JD-WD-0003,WEB_DEV,tfidf,Communication,Good communication and teamwork skills,0.648,tfidf
+JD-WD-0003,WEB_DEV,tfidf,Process Mapping,Willingness,0.302,tfidf
+JD-WD-0003,WEB_DEV,tfidf,Leadership,Willingness to learn and take ownership of tasks,0.495,tfidf
+JD-WD-0003,WEB_DEV,tfidf,Docker,Experience with Docker and containerized environments,0.745,tfidf
+JD-WD-0003,WEB_DEV,tfidf,Agile / Scrum,Exposure to Agile methodologies (Scrum/Kanban,0.707,tfidf
+JD-WD-0003,WEB_DEV,tfidf,Unit Testing,Knowledge of unit testing and code quality tools,0.408,tfidf
+JD-WD-0003,WEB_DEV,tfidf,Networking,Hybrid working arrangement,0.274,tfidf
+JD-WD-0003,WEB_DEV,tfidf,Identity & Access Management,Free gym access,0.442,tfidf
 JD-WD-0004,WEB_DEV,keyword,JavaScript,js,1.0,keyword
 JD-WD-0004,WEB_DEV,keyword,Identity & Access Management,access control,1.0,keyword
 JD-WD-0004,WEB_DEV,keyword,CRM Software,CRM,1.0,keyword
@@ -1574,6 +3030,42 @@ JD-WD-0004,WEB_DEV,hybrid,React,React,1.0,keyword
 JD-WD-0004,WEB_DEV,hybrid,SQL,SQL,1.0,keyword
 JD-WD-0004,WEB_DEV,hybrid,PostgreSQL,PostgreSQL,1.0,keyword
 JD-WD-0004,WEB_DEV,hybrid,Git,Git,1.0,keyword
+JD-WD-0004,WEB_DEV,tfidf,Security Operations (SOC),operations platform,0.533,tfidf
+JD-WD-0004,WEB_DEV,tfidf,SIEM,site management,0.294,tfidf
+JD-WD-0004,WEB_DEV,tfidf,Problem Solving,problems,0.5,tfidf
+JD-WD-0004,WEB_DEV,tfidf,Interpersonal Skills,real people,0.292,tfidf
+JD-WD-0004,WEB_DEV,tfidf,Risk Analysis,management,0.325,tfidf
+JD-WD-0004,WEB_DEV,tfidf,Incident Response,Key Responsibilities,0.352,tfidf
+JD-WD-0004,WEB_DEV,tfidf,Training & Development,Guard Ops App Development,0.476,tfidf
+JD-WD-0004,WEB_DEV,tfidf,Feature Engineering,features,0.678,tfidf
+JD-WD-0004,WEB_DEV,tfidf,Data Visualisation,web dashboard,0.546,tfidf
+JD-WD-0004,WEB_DEV,tfidf,Communication,authentication,0.329,tfidf
+JD-WD-0004,WEB_DEV,tfidf,Identity & Access Management,access control,0.481,tfidf
+JD-WD-0004,WEB_DEV,tfidf,Employment Law,help with deployments,0.442,tfidf
+JD-WD-0004,WEB_DEV,tfidf,Machine Learning,supervisors,0.43,tfidf
+JD-WD-0004,WEB_DEV,tfidf,Business Process Improvement,improvements,0.577,tfidf
+JD-WD-0004,WEB_DEV,tfidf,AI Literacy,AI,0.401,tfidf
+JD-WD-0004,WEB_DEV,tfidf,REST API,APIs,0.382,tfidf
+JD-WD-0004,WEB_DEV,tfidf,CI/CD,APIs & Integrations,0.373,tfidf
+JD-WD-0004,WEB_DEV,tfidf,Systems Thinking,business systems,0.466,tfidf
+JD-WD-0004,WEB_DEV,tfidf,GCP,Google Workspace Admin,0.395,tfidf
+JD-WD-0004,WEB_DEV,tfidf,Email Marketing,email configurations,0.789,tfidf
+JD-WD-0004,WEB_DEV,tfidf,CRM Software,CRM,0.354,tfidf
+JD-WD-0004,WEB_DEV,tfidf,ETL,CRM pipeline setup,0.455,tfidf
+JD-WD-0004,WEB_DEV,tfidf,Generative AI,General Tech Support,0.274,tfidf
+JD-WD-0004,WEB_DEV,tfidf,Requirements Analysis,Skills Required,0.457,tfidf
+JD-WD-0004,WEB_DEV,tfidf,Computer Vision,Computer Science,0.29,tfidf
+JD-WD-0004,WEB_DEV,tfidf,Malware Analysis,Software Engineering,0.473,tfidf
+JD-WD-0004,WEB_DEV,tfidf,JavaScript,JavaScript/TypeScript,0.674,tfidf
+JD-WD-0004,WEB_DEV,tfidf,Python,Python,0.842,tfidf
+JD-WD-0004,WEB_DEV,tfidf,React,React,0.765,tfidf
+JD-WD-0004,WEB_DEV,tfidf,Scikit-learn,learn quickly,0.361,tfidf
+JD-WD-0004,WEB_DEV,tfidf,SQL,SQL,0.394,tfidf
+JD-WD-0004,WEB_DEV,tfidf,Ansible,automation,0.455,tfidf
+JD-WD-0004,WEB_DEV,tfidf,PostgreSQL,PostgreSQL,0.874,tfidf
+JD-WD-0004,WEB_DEV,tfidf,Git,Familiarity with Git and GitHub,0.461,tfidf
+JD-WD-0004,WEB_DEV,tfidf,Project Management,personal projects,0.475,tfidf
+JD-WD-0004,WEB_DEV,tfidf,Leadership,Mentorship,0.353,tfidf
 JD-WD-0005,WEB_DEV,keyword,React,React,1.0,keyword
 JD-WD-0005,WEB_DEV,keyword,TypeScript,TypeScript,1.0,keyword
 JD-WD-0005,WEB_DEV,keyword,CSS,Tailwind CSS,1.0,keyword
@@ -1598,6 +3090,29 @@ JD-WD-0005,WEB_DEV,hybrid,SQL,SQL queries,1.0,keyword
 JD-WD-0005,WEB_DEV,hybrid,JavaScript,ES6,1.0,keyword
 JD-WD-0005,WEB_DEV,hybrid,Data Visualisation,Data visualization,1.0,keyword
 JD-WD-0005,WEB_DEV,hybrid,Documentation,documentation,1.0,keyword
+JD-WD-0005,WEB_DEV,tfidf,React,polished React interfaces,0.765,tfidf
+JD-WD-0005,WEB_DEV,tfidf,Terraform,working with ClickHouse big data infrastructure,0.341,tfidf
+JD-WD-0005,WEB_DEV,tfidf,Teamwork,collaborate with cross-functional teams,0.404,tfidf
+JD-WD-0005,WEB_DEV,tfidf,Serverless,cross-functional teams,0.437,tfidf
+JD-WD-0005,WEB_DEV,tfidf,Feature Engineering,deliver data driven product features,0.678,tfidf
+JD-WD-0005,WEB_DEV,tfidf,UI/UX Design,design,0.503,tfidf
+JD-WD-0005,WEB_DEV,tfidf,Employment Law,deployment,0.54,tfidf
+JD-WD-0005,WEB_DEV,tfidf,Incident Response,Key Responsibilities,0.417,tfidf
+JD-WD-0005,WEB_DEV,tfidf,TypeScript,React 18+ and TypeScript,0.882,tfidf
+JD-WD-0005,WEB_DEV,tfidf,OWASP Top 10,Manage application state,0.334,tfidf
+JD-WD-0005,WEB_DEV,tfidf,CSS,Tailwind CSS,0.543,tfidf
+JD-WD-0005,WEB_DEV,tfidf,Communication,JWT authentication,0.329,tfidf
+JD-WD-0005,WEB_DEV,tfidf,Data Modelling,ClickHouse database table design,0.654,tfidf
+JD-WD-0005,WEB_DEV,tfidf,SQL,complex SQL queries,0.509,tfidf
+JD-WD-0005,WEB_DEV,tfidf,Training & Development,backend developers,0.258,tfidf
+JD-WD-0005,WEB_DEV,tfidf,Malware Analysis,Software Engineering,0.473,tfidf
+JD-WD-0005,WEB_DEV,tfidf,Computer Vision,Computer Science,0.29,tfidf
+JD-WD-0005,WEB_DEV,tfidf,HRIS,Information Technology,0.303,tfidf
+JD-WD-0005,WEB_DEV,tfidf,Content Marketing,Frontend,0.396,tfidf
+JD-WD-0005,WEB_DEV,tfidf,Documentation,Core Technologies,0.577,tfidf
+JD-WD-0005,WEB_DEV,tfidf,JavaScript,Strong ES6+ JavaScript fundamentals,0.509,tfidf
+JD-WD-0005,WEB_DEV,tfidf,CI/CD,Axios + JWT for API integration,0.33,tfidf
+JD-WD-0005,WEB_DEV,tfidf,Data Visualisation,Data visualization experience,0.326,tfidf
 JD-WD-0006,WEB_DEV,keyword,Vue.js,VueJS,1.0,keyword
 JD-WD-0006,WEB_DEV,keyword,REST API,RESTful APIs,1.0,keyword
 JD-WD-0006,WEB_DEV,keyword,UI/UX Design,UI/UX designs,1.0,keyword
@@ -1635,6 +3150,42 @@ JD-WD-0006,WEB_DEV,hybrid,Self-Motivation,proactive,1.0,keyword
 JD-WD-0006,WEB_DEV,hybrid,Communication,communication,1.0,keyword
 JD-WD-0006,WEB_DEV,hybrid,Interpersonal Skills,interpersonal skills,1.0,keyword
 JD-WD-0006,WEB_DEV,hybrid,Search Engine Optimisation,SEO,1.0,keyword
+JD-WD-0006,WEB_DEV,tfidf,Teamwork,join our growing team,0.403,tfidf
+JD-WD-0006,WEB_DEV,tfidf,OWASP Top 10,appealing web applications,0.395,tfidf
+JD-WD-0006,WEB_DEV,tfidf,UI/UX Design,designers,0.59,tfidf
+JD-WD-0006,WEB_DEV,tfidf,Training & Development,backend developers,0.715,tfidf
+JD-WD-0006,WEB_DEV,tfidf,Incident Response,Key Responsibilities,0.352,tfidf
+JD-WD-0006,WEB_DEV,tfidf,Vue.js,Nuxt / VueJS,0.609,tfidf
+JD-WD-0006,WEB_DEV,tfidf,REST API,integrate RESTful APIs and WebSocket connections,0.751,tfidf
+JD-WD-0006,WEB_DEV,tfidf,Performance Management,Optimize frontend performance,0.502,tfidf
+JD-WD-0006,WEB_DEV,tfidf,Vulnerability Assessment,scalability,0.506,tfidf
+JD-WD-0006,WEB_DEV,tfidf,Process Mapping,debugging processes,0.526,tfidf
+JD-WD-0006,WEB_DEV,tfidf,Project Management,Projects,0.769,tfidf
+JD-WD-0006,WEB_DEV,tfidf,Customer Focus,Customer-facing portals,0.531,tfidf
+JD-WD-0006,WEB_DEV,tfidf,Data Visualisation,Admin dashboards,0.511,tfidf
+JD-WD-0006,WEB_DEV,tfidf,CI/CD,party service integrations,0.346,tfidf
+JD-WD-0006,WEB_DEV,tfidf,Computer Vision,Computer Science,0.29,tfidf
+JD-WD-0006,WEB_DEV,tfidf,Malware Analysis,Software Engineering,0.473,tfidf
+JD-WD-0006,WEB_DEV,tfidf,Metasploit,frameworks,0.317,tfidf
+JD-WD-0006,WEB_DEV,tfidf,React,Vue / Svelte / React,0.534,tfidf
+JD-WD-0006,WEB_DEV,tfidf,HTML,HTML5,0.548,tfidf
+JD-WD-0006,WEB_DEV,tfidf,CSS,CSS3,0.543,tfidf
+JD-WD-0006,WEB_DEV,tfidf,JavaScript,JavaScript,0.743,tfidf
+JD-WD-0006,WEB_DEV,tfidf,Git,Git/GitHub,0.472,tfidf
+JD-WD-0006,WEB_DEV,tfidf,A/B Testing,Experience in browser testing and debugging,0.665,tfidf
+JD-WD-0006,WEB_DEV,tfidf,Hugging Face,debugging,0.483,tfidf
+JD-WD-0006,WEB_DEV,tfidf,Employment Law,deployment,0.54,tfidf
+JD-WD-0006,WEB_DEV,tfidf,Google Analytics,layout aesthetics,0.265,tfidf
+JD-WD-0006,WEB_DEV,tfidf,Business Process Improvement,Passionate about R&D and continuous improvement,0.442,tfidf
+JD-WD-0006,WEB_DEV,tfidf,FastAPI,work in a fast-paced environment,0.423,tfidf
+JD-WD-0006,WEB_DEV,tfidf,Communication,Strong communication,0.863,tfidf
+JD-WD-0006,WEB_DEV,tfidf,Interpersonal Skills,interpersonal skills,0.565,tfidf
+JD-WD-0006,WEB_DEV,tfidf,Network Security,past work,0.266,tfidf
+JD-WD-0006,WEB_DEV,tfidf,Serverless,Server-Side Rendering,0.254,tfidf
+JD-WD-0006,WEB_DEV,tfidf,Search Engine Optimisation,SEO,0.326,tfidf
+JD-WD-0006,WEB_DEV,tfidf,Microservices,party services,0.384,tfidf
+JD-WD-0006,WEB_DEV,tfidf,Firewall Management,Firebase,0.341,tfidf
+JD-WD-0006,WEB_DEV,tfidf,User Acceptance Testing,walking distance,0.29,tfidf
 JD-WD-0007,WEB_DEV,keyword,React,React,1.0,keyword
 JD-WD-0007,WEB_DEV,keyword,Generative AI,LLMs,1.0,keyword
 JD-WD-0007,WEB_DEV,keyword,Documentation,documentation,1.0,keyword
@@ -1662,6 +3213,29 @@ JD-WD-0007,WEB_DEV,hybrid,Vue.js,Vue,1.0,keyword
 JD-WD-0007,WEB_DEV,hybrid,HTML,HTML,1.0,keyword
 JD-WD-0007,WEB_DEV,hybrid,CSS,CSS,1.0,keyword
 JD-WD-0007,WEB_DEV,hybrid,REST API,REST APIs,1.0,keyword
+JD-WD-0007,WEB_DEV,tfidf,Systems Thinking,modern identity systems,0.434,tfidf
+JD-WD-0007,WEB_DEV,tfidf,OWASP Top 10,integrate with web applications,0.395,tfidf
+JD-WD-0007,WEB_DEV,tfidf,React,React,0.765,tfidf
+JD-WD-0007,WEB_DEV,tfidf,Content Marketing,modern frontend,0.297,tfidf
+JD-WD-0007,WEB_DEV,tfidf,Metasploit,frameworks,0.317,tfidf
+JD-WD-0007,WEB_DEV,tfidf,Documentation,"accelerate development, testing, and documentation",0.631,tfidf
+JD-WD-0007,WEB_DEV,tfidf,Training & Development,development,0.476,tfidf
+JD-WD-0007,WEB_DEV,tfidf,Accounting,account management UI components,0.465,tfidf
+JD-WD-0007,WEB_DEV,tfidf,Communication,OAuth2/OIDC authentication APIs,0.271,tfidf
+JD-WD-0007,WEB_DEV,tfidf,Generative AI,code generation,0.385,tfidf
+JD-WD-0007,WEB_DEV,tfidf,Teamwork,Collaborate with backend engineers,0.295,tfidf
+JD-WD-0007,WEB_DEV,tfidf,Malware Analysis,backend engineers,0.306,tfidf
+JD-WD-0007,WEB_DEV,tfidf,UI/UX Design,design secure API interactions,0.274,tfidf
+JD-WD-0007,WEB_DEV,tfidf,Security Operations (SOC),secure API interactions,0.576,tfidf
+JD-WD-0007,WEB_DEV,tfidf,Computer Vision,Computer Science,0.29,tfidf
+JD-WD-0007,WEB_DEV,tfidf,R,Strong programming fundamentals,0.378,tfidf
+JD-WD-0007,WEB_DEV,tfidf,Problem Solving,Strong programming fundamentals and problem-solving skills,0.629,tfidf
+JD-WD-0007,WEB_DEV,tfidf,TypeScript,JavaScript / TypeScript,0.709,tfidf
+JD-WD-0007,WEB_DEV,tfidf,Vue.js,Vue,0.703,tfidf
+JD-WD-0007,WEB_DEV,tfidf,HTML,HTML,0.502,tfidf
+JD-WD-0007,WEB_DEV,tfidf,CSS,CSS,0.447,tfidf
+JD-WD-0007,WEB_DEV,tfidf,REST API,REST APIs,0.541,tfidf
+JD-WD-0007,WEB_DEV,tfidf,AI Literacy,JWT concepts,0.333,tfidf
 JD-WD-0008,WEB_DEV,keyword,Self-Motivation,proactive,1.0,keyword
 JD-WD-0008,WEB_DEV,keyword,UI/UX Design,UI/UX designs,1.0,keyword
 JD-WD-0008,WEB_DEV,keyword,REST API,RESTful APIs,1.0,keyword
@@ -1720,6 +3294,47 @@ JD-WD-0008,WEB_DEV,hybrid,Cloud Computing,cloud platforms,1.0,keyword
 JD-WD-0008,WEB_DEV,hybrid,AWS,AWS,1.0,keyword
 JD-WD-0008,WEB_DEV,hybrid,Azure,Azure,1.0,keyword
 JD-WD-0008,WEB_DEV,hybrid,Unit Testing,Jest,1.0,keyword
+JD-WD-0008,WEB_DEV,tfidf,Teamwork,join our team,0.528,tfidf
+JD-WD-0008,WEB_DEV,tfidf,OWASP Top 10,"scalable, high-quality applications",0.372,tfidf
+JD-WD-0008,WEB_DEV,tfidf,Microservices,blend great design with robust architecture,0.515,tfidf
+JD-WD-0008,WEB_DEV,tfidf,UI/UX Design,great design,0.531,tfidf
+JD-WD-0008,WEB_DEV,tfidf,Performance Management,"balance usability, performance, and maintainability",0.738,tfidf
+JD-WD-0008,WEB_DEV,tfidf,Vulnerability Assessment,usability,0.509,tfidf
+JD-WD-0008,WEB_DEV,tfidf,Serverless,cross-functional teams,0.301,tfidf
+JD-WD-0008,WEB_DEV,tfidf,Machine Learning,mentoring and learning from others,0.536,tfidf
+JD-WD-0008,WEB_DEV,tfidf,Incident Response,"responsive, accessible user interfaces",0.25,tfidf
+JD-WD-0008,WEB_DEV,tfidf,REST API,Build RESTful APIs,0.751,tfidf
+JD-WD-0008,WEB_DEV,tfidf,Data Cleaning,data flow,0.376,tfidf
+JD-WD-0008,WEB_DEV,tfidf,Systems Thinking,end and backend systems,0.416,tfidf
+JD-WD-0008,WEB_DEV,tfidf,Data Modelling,database design,0.527,tfidf
+JD-WD-0008,WEB_DEV,tfidf,SQL,queries,0.452,tfidf
+JD-WD-0008,WEB_DEV,tfidf,Malware Analysis,engineers,0.473,tfidf
+JD-WD-0008,WEB_DEV,tfidf,Feature Engineering,deliver high-quality features,0.55,tfidf
+JD-WD-0008,WEB_DEV,tfidf,Documentation,new technologies,0.631,tfidf
+JD-WD-0008,WEB_DEV,tfidf,Business Process Improvement,improve the development process,0.5,tfidf
+JD-WD-0008,WEB_DEV,tfidf,Process Mapping,development process,0.404,tfidf
+JD-WD-0008,WEB_DEV,tfidf,Computer Vision,Computer Science,0.29,tfidf
+JD-WD-0008,WEB_DEV,tfidf,Training & Development,end development,0.448,tfidf
+JD-WD-0008,WEB_DEV,tfidf,JavaScript,"HTML, CSS, JavaScript",0.568,tfidf
+JD-WD-0008,WEB_DEV,tfidf,Metasploit,frameworks,0.317,tfidf
+JD-WD-0008,WEB_DEV,tfidf,Angular,Angular,0.887,tfidf
+JD-WD-0008,WEB_DEV,tfidf,React,React,0.765,tfidf
+JD-WD-0008,WEB_DEV,tfidf,Vue.js,Vue,0.703,tfidf
+JD-WD-0008,WEB_DEV,tfidf,Node.js,Node.js,0.8,tfidf
+JD-WD-0008,WEB_DEV,tfidf,C#,.NET Core,0.274,tfidf
+JD-WD-0008,WEB_DEV,tfidf,Employee Relations,relational,0.461,tfidf
+JD-WD-0008,WEB_DEV,tfidf,MySQL,MySQL,0.894,tfidf
+JD-WD-0008,WEB_DEV,tfidf,Git,version control,0.561,tfidf
+JD-WD-0008,WEB_DEV,tfidf,Docker,containerization,0.727,tfidf
+JD-WD-0008,WEB_DEV,tfidf,Cloud Computing,cloud platforms,0.659,tfidf
+JD-WD-0008,WEB_DEV,tfidf,AWS,AWS,0.319,tfidf
+JD-WD-0008,WEB_DEV,tfidf,Azure,Azure,0.782,tfidf
+JD-WD-0008,WEB_DEV,tfidf,A/B Testing,testing frameworks,0.467,tfidf
+JD-WD-0008,WEB_DEV,tfidf,Unit Testing,xUnit,0.346,tfidf
+JD-WD-0008,WEB_DEV,tfidf,Project Management,Portfolio or GitHub with relevant projects,0.586,tfidf
+JD-WD-0008,WEB_DEV,tfidf,Payroll,Contributions,0.355,tfidf
+JD-WD-0008,WEB_DEV,tfidf,Security Operations (SOC),security best practices,0.476,tfidf
+JD-WD-0008,WEB_DEV,tfidf,Identity & Access Management,accessibility,0.322,tfidf
 JD-WD-0009,WEB_DEV,keyword,HTML,HTML,1.0,keyword
 JD-WD-0009,WEB_DEV,keyword,Email Marketing,email campaigns,1.0,keyword
 JD-WD-0009,WEB_DEV,keyword,CSS,CSS,1.0,keyword
@@ -1735,6 +3350,24 @@ JD-WD-0009,WEB_DEV,hybrid,CSS,CSS,1.0,keyword
 JD-WD-0009,WEB_DEV,hybrid,JavaScript,JavaScript,1.0,keyword
 JD-WD-0009,WEB_DEV,hybrid,PHP,PHP,1.0,keyword
 JD-WD-0009,WEB_DEV,hybrid,Excel,Microsoft Excel,1.0,keyword
+JD-WD-0009,WEB_DEV,tfidf,OWASP Top 10,Develop and maintain web applications,0.395,tfidf
+JD-WD-0009,WEB_DEV,tfidf,HTML,Build HTML EDMs,0.502,tfidf
+JD-WD-0009,WEB_DEV,tfidf,Email Marketing,Build HTML EDMs for email campaigns,0.485,tfidf
+JD-WD-0009,WEB_DEV,tfidf,Microservices,campaign microsites,0.29,tfidf
+JD-WD-0009,WEB_DEV,tfidf,Incident Response,Key responsibilities,0.374,tfidf
+JD-WD-0009,WEB_DEV,tfidf,Training & Development,Develop,0.4,tfidf
+JD-WD-0009,WEB_DEV,tfidf,Digital Marketing,Create and update marketing campaign microsites,0.72,tfidf
+JD-WD-0009,WEB_DEV,tfidf,Vulnerability Assessment,Ensure cross-browser and mobile compatibility,0.305,tfidf
+JD-WD-0009,WEB_DEV,tfidf,UI/UX Design,design,0.503,tfidf
+JD-WD-0009,WEB_DEV,tfidf,JavaScript,"Proficient in HTML, CSS, JavaScript",0.643,tfidf
+JD-WD-0009,WEB_DEV,tfidf,Performance Management,Familiarity with web performance and browser testing,0.673,tfidf
+JD-WD-0009,WEB_DEV,tfidf,A/B Testing,browser testing,0.665,tfidf
+JD-WD-0009,WEB_DEV,tfidf,Identity & Access Management,accessibility,0.322,tfidf
+JD-WD-0009,WEB_DEV,tfidf,PHP,PHP,0.766,tfidf
+JD-WD-0009,WEB_DEV,tfidf,Documentation,web technologies,0.251,tfidf
+JD-WD-0009,WEB_DEV,tfidf,Excel,Microsoft Excel,0.679,tfidf
+JD-WD-0009,WEB_DEV,tfidf,Data Cleaning,data handling,0.31,tfidf
+JD-WD-0009,WEB_DEV,tfidf,Content Marketing,content input,0.793,tfidf
 JD-WD-0010,WEB_DEV,keyword,PHP,PHP,1.0,keyword
 JD-WD-0010,WEB_DEV,keyword,MySQL,MYSQL,1.0,keyword
 JD-WD-0010,WEB_DEV,keyword,HTML,HTML,1.0,keyword
@@ -1750,6 +3383,21 @@ JD-WD-0010,WEB_DEV,hybrid,MySQL,MYSQL,1.0,keyword
 JD-WD-0010,WEB_DEV,hybrid,HTML,HTML,1.0,keyword
 JD-WD-0010,WEB_DEV,hybrid,CSS,CSS,1.0,keyword
 JD-WD-0010,WEB_DEV,hybrid,JavaScript,JAVASCRIPT,1.0,keyword
+JD-WD-0010,WEB_DEV,tfidf,Project Management,Meet customer with Senior / Project Manager,0.796,tfidf
+JD-WD-0010,WEB_DEV,tfidf,Customer Focus,customer,0.794,tfidf
+JD-WD-0010,WEB_DEV,tfidf,Systems Thinking,implement & maintain the system,0.262,tfidf
+JD-WD-0010,WEB_DEV,tfidf,Requirements Analysis,work experience required,0.358,tfidf
+JD-WD-0010,WEB_DEV,tfidf,Data Mining,Minimum,0.363,tfidf
+JD-WD-0010,WEB_DEV,tfidf,PHP,PHP,0.766,tfidf
+JD-WD-0010,WEB_DEV,tfidf,MySQL,MYSQL,0.894,tfidf
+JD-WD-0010,WEB_DEV,tfidf,HTML,HTML,0.502,tfidf
+JD-WD-0010,WEB_DEV,tfidf,CSS,CSS,0.447,tfidf
+JD-WD-0010,WEB_DEV,tfidf,JavaScript,JAVASCRIPT,0.743,tfidf
+JD-WD-0010,WEB_DEV,tfidf,R,2 x Programmer,0.502,tfidf
+JD-WD-0010,WEB_DEV,tfidf,Digital Marketing,2 x Marketing,0.72,tfidf
+JD-WD-0010,WEB_DEV,tfidf,Interpersonal Skills,1 x Personal Assistant,0.275,tfidf
+JD-WD-0010,WEB_DEV,tfidf,Networking,Flexible working hours,0.283,tfidf
+JD-WD-0010,WEB_DEV,tfidf,Git,Conversion,0.368,tfidf
 JD-WD-0011,WEB_DEV,keyword,PHP,PHP,1.0,keyword
 JD-WD-0011,WEB_DEV,keyword,HTML,HTML,1.0,keyword
 JD-WD-0011,WEB_DEV,keyword,CSS,CSS,1.0,keyword
@@ -1769,3 +3417,20 @@ JD-WD-0011,WEB_DEV,hybrid,Project Management,Manage multiple projects,0.649,sema
 JD-WD-0011,WEB_DEV,hybrid,Time Management,deadlines,0.62,semantic
 JD-WD-0011,WEB_DEV,hybrid,Communication,communication,1.0,keyword
 JD-WD-0011,WEB_DEV,hybrid,MySQL,MySQL,1.0,keyword
+JD-WD-0011,WEB_DEV,tfidf,Training & Development,passionate developer,0.257,tfidf
+JD-WD-0011,WEB_DEV,tfidf,Teamwork,Join our team,0.344,tfidf
+JD-WD-0011,WEB_DEV,tfidf,Creativity,create innovative web solutions,0.492,tfidf
+JD-WD-0011,WEB_DEV,tfidf,Incident Response,Key Responsibilities,0.352,tfidf
+JD-WD-0011,WEB_DEV,tfidf,OWASP Top 10,high-quality web applications,0.349,tfidf
+JD-WD-0011,WEB_DEV,tfidf,PHP,PHP,0.766,tfidf
+JD-WD-0011,WEB_DEV,tfidf,JavaScript,"PHP, HTML, CSS, and JavaScript",0.743,tfidf
+JD-WD-0011,WEB_DEV,tfidf,HTML,HTML,0.502,tfidf
+JD-WD-0011,WEB_DEV,tfidf,CSS,CSS,0.447,tfidf
+JD-WD-0011,WEB_DEV,tfidf,Microservices,existing backend services,0.302,tfidf
+JD-WD-0011,WEB_DEV,tfidf,Project Management,projects,0.745,tfidf
+JD-WD-0011,WEB_DEV,tfidf,Time Management,deadlines,0.492,tfidf
+JD-WD-0011,WEB_DEV,tfidf,Computer Vision,Computer Science,0.29,tfidf
+JD-WD-0011,WEB_DEV,tfidf,Interpersonal Skills,right skills,0.34,tfidf
+JD-WD-0011,WEB_DEV,tfidf,Communication,effective team communication,0.735,tfidf
+JD-WD-0011,WEB_DEV,tfidf,Metasploit,CodeIgniter Framework,0.283,tfidf
+JD-WD-0011,WEB_DEV,tfidf,MySQL,Database Knowledge: Experience with MySQL,0.894,tfidf

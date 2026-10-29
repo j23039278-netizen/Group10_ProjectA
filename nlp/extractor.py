@@ -1,6 +1,7 @@
 """
 Skill extraction for the SEAGAS NLP module: Level 1 (keyword), Level 2
-(semantic, further down) and hybrid (both, at the end of the file).
+(semantic, further down), TF-IDF (same candidates as semantic, for the method
+comparison) and hybrid (keyword + semantic, at the end of the file).
 Author: Ng Yong Hin (AI / NLP Engineer)
 
 Level 1 is pure Python + regex, standard library only. Use it through
@@ -381,7 +382,7 @@ class _Hit(NamedTuple):
     start: int
     end: int
     skill_name: str
-    method: str            # "keyword" or "semantic"
+    method: str            # "keyword", "semantic" or TFIDF_METHOD
     confidence: float
 
 
@@ -583,27 +584,38 @@ def _semantic_candidates(text, catalogue):
     return [(s, e, phrase) for (s, e), phrase in sorted(found.items())]
 
 
-def _semantic_hits(text, catalogue):
-    """Every candidate phrase whose most similar skill reaches MATCH_THRESHOLD."""
-    from nlp.model import encode, skill_embeddings
+def _best_skill_hits(candidates, similarity, threshold, method):
+    """Hits for the candidate phrases whose most similar skill reaches `threshold`.
 
-    candidates = _semantic_candidates(text, catalogue)
+    similarity(phrases) -> (names, matrix) scores each distinct lower-cased phrase
+    against every skill.
+    """
     if not candidates:
         return []
-
-    skills = skill_embeddings(catalogue)
     phrases = sorted({p.lower() for _, _, p in candidates})
-    sims = skills.similarity(encode(phrases))
+    names, sims = similarity(phrases)
     best_idx = sims.argmax(axis=1)
-    best_of = {p: (skills.names[i], float(sims[k, i]))
+    best_of = {p: (names[i], float(sims[k, i]))
                for k, (p, i) in enumerate(zip(phrases, best_idx))}
 
     hits = []
     for start, end, phrase in candidates:
         name, score = best_of[phrase.lower()]
-        if score >= config.MATCH_THRESHOLD:
-            hits.append(_Hit(start, end, name, "semantic", score))
+        if score >= threshold:
+            hits.append(_Hit(start, end, name, method, score))
     return hits
+
+
+def _semantic_hits(text, catalogue):
+    """Every candidate phrase whose most similar skill reaches MATCH_THRESHOLD."""
+    from nlp.model import encode, skill_embeddings
+
+    def similarity(phrases):
+        skills = skill_embeddings(catalogue)
+        return skills.names, skills.similarity(encode(phrases))
+
+    return _best_skill_hits(_semantic_candidates(text, catalogue), similarity,
+                            config.MATCH_THRESHOLD, "semantic")
 
 
 def extract_semantic(text, catalogue):
@@ -616,6 +628,50 @@ def extract_semantic(text, catalogue):
     if not text or not text.strip() or not len(catalogue):
         return []
     return _results(text, _semantic_hits(text, catalogue), catalogue)
+
+
+# ══════════════════════════════════════════════════════════════
+# TF-IDF extraction (for the method comparison)
+# ══════════════════════════════════════════════════════════════
+# Use it through `nlp.extract_skills(text, method="tfidf")`. The third L2
+# option of the brief (TF-IDF + cosine), kept so the evaluation can compare
+# keyword / TF-IDF / semantic / hybrid. Needs spaCy and scikit-learn, not the
+# Sentence Transformers model.
+#
+# Only the representation differs from semantic extraction:
+#   1. The same candidate phrases (_semantic_candidates above).
+#   2. A TfidfVectorizer (config.TFIDF_ANALYZER) fitted on the catalogue skill
+#      texts (config.SKILL_TEXT_MODE) vectorises every distinct phrase; its
+#      best skill by cosine is kept at >= config.TFIDF_MATCH_THRESHOLD.
+#   3. One ExtractedSkill per canonical skill, ordered by start_char, with
+#      method TFIDF_METHOD and confidence_score = the best cosine.
+
+# ExtractedSkill.method of a TF-IDF hit.
+TFIDF_METHOD = "tfidf"
+
+
+def _tfidf_hits(text, catalogue):
+    """Every candidate phrase whose most similar skill reaches TFIDF_MATCH_THRESHOLD."""
+    from nlp.model import skill_tfidf
+
+    def similarity(phrases):
+        skills = skill_tfidf(catalogue)
+        return skills.names, skills.similarity(phrases)
+
+    return _best_skill_hits(_semantic_candidates(text, catalogue), similarity,
+                            config.TFIDF_MATCH_THRESHOLD, TFIDF_METHOD)
+
+
+def extract_tfidf(text, catalogue):
+    """TF-IDF extraction: catalogue skills whose TF-IDF vector is close to a JD phrase.
+
+    Returns one ExtractedSkill per canonical skill, ordered by start_char, with
+    confidence_score = TF-IDF cosine similarity (best over all phrases).
+    raw_skill_text / offsets come from the first matching phrase.
+    """
+    if not text or not text.strip() or not len(catalogue):
+        return []
+    return _results(text, _tfidf_hits(text, catalogue), catalogue)
 
 
 # ══════════════════════════════════════════════════════════════

@@ -1,10 +1,22 @@
 # SEAGAS NLP Interface (contract for backend integration)
 
 **Owner:** Ng Yong Hin (AI / NLP Engineer) | **Consumer:** Soh Way Miin (Carl), backend
-**Status (2026-10-15):** everything below works: `extract_skills()` with
-`method="keyword"`, `"semantic"` and `"hybrid"` (`nlp/extractor.py`), and
+**Status (2026-10-29):** everything below works: `extract_skills()` with
+`method="keyword"`, `"semantic"`, `"hybrid"` and `"tfidf"` (`nlp/extractor.py`), and
 `match_skills()` with all three methods (`nlp/matcher.py`). The signatures and fields
 below will not change without a note in this file.
+
+**Changes on 2026-10-29**
+
+- New extraction method `extract_skills(text, method="tfidf")`: TF-IDF + cosine
+  similarity on the same candidate phrases as `"semantic"`, for the method comparison
+  (keyword / TF-IDF / semantic / hybrid). Its rows have `method = "tfidf"`, which
+  `jd_extracted_skills.extraction_method` does **not** accept, so the backend must not
+  store them; `VALID_METHODS` (the backend's method list) is unchanged and does not
+  include it. See 6(i) for the schema change if TF-IDF rows ever need storing.
+- `match_skills(method="tfidf")` raises `ValueError` (matching stays keyword /
+  semantic / hybrid).
+- Every existing call behaves as before.
 
 **Changes on 2026-10-15**
 
@@ -31,6 +43,9 @@ from nlp.types import ExtractedSkill, StudentSkill, RequiredSkill, MatchResult
   need the packages in `nlp/requirements.txt` (spaCy + `en_core_web_sm`,
   sentence-transformers, numpy). They are imported only when a similarity is needed.
   See section 8.
+- TF-IDF extraction (`method="tfidf"`) needs spaCy + `en_core_web_sm` and
+  scikit-learn (all in `nlp/requirements.txt`), but never loads the Sentence
+  Transformers model.
 - The **repo root** must be on `sys.path` (not `nlp/` itself: `nlp/types.py` would then
   shadow Python's built-in `types` module).
 - Everything is plain `dict` / `list` / `str` / `float`, so results can be passed to
@@ -43,7 +58,7 @@ from nlp.types import ExtractedSkill, StudentSkill, RequiredSkill, MatchResult
 | Parameter | Type | Meaning |
 |-----------|------|---------|
 | `text` | `str` | Raw JD text (`job_descriptions.raw_text`). |
-| `method` | `str` | `"keyword"`, `"semantic"` or `"hybrid"` (default). |
+| `method` | `str` | `"keyword"`, `"semantic"`, `"hybrid"` (default) or `"tfidf"` (method comparison only; do not store its rows, see 6(i)). |
 | `skills` | `list[dict] \| None` | Rows from `skills_library` (`skill_id`, `skill_name`, `category`, `aliases`, `description`, optional `is_active`). Pass them so results carry real UUIDs. `None` uses `nlp/resources/skills_taxonomy.json`, and then `skill_id` is `None`. SQLAlchemy `Row` objects are accepted too. |
 
 Returns one `ExtractedSkill` per **distinct** skill found, ordered by
@@ -70,9 +85,12 @@ stays in the backend.
 |-------|------------|----------|
 | `keyword` | Exact / alias / normalised matching against the catalogue ("Power-BI" = "PowerBI" = "Power BI"). Ambiguous aliases (R, Go, Excel, CV, REST, ...) only count with supporting context. | Same skill only: same `skill_id` when both sides have one, else the same canonical name (aliases resolved). No similarity. |
 | `semantic` | spaCy noun chunks, short verb phrases and short sentences of the JD, embedded with `all-MiniLM-L6-v2`; a phrase counts as its most similar catalogue skill when cosine similarity ≥ `MATCH_THRESHOLD` (`nlp/config.py`). | Cosine similarity between the required skill and every student skill; the most similar student skill decides. |
+| `tfidf` | The same candidate phrases as `semantic`, compared with the catalogue skill texts as TF-IDF vectors (scikit-learn `TfidfVectorizer`, `config.TFIDF_ANALYZER` = character 3-5-grams, fitted on the catalogue); a phrase counts as its most similar skill when the TF-IDF cosine ≥ `TFIDF_MATCH_THRESHOLD` (0.25). For the method comparison only: it finds many surface look-alikes ("deployment" → Employment Law), see `nlp/experiments/THRESHOLDS.md`. | Not available: `ValueError`. |
 | `hybrid` | (1) every keyword hit; (2) items of coordinated skill lists that keyword could not resolve, read with the shared head noun ("good **analytical**, communication and problem-solving skills" → "analytical skills" → Critical Thinking); (3) semantic hits for skills not found yet whose span does not overlap a keyword span. Keyword results are exactly those of `method="keyword"`. | Keyword first; semantic only for required skills keyword could not match. |
 
 Any other value (including `"spacy_ner"`, `None`, wrong case) raises `ValueError`.
+`nlp.VALID_METHODS` = `("keyword", "semantic", "hybrid")` is the list the backend offers;
+`nlp.EXTRACTION_METHODS` adds `"tfidf"` for `extract_skills()` only.
 
 ## 3. Types and database mapping
 
@@ -85,8 +103,8 @@ All types are `TypedDict`s in `nlp/types.py`. Every field is always present.
 | `skill_id` | `str \| None` | `skills_library` UUID; `None` only if no `skills` rows were passed | `skill_id` |
 | `skill_name` | `str` | Canonical name from the catalogue, e.g. `"Power BI"` | (via `skill_id` → `skills_library.skill_name`) |
 | `raw_skill_text` | `str` | Exact span of the JD, `text[start_char:end_char]`, e.g. `"PowerBI"`; at most 255 chars | `raw_skill_text` |
-| `method` | `"keyword" \| "semantic"` | Extractor that found this skill. Never `"hybrid"`, even when `method="hybrid"` was requested | `extraction_method` |
-| `confidence_score` | `float` 0–1 | Keyword hit = 1.0 (0.8 for an ambiguous alias with context); semantic = cosine similarity | `confidence_score` (round to 3 dp) |
+| `method` | `"keyword" \| "semantic" \| "tfidf"` | Extractor that found this skill. Never `"hybrid"`, even when `method="hybrid"` was requested. `"tfidf"` only with `method="tfidf"`, and the DB CHECK rejects it (see 6(i)) | `extraction_method` |
+| `confidence_score` | `float` 0–1 | Keyword hit = 1.0 (0.8 for an ambiguous alias with context); semantic = embedding cosine similarity; tfidf = TF-IDF cosine similarity (lower scale, not comparable with semantic) | `confidence_score` (round to 3 dp) |
 | `start_char` | `int` | Start offset of the span in `text` (inclusive) | not stored (UI highlighting) |
 | `end_char` | `int` | End offset of the span in `text` (exclusive) | not stored |
 
@@ -221,7 +239,8 @@ is 5.5 / 12 = **45.83**.
 
 | Situation | Result |
 |-----------|--------|
-| `method` not in `keyword` / `semantic` / `hybrid` | `ValueError` → return HTTP 400 |
+| `method` not in `keyword` / `semantic` / `hybrid` (`extract_skills` also takes `tfidf`) | `ValueError` → return HTTP 400 |
+| `match_skills(method="tfidf")` | `ValueError` (TF-IDF is an extraction method only) |
 | `text` is not a `str` | `ValueError` |
 | `skills` row without `skill_name`, or two rows with the same name (case-insensitive) | `ValueError` |
 | A student / required skill that is not a dict (or SQLAlchemy `Row`), has no `skill_name`, or has an unknown `proficiency_level` / `importance` | `ValueError` → HTTP 400 |
@@ -238,8 +257,9 @@ These are suggestions; `nlp/` does not edit `backend/` or `database/schema.sql`.
 
 **(a) `jd_extracted_skills.extraction_method` and "hybrid".** The CHECK allows
 `'spacy_ner', 'keyword', 'semantic'`, not `'hybrid'`. Store the per-skill
-`ExtractedSkill.method` (always `keyword` or `semantic`), which already fits, so **no
-schema change is needed**.
+`ExtractedSkill.method` (always `keyword` or `semantic` for the methods in
+`VALID_METHODS`), which already fits, so **no schema change is needed**. TF-IDF rows
+(`"tfidf"`) are not stored; see (i).
 
 **(b) `skill_match_results`.** Fill `matched_student_skill` and `similarity_score` from
 `MatchResult` (the INSERT in `assessments.py` currently omits `matched_student_skill`).
@@ -345,6 +365,27 @@ add the matched skill:
 - **(h)** `AssessmentRequest.matching_method` defaults to `"semantic"`;
   the NLP default is `"hybrid"`. Either is valid; pick one for the UI.
 
+**(i) TF-IDF (`extract_skills(method="tfidf")`, added 2026-10-29).** Nothing to do now.
+It is for the method comparison in the report; `nlp.VALID_METHODS` (used by
+`backend/nlp_service.py`) does not include it, so the backend never runs it and never
+stores a `"tfidf"` row. If TF-IDF results ever need storing, the CHECK on
+`jd_extracted_skills.extraction_method` must allow it first (`VARCHAR(20)` already
+fits). In PostgreSQL the inline CHECK in `database/schema.sql` gets the default name
+`jd_extracted_skills_extraction_method_check`; `database/models.py` names it
+`chk_extraction_method`, so check which one exists (`\d jd_extracted_skills`) and use
+that name:
+
+```sql
+ALTER TABLE jd_extracted_skills
+    DROP CONSTRAINT jd_extracted_skills_extraction_method_check;
+ALTER TABLE jd_extracted_skills
+    ADD CONSTRAINT jd_extracted_skills_extraction_method_check
+    CHECK (extraction_method IN ('spacy_ner', 'keyword', 'semantic', 'tfidf'));
+```
+
+and the same list in `schema.sql` and in the `chk_extraction_method` CheckConstraint
+in `database/models.py`. Only then add `"tfidf"` to the methods the backend offers.
+
 ## 7. Skill catalogue helpers
 
 ```python
@@ -385,9 +426,13 @@ Text helpers in `nlp/normalise.py`: `normalise_text()`, `uk_spelling()`
   `SKILL_TEXT_MODE = "name_aliases"`, plus `LIST_ITEM_TEXT_MODE = "name_aliases_max"`
   and `LIST_ITEM_THRESHOLD = 0.70` for coordinated lists in hybrid extraction. They
   live only in `nlp/config.py`; how they were chosen is in
-  `nlp/experiments/THRESHOLDS.md`.
-- **Results:** hybrid finds 11.2 skills per JD on the 65 JDs (keyword 9.2, semantic
-  7.3) and 7 of 7 skills on the POC004 brief example (keyword 6 of 7).
+  `nlp/experiments/THRESHOLDS.md`. TF-IDF has its own `TFIDF_ANALYZER = "char_wb"` and
+  `TFIDF_MATCH_THRESHOLD = 0.25`, chosen on the same labelled pairs.
+- **Results (2026-10-29):** hybrid finds 10.8 skills per JD on the 65 JDs (keyword 9.4,
+  semantic 7.0, TF-IDF 25.6) and 7 of 7 skills on the POC004 brief example (keyword 6,
+  TF-IDF 6 plus one extra, semantic 4). TF-IDF takes 42 ms per JD (median; semantic
+  126 ms) and fits its vectorizer in memory in a few milliseconds on first use
+  (`nlp/model.py`, `skill_tfidf()`). Tables: `nlp/experiments/results/method_comparison_summary.md`.
 - **Warm-up:** at FastAPI start-up, run
   `extract_skills("Good analytical and communication skills in SQL.", method="hybrid")`
   once (in a background thread if start-up should not wait), so the first real request

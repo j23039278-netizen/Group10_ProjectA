@@ -1,6 +1,8 @@
 """
-S2-02-02: compare Level 1 (keyword), Level 2 (semantic) and hybrid extraction
-on the real JDs, to find inconsistent behaviour before integration.
+S2-02-02: compare Level 1 (keyword), Level 2 (semantic), hybrid and TF-IDF
+extraction on the real JDs, to find inconsistent behaviour before integration.
+TF-IDF uses the same candidate phrases as semantic, so the two differ only in
+how a phrase is compared with a skill.
 
     python nlp/experiments/compare_methods.py
 
@@ -11,6 +13,7 @@ the median counts). Writes to nlp/experiments/results/:
   method_comparison.csv              one row per JD x method x skill found
   method_counts.csv                  skills per JD per method (mean / median / min / max), overall and per role
   method_overlap.csv                 per JD: keyword vs semantic skill sets and their Jaccard index
+  method_pairwise_agreement.csv      per pair of methods: mean Jaccard per JD, shared / only-one JD-skill pairs
   method_skill_agreement.csv         per skill: JDs where only keyword / both / only semantic found it
   method_runtime.csv                 per JD and method: median seconds of REPEATS runs
   method_disagreements.csv           every skill that keyword or semantic found and the other did not, with context
@@ -35,12 +38,15 @@ REPO = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO))
 
 from nlp import config, extract_skills, load_catalogue  # noqa: E402
-from nlp.model import encode, get_model, get_spacy, skill_embeddings  # noqa: E402
+from nlp.model import encode, get_model, get_spacy, skill_embeddings, skill_tfidf  # noqa: E402
 
 JD_PATH = REPO / "data" / "jd_dataset" / "jd_dataset.csv"
 GOLD_PATH = REPO / "data" / "jd_dataset" / "gold" / "gold_labels.csv"
 RESULTS = Path(__file__).resolve().parent / "results"
-METHODS = ("keyword", "semantic", "hybrid")
+# TF-IDF last, so its colour (slot 4) sits next to hybrid's, not semantic's
+# (orange next to yellow fails the palette's normal-vision check).
+METHODS = ("keyword", "semantic", "hybrid", "tfidf")
+LABELS = {"keyword": "Keyword", "semantic": "Semantic", "hybrid": "Hybrid", "tfidf": "TF-IDF"}
 REPEATS = 5
 CONTEXT = 70           # characters of JD text shown on each side of a disagreement
 TOP = 15
@@ -83,7 +89,8 @@ def load_jds():
 
 
 def warm_up(text):
-    """Load the model, spaCy and both embedding sets once; return the cold-start times."""
+    """Load the model, spaCy, both embedding sets and the TF-IDF vectorizer once;
+    return the cold-start times."""
     times = {}
     t0 = time.perf_counter()
     get_model()
@@ -97,6 +104,9 @@ def warm_up(text):
     item_mode = config.LIST_ITEM_TEXT_MODE
     skill_embeddings(catalogue, item_mode, use_disk=item_mode == config.SKILL_TEXT_MODE)
     times["skill embeddings"] = time.perf_counter() - t0
+    t0 = time.perf_counter()
+    skill_tfidf(catalogue)
+    times["TF-IDF fit"] = time.perf_counter() - t0
     for method in METHODS:
         extract_skills(text, method=method)
     return times
@@ -106,7 +116,7 @@ def run_all(jds):
     """{jd_ref: {method: [ExtractedSkill]}} and {jd_ref: {method: median seconds}}.
 
     The methods take turns within each repeat, so a burst of background load
-    slows all three alike instead of one method's runs.
+    slows all methods alike instead of one method's runs.
     """
     found, seconds = defaultdict(dict), defaultdict(dict)
     for jd in jds:
@@ -147,6 +157,22 @@ def overlap_rows(jds, found):
                      "n_only_keyword": len(k - s), "n_only_semantic": len(s - k),
                      "jaccard": round(len(k & s) / len(k | s), 3) if k | s else 1.0,
                      "only_keyword": "; ".join(sorted(k - s)), "only_semantic": "; ".join(sorted(s - k))})
+    return rows
+
+
+def pairwise_rows(jds, found):
+    """Every pair of methods: mean Jaccard per JD and the JD-skill pairs both / only one found."""
+    rows = []
+    for i, a in enumerate(METHODS):
+        for b in METHODS[i + 1:]:
+            jac, both, only_a, only_b = [], 0, 0, 0
+            for jd in jds:
+                x = {s["skill_name"] for s in found[jd["jd_ref"]][a]}
+                y = {s["skill_name"] for s in found[jd["jd_ref"]][b]}
+                jac.append(len(x & y) / len(x | y) if x | y else 1.0)
+                both, only_a, only_b = both + len(x & y), only_a + len(x - y), only_b + len(y - x)
+            rows.append({"method_a": a, "method_b": b, "mean_jaccard": round(statistics.mean(jac), 3),
+                         "both": both, "only_a": only_a, "only_b": only_b})
     return rows
 
 
@@ -246,10 +272,10 @@ def write_csv(name, rows):
 
 
 # ── Figures (half page width in a Word report) ────────────────
-# Colours: the dataviz reference palette, categorical slots 1-3 by method (the
-# same in every figure) and its muted grey for "both"; checked with the
-# palette validator on a white page.
-COLORS = {"keyword": "#2a78d6", "semantic": "#eb6834", "hybrid": "#1baf7a"}
+# Colours: the dataviz reference palette, categorical slots 1-4 by method (the
+# same in every figure, in METHODS order) and its muted grey for "both"; checked
+# with the palette validator on a white page.
+COLORS = {"keyword": "#2a78d6", "semantic": "#eb6834", "hybrid": "#1baf7a", "tfidf": "#eda100"}
 BOTH = "#898781"
 INK, INK_2, MUTED, GRID, BASE = "#0b0b0b", "#52514e", "#898781", "#e1e0d9", "#c3c2b7"
 FIG_WIDTH = 3.25       # inches, half the text width of an A4 page
@@ -332,11 +358,12 @@ def figure_skills_per_jd(plt, jds, counts, path):
     means = {(r["scope"], r["method"]): r["mean"] for r in counts}
     scopes = ["All"] + list(ROLES)
     labels = group_labels(jds)
-    bar, step = 0.24, 0.27                       # bar thickness and pitch, in group units
+    bar, step = 0.19, 0.22                       # bar thickness and pitch, in group units
     centres = [0.0] + [1.35 + i for i in range(len(ROLES))]   # extra space after "All JDs"
+    middle = (len(METHODS) - 1) / 2
 
-    fig = plt.figure(figsize=(FIG_WIDTH, 3.15))
-    ax = fig.add_axes([0.40, 0.11, 0.53, 0.78])
+    fig = plt.figure(figsize=(FIG_WIDTH, 4.2))
+    ax = fig.add_axes([0.40, 0.09, 0.53, 0.82])
     style_axes(ax)
     xmax = max(means.values()) * 1.18
     ax.set_xlim(0, xmax)
@@ -346,14 +373,14 @@ def figure_skills_per_jd(plt, jds, counts, path):
     ax.set_xlabel("Skills found per JD (mean)")
     for centre, scope in zip(centres, scopes):
         for k, method in enumerate(METHODS):
-            y = centre + (k - 1) * step
+            y = centre + (k - middle) * step
             value = means[(scope, method)]
             hbar(ax, y, 0, value, bar, COLORS[method])
             if scope == "All":                    # direct labels on the headline group only
                 ax.text(value + xmax * 0.015, y, f"{value:.1f}", va="center", ha="left",
-                        fontsize=7, color=INK_2)
-    fig.legend(handles=legend_handles([(m.capitalize(), COLORS[m]) for m in METHODS]),
-               loc="upper center", bbox_to_anchor=(0.62, 1.0), ncol=3, frameon=False,
+                        fontsize=6.5, color=INK_2)
+    fig.legend(handles=legend_handles([(LABELS[m], COLORS[m]) for m in METHODS]),
+               loc="upper center", bbox_to_anchor=(0.55, 1.0), ncol=len(METHODS), frameon=False,
                handlelength=0.9, handleheight=0.9, columnspacing=1.0, handletextpad=0.4)
     fig.savefig(path)
     plt.close(fig)
@@ -412,13 +439,13 @@ def figure_agreement(plt, jds, overlap, path):
 
 def figure_runtime(plt, seconds, path):
     """(c) Time per JD by method: median (dot) and range over the JDs (line), log scale."""
-    fig = plt.figure(figsize=(FIG_WIDTH, 1.55))
-    ax = fig.add_axes([0.20, 0.27, 0.70, 0.66])
+    fig = plt.figure(figsize=(FIG_WIDTH, 0.45 + 0.37 * len(METHODS)))
+    ax = fig.add_axes([0.20, 0.22, 0.70, 0.72])
     style_axes(ax)
     ax.set_xscale("log")
     ax.set_xlim(0.05, 2000)
     ax.set_ylim(len(METHODS) - 0.4, -0.6)
-    ax.set_yticks(range(len(METHODS)), [m.capitalize() for m in METHODS])
+    ax.set_yticks(range(len(METHODS)), [LABELS[m] for m in METHODS])
     ticks = [0.1, 1, 10, 100, 1000]
     ax.set_xticks(ticks, ["0.1", "1", "10", "100", "1,000"])
     ax.minorticks_off()
@@ -445,16 +472,18 @@ def md_table(header, rows, text_columns=1):
     return lines
 
 
-def write_summary(jds, counts, overlap, agreement, seconds, cold, found, disagreements, reviewed, gold):
+def write_summary(jds, counts, overlap, pairwise, agreement, seconds, cold, found, disagreements, reviewed,
+                  gold):
     roles = Counter(j["role_code"] for j in jds)
     lines = [
-        "# Keyword vs semantic vs hybrid extraction (S2-02-02)",
+        "# Keyword vs semantic vs hybrid vs TF-IDF extraction (S2-02-02)",
         "",
         f"Generated by `nlp/experiments/compare_methods.py` on {time.strftime('%Y-%m-%d')}: "
         f"{len(jds)} JDs from `data/jd_dataset/jd_dataset.csv` ("
         + ", ".join(f"{ROLES[c]} {roles[c]}" for c in ROLES) + "). Settings: MATCH "
         f"{config.MATCH_THRESHOLD:.2f}, SKILL_TEXT_MODE {config.SKILL_TEXT_MODE}, list items "
-        f"{config.LIST_ITEM_TEXT_MODE} at {config.LIST_ITEM_THRESHOLD:.2f}. Skills are compared by "
+        f"{config.LIST_ITEM_TEXT_MODE} at {config.LIST_ITEM_THRESHOLD:.2f}, TF-IDF {config.TFIDF_ANALYZER} "
+        f"at {config.TFIDF_MATCH_THRESHOLD:.2f} (same candidate phrases as semantic). Skills are compared by "
         "canonical name.",
         "",
         "## Skills found per JD",
@@ -489,6 +518,14 @@ def write_summary(jds, counts, overlap, agreement, seconds, cold, found, disagre
         top = sorted((r for r in agreement if r[key]), key=lambda r: (-r[key], r["skill_name"]))[:TOP]
         lines += ["", f"Top {TOP} skills found {title} (number of JDs):", "",
                   ", ".join(f"{r['skill_name']} {r[key]}" for r in top)]
+
+    lines += ["", "## Agreement between every pair of methods", "",
+              "Mean Jaccard per JD, and the JD-skill pairs found by both / only by A / only by B. "
+              "Semantic vs TF-IDF share the candidate phrases, so their row shows what the "
+              "representation alone changes.", ""]
+    lines += md_table(["A", "B", "Mean Jaccard", "Both", "Only A", "Only B"],
+                      [[LABELS[r["method_a"]], LABELS[r["method_b"]], f"{r['mean_jaccard']:.2f}", r["both"],
+                        r["only_a"], r["only_b"]] for r in pairwise], text_columns=2)
 
     lines += ["", "## Runtime per JD", "",
               f"Median of {REPEATS} runs per JD after a warm-up, CPU. Cold start before the first JD: "
@@ -540,12 +577,14 @@ def main():
         for ref in found for method in METHODS for s in found[ref][method]])
     counts = count_rows(jds, found)
     overlap = overlap_rows(jds, found)
+    pairwise = pairwise_rows(jds, found)
     agreement = agreement_rows(overlap, found)
     disagreements = disagreement_rows(jds, found)
     reviewed = reviewed_rows(disagreements)
     gold = gold_scores(jds, found)
     write_csv("method_counts.csv", counts)
     write_csv("method_overlap.csv", overlap)
+    write_csv("method_pairwise_agreement.csv", pairwise)
     write_csv("method_skill_agreement.csv", agreement)
     write_csv("method_runtime.csv", [{"jd_ref": j["jd_ref"], "role_code": j["role_code"], "chars": len(j["raw_text"]),
                                       **{f"{m}_s": round(seconds[j["jd_ref"]][m], 5) for m in METHODS}}
@@ -558,7 +597,7 @@ def main():
     figure_skills_per_jd(plt, jds, counts, RESULTS / "method_skills_per_jd.png")
     figure_agreement(plt, jds, overlap, RESULTS / "method_agreement.png")
     figure_runtime(plt, seconds, RESULTS / "method_runtime.png")
-    write_summary(jds, counts, overlap, agreement, seconds, cold, found, disagreements, reviewed, gold)
+    write_summary(jds, counts, overlap, pairwise, agreement, seconds, cold, found, disagreements, reviewed, gold)
     print((RESULTS / "method_comparison_summary.md").read_text(encoding="utf-8"))
 
 

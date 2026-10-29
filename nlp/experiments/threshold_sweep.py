@@ -23,8 +23,19 @@ sweeps thresholds 0.40-0.90 in 0.05 steps and writes to results/:
   threshold_sweep.png   precision / recall / F1 curves
 and prints the proposed MATCH / RELATED thresholds. The chosen values go in
 nlp/config.py by hand, with the reasoning in THRESHOLDS.md.
+
+    python nlp/experiments/threshold_sweep.py --method tfidf
+
+does the same for TF-IDF extraction on the same pairs: for each analyzer in
+nlp.model.TFIDF_ANALYZERS (word 1-2-grams, char_wb 3-5-grams), with the skill
+texts of config.SKILL_TEXT_MODE, it sweeps thresholds 0.05-0.90 (TF-IDF
+cosines run lower than embedding cosines) and writes threshold_sweep_tfidf.csv,
+pair_scores_tfidf.csv and threshold_sweep_tfidf.png. It proposes
+TFIDF_ANALYZER and TFIDF_MATCH_THRESHOLD (no RELATED: matching has no TF-IDF
+method).
 """
 
+import argparse
 import csv
 import random
 import sys
@@ -35,9 +46,9 @@ import numpy as np
 REPO = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO))
 
-from nlp import load_catalogue  # noqa: E402
+from nlp import config, load_catalogue  # noqa: E402
 from nlp.extractor import _semantic_candidates  # noqa: E402
-from nlp.model import SKILL_TEXT_MODES, encode, skill_embeddings  # noqa: E402
+from nlp.model import SKILL_TEXT_MODES, TFIDF_ANALYZERS, encode, skill_embeddings, skill_tfidf  # noqa: E402
 from nlp.normalise import skill_key  # noqa: E402
 
 EXP_DIR = Path(__file__).resolve().parent
@@ -47,10 +58,12 @@ RESULTS_DIR = EXP_DIR / "results"
 JD_PATH = REPO / "data" / "jd_dataset" / "jd_dataset.csv"
 
 THRESHOLDS = [round(0.40 + 0.05 * i, 2) for i in range(11)]   # 0.40 ... 0.90
+TFIDF_THRESHOLDS = [round(0.05 * i, 2) for i in range(1, 19)]  # 0.05 ... 0.90
 RELATED_MIN_RECALL = 0.95
 MODE_TITLES = {"name_aliases": "name + aliases (one text)",
                "name_aliases_max": "name + aliases (best term)",
                "name_description": "name + description"}   # RELATED must still catch nearly every true match
+TFIDF_TITLES = {"word": "word 1-2-grams", "char_wb": "char_wb 3-5-grams"}
 
 # Candidate pairs per similarity bin (mean over both modes); 6 bins x 10 = 60.
 SIM_BINS = [(0.0, 0.40), (0.40, 0.50), (0.50, 0.60), (0.60, 0.70), (0.70, 0.80), (0.80, 1.01)]
@@ -153,7 +166,8 @@ def propose(rows):
     return match, related
 
 
-def plot(table, path):
+def plot(table, path, modes=SKILL_TEXT_MODES, titles=MODE_TITLES, thresholds=THRESHOLDS,
+         what="Semantic skill matching", xlabel="cosine similarity threshold"):
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
@@ -162,9 +176,9 @@ def plot(table, path):
     series = [("precision", "#2a78d6", "-"), ("recall", "#eb6834", "--"), ("f1", "#1baf7a", "-.")]
     ink, muted, grid, surface = "#0b0b0b", "#898781", "#e1e0d9", "#fcfcfb"
 
-    fig, axes = plt.subplots(1, len(SKILL_TEXT_MODES), figsize=(14, 4.2), sharey=True,
+    fig, axes = plt.subplots(1, len(modes), figsize=(max(11, 14 * len(modes) / 3), 4.2), sharey=True,
                              facecolor=surface)
-    for ax, mode in zip(axes, SKILL_TEXT_MODES):
+    for ax, mode in zip(axes, modes):
         rows = [r for r in table if r["mode"] == mode]
         xs = [r["threshold"] for r in rows]
         ax.set_facecolor(surface)
@@ -172,10 +186,10 @@ def plot(table, path):
             ys = [r[key] for r in rows]
             ax.plot(xs, ys, color=colour, linestyle=style, linewidth=2,
                     marker="o", markersize=4, label="F1" if key == "f1" else key.capitalize())
-        ax.set_title(MODE_TITLES[mode], fontsize=10, color=ink, loc="left")
-        ax.set_xlabel("cosine similarity threshold", fontsize=9, color=muted)
-        ax.set_xticks(THRESHOLDS)
-        ax.set_xlim(0.38, 0.92)
+        ax.set_title(titles[mode], fontsize=10, color=ink, loc="left")
+        ax.set_xlabel(xlabel, fontsize=9, color=muted)
+        ax.set_xticks(thresholds[::2] if len(thresholds) > 12 else thresholds)
+        ax.set_xlim(thresholds[0] - 0.02, thresholds[-1] + 0.02)
         ax.set_ylim(0, 1.02)
         ax.tick_params(colors=muted, labelsize=8)
         ax.grid(True, color=grid, linewidth=0.6)
@@ -186,7 +200,7 @@ def plot(table, path):
     axes[0].set_ylabel("score", fontsize=9, color=muted)
     handles, labels = axes[0].get_legend_handles_labels()
     fig.legend(handles, labels, loc="upper right", ncol=3, fontsize=9, frameon=False)
-    fig.suptitle("Semantic skill matching: precision / recall / F1 by threshold "
+    fig.suptitle(f"{what}: precision / recall / F1 by threshold "
                  f"(n = {table[0]['tp'] + table[0]['fp'] + table[0]['fn'] + table[0]['tn']} labelled pairs)",
                  fontsize=11, color=ink, x=0.01, ha="left")
     fig.tight_layout(rect=(0, 0, 1, 0.97))
@@ -240,7 +254,62 @@ def sweep():
     print(f"results in {RESULTS_DIR}")
 
 
+def sweep_tfidf():
+    """TF-IDF version of sweep(): one 'mode' per analyzer, skill texts of SKILL_TEXT_MODE."""
+    catalogue = load_catalogue()
+    pairs = load_pairs(catalogue)
+    labels = np.array([p[2] for p in pairs])
+    phrases = [p[0] for p in pairs]
+    analyzers = tuple(TFIDF_ANALYZERS)
+
+    scores = {}
+    for analyzer in analyzers:
+        skills = skill_tfidf(catalogue, config.SKILL_TEXT_MODE, analyzer)
+        col_of = {n: i for i, n in enumerate(skills.names)}
+        full = skills.similarity(phrases)
+        scores[analyzer] = full[np.arange(len(pairs)), [col_of[p[1]] for p in pairs]]
+
+    table = [{"analyzer": a, "threshold": t, **metrics(scores[a], labels, t)}
+             for a in analyzers for t in TFIDF_THRESHOLDS]
+
+    RESULTS_DIR.mkdir(parents=True, exist_ok=True)
+    with open(RESULTS_DIR / "threshold_sweep_tfidf.csv", "w", encoding="utf-8", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=list(table[0]))
+        w.writeheader()
+        w.writerows(table)
+    with open(RESULTS_DIR / "pair_scores_tfidf.csv", "w", encoding="utf-8", newline="") as f:
+        w = csv.writer(f)
+        w.writerow(["phrase", "skill_name", "label"] + [f"tfidf_{a}" for a in analyzers])
+        for k, (phrase, skill, label) in enumerate(pairs):
+            w.writerow([phrase, skill, label] + [f"{scores[a][k]:.3f}" for a in analyzers])
+    plot([dict(r, mode=r["analyzer"]) for r in table], RESULTS_DIR / "threshold_sweep_tfidf.png",
+         modes=analyzers, titles=TFIDF_TITLES, thresholds=TFIDF_THRESHOLDS,
+         what=f"TF-IDF ({config.SKILL_TEXT_MODE})",
+         xlabel="TF-IDF cosine similarity threshold")
+
+    print(f"{len(pairs)} labelled pairs ({int(labels.sum())} positive), "
+          f"skill texts {config.SKILL_TEXT_MODE}\n")
+    print(f"{'analyzer':<9} {'thr':>5} {'P':>6} {'R':>6} {'F1':>6}  tp fp fn tn")
+    for r in table:
+        print(f"{r['analyzer']:<9} {r['threshold']:>5.2f} {r['precision']:>6.3f} {r['recall']:>6.3f} "
+              f"{r['f1']:>6.3f}  {r['tp']:>2} {r['fp']:>2} {r['fn']:>2} {r['tn']:>2}")
+    print()
+    best = None
+    for analyzer in analyzers:
+        match, _ = propose([r for r in table if r["analyzer"] == analyzer])
+        print(f"{analyzer}: MATCH {match['threshold']:.2f} (F1 {match['f1']:.3f}, "
+              f"P {match['precision']:.3f}, R {match['recall']:.3f})")
+        if best is None or match["f1"] > best[1]["f1"]:
+            best = (analyzer, match)
+    print(f"\nproposed: TFIDF_ANALYZER = {best[0]!r}, TFIDF_MATCH_THRESHOLD = {best[1]['threshold']:.2f}")
+    print(f"results in {RESULTS_DIR}")
+
+
 def main():
+    parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0].strip())
+    parser.add_argument("--method", choices=("semantic", "tfidf"), default="semantic",
+                        help="representation to sweep (default: semantic, the embeddings)")
+    args = parser.parse_args()
     if not PAIRS_PATH.exists():
         n, pool = generate_candidates()
         print(f"{PAIRS_PATH.name} not found.")
@@ -249,7 +318,10 @@ def main():
         print("Label each pair by hand (1 = same skill, 0 = not; see nlp/experiments/README.md), "
               f"save it as {PAIRS_PATH.relative_to(REPO)} and run this script again.")
         return 2
-    sweep()
+    if args.method == "tfidf":
+        sweep_tfidf()
+    else:
+        sweep()
     return 0
 
 
