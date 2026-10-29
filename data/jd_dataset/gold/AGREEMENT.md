@@ -26,4 +26,8 @@ Kappa on the union alone is not a valid agreement figure: without an absent/abse
 
 49 (JD, skill) pairs differ in presence or importance; see `agreement_disagreements.csv`. Resolve them together, fix the workbook(s), re-run `collect_workbook.py`, then freeze `gold_labels.csv`.
 
+## Independence of annotator B
+
+A copy of annotator A's labelled workbook (`docs/gold_workbook.xlsx`, commit 5eb1fc6) was merged into `dev` on 2026-10-29 at 17:28, before B finished labelling (B's workbook was last saved at 18:11). B confirmed they did not see that file or A's labels before finishing, so the figures above are reported as independent agreement.
+
 Kappa bands: Landis & Koch (1977).
