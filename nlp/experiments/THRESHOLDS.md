@@ -183,6 +183,40 @@ Vision (0.29). Raising the threshold does not fix this, it only removes skills:
 (Read from `results/method_comparison.csv`: a skill's confidence is its best
 phrase score, so the counts at a higher threshold are exact.) The F1-best value
 is kept as asked, so the comparison shows TF-IDF at its best on the labelled
-pairs; re-check it on the gold set once `gold_labels.csv` has rows. On the POC004
-brief example TF-IDF finds 6 of 7 (Critical Thinking missing; extra Data
-Analysis from the title "junior data analyst").
+pairs. On the POC004 brief example TF-IDF finds 6 of 7 (Critical Thinking
+missing; extra Data Analysis from the title "junior data analyst").
+
+### Check on the gold set (2026-10-29)
+
+`gold_labels.csv` (892 hand-made skills in 59 JDs, frozen after the A/B
+resolution) gives micro precision / recall / F1 per method
+(`results/method_comparison_summary.md`, "Gold labels"):
+
+| Method | Precision | Recall | F1 | Skills per JD |
+|---|---:|---:|---:|---:|
+| keyword | 0.920 | 0.583 | 0.714 | 9.6 |
+| semantic | 0.883 | 0.414 | 0.563 | 7.1 |
+| hybrid | 0.867 | 0.631 | **0.731** | 11.0 |
+| TF-IDF (char_wb, 0.25) | 0.356 | 0.604 | 0.448 | 25.7 |
+
+The same TF-IDF run at other settings on those 59 JDs (scratch script, not kept;
+same loading and scoring as `gold_scores()` in `compare_methods.py`):
+
+| Threshold | char_wb P / R / F1 | word P / R / F1 |
+|---:|---|---|
+| 0.20 | 0.319 / 0.618 / 0.421 | 0.435 / 0.580 / 0.497 |
+| **0.25** | **0.356 / 0.604 / 0.448** | 0.475 / 0.554 / 0.511 |
+| 0.30 | 0.398 / 0.595 / 0.477 | 0.540 / 0.538 / **0.539** |
+| 0.40 | 0.497 / 0.529 / 0.512 | 0.587 / 0.445 / 0.506 |
+| 0.45 | 0.542 / 0.497 / 0.518 | 0.628 / 0.407 / 0.494 |
+| 0.50 | 0.609 / 0.453 / **0.520** | 0.651 / 0.348 / 0.453 |
+| 0.60 | 0.692 / 0.331 / 0.448 | 0.783 / 0.279 / 0.412 |
+
+**Decision: keep char_wb at 0.25.** The gold set confirms the caveat above:
+the labelled pairs overrate TF-IDF, whose F1 on real JDs (0.448) is far below
+keyword (0.714) and hybrid (0.731). Retuning on the gold set would raise it to
+at most 0.539 (word, 0.30), still well below keyword, so the conclusion of the
+comparison does not depend on the threshold. Choosing the value on the set it
+is reported on would also overstate it; 0.25 was chosen on independent data.
+TF-IDF's recall stays near hybrid's even at 0.15 (0.624), so its problem is
+precision: surface look-alikes, not missed skills.

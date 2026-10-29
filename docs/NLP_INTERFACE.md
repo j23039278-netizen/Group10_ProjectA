@@ -430,9 +430,12 @@ Text helpers in `nlp/normalise.py`: `normalise_text()`, `uk_spelling()`
   `TFIDF_MATCH_THRESHOLD = 0.25`, chosen on the same labelled pairs.
 - **Results (2026-10-29):** hybrid finds 10.8 skills per JD on the 65 JDs (keyword 9.4,
   semantic 7.0, TF-IDF 25.6) and 7 of 7 skills on the POC004 brief example (keyword 6,
-  TF-IDF 6 plus one extra, semantic 4). TF-IDF takes 42 ms per JD (median; semantic
-  126 ms) and fits its vectorizer in memory in a few milliseconds on first use
-  (`nlp/model.py`, `skill_tfidf()`). Tables: `nlp/experiments/results/method_comparison_summary.md`.
+  TF-IDF 6 plus one extra, semantic 4). On the hand-made gold set (892 skills in 59
+  JDs) micro F1 is hybrid 0.731, keyword 0.714, semantic 0.563, TF-IDF 0.448
+  (precision 0.867 / 0.920 / 0.883 / 0.356). TF-IDF takes about a third of semantic's
+  time per JD (median 45 ms vs 141 ms) and fits its vectorizer in memory in a few
+  milliseconds on first use (`nlp/model.py`, `skill_tfidf()`). Tables:
+  `nlp/experiments/results/method_comparison_summary.md`.
 - **Warm-up:** at FastAPI start-up, run
   `extract_skills("Good analytical and communication skills in SQL.", method="hybrid")`
   once (in a background thread if start-up should not wait), so the first real request

@@ -48,7 +48,8 @@ MAX_PHRASE_TOKENS = 8
 # same 60 hand-labelled pairs; see nlp/experiments/THRESHOLDS.md.
 # F1-best: char_wb at 0.25 (P 0.784, R 0.967, F1 0.866); word 1-2-grams peak at
 # 0.30 (F1 0.833). TF-IDF cosines run lower than embedding cosines, so this is
-# not comparable with MATCH_THRESHOLD.
+# not comparable with MATCH_THRESHOLD. On the gold set (59 JDs) it scores F1
+# 0.448 (keyword 0.714, hybrid 0.731); no threshold reaches keyword, so it is kept.
 TFIDF_ANALYZER = "char_wb"
 TFIDF_MATCH_THRESHOLD = 0.25
 

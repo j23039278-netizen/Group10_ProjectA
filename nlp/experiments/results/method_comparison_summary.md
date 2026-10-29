@@ -77,14 +77,14 @@ Mean Jaccard per JD, and the JD-skill pairs found by both / only by A / only by 
 
 ## Runtime per JD
 
-Median of 5 runs per JD after a warm-up, CPU. Cold start before the first JD: model 20.5 s, spaCy 1.3 s, skill embeddings 0.4 s, TF-IDF fit 0.0 s.
+Median of 5 runs per JD after a warm-up, CPU. Cold start before the first JD: model 45.0 s, spaCy 1.3 s, skill embeddings 0.9 s, TF-IDF fit 0.1 s.
 
 | Method | Mean ms | Median ms | Min ms | Max ms |
 |---|---:|---:|---:|---:|
-| keyword | 0.6 | 0.5 | 0.2 | 1.4 |
-| semantic | 125.1 | 126.0 | 33.9 | 304.8 |
-| hybrid | 128.3 | 127.2 | 33.2 | 309.5 |
-| tfidf | 45.5 | 42.3 | 14.9 | 121.6 |
+| keyword | 0.7 | 0.6 | 0.2 | 2.3 |
+| semantic | 139.9 | 140.9 | 42.3 | 421.7 |
+| hybrid | 145.0 | 144.6 | 46.4 | 432.1 |
+| tfidf | 51.1 | 45.3 | 17.5 | 159.6 |
 
 ## Disagreements
 
@@ -103,4 +103,11 @@ Counts by class: Likely keyword miss (synonym / paraphrase) 3, Likely semantic f
 
 ## Gold labels
 
-`data/jd_dataset/gold/gold_labels.csv` has no hand-made rows yet, so no precision, recall or F1 is reported. `gold_labels_draft.csv` is a keyword pre-fill and is not ground truth.
+Hand-made gold rows cover 59 JDs; scores on those JDs only:
+
+| Method | JDs | Precision | Recall | F1 |
+|---|---:|---:|---:|---:|
+| keyword | 59 | 0.92 | 0.583 | 0.714 |
+| semantic | 59 | 0.883 | 0.414 | 0.563 |
+| hybrid | 59 | 0.867 | 0.631 | 0.731 |
+| tfidf | 59 | 0.356 | 0.604 | 0.448 |
