@@ -1,0 +1,7 @@
+method_a,method_b,mean_jaccard,both,only_a,only_b
+keyword,semantic,0.561,382,229,73
+keyword,hybrid,0.865,611,0,93
+keyword,tfidf,0.281,508,103,1157
+semantic,hybrid,0.641,451,4,253
+semantic,tfidf,0.251,431,24,1234
+hybrid,tfidf,0.313,574,130,1091

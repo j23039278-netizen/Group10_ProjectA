@@ -13,6 +13,9 @@ Author: Ng Yong Hin (AI / NLP Engineer)
                        disk in nlp/resources/skill_embeddings.npy (+ .json with
                        the hash). A changed catalogue gives a new hash, so the
                        embeddings are rebuilt and the file is overwritten.
+  * skill_tfidf()      SkillTfidf: a TfidfVectorizer fitted on the same skill
+                       texts (method="tfidf"). Needs scikit-learn, not the
+                       model; cached in memory only (fitting takes milliseconds).
 
 Needs the packages in nlp/requirements.txt. The first get_model() call
 downloads the model (~90 MB) into the Hugging Face cache.
@@ -39,6 +42,8 @@ _embedding_lock = threading.Lock()   # separate: building embeddings loads the m
 _model = None
 _spacy = None
 _embedding_cache = {}   # hash -> (skill names tuple, matrix)
+_tfidf_lock = threading.Lock()
+_tfidf_cache = {}       # (analyzer, hash) -> SkillTfidf
 
 
 # ── Model ─────────────────────────────────────────────────────
@@ -177,4 +182,72 @@ def skill_embeddings(catalogue, mode=None, use_disk=True):
             matrix, counts = found
         starts = np.concatenate(([0], np.cumsum(counts)[:-1])).astype(np.intp)
         vectors = _embedding_cache[digest] = SkillVectors(names, matrix, starts)
+        return vectors
+
+
+# ── Skill TF-IDF vectors (method="tfidf") ─────────────────────
+# n-gram range per analyzer (config.TFIDF_ANALYZER).
+TFIDF_ANALYZERS = {"word": (1, 2), "char_wb": (3, 5)}
+# Word tokens: letters / digits plus the symbols of "C++", "C#".
+_TFIDF_TOKEN_PATTERN = r"(?u)\b\w[\w+#]*"
+
+
+def tfidf_preprocess(text):
+    """Lower case, unified dashes and UK spelling, as the keyword extractor compares terms."""
+    from nlp.normalise import normalise_text, uk_spelling
+    return uk_spelling(normalise_text(text))
+
+
+class SkillTfidf(NamedTuple):
+    """TF-IDF vectors of the catalogue, grouped by skill like SkillVectors."""
+    names: tuple
+    vectorizer: object      # fitted sklearn TfidfVectorizer
+    matrix: object          # sparse, L2-normalised rows
+    starts: np.ndarray
+
+    def similarity(self, texts):
+        """Cosine similarity (len(texts) x len(names)): best row per skill."""
+        sims = (self.vectorizer.transform(list(texts)) @ self.matrix.T).toarray()
+        if len(self.starts) == self.matrix.shape[0]:
+            return sims
+        return np.maximum.reduceat(sims, self.starts, axis=1)
+
+
+def _tfidf_vectorizer(analyzer):
+    from sklearn.feature_extraction.text import TfidfVectorizer  # lazy, like the model
+    if analyzer not in TFIDF_ANALYZERS:
+        raise ValueError(f"unknown TF-IDF analyzer {analyzer!r}; use one of {tuple(TFIDF_ANALYZERS)}")
+    if analyzer == "word":
+        return TfidfVectorizer(analyzer="word", ngram_range=TFIDF_ANALYZERS[analyzer],
+                               preprocessor=tfidf_preprocess, token_pattern=_TFIDF_TOKEN_PATTERN,
+                               stop_words="english")
+    return TfidfVectorizer(analyzer=analyzer, ngram_range=TFIDF_ANALYZERS[analyzer],
+                           preprocessor=tfidf_preprocess)
+
+
+def skill_tfidf(catalogue, mode=None, analyzer=None):
+    """SkillTfidf for every skill in the catalogue.
+
+    The vectorizer is fitted on the skill texts of `mode` (default
+    config.SKILL_TEXT_MODE), so the IDF weights come from the catalogue. Built
+    once per (analyzer, mode, catalogue texts) and kept in memory.
+    """
+    mode = mode or config.SKILL_TEXT_MODE
+    analyzer = analyzer or config.TFIDF_ANALYZER
+    names = tuple(e["skill_name"] for e in catalogue)
+    texts_per_skill = [skill_texts(e, mode) for e in catalogue]
+    key = (analyzer, catalogue_hash(texts_per_skill, mode))
+
+    cached = _tfidf_cache.get(key)
+    if cached is not None:
+        return cached
+    with _tfidf_lock:
+        cached = _tfidf_cache.get(key)
+        if cached is not None:
+            return cached
+        vectorizer = _tfidf_vectorizer(analyzer)
+        matrix = vectorizer.fit_transform([t for texts in texts_per_skill for t in texts])
+        counts = [len(t) for t in texts_per_skill]
+        starts = np.concatenate(([0], np.cumsum(counts)[:-1])).astype(np.intp)
+        vectors = _tfidf_cache[key] = SkillTfidf(names, vectorizer, matrix.tocsr(), starts)
         return vectors

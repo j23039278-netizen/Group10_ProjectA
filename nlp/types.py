@@ -14,12 +14,17 @@ from typing import Literal, TypedDict
 # ── Allowed values ────────────────────────────────────────────
 # Mirrors the CHECK constraints in database/schema.sql.
 MatchingMethod = Literal["keyword", "semantic", "hybrid"]   # assessments / skill_match_results
-ExtractionMethod = Literal["keyword", "semantic"]           # jd_extracted_skills (per skill)
+# jd_extracted_skills (per skill). "tfidf" comes only from extract_skills(method="tfidf"),
+# which is for the method comparison; the DB CHECK does not accept it.
+ExtractionMethod = Literal["keyword", "semantic", "tfidf"]
 ProficiencyLevel = Literal["beginner", "intermediate", "advanced"]
 Importance = Literal["required", "preferred", "bonus"]
 MatchStatus = Literal["strong", "developing", "gap"]
 
+# Methods the backend may pass (backend/nlp_service.py) to both functions.
 VALID_METHODS = ("keyword", "semantic", "hybrid")
+# extract_skills() also takes "tfidf" (evaluation only, see docs/NLP_INTERFACE.md).
+EXTRACTION_METHODS = VALID_METHODS + ("tfidf",)
 
 
 # ── Skill catalogue ───────────────────────────────────────────
