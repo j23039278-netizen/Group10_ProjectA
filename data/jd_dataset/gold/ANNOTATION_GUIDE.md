@@ -43,6 +43,30 @@ Write `NEW: <term>` in `skill_name`, for example `NEW: DevOps`. After annotation
 
 ## Process
 
-1. Annotator A labels all 60 JDs.
-2. If time allows, annotator B labels 12 of them (2 per role). Report the agreement (Cohen's κ on skill presence) in the report.
-3. Resolve disagreements together, then freeze `gold_labels.csv` with a commit.
+Labelling happens in an Excel workbook (one sheet per JD: the JD text on top, the label table below). The scripts only move labels between the workbook and the CSV files and check them. They never create labels. Run every command from the repo root.
+
+1. **Annotator A labels all 60 JDs.**
+   ```bash
+   python data/jd_dataset/gold/make_workbook.py
+   ```
+   This creates `gold/gold_workbook.xlsx`. The table on each sheet is pre-filled from `gold_labels_draft.csv` with `keep` empty. Set `keep` = `Y` (correct; fix the cells if needed) or `N` (wrong) on every row, then add the missing skills on the empty rows with `keep` = `Y`. `skill_name` and `importance` have drop-downs. Type `NEW: <term>` for a skill not in the list and click *Yes* on the warning. Yellow rows still need a Y or N. The README sheet links to every JD and counts the rows still to review. Use `note` for anything to discuss (it is not exported).
+   ```bash
+   python data/jd_dataset/gold/collect_workbook.py
+   ```
+   This writes `gold_labels.csv` from the `keep` = `Y` rows. Run it as often as you like: it lists errors (unknown skill name, bad importance, …), warnings (evidence not found in the JD text) and the JDs not started yet, plus a per-role summary. If there are errors, nothing is written. Fix the workbook, not the CSV, because the CSV is overwritten on every run.
+2. **If time allows, annotator B labels 12 of the JDs (2 per role, seed 42).**
+   ```bash
+   python data/jd_dataset/gold/make_workbook.py --annotator B
+   ```
+   This creates `gold/gold_workbook_B.xlsx` with empty tables. B must not see the draft, A's workbook or `gold_labels.csv`. To choose the JDs yourself, add `--refs JD-CE-0001 JD-CY-0004 …`.
+   ```bash
+   python data/jd_dataset/gold/collect_workbook.py --annotator B
+   ```
+   This writes `gold_labels_B.csv` from every non-empty row (except rows with `keep` = `N`).
+   ```bash
+   python data/jd_dataset/gold/agreement.py
+   ```
+   This writes `gold/AGREEMENT.md` (Cohen's κ on skill presence, with and without sampled negatives, percent agreement, and weighted κ on importance) and `gold/agreement_disagreements.csv`. Put the κ figures in the report.
+3. **Resolve the disagreements together.** Fix `gold_workbook.xlsx`, run `collect_workbook.py` again, then freeze `gold_labels.csv` with a commit.
+
+`make_workbook.py` never overwrites an existing workbook, because it may already hold labels. Use `--force` only if you really want to start again.
