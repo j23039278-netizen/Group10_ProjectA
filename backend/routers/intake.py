@@ -175,11 +175,11 @@ def clean_row(cells, cols, course_programmes):
 # ── Advisor: Excel template (Course and Programme are drop-down lists) ──
 TEMPLATE_ROWS = [
     ("Example Student", "+60 12-345 6789", "example.student@gmail.com", "Computer Science",
-     "Bachelor of Computer Science (Software Development)"),
+     "Bachelor of Computer Science (Software Engineering)"),
     ("Another Student", "+60 13-222 3333", "another.student@gmail.com", "Business",
      "Bachelor of Business (Marketing)"),
     ("Third Student",   "+60 14-444 5555", "third.student@gmail.com",   "Information and Communications Technology",
-     "Bachelor of Information and Communications Technology (Software Systems)"),
+     "Bachelor of Information and Communications Technology (Web and Mobile Development)"),
 ]
 
 

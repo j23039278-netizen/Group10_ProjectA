@@ -18,7 +18,8 @@ from fastapi import HTTPException
 
 ALL_COURSES = ("CS", "BUSINESS", "ICT")
 # Course names shown to people (emails, Excel template, messages); the codes stay CS / BUSINESS / ICT
-COURSE_NAMES = {"CS": "Computer Science", "BUSINESS": "Business", "ICT": "Information and Communications Technology"}
+# In display order: the Computing courses first (same office), then Business
+COURSE_NAMES = {"CS": "Computer Science", "ICT": "Information and Communications Technology", "BUSINESS": "Business"}
 COMPUTING = f"{COURSE_NAMES['CS']} and {COURSE_NAMES['ICT']}"     # the Computing office's courses
 
 # (position, courses) -> staff ID prefix. Courses are kept sorted.

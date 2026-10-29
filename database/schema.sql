@@ -743,6 +743,19 @@ CREATE INDEX IF NOT EXISTS idx_users_course ON users(course);
 -- ICT programmes are called "Information and Communications Technology" (28 October)
 UPDATE student_profiles SET programme = replace(programme, 'Information and Communication Technology', 'Information and Communications Technology')
 WHERE programme LIKE '%Information and Communication Technology%';
+-- Software Engineering is a Computer Science programme, named like the others (29 October).
+-- The synthetic data generator still writes the old name; this renames it after every load.
+UPDATE student_profiles SET programme = 'Bachelor of Computer Science (Software Engineering)' WHERE programme = 'Bachelor of Software Engineering';
+-- Software Development is merged into Software Engineering (29 October)
+UPDATE student_profiles SET programme = 'Bachelor of Computer Science (Software Engineering)' WHERE programme = 'Bachelor of Computer Science (Software Development)';
+-- ICT's software programme is Web and Mobile Development, to tell it apart from
+-- Computer Science (Software Engineering) (29 October)
+UPDATE student_profiles SET programme = 'Bachelor of Information and Communications Technology (Web and Mobile Development)' WHERE programme = 'Bachelor of Information and Communications Technology (Software Systems)';
+-- Business has one programme per Business role (29 October): Information Systems ->
+-- Business Analytics, Digital Marketing -> Marketing, Accounting -> Finance. The
+-- synthetic data generator still writes the old names; this merges them after every load.
+UPDATE student_profiles SET programme = CASE programme WHEN 'Bachelor of Business (Information Systems)' THEN 'Bachelor of Business (Business Analytics)' WHEN 'Bachelor of Business (Digital Marketing)' THEN 'Bachelor of Business (Marketing)' WHEN 'Bachelor of Business (Accounting)' THEN 'Bachelor of Business (Finance)' END
+WHERE programme IN ('Bachelor of Business (Information Systems)', 'Bachelor of Business (Digital Marketing)', 'Bachelor of Business (Accounting)');
 
 -- Synthetic students: programme name matching their course, chosen by target role.
 -- Only rows that do not match yet are changed, so running this again changes nothing.
@@ -756,13 +769,13 @@ UPDATE student_profiles sp SET programme = CASE u.course
                             WHEN 'Cloud Engineer'        THEN 'Bachelor of Information and Communications Technology (Cloud and Networking)'
                             WHEN 'Data Analyst'          THEN 'Bachelor of Information and Communications Technology (Data Management)'
                             WHEN 'Data Scientist'        THEN 'Bachelor of Information and Communications Technology (Data Management)'
-                            ELSE 'Bachelor of Information and Communications Technology (Software Systems)' END
+                            ELSE 'Bachelor of Information and Communications Technology (Web and Mobile Development)' END
         ELSE CASE sp.target_role
                  WHEN 'Cybersecurity Analyst' THEN 'Bachelor of Computer Science (Cybersecurity)'
                  WHEN 'Cloud Engineer'        THEN 'Bachelor of Computer Science (Cloud Computing)'
                  WHEN 'Data Analyst'          THEN 'Bachelor of Computer Science (Data Science)'
                  WHEN 'Data Scientist'        THEN 'Bachelor of Computer Science (Data Science)'
-                 ELSE 'Bachelor of Computer Science (Software Development)' END
+                 ELSE 'Bachelor of Computer Science (Software Engineering)' END
     END,
     updated_at = CURRENT_TIMESTAMP
 FROM users u
@@ -770,8 +783,7 @@ WHERE u.user_id = sp.user_id
   AND u.email LIKE '%@synthetic.example.com'
   AND NOT (   (u.course = 'BUSINESS' AND sp.programme LIKE 'Bachelor of Business%')
            OR (u.course = 'ICT'      AND sp.programme LIKE 'Bachelor of Information and Communications Technology%')
-           OR (u.course = 'CS'       AND (sp.programme LIKE 'Bachelor of Computer Science%'
-                                          OR sp.programme LIKE 'Bachelor of Software Engineering%')));
+           OR (u.course = 'CS'       AND sp.programme LIKE 'Bachelor of Computer Science%'));
 
 
 -- ── Roles per course, Business roles, GPA + CGPA (27 October) ──
@@ -966,29 +978,34 @@ CREATE TABLE IF NOT EXISTS programmes (
 );
 UPDATE programmes SET programme_name = replace(programme_name, 'Information and Communication Technology', 'Information and Communications Technology')
 WHERE programme_name LIKE '%Information and Communication Technology%';
+UPDATE programmes SET programme_name = 'Bachelor of Computer Science (Software Engineering)' WHERE programme_name = 'Bachelor of Software Engineering';
+DELETE FROM programmes WHERE programme_name = 'Bachelor of Computer Science (Software Development)';
+UPDATE programmes SET programme_name = 'Bachelor of Information and Communications Technology (Web and Mobile Development)' WHERE programme_name = 'Bachelor of Information and Communications Technology (Software Systems)';
+DELETE FROM programmes WHERE programme_name IN ('Bachelor of Business (Information Systems)', 'Bachelor of Business (Digital Marketing)', 'Bachelor of Business (Accounting)');
 INSERT INTO programmes (programme_name, course, sort_order) VALUES
-('Bachelor of Computer Science (Software Development)',                       'CS',       1),
+('Bachelor of Computer Science (Software Engineering)',                      'CS',       1),
 ('Bachelor of Computer Science (Data Science)',                               'CS',       2),
 ('Bachelor of Computer Science (Artificial Intelligence)',                    'CS',       3),
 ('Bachelor of Computer Science (Cybersecurity)',                              'CS',       4),
 ('Bachelor of Computer Science (Cloud Computing)',                            'CS',       5),
-('Bachelor of Software Engineering',                                          'CS',       6),
-('Bachelor of Information and Communications Technology (Software Systems)',   'ICT',      1),
+('Bachelor of Information and Communications Technology (Web and Mobile Development)', 'ICT', 1),
 ('Bachelor of Information and Communications Technology (Data Management)',    'ICT',      2),
 ('Bachelor of Information and Communications Technology (Network Security)',   'ICT',      3),
 ('Bachelor of Information and Communications Technology (Cloud and Networking)', 'ICT',    4),
 ('Bachelor of Business (Business Analytics)',                                 'BUSINESS', 1),
-('Bachelor of Business (Information Systems)',                                'BUSINESS', 2),
-('Bachelor of Business (Marketing)',                                          'BUSINESS', 3),
-('Bachelor of Business (Digital Marketing)',                                  'BUSINESS', 4),
-('Bachelor of Business (Finance)',                                            'BUSINESS', 5),
-('Bachelor of Business (Accounting)',                                         'BUSINESS', 6),
-('Bachelor of Business (Human Resource Management)',                          'BUSINESS', 7)
+('Bachelor of Business (Marketing)',                                          'BUSINESS', 2),
+('Bachelor of Business (Finance)',                                            'BUSINESS', 3),
+('Bachelor of Business (Human Resource Management)',                          'BUSINESS', 4)
 ON CONFLICT (programme_name) DO UPDATE SET course = EXCLUDED.course, sort_order = EXCLUDED.sort_order;
 
 ALTER TABLE student_intake_rows ADD COLUMN IF NOT EXISTS programme VARCHAR(150);
 UPDATE student_intake_rows SET programme = replace(programme, 'Information and Communication Technology', 'Information and Communications Technology')
 WHERE programme LIKE '%Information and Communication Technology%';
+UPDATE student_intake_rows SET programme = 'Bachelor of Computer Science (Software Engineering)' WHERE programme = 'Bachelor of Software Engineering';
+UPDATE student_intake_rows SET programme = 'Bachelor of Computer Science (Software Engineering)' WHERE programme = 'Bachelor of Computer Science (Software Development)';
+UPDATE student_intake_rows SET programme = 'Bachelor of Information and Communications Technology (Web and Mobile Development)' WHERE programme = 'Bachelor of Information and Communications Technology (Software Systems)';
+UPDATE student_intake_rows SET programme = CASE programme WHEN 'Bachelor of Business (Information Systems)' THEN 'Bachelor of Business (Business Analytics)' WHEN 'Bachelor of Business (Digital Marketing)' THEN 'Bachelor of Business (Marketing)' WHEN 'Bachelor of Business (Accounting)' THEN 'Bachelor of Business (Finance)' END
+WHERE programme IN ('Bachelor of Business (Information Systems)', 'Bachelor of Business (Digital Marketing)', 'Bachelor of Business (Accounting)');
 
 -- Synthetic Business students get their programme from the generator
 -- (data/generate_synthetic_data.py, by Business role).
