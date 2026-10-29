@@ -8,7 +8,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { intakeAPI } from '../api/intake'
 import { COURSES, courseLabel } from '../utils/courses'
 import { studentAPI } from '../api/client'
-import { C, card, th, td, input, btn, smallBtn, heading, errorText } from './admin/adminStyles'
+import { C, card, th, td, tdOne, input, btn, smallBtn, heading, errorText } from './admin/adminStyles'
 import { Alert } from './admin/AdminUi'
 
 const STATUS = {
@@ -137,7 +137,7 @@ function BatchDetail({ batchId, onChanged, onCreated }) {
       {notice && <Alert type="success">{notice}</Alert>}
       {error && <Alert>{error}</Alert>}
       <div style={{ overflowX: 'auto' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '1350px' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '1450px' }}>
           <thead><tr>{['Row', 'Name', 'Phone', 'Personal email', 'Course', 'Programme', 'Student ID', 'School email', 'Status', ''].map(h => <th key={h} style={th}>{h}</th>)}</tr></thead>
           <tbody>
             {data.rows.map(r => {
@@ -146,10 +146,10 @@ function BatchDetail({ batchId, onChanged, onCreated }) {
               return (
                 <tr key={r.row_id} style={{ opacity: r.status === 'rejected' ? 0.6 : 1 }}>
                   <td style={td}>{r.line_number}</td>
-                  <td style={{ ...td, color: C.ink, fontWeight: '600' }}>{r.full_name}</td>
-                  <td style={td}>{r.phone || '—'}</td>
-                  <td style={td}>{r.personal_email}</td>
-                  <td style={td}>
+                  <td style={{ ...tdOne, color: C.ink, fontWeight: '600' }}>{r.full_name}</td>
+                  <td style={tdOne}>{r.phone || '—'}</td>
+                  <td style={tdOne}>{r.personal_email}</td>
+                  <td style={{ ...td, minWidth: '170px' }}>
                     {r.status === 'pending'
                       ? <select aria-label={`Course for ${r.full_name}`} style={{ ...input, width: 'auto', padding: '6px 8px' }}
                           value={r.course || ''} disabled={busy === r.row_id} onChange={e => changeCourse(r, e.target.value)}>
@@ -158,7 +158,7 @@ function BatchDetail({ batchId, onChanged, onCreated }) {
                         </select>
                       : <span>{courseLabel(r.course)}</span>}
                   </td>
-                  <td style={td}>
+                  <td style={{ ...td, minWidth: '220px' }}>
                     {r.status === 'pending' && r.course
                       ? <select aria-label={`Programme for ${r.full_name}`} style={{ ...input, width: '260px', padding: '6px 8px' }}
                           value={r.programme || ''} disabled={busy === r.row_id} onChange={e => changeProgramme(r, e.target.value)}>
@@ -168,13 +168,13 @@ function BatchDetail({ batchId, onChanged, onCreated }) {
                         </select>
                       : <span>{r.programme || '—'}</span>}
                   </td>
-                  <td style={td}>
+                  <td style={tdOne}>
                     {editable
                       ? <input aria-label={`Student ID for ${r.full_name}`} style={{ ...input, width: '110px', fontFamily: 'Consolas, monospace' }} maxLength={9}
                           value={field(r, 'student_number')} onChange={e => setField(r, 'student_number', e.target.value.replace(/\D/g, ''))} />
                       : <span style={{ fontFamily: 'Consolas, monospace' }}>{r.student_number || '—'}</span>}
                   </td>
-                  <td style={td}>
+                  <td style={tdOne}>
                     {editable
                       ? <input aria-label={`School email for ${r.full_name}`} style={{ ...input, width: '250px' }}
                           value={field(r, 'school_email')} onChange={e => setField(r, 'school_email', e.target.value)} />

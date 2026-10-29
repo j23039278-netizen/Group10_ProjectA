@@ -11,8 +11,9 @@ const C = { ink: '#1a1f2e', body: '#4a5168', muted: '#8b92a8', line: '#e4e6ef',
             blue: '#2d5be3', green: '#16a34a', amber: '#d97706', red: '#dc2626' }
 const card    = { background: '#fff', border: `1px solid ${C.line}`, borderRadius: '12px', padding: '20px 24px', marginBottom: '16px' }
 const heading = { fontSize: '13px', fontWeight: '700', color: C.ink, marginBottom: '14px', textTransform: 'uppercase', letterSpacing: '0.5px' }
-const th = { textAlign: 'left', fontSize: '11px', fontWeight: '700', color: C.muted, textTransform: 'uppercase', padding: '8px 10px', borderBottom: `1px solid ${C.line}` }
+const th = { textAlign: 'left', fontSize: '11px', fontWeight: '700', color: C.muted, textTransform: 'uppercase', padding: '8px 10px', borderBottom: `1px solid ${C.line}`, whiteSpace: 'nowrap' }
 const td = { padding: '9px 10px', fontSize: '13px', color: C.body, borderBottom: '1px solid #f0f1f5' }
+const tdOne = { ...td, whiteSpace: 'nowrap' }   // IDs, emails, phones, dates stay on one line
 const button = (primary) => ({ padding: '8px 14px', fontSize: '13px', fontWeight: '600', borderRadius: '8px', cursor: 'pointer',
   border: primary ? 'none' : `1px solid ${C.line}`, background: primary ? C.blue : '#fff', color: primary ? '#fff' : C.body })
 
@@ -152,7 +153,7 @@ export default function AdvisorNewStudents() {
                 {batches.map(b => (
                   <tr key={b.batch_id}>
                     <td style={{ ...td, color: C.ink, fontWeight: '600' }}>{b.file_name}</td>
-                    <td style={td}>{fmtDate(b.uploaded_at)}</td>
+                    <td style={tdOne}>{fmtDate(b.uploaded_at)}</td>
                     <td style={td}>{b.total}</td>
                     <td style={{ ...td, color: C.amber, fontWeight: '600' }}>{b.pending}</td>
                     <td style={{ ...td, color: C.green, fontWeight: '600' }}>{b.created}</td>
@@ -174,7 +175,7 @@ export default function AdvisorNewStudents() {
         <div style={card}>
           <div style={heading}>{open.batch.file_name}</div>
           <div style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '720px' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '1100px' }}>
               <thead><tr>{['Row', 'Name', 'Phone', 'Personal email', 'Course', 'Programme', 'Student ID', 'Status'].map(h => <th key={h} style={th}>{h}</th>)}</tr></thead>
               <tbody>
                 {open.rows.map(r => {
@@ -182,12 +183,12 @@ export default function AdvisorNewStudents() {
                   return (
                     <tr key={r.row_id}>
                       <td style={td}>{r.line_number}</td>
-                      <td style={{ ...td, color: C.ink }}>{r.full_name}</td>
-                      <td style={td}>{r.phone || '—'}</td>
-                      <td style={td}>{r.personal_email}</td>
+                      <td style={{ ...tdOne, color: C.ink }}>{r.full_name}</td>
+                      <td style={tdOne}>{r.phone || '—'}</td>
+                      <td style={tdOne}>{r.personal_email}</td>
                       <td style={td}>{courseLabel(r.course)}</td>
                       <td style={td}>{r.programme || '—'}</td>
-                      <td style={{ ...td, fontFamily: 'Consolas, monospace' }}>{r.status === 'created' ? r.student_number : '—'}</td>
+                      <td style={{ ...tdOne, fontFamily: 'Consolas, monospace' }}>{r.status === 'created' ? r.student_number : '—'}</td>
                       <td style={td} title={r.note || undefined}>
                         <span style={{ padding: '3px 9px', borderRadius: '20px', fontSize: '11px', fontWeight: '600', background: st.bg, color: st.color }}>{st.label}</span>
                       </td>

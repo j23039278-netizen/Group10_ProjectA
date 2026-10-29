@@ -181,7 +181,7 @@ export default function AdvisorDashboard() {
               <thead>
                 <tr>
                   {['Skill', 'Category', 'Gap %', 'Gap Count', 'Developing', 'Strong'].map(h => (
-                    <th key={h} style={{ textAlign: 'left', fontSize: '11px', fontWeight: '700', color: '#8b92a8', textTransform: 'uppercase', letterSpacing: '0.5px', padding: '10px 12px', borderBottom: '1px solid #e4e6ef' }}>
+                    <th key={h} style={{ textAlign: 'left', fontSize: '11px', fontWeight: '700', color: '#8b92a8', textTransform: 'uppercase', letterSpacing: '0.5px', padding: '10px 12px', borderBottom: '1px solid #e4e6ef', whiteSpace: 'nowrap' }}>
                       {h}
                     </th>
                   ))}
@@ -239,7 +239,7 @@ export default function AdvisorDashboard() {
             <thead>
               <tr>
                 {['Name', 'Student ID', 'Course', 'Programme', 'Target Role', 'Readiness', 'Status'].map(h => (
-                  <th key={h} style={{ textAlign: 'left', fontSize: '11px', fontWeight: '700', color: '#8b92a8', textTransform: 'uppercase', letterSpacing: '0.5px', padding: '10px 12px', borderBottom: '1px solid #e4e6ef' }}>
+                  <th key={h} style={{ textAlign: 'left', fontSize: '11px', fontWeight: '700', color: '#8b92a8', textTransform: 'uppercase', letterSpacing: '0.5px', padding: '10px 12px', borderBottom: '1px solid #e4e6ef', whiteSpace: 'nowrap' }}>
                     {h}
                   </th>
                 ))}
@@ -258,7 +258,7 @@ export default function AdvisorDashboard() {
                     onKeyDown={e => { if (e.key === 'Enter') open() }}
                     style={{ background: i % 2 === 0 ? '#f5f6fa' : '#fff', cursor: 'pointer' }}>
                     <td style={{ padding: '10px 12px', fontSize: '13px', fontWeight: '500', color: '#2d5be3' }}>{s.full_name}</td>
-                    <td style={{ padding: '10px 12px', fontSize: '12px', color: '#4a5168', fontFamily: 'Consolas, monospace' }}>{s.student_number || '—'}</td>
+                    <td style={{ padding: '10px 12px', fontSize: '12px', color: '#4a5168', fontFamily: 'Consolas, monospace', whiteSpace: 'nowrap' }}>{s.student_number || '—'}</td>
                     <td style={{ padding: '10px 12px', fontSize: '12px', color: '#4a5168' }}>{courseLabel(s.course)}</td>
                     <td style={{ padding: '10px 12px', fontSize: '12px', color: '#4a5168' }}>{s.programme || '—'}</td>
                     <td style={{ padding: '10px 12px', fontSize: '12px', color: '#4a5168' }}>{s.target_role || '—'}</td>

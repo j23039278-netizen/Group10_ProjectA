@@ -8,7 +8,7 @@ import { authAPI, studentAPI } from '../api/client'
 import { adminAPI } from '../api/admin'
 import { passwordProblem } from '../utils/passwordRules'
 import { COURSES, courseLabel, ADVISOR_POSITIONS, advisorPositionOf } from '../utils/courses'
-import { C, card, th, td, input, label, btn, errorText } from './admin/adminStyles'
+import { C, card, th, td, tdOne, input, label, btn, errorText } from './admin/adminStyles'
 import { Modal, Alert } from './admin/AdminUi'
 
 const PAGE_SIZE = 50
@@ -492,8 +492,8 @@ export default function AdminUsers() {
                 return (
                   <tr key={u.user_id} style={{ opacity: u.is_active ? 1 : 0.6 }}>
                     <td style={{ ...td, color: C.ink, fontWeight: '600' }}>{u.full_name}{isMe && <span style={{ color: C.muted, fontWeight: '500' }}> (you)</span>}</td>
-                    <td style={td}>{u.email}</td>
-                    <td style={{ ...td, fontFamily: 'Consolas, monospace' }}>{u.student_number || u.staff_number || '—'}</td>
+                    <td style={tdOne}>{u.email}</td>
+                    <td style={{ ...tdOne, fontFamily: 'Consolas, monospace' }}>{u.student_number || u.staff_number || '—'}</td>
                     <td style={td}>
                       {u.course ? courseLabel(u.course) : (u.position_label || '—')}
                       {u.programme && <div style={{ fontSize: '11px', color: C.muted }}>{u.programme}</div>}
@@ -502,7 +502,7 @@ export default function AdminUsers() {
                       <span style={{ padding: '3px 9px', borderRadius: '999px', fontSize: '11px', fontWeight: '600', textTransform: 'capitalize', background: badge.bg, color: badge.color }}>{u.role}</span>
                     </td>
                     <td style={{ ...td, color: u.is_active ? C.green : C.red, fontWeight: '600' }}>{u.is_active ? 'Active' : 'Deactivated'}</td>
-                    <td style={td}>{u.created_at ? new Date(u.created_at).toLocaleDateString('en-GB') : '—'}</td>
+                    <td style={tdOne}>{u.created_at ? new Date(u.created_at).toLocaleDateString('en-GB') : '—'}</td>
                     <td style={{ ...td, textAlign: 'right', whiteSpace: 'nowrap' }}>
                       <button style={{ ...btn('secondary'), padding: '6px 10px', fontSize: '12px', marginRight: '6px' }}
                         onClick={() => { setNotice(''); setEditing(u) }}>Edit</button>

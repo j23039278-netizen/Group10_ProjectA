@@ -5,8 +5,10 @@ export const C = {
 }
 
 export const card  = { background: '#fff', border: `1px solid ${C.line}`, borderRadius: '12px' }
-export const th    = { textAlign: 'left', fontSize: '11px', fontWeight: '700', color: C.muted, textTransform: 'uppercase', letterSpacing: '0.5px', padding: '10px 12px', borderBottom: `1px solid ${C.line}`, background: '#fff' }
+export const th    = { textAlign: 'left', fontSize: '11px', fontWeight: '700', color: C.muted, textTransform: 'uppercase', letterSpacing: '0.5px', padding: '10px 12px', borderBottom: `1px solid ${C.line}`, background: '#fff', whiteSpace: 'nowrap' }
 export const td    = { padding: '11px 12px', fontSize: '13px', color: C.body, borderBottom: '1px solid #f0f1f5', verticalAlign: 'top' }
+// IDs, emails and phone numbers stay on one line; the table scrolls sideways instead
+export const tdOne = { ...td, whiteSpace: 'nowrap' }
 export const input = { width: '100%', padding: '9px 11px', fontSize: '13px', border: `1px solid ${C.line}`, borderRadius: '8px', outline: 'none', boxSizing: 'border-box', color: C.ink, background: '#fff' }
 export const label = { display: 'block', fontSize: '12px', fontWeight: '600', color: C.body, marginBottom: '6px' }
 export const heading = { fontSize: '13px', fontWeight: '700', color: C.ink, textTransform: 'uppercase', letterSpacing: '0.5px' }

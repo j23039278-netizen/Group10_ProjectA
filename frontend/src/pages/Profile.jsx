@@ -292,12 +292,12 @@ export default function Profile() {
       {account && card(
         <>
           {cardTitle('My Details')}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '14px 20px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '14px 20px' }}>
             {[
               ['Name',         account.full_name],
               ['Student ID',   account.student_number, true],
               ['Course',       courseLabel(account.course)],
-              ['School Email', account.email],
+              ['School Email', account.email && <>{account.email.split('@')[0]}@<wbr />{account.email.split('@')[1]}</>],
               ['University',   profile?.university],
               ['Programme',    profile?.programme],
               ['Target Role',  profile?.target_role],
@@ -307,7 +307,7 @@ export default function Profile() {
               <div key={k}>
                 <div style={{ fontSize: '11px', fontWeight: '600', color: '#8b92a8', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{k}</div>
                 <div style={{ fontSize: '14px', color: v ? '#1a1f2e' : '#8b92a8', marginTop: '3px', fontWeight: '500',
-                              fontFamily: mono ? 'Consolas, monospace' : undefined, wordBreak: 'break-word' }}>
+                              fontFamily: mono ? 'Consolas, monospace' : undefined, overflowWrap: 'break-word' }}>
                   {v || 'Not set'}
                 </div>
               </div>
