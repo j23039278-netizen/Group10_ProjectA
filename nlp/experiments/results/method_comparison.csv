@@ -1,5 +1,5 @@
 jd_ref,role_code,method,skill_name,raw_skill_text,confidence,found_by
-JD-CE-0001,CLOUD_ENGINEER,keyword,Monitoring & Observability,monitoring,1.0,keyword
+JD-CE-0001,CLOUD_ENGINEER,keyword,Monitoring & Observability,monitoring,0.8,keyword
 JD-CE-0001,CLOUD_ENGINEER,keyword,Problem Solving,troubleshooting,1.0,keyword
 JD-CE-0001,CLOUD_ENGINEER,keyword,Azure,Microsoft Azure,1.0,keyword
 JD-CE-0001,CLOUD_ENGINEER,keyword,Networking,DNS,1.0,keyword
@@ -10,7 +10,7 @@ JD-CE-0001,CLOUD_ENGINEER,keyword,Identity & Access Management,access control,1.
 JD-CE-0001,CLOUD_ENGINEER,keyword,Cloud Computing,Cloud Computing,1.0,keyword
 JD-CE-0001,CLOUD_ENGINEER,keyword,PowerShell,PowerShell,1.0,keyword
 JD-CE-0001,CLOUD_ENGINEER,keyword,Bash,Bash,1.0,keyword
-JD-CE-0001,CLOUD_ENGINEER,keyword,Self-Motivation,initiative,1.0,keyword
+JD-CE-0001,CLOUD_ENGINEER,keyword,Self-Motivation,initiative,0.8,keyword
 JD-CE-0001,CLOUD_ENGINEER,keyword,Communication,communication skills,1.0,keyword
 JD-CE-0001,CLOUD_ENGINEER,keyword,Attention to Detail,attention to detail,1.0,keyword
 JD-CE-0001,CLOUD_ENGINEER,semantic,Azure,Microsoft Azure infrastructure activities,0.89,semantic
@@ -22,9 +22,9 @@ JD-CE-0001,CLOUD_ENGINEER,semantic,Linux,Linux,0.681,semantic
 JD-CE-0001,CLOUD_ENGINEER,semantic,PowerShell,PowerShell,0.793,semantic
 JD-CE-0001,CLOUD_ENGINEER,semantic,Bash,Bash,0.74,semantic
 JD-CE-0001,CLOUD_ENGINEER,semantic,Problem Solving,Good analytical and problem-solving skills,0.68,semantic
-JD-CE-0001,CLOUD_ENGINEER,semantic,Teamwork,initiative and work collaboratively,0.605,semantic
+JD-CE-0001,CLOUD_ENGINEER,semantic,Teamwork,work collaboratively,0.734,semantic
 JD-CE-0001,CLOUD_ENGINEER,semantic,Communication,Good communication skills,0.671,semantic
-JD-CE-0001,CLOUD_ENGINEER,hybrid,Monitoring & Observability,monitoring,1.0,keyword
+JD-CE-0001,CLOUD_ENGINEER,hybrid,Monitoring & Observability,monitoring,0.8,keyword
 JD-CE-0001,CLOUD_ENGINEER,hybrid,Problem Solving,troubleshooting,1.0,keyword
 JD-CE-0001,CLOUD_ENGINEER,hybrid,Azure,Microsoft Azure,1.0,keyword
 JD-CE-0001,CLOUD_ENGINEER,hybrid,Networking,DNS,1.0,keyword
@@ -36,7 +36,8 @@ JD-CE-0001,CLOUD_ENGINEER,hybrid,Cloud Computing,Cloud Computing,1.0,keyword
 JD-CE-0001,CLOUD_ENGINEER,hybrid,PowerShell,PowerShell,1.0,keyword
 JD-CE-0001,CLOUD_ENGINEER,hybrid,Bash,Bash,1.0,keyword
 JD-CE-0001,CLOUD_ENGINEER,hybrid,Critical Thinking,analytical,0.77,semantic
-JD-CE-0001,CLOUD_ENGINEER,hybrid,Self-Motivation,initiative,1.0,keyword
+JD-CE-0001,CLOUD_ENGINEER,hybrid,Self-Motivation,initiative,0.8,keyword
+JD-CE-0001,CLOUD_ENGINEER,hybrid,Teamwork,work collaboratively,0.734,semantic
 JD-CE-0001,CLOUD_ENGINEER,hybrid,Communication,communication skills,1.0,keyword
 JD-CE-0001,CLOUD_ENGINEER,hybrid,Attention to Detail,attention to detail,1.0,keyword
 JD-CE-0002,CLOUD_ENGINEER,keyword,UI/UX Design,user experience,1.0,keyword
@@ -51,17 +52,13 @@ JD-CE-0002,CLOUD_ENGINEER,keyword,Azure,Azure,1.0,keyword
 JD-CE-0002,CLOUD_ENGINEER,keyword,GCP,GCP,1.0,keyword
 JD-CE-0002,CLOUD_ENGINEER,keyword,SQL,SQL,1.0,keyword
 JD-CE-0002,CLOUD_ENGINEER,semantic,Prompt Engineering,ensuring prompt resolution and positive user experience,0.641,semantic
-JD-CE-0002,CLOUD_ENGINEER,semantic,Windows Server,administration,0.625,semantic
-JD-CE-0002,CLOUD_ENGINEER,semantic,A/B Testing,testing,0.616,semantic
 JD-CE-0002,CLOUD_ENGINEER,semantic,Generative AI,Generative AI,0.668,semantic
 JD-CE-0002,CLOUD_ENGINEER,semantic,Time Management,Effective time management and problem-solving skills,0.697,semantic
 JD-CE-0002,CLOUD_ENGINEER,semantic,AWS,AWS,0.686,semantic
 JD-CE-0002,CLOUD_ENGINEER,semantic,Azure,Azure,0.86,semantic
 JD-CE-0002,CLOUD_ENGINEER,semantic,GCP,GCP,0.621,semantic
 JD-CE-0002,CLOUD_ENGINEER,hybrid,UI/UX Design,user experience,1.0,keyword
-JD-CE-0002,CLOUD_ENGINEER,hybrid,Windows Server,administration,0.625,semantic
 JD-CE-0002,CLOUD_ENGINEER,hybrid,Documentation,documentation,1.0,keyword
-JD-CE-0002,CLOUD_ENGINEER,hybrid,A/B Testing,testing,0.616,semantic
 JD-CE-0002,CLOUD_ENGINEER,hybrid,Generative AI,Generative AI,1.0,keyword
 JD-CE-0002,CLOUD_ENGINEER,hybrid,Communication,communication,1.0,keyword
 JD-CE-0002,CLOUD_ENGINEER,hybrid,Interpersonal Skills,interpersonal,0.87,semantic
@@ -75,6 +72,7 @@ JD-CE-0002,CLOUD_ENGINEER,hybrid,SQL,SQL,1.0,keyword
 JD-CE-0003,CLOUD_ENGINEER,keyword,Cloud Computing,cloud infrastructure,1.0,keyword
 JD-CE-0003,CLOUD_ENGINEER,keyword,Monitoring & Observability,monitoring,1.0,keyword
 JD-CE-0003,CLOUD_ENGINEER,keyword,Incident Response,incident response,1.0,keyword
+JD-CE-0003,CLOUD_ENGINEER,keyword,User Acceptance Testing,UAT,1.0,keyword
 JD-CE-0003,CLOUD_ENGINEER,keyword,Networking,networking,1.0,keyword
 JD-CE-0003,CLOUD_ENGINEER,keyword,AWS,AWS,1.0,keyword
 JD-CE-0003,CLOUD_ENGINEER,keyword,Azure,Azure,1.0,keyword
@@ -85,11 +83,13 @@ JD-CE-0003,CLOUD_ENGINEER,keyword,Kubernetes,Kubernetes,1.0,keyword
 JD-CE-0003,CLOUD_ENGINEER,keyword,CI/CD,CI/CD,1.0,keyword
 JD-CE-0003,CLOUD_ENGINEER,keyword,Linux,Linux,1.0,keyword
 JD-CE-0003,CLOUD_ENGINEER,keyword,Bash,shell scripting,1.0,keyword
+JD-CE-0003,CLOUD_ENGINEER,keyword,Firewall Management,firewall,1.0,keyword
 JD-CE-0003,CLOUD_ENGINEER,keyword,MySQL,MySQL,1.0,keyword
 JD-CE-0003,CLOUD_ENGINEER,keyword,Problem Solving,troubleshooting,1.0,keyword
 JD-CE-0003,CLOUD_ENGINEER,keyword,PHP,PHP,1.0,keyword
 JD-CE-0003,CLOUD_ENGINEER,keyword,Security Frameworks,ISO/IEC 27001,1.0,keyword
 JD-CE-0003,CLOUD_ENGINEER,keyword,Identity & Access Management,access control,1.0,keyword
+JD-CE-0003,CLOUD_ENGINEER,keyword,Auditing,external audits,1.0,keyword
 JD-CE-0003,CLOUD_ENGINEER,keyword,SQL,SQL,1.0,keyword
 JD-CE-0003,CLOUD_ENGINEER,keyword,Python,Python,1.0,keyword
 JD-CE-0003,CLOUD_ENGINEER,keyword,Git,Git,1.0,keyword
@@ -103,13 +103,13 @@ JD-CE-0003,CLOUD_ENGINEER,semantic,GCP,Google Cloud,0.698,semantic
 JD-CE-0003,CLOUD_ENGINEER,semantic,Docker,Containers and Orchestration,0.756,semantic
 JD-CE-0003,CLOUD_ENGINEER,semantic,Kubernetes,Kubernetes,0.868,semantic
 JD-CE-0003,CLOUD_ENGINEER,semantic,Networking,Systems and Networking,0.691,semantic
-JD-CE-0003,CLOUD_ENGINEER,semantic,Bash,scripting,0.886,semantic
-JD-CE-0003,CLOUD_ENGINEER,semantic,Firewall Management,firewall rules,0.671,semantic
+JD-CE-0003,CLOUD_ENGINEER,semantic,Firewall Management,firewall rules,0.701,semantic
 JD-CE-0003,CLOUD_ENGINEER,semantic,Security Frameworks,Security and Compliance,0.641,semantic
-JD-CE-0003,CLOUD_ENGINEER,semantic,Log Analysis,logging,0.683,semantic
 JD-CE-0003,CLOUD_ENGINEER,semantic,Vulnerability Assessment,vulnerability remediation,0.677,semantic
+JD-CE-0003,CLOUD_ENGINEER,semantic,Auditing,Produce evidence for internal and external audits,0.829,semantic
 JD-CE-0003,CLOUD_ENGINEER,semantic,Linux,Linux administration,0.733,semantic
 JD-CE-0003,CLOUD_ENGINEER,semantic,MySQL,Basic MySQL,0.752,semantic
+JD-CE-0003,CLOUD_ENGINEER,semantic,Bash,Scripting in Bash,0.886,semantic
 JD-CE-0003,CLOUD_ENGINEER,semantic,Documentation,documentation,0.711,semantic
 JD-CE-0003,CLOUD_ENGINEER,semantic,Problem Solving,Strong analytical and troubleshooting skills,0.685,semantic
 JD-CE-0003,CLOUD_ENGINEER,semantic,Terraform,Terraform,0.71,semantic
@@ -117,6 +117,7 @@ JD-CE-0003,CLOUD_ENGINEER,semantic,Ansible,Ansible,0.859,semantic
 JD-CE-0003,CLOUD_ENGINEER,hybrid,Cloud Computing,cloud infrastructure,1.0,keyword
 JD-CE-0003,CLOUD_ENGINEER,hybrid,Monitoring & Observability,monitoring,1.0,keyword
 JD-CE-0003,CLOUD_ENGINEER,hybrid,Incident Response,incident response,1.0,keyword
+JD-CE-0003,CLOUD_ENGINEER,hybrid,User Acceptance Testing,UAT,1.0,keyword
 JD-CE-0003,CLOUD_ENGINEER,hybrid,Networking,networking,1.0,keyword
 JD-CE-0003,CLOUD_ENGINEER,hybrid,AWS,AWS,1.0,keyword
 JD-CE-0003,CLOUD_ENGINEER,hybrid,Azure,Azure,1.0,keyword
@@ -127,14 +128,14 @@ JD-CE-0003,CLOUD_ENGINEER,hybrid,Kubernetes,Kubernetes,1.0,keyword
 JD-CE-0003,CLOUD_ENGINEER,hybrid,CI/CD,CI/CD,1.0,keyword
 JD-CE-0003,CLOUD_ENGINEER,hybrid,Linux,Linux,1.0,keyword
 JD-CE-0003,CLOUD_ENGINEER,hybrid,Bash,shell scripting,1.0,keyword
-JD-CE-0003,CLOUD_ENGINEER,hybrid,Firewall Management,firewall rules,0.671,semantic
+JD-CE-0003,CLOUD_ENGINEER,hybrid,Firewall Management,firewall,1.0,keyword
 JD-CE-0003,CLOUD_ENGINEER,hybrid,MySQL,MySQL,1.0,keyword
 JD-CE-0003,CLOUD_ENGINEER,hybrid,Problem Solving,troubleshooting,1.0,keyword
 JD-CE-0003,CLOUD_ENGINEER,hybrid,PHP,PHP,1.0,keyword
 JD-CE-0003,CLOUD_ENGINEER,hybrid,Security Frameworks,ISO/IEC 27001,1.0,keyword
 JD-CE-0003,CLOUD_ENGINEER,hybrid,Identity & Access Management,access control,1.0,keyword
-JD-CE-0003,CLOUD_ENGINEER,hybrid,Log Analysis,logging,0.683,semantic
 JD-CE-0003,CLOUD_ENGINEER,hybrid,Vulnerability Assessment,vulnerability remediation,0.677,semantic
+JD-CE-0003,CLOUD_ENGINEER,hybrid,Auditing,external audits,1.0,keyword
 JD-CE-0003,CLOUD_ENGINEER,hybrid,SQL,SQL,1.0,keyword
 JD-CE-0003,CLOUD_ENGINEER,hybrid,Python,Python,1.0,keyword
 JD-CE-0003,CLOUD_ENGINEER,hybrid,Git,Git,1.0,keyword
@@ -177,7 +178,7 @@ JD-CE-0006,CLOUD_ENGINEER,hybrid,Excel,Excel,0.8,keyword
 JD-CE-0006,CLOUD_ENGINEER,hybrid,Networking,networking,1.0,keyword
 JD-CE-0006,CLOUD_ENGINEER,hybrid,Critical Thinking,analytical,0.77,semantic
 JD-CE-0006,CLOUD_ENGINEER,hybrid,Communication,communication,1.0,keyword
-JD-CE-0007,CLOUD_ENGINEER,keyword,Monitoring & Observability,monitoring,1.0,keyword
+JD-CE-0007,CLOUD_ENGINEER,keyword,Monitoring & Observability,monitoring,0.8,keyword
 JD-CE-0007,CLOUD_ENGINEER,keyword,CI/CD,CI/CD,1.0,keyword
 JD-CE-0007,CLOUD_ENGINEER,keyword,Self-Motivation,Proactive,1.0,keyword
 JD-CE-0007,CLOUD_ENGINEER,keyword,Problem Solving,problem-solving,1.0,keyword
@@ -188,7 +189,7 @@ JD-CE-0007,CLOUD_ENGINEER,semantic,Critical Thinking,Critical thinker,0.695,sema
 JD-CE-0007,CLOUD_ENGINEER,semantic,Problem Solving,problem-solving skills,0.677,semantic
 JD-CE-0007,CLOUD_ENGINEER,semantic,Time Management,Good time-management skills,0.64,semantic
 JD-CE-0007,CLOUD_ENGINEER,semantic,Communication,Good interpersonal and communication skills,0.621,semantic
-JD-CE-0007,CLOUD_ENGINEER,hybrid,Monitoring & Observability,monitoring,1.0,keyword
+JD-CE-0007,CLOUD_ENGINEER,hybrid,Monitoring & Observability,monitoring,0.8,keyword
 JD-CE-0007,CLOUD_ENGINEER,hybrid,CI/CD,CI/CD,1.0,keyword
 JD-CE-0007,CLOUD_ENGINEER,hybrid,Self-Motivation,Proactive,1.0,keyword
 JD-CE-0007,CLOUD_ENGINEER,hybrid,Critical Thinking,Critical thinker,0.759,semantic
@@ -213,7 +214,7 @@ JD-CE-0008,CLOUD_ENGINEER,semantic,AWS,cloud server infrastructure,0.621,semanti
 JD-CE-0008,CLOUD_ENGINEER,semantic,Cloud Computing,large scale cloud infrastructure,0.677,semantic
 JD-CE-0008,CLOUD_ENGINEER,semantic,Linux,Linux,0.681,semantic
 JD-CE-0008,CLOUD_ENGINEER,semantic,Requirements Analysis,Technical requirements,0.642,semantic
-JD-CE-0008,CLOUD_ENGINEER,semantic,Monitoring & Observability,Monitoring - Prometheus,0.673,semantic
+JD-CE-0008,CLOUD_ENGINEER,semantic,Monitoring & Observability,Monitoring - Prometheus,0.677,semantic
 JD-CE-0008,CLOUD_ENGINEER,semantic,Ansible,Ansible,0.859,semantic
 JD-CE-0008,CLOUD_ENGINEER,semantic,Windows Server,Windows Server,0.681,semantic
 JD-CE-0008,CLOUD_ENGINEER,semantic,SQL,Microsoft SQL,0.61,semantic
@@ -241,16 +242,12 @@ JD-CE-0009,CLOUD_ENGINEER,keyword,React,React,1.0,keyword
 JD-CE-0009,CLOUD_ENGINEER,keyword,JavaScript,JavaScript,1.0,keyword
 JD-CE-0009,CLOUD_ENGINEER,keyword,HTML,HTML,1.0,keyword
 JD-CE-0009,CLOUD_ENGINEER,keyword,CSS,CSS,1.0,keyword
-JD-CE-0009,CLOUD_ENGINEER,semantic,Windows Server,System Administration,0.644,semantic
-JD-CE-0009,CLOUD_ENGINEER,semantic,R,programming languages,0.602,semantic
 JD-CE-0009,CLOUD_ENGINEER,semantic,PHP,PHP Laravel,0.832,semantic
 JD-CE-0009,CLOUD_ENGINEER,semantic,Node.js,Node.js,0.94,semantic
 JD-CE-0009,CLOUD_ENGINEER,semantic,React,React.ks,0.684,semantic
 JD-CE-0009,CLOUD_ENGINEER,semantic,JavaScript,JavaScript,0.635,semantic
 JD-CE-0009,CLOUD_ENGINEER,semantic,HTML,HTML,0.663,semantic
-JD-CE-0009,CLOUD_ENGINEER,hybrid,Windows Server,System Administration,0.644,semantic
 JD-CE-0009,CLOUD_ENGINEER,hybrid,Problem Solving,troubleshooting,1.0,keyword
-JD-CE-0009,CLOUD_ENGINEER,hybrid,R,programming languages,0.602,semantic
 JD-CE-0009,CLOUD_ENGINEER,hybrid,PHP,PHP,1.0,keyword
 JD-CE-0009,CLOUD_ENGINEER,hybrid,Node.js,Node.js,1.0,keyword
 JD-CE-0009,CLOUD_ENGINEER,hybrid,React,React,1.0,keyword
@@ -259,7 +256,7 @@ JD-CE-0009,CLOUD_ENGINEER,hybrid,HTML,HTML,1.0,keyword
 JD-CE-0009,CLOUD_ENGINEER,hybrid,CSS,CSS,1.0,keyword
 JD-CE-0010,CLOUD_ENGINEER,keyword,Identity & Access Management,Active Directory,1.0,keyword
 JD-CE-0010,CLOUD_ENGINEER,keyword,Documentation,documentation,1.0,keyword
-JD-CE-0010,CLOUD_ENGINEER,keyword,Monitoring & Observability,monitoring,1.0,keyword
+JD-CE-0010,CLOUD_ENGINEER,keyword,Monitoring & Observability,monitoring,0.8,keyword
 JD-CE-0010,CLOUD_ENGINEER,keyword,Problem Solving,troubleshooting,1.0,keyword
 JD-CE-0010,CLOUD_ENGINEER,keyword,AI Literacy,AI concepts,1.0,keyword
 JD-CE-0010,CLOUD_ENGINEER,keyword,Machine Learning,machine learning,1.0,keyword
@@ -271,29 +268,23 @@ JD-CE-0010,CLOUD_ENGINEER,keyword,Azure,Azure,1.0,keyword
 JD-CE-0010,CLOUD_ENGINEER,keyword,AWS,AWS,1.0,keyword
 JD-CE-0010,CLOUD_ENGINEER,keyword,GCP,GCP,1.0,keyword
 JD-CE-0010,CLOUD_ENGINEER,keyword,Cybersecurity,cybersecurity,1.0,keyword
-JD-CE-0010,CLOUD_ENGINEER,semantic,MySQL,Database,0.665,semantic
 JD-CE-0010,CLOUD_ENGINEER,semantic,Documentation,documentation,0.711,semantic
-JD-CE-0010,CLOUD_ENGINEER,semantic,A/B Testing,testing,0.616,semantic
 JD-CE-0010,CLOUD_ENGINEER,semantic,Presentation Skills,presentations,0.737,semantic
 JD-CE-0010,CLOUD_ENGINEER,semantic,AI Literacy,AI concepts,0.664,semantic
 JD-CE-0010,CLOUD_ENGINEER,semantic,Problem Solving,Good analytical and problem-solving skills,0.68,semantic
-JD-CE-0010,CLOUD_ENGINEER,semantic,Bash,scripting languages,0.601,semantic
 JD-CE-0010,CLOUD_ENGINEER,semantic,Python,Python,0.775,semantic
 JD-CE-0010,CLOUD_ENGINEER,semantic,Cloud Computing,cloud platforms,0.686,semantic
 JD-CE-0010,CLOUD_ENGINEER,semantic,Azure,Azure,0.86,semantic
 JD-CE-0010,CLOUD_ENGINEER,semantic,Cybersecurity,cybersecurity basics,0.666,semantic
 JD-CE-0010,CLOUD_ENGINEER,hybrid,Identity & Access Management,Active Directory,1.0,keyword
-JD-CE-0010,CLOUD_ENGINEER,hybrid,MySQL,Database,0.665,semantic
 JD-CE-0010,CLOUD_ENGINEER,hybrid,Documentation,documentation,1.0,keyword
-JD-CE-0010,CLOUD_ENGINEER,hybrid,Monitoring & Observability,monitoring,1.0,keyword
+JD-CE-0010,CLOUD_ENGINEER,hybrid,Monitoring & Observability,monitoring,0.8,keyword
 JD-CE-0010,CLOUD_ENGINEER,hybrid,Problem Solving,troubleshooting,1.0,keyword
-JD-CE-0010,CLOUD_ENGINEER,hybrid,A/B Testing,testing,0.616,semantic
 JD-CE-0010,CLOUD_ENGINEER,hybrid,Presentation Skills,presentations,0.737,semantic
 JD-CE-0010,CLOUD_ENGINEER,hybrid,AI Literacy,AI concepts,1.0,keyword
 JD-CE-0010,CLOUD_ENGINEER,hybrid,Machine Learning,machine learning,1.0,keyword
 JD-CE-0010,CLOUD_ENGINEER,hybrid,Linux,Unix,1.0,keyword
 JD-CE-0010,CLOUD_ENGINEER,hybrid,Critical Thinking,analytical,0.77,semantic
-JD-CE-0010,CLOUD_ENGINEER,hybrid,Bash,scripting languages,0.601,semantic
 JD-CE-0010,CLOUD_ENGINEER,hybrid,Python,Python,1.0,keyword
 JD-CE-0010,CLOUD_ENGINEER,hybrid,PowerShell,PowerShell,1.0,keyword
 JD-CE-0010,CLOUD_ENGINEER,hybrid,Cloud Computing,cloud platforms,1.0,keyword
@@ -313,7 +304,6 @@ JD-CY-0001,CYBER_ANALYST,hybrid,Networking,networking,1.0,keyword
 JD-CY-0001,CYBER_ANALYST,hybrid,Critical Thinking,analytical,0.765,semantic
 JD-CY-0001,CYBER_ANALYST,hybrid,Time Management,time management,1.0,keyword
 JD-CY-0002,CYBER_ANALYST,keyword,Communication,Communication,1.0,keyword
-JD-CY-0002,CYBER_ANALYST,keyword,Monitoring & Observability,Monitoring,1.0,keyword
 JD-CY-0002,CYBER_ANALYST,keyword,SIEM,SIEM,1.0,keyword
 JD-CY-0002,CYBER_ANALYST,keyword,React,React,1.0,keyword
 JD-CY-0002,CYBER_ANALYST,keyword,Documentation,documentation,1.0,keyword
@@ -324,7 +314,7 @@ JD-CY-0002,CYBER_ANALYST,keyword,Cybersecurity,cybersecurity,1.0,keyword
 JD-CY-0002,CYBER_ANALYST,keyword,Security Operations (SOC),SOC analyst,1.0,keyword
 JD-CY-0002,CYBER_ANALYST,keyword,Customer Focus,customer service,1.0,keyword
 JD-CY-0002,CYBER_ANALYST,keyword,Interpersonal Skills,interpersonal skills,1.0,keyword
-JD-CY-0002,CYBER_ANALYST,semantic,Windows Server,administrator,0.603,semantic
+JD-CY-0002,CYBER_ANALYST,semantic,Content Marketing,content development,0.635,semantic
 JD-CY-0002,CYBER_ANALYST,semantic,SIEM,security events,0.601,semantic
 JD-CY-0002,CYBER_ANALYST,semantic,Log Analysis,log retrieval,0.607,semantic
 JD-CY-0002,CYBER_ANALYST,semantic,Documentation,documentation,0.711,semantic
@@ -333,9 +323,8 @@ JD-CY-0002,CYBER_ANALYST,semantic,Malware Analysis,malware analysis,0.8,semantic
 JD-CY-0002,CYBER_ANALYST,semantic,Cybersecurity,Analyze cybersecurity alerts and data,0.603,semantic
 JD-CY-0002,CYBER_ANALYST,semantic,Interpersonal Skills,interpersonal skills,0.685,semantic
 JD-CY-0002,CYBER_ANALYST,hybrid,Communication,Communication,1.0,keyword
-JD-CY-0002,CYBER_ANALYST,hybrid,Windows Server,administrator,0.603,semantic
-JD-CY-0002,CYBER_ANALYST,hybrid,Monitoring & Observability,Monitoring,1.0,keyword
 JD-CY-0002,CYBER_ANALYST,hybrid,SIEM,SIEM,1.0,keyword
+JD-CY-0002,CYBER_ANALYST,hybrid,Content Marketing,content development,0.635,semantic
 JD-CY-0002,CYBER_ANALYST,hybrid,React,React,1.0,keyword
 JD-CY-0002,CYBER_ANALYST,hybrid,Log Analysis,log retrieval,0.607,semantic
 JD-CY-0002,CYBER_ANALYST,hybrid,Documentation,documentation,1.0,keyword
@@ -385,8 +374,8 @@ JD-CY-0004,CYBER_ANALYST,semantic,Incident Response,incident response,0.652,sema
 JD-CY-0004,CYBER_ANALYST,semantic,Digital Forensics,forensic analysis,0.623,semantic
 JD-CY-0004,CYBER_ANALYST,semantic,Linux,Linux,0.681,semantic
 JD-CY-0004,CYBER_ANALYST,semantic,Log Analysis,Analyse logs,0.741,semantic
-JD-CY-0004,CYBER_ANALYST,semantic,Bash,scripting,0.74,semantic
 JD-CY-0004,CYBER_ANALYST,semantic,Python,Python,0.775,semantic
+JD-CY-0004,CYBER_ANALYST,semantic,Bash,Bash,0.74,semantic
 JD-CY-0004,CYBER_ANALYST,semantic,PowerShell,PowerShell,0.793,semantic
 JD-CY-0004,CYBER_ANALYST,semantic,Cybersecurity,cybersecurity,0.717,semantic
 JD-CY-0004,CYBER_ANALYST,hybrid,Incident Response,incident response,1.0,keyword
@@ -399,47 +388,45 @@ JD-CY-0004,CYBER_ANALYST,hybrid,PowerShell,PowerShell,1.0,keyword
 JD-CY-0004,CYBER_ANALYST,hybrid,Cybersecurity,cybersecurity,1.0,keyword
 JD-CY-0004,CYBER_ANALYST,hybrid,SIEM,SIEM,1.0,keyword
 JD-CY-0005,CYBER_ANALYST,keyword,SIEM,SIEM,1.0,keyword
+JD-CY-0005,CYBER_ANALYST,keyword,Firewall Management,firewalls,1.0,keyword
 JD-CY-0005,CYBER_ANALYST,keyword,Incident Response,incident response,1.0,keyword
 JD-CY-0005,CYBER_ANALYST,keyword,Documentation,documentation,1.0,keyword
 JD-CY-0005,CYBER_ANALYST,keyword,Cybersecurity,cybersecurity,1.0,keyword
 JD-CY-0005,CYBER_ANALYST,keyword,Problem Solving,problem-solving,1.0,keyword
 JD-CY-0005,CYBER_ANALYST,keyword,Communication,communication skills,1.0,keyword
-JD-CY-0005,CYBER_ANALYST,semantic,Log Analysis,logs,0.682,semantic
-JD-CY-0005,CYBER_ANALYST,semantic,Firewall Management,firewalls,0.65,semantic
+JD-CY-0005,CYBER_ANALYST,semantic,Firewall Management,firewalls,0.693,semantic
 JD-CY-0005,CYBER_ANALYST,semantic,Incident Response,incident response teams,0.603,semantic
 JD-CY-0005,CYBER_ANALYST,semantic,Vulnerability Assessment,Perform routine security assessments and vulnerability scans,0.868,semantic
 JD-CY-0005,CYBER_ANALYST,semantic,Risk Analysis,identify and report risks,0.612,semantic
-JD-CY-0005,CYBER_ANALYST,semantic,Teamwork,Collaborate with IT teams,0.615,semantic
+JD-CY-0005,CYBER_ANALYST,semantic,Teamwork,Collaborate with IT teams,0.713,semantic
 JD-CY-0005,CYBER_ANALYST,semantic,Cybersecurity,latest cybersecurity trends,0.717,semantic
 JD-CY-0005,CYBER_ANALYST,semantic,Problem Solving,Strong analytical and problem-solving skills,0.671,semantic
 JD-CY-0005,CYBER_ANALYST,semantic,Communication,Good communication skills,0.671,semantic
-JD-CY-0005,CYBER_ANALYST,hybrid,Log Analysis,logs,0.682,semantic
 JD-CY-0005,CYBER_ANALYST,hybrid,SIEM,SIEM,1.0,keyword
-JD-CY-0005,CYBER_ANALYST,hybrid,Firewall Management,firewalls,0.65,semantic
+JD-CY-0005,CYBER_ANALYST,hybrid,Firewall Management,firewalls,1.0,keyword
 JD-CY-0005,CYBER_ANALYST,hybrid,Incident Response,incident response,1.0,keyword
 JD-CY-0005,CYBER_ANALYST,hybrid,Vulnerability Assessment,Perform routine security assessments and vulnerability scans,0.868,semantic
 JD-CY-0005,CYBER_ANALYST,hybrid,Risk Analysis,identify and report risks,0.612,semantic
 JD-CY-0005,CYBER_ANALYST,hybrid,Documentation,documentation,1.0,keyword
-JD-CY-0005,CYBER_ANALYST,hybrid,Teamwork,Collaborate with IT teams,0.615,semantic
+JD-CY-0005,CYBER_ANALYST,hybrid,Teamwork,Collaborate with IT teams,0.713,semantic
 JD-CY-0005,CYBER_ANALYST,hybrid,Cybersecurity,cybersecurity,1.0,keyword
 JD-CY-0005,CYBER_ANALYST,hybrid,Critical Thinking,analytical,0.77,semantic
 JD-CY-0005,CYBER_ANALYST,hybrid,Problem Solving,problem-solving,1.0,keyword
 JD-CY-0005,CYBER_ANALYST,hybrid,Communication,communication skills,1.0,keyword
 JD-CY-0006,CYBER_ANALYST,keyword,Security Operations (SOC),Security Monitoring,1.0,keyword
-JD-CY-0006,CYBER_ANALYST,keyword,Monitoring & Observability,monitoring,1.0,keyword
 JD-CY-0006,CYBER_ANALYST,keyword,SIEM,SIEM,1.0,keyword
 JD-CY-0006,CYBER_ANALYST,keyword,Incident Response,Incident Response,1.0,keyword
 JD-CY-0006,CYBER_ANALYST,keyword,Threat Intelligence,threat intelligence,1.0,keyword
+JD-CY-0006,CYBER_ANALYST,keyword,Firewall Management,firewalls,1.0,keyword
 JD-CY-0006,CYBER_ANALYST,semantic,SIEM,security events,0.601,semantic
 JD-CY-0006,CYBER_ANALYST,semantic,Incident Response,Incident Response,0.652,semantic
 JD-CY-0006,CYBER_ANALYST,semantic,Threat Intelligence,Threat Detection & Intelligence Utilization Detect,0.676,semantic
-JD-CY-0006,CYBER_ANALYST,semantic,Firewall Management,firewalls,0.65,semantic
+JD-CY-0006,CYBER_ANALYST,semantic,Firewall Management,firewalls,0.693,semantic
 JD-CY-0006,CYBER_ANALYST,hybrid,Security Operations (SOC),Security Monitoring,1.0,keyword
-JD-CY-0006,CYBER_ANALYST,hybrid,Monitoring & Observability,monitoring,1.0,keyword
 JD-CY-0006,CYBER_ANALYST,hybrid,SIEM,SIEM,1.0,keyword
 JD-CY-0006,CYBER_ANALYST,hybrid,Incident Response,Incident Response,1.0,keyword
 JD-CY-0006,CYBER_ANALYST,hybrid,Threat Intelligence,threat intelligence,1.0,keyword
-JD-CY-0006,CYBER_ANALYST,hybrid,Firewall Management,firewalls,0.65,semantic
+JD-CY-0006,CYBER_ANALYST,hybrid,Firewall Management,firewalls,1.0,keyword
 JD-CY-0007,CYBER_ANALYST,keyword,SIEM,SIEM,1.0,keyword
 JD-CY-0007,CYBER_ANALYST,keyword,Incident Response,Incident Response,1.0,keyword
 JD-CY-0007,CYBER_ANALYST,keyword,Threat Intelligence,threat intelligence,1.0,keyword
@@ -447,15 +434,17 @@ JD-CY-0007,CYBER_ANALYST,keyword,Log Analysis,log analysis,1.0,keyword
 JD-CY-0007,CYBER_ANALYST,keyword,Security Operations (SOC),security monitoring,1.0,keyword
 JD-CY-0007,CYBER_ANALYST,keyword,Cybersecurity,cybersecurity,1.0,keyword
 JD-CY-0007,CYBER_ANALYST,keyword,Networking,networking,1.0,keyword
+JD-CY-0007,CYBER_ANALYST,keyword,Firewall Management,firewalls,1.0,keyword
 JD-CY-0007,CYBER_ANALYST,keyword,Splunk,Splunk,1.0,keyword
 JD-CY-0007,CYBER_ANALYST,keyword,Linux,Linux,1.0,keyword
 JD-CY-0007,CYBER_ANALYST,semantic,SIEM,Monitor security events,0.614,semantic
 JD-CY-0007,CYBER_ANALYST,semantic,Security Frameworks,security platforms,0.615,semantic
 JD-CY-0007,CYBER_ANALYST,semantic,Incident Response,Incident Response team,0.628,semantic
 JD-CY-0007,CYBER_ANALYST,semantic,Threat Intelligence,Perform basic threat intelligence lookups,0.699,semantic
+JD-CY-0007,CYBER_ANALYST,semantic,Log Analysis,log analysis,0.696,semantic
 JD-CY-0007,CYBER_ANALYST,semantic,Cybersecurity,current cybersecurity threats,0.717,semantic
 JD-CY-0007,CYBER_ANALYST,semantic,Networking,networking concepts,0.69,semantic
-JD-CY-0007,CYBER_ANALYST,semantic,Firewall Management,firewalls,0.65,semantic
+JD-CY-0007,CYBER_ANALYST,semantic,Firewall Management,firewalls,0.693,semantic
 JD-CY-0007,CYBER_ANALYST,semantic,Splunk,"e.g., Splunk",0.784,semantic
 JD-CY-0007,CYBER_ANALYST,semantic,Linux,Linux operating systems,0.668,semantic
 JD-CY-0007,CYBER_ANALYST,hybrid,SIEM,SIEM,1.0,keyword
@@ -466,24 +455,19 @@ JD-CY-0007,CYBER_ANALYST,hybrid,Log Analysis,log analysis,1.0,keyword
 JD-CY-0007,CYBER_ANALYST,hybrid,Security Operations (SOC),security monitoring,1.0,keyword
 JD-CY-0007,CYBER_ANALYST,hybrid,Cybersecurity,cybersecurity,1.0,keyword
 JD-CY-0007,CYBER_ANALYST,hybrid,Networking,networking,1.0,keyword
-JD-CY-0007,CYBER_ANALYST,hybrid,Firewall Management,firewalls,0.65,semantic
+JD-CY-0007,CYBER_ANALYST,hybrid,Firewall Management,firewalls,1.0,keyword
 JD-CY-0007,CYBER_ANALYST,hybrid,Splunk,Splunk,1.0,keyword
 JD-CY-0007,CYBER_ANALYST,hybrid,Linux,Linux,1.0,keyword
 JD-CY-0008,CYBER_ANALYST,keyword,Teamwork,team work,1.0,keyword
 JD-CY-0008,CYBER_ANALYST,keyword,SIEM,SIEM,1.0,keyword
-JD-CY-0008,CYBER_ANALYST,keyword,Monitoring & Observability,monitoring,1.0,keyword
-JD-CY-0008,CYBER_ANALYST,semantic,A/B Testing,Testing,0.616,semantic
 JD-CY-0008,CYBER_ANALYST,semantic,Security Frameworks,new security-related project,0.603,semantic
 JD-CY-0008,CYBER_ANALYST,semantic,Network Security,Security and Network related concept,0.604,semantic
 JD-CY-0008,CYBER_ANALYST,hybrid,Teamwork,team work,1.0,keyword
-JD-CY-0008,CYBER_ANALYST,hybrid,A/B Testing,Testing,0.616,semantic
 JD-CY-0008,CYBER_ANALYST,hybrid,Security Frameworks,new security-related project,0.603,semantic
 JD-CY-0008,CYBER_ANALYST,hybrid,SIEM,SIEM,1.0,keyword
-JD-CY-0008,CYBER_ANALYST,hybrid,Monitoring & Observability,monitoring,1.0,keyword
 JD-CY-0008,CYBER_ANALYST,hybrid,Network Security,Security and Network related concept,0.604,semantic
 JD-CY-0009,CYBER_ANALYST,keyword,Problem Solving,troubleshooting,1.0,keyword
 JD-CY-0009,CYBER_ANALYST,keyword,Network Security,network security,1.0,keyword
-JD-CY-0009,CYBER_ANALYST,keyword,Self-Motivation,initiatives,1.0,keyword
 JD-CY-0009,CYBER_ANALYST,keyword,Customer Focus,customer service,1.0,keyword
 JD-CY-0009,CYBER_ANALYST,keyword,PHP,PHP,1.0,keyword
 JD-CY-0009,CYBER_ANALYST,keyword,Java,Java,1.0,keyword
@@ -493,46 +477,44 @@ JD-CY-0009,CYBER_ANALYST,semantic,Java,Java,0.742,semantic
 JD-CY-0009,CYBER_ANALYST,semantic,Teamwork,work both independently and collaboratively,0.672,semantic
 JD-CY-0009,CYBER_ANALYST,hybrid,Problem Solving,troubleshooting,1.0,keyword
 JD-CY-0009,CYBER_ANALYST,hybrid,Network Security,network security,1.0,keyword
-JD-CY-0009,CYBER_ANALYST,hybrid,Self-Motivation,initiatives,1.0,keyword
 JD-CY-0009,CYBER_ANALYST,hybrid,Customer Focus,customer service,1.0,keyword
 JD-CY-0009,CYBER_ANALYST,hybrid,PHP,PHP,1.0,keyword
 JD-CY-0009,CYBER_ANALYST,hybrid,Java,Java,1.0,keyword
 JD-CY-0009,CYBER_ANALYST,hybrid,Teamwork,work both independently and collaboratively,0.672,semantic
 JD-CY-0010,CYBER_ANALYST,keyword,Cybersecurity,cybersecurity,1.0,keyword
 JD-CY-0010,CYBER_ANALYST,keyword,Security Operations (SOC),Security Operations Center,1.0,keyword
-JD-CY-0010,CYBER_ANALYST,keyword,Monitoring & Observability,Monitoring,1.0,keyword
 JD-CY-0010,CYBER_ANALYST,keyword,Vulnerability Assessment,vulnerability scanning,1.0,keyword
 JD-CY-0010,CYBER_ANALYST,keyword,Ethical Hacking,penetration testing,1.0,keyword
 JD-CY-0010,CYBER_ANALYST,keyword,Security Frameworks,security frameworks,1.0,keyword
 JD-CY-0010,CYBER_ANALYST,keyword,Threat Intelligence,cyber threat intelligence,1.0,keyword
 JD-CY-0010,CYBER_ANALYST,keyword,Networking,networking,1.0,keyword
+JD-CY-0010,CYBER_ANALYST,keyword,Firewall Management,firewalls,1.0,keyword
 JD-CY-0010,CYBER_ANALYST,keyword,Malware Analysis,malware analysis,1.0,keyword
 JD-CY-0010,CYBER_ANALYST,keyword,Communication,communication,1.0,keyword
 JD-CY-0010,CYBER_ANALYST,keyword,Teamwork,teamwork,1.0,keyword
 JD-CY-0010,CYBER_ANALYST,semantic,Cybersecurity,cybersecurity,0.717,semantic
 JD-CY-0010,CYBER_ANALYST,semantic,Security Operations (SOC),join our Security Operations Center (SOC,0.745,semantic
 JD-CY-0010,CYBER_ANALYST,semantic,SIEM,Assist in Security Event Monitoring,0.665,semantic
-JD-CY-0010,CYBER_ANALYST,semantic,Log Analysis,"track alerts, logs, and security incidents",0.682,semantic
+JD-CY-0010,CYBER_ANALYST,semantic,Log Analysis,"track alerts, logs, and security incidents",0.615,semantic
 JD-CY-0010,CYBER_ANALYST,semantic,Vulnerability Assessment,Basic Security Assessments,0.904,semantic
 JD-CY-0010,CYBER_ANALYST,semantic,Ethical Hacking,penetration testing,0.669,semantic
 JD-CY-0010,CYBER_ANALYST,semantic,Security Frameworks,security frameworks,0.712,semantic
 JD-CY-0010,CYBER_ANALYST,semantic,Networking,networking & security concepts,0.627,semantic
-JD-CY-0010,CYBER_ANALYST,semantic,Firewall Management,firewalls,0.65,semantic
+JD-CY-0010,CYBER_ANALYST,semantic,Firewall Management,firewalls,0.693,semantic
 JD-CY-0010,CYBER_ANALYST,semantic,Malware Analysis,malware analysis,0.8,semantic
 JD-CY-0010,CYBER_ANALYST,hybrid,Cybersecurity,cybersecurity,1.0,keyword
 JD-CY-0010,CYBER_ANALYST,hybrid,Security Operations (SOC),Security Operations Center,1.0,keyword
-JD-CY-0010,CYBER_ANALYST,hybrid,Monitoring & Observability,Monitoring,1.0,keyword
-JD-CY-0010,CYBER_ANALYST,hybrid,Log Analysis,"track alerts, logs, and security incidents",0.682,semantic
+JD-CY-0010,CYBER_ANALYST,hybrid,SIEM,Assist in Security Event Monitoring,0.665,semantic
+JD-CY-0010,CYBER_ANALYST,hybrid,Log Analysis,"track alerts, logs, and security incidents",0.615,semantic
 JD-CY-0010,CYBER_ANALYST,hybrid,Vulnerability Assessment,vulnerability scanning,1.0,keyword
 JD-CY-0010,CYBER_ANALYST,hybrid,Ethical Hacking,penetration testing,1.0,keyword
 JD-CY-0010,CYBER_ANALYST,hybrid,Security Frameworks,security frameworks,1.0,keyword
 JD-CY-0010,CYBER_ANALYST,hybrid,Threat Intelligence,cyber threat intelligence,1.0,keyword
 JD-CY-0010,CYBER_ANALYST,hybrid,Networking,networking,1.0,keyword
-JD-CY-0010,CYBER_ANALYST,hybrid,Firewall Management,firewalls,0.65,semantic
+JD-CY-0010,CYBER_ANALYST,hybrid,Firewall Management,firewalls,1.0,keyword
 JD-CY-0010,CYBER_ANALYST,hybrid,Malware Analysis,malware analysis,1.0,keyword
 JD-CY-0010,CYBER_ANALYST,hybrid,Communication,communication,1.0,keyword
 JD-CY-0010,CYBER_ANALYST,hybrid,Teamwork,teamwork,1.0,keyword
-JD-DA-0001,DATA_ANALYST,keyword,Monitoring & Observability,monitoring,1.0,keyword
 JD-DA-0001,DATA_ANALYST,keyword,AI Literacy,artificial intelligence,1.0,keyword
 JD-DA-0001,DATA_ANALYST,keyword,SQL,SQL,1.0,keyword
 JD-DA-0001,DATA_ANALYST,keyword,Python,Python,1.0,keyword
@@ -542,12 +524,10 @@ JD-DA-0001,DATA_ANALYST,keyword,R,R,0.8,keyword
 JD-DA-0001,DATA_ANALYST,keyword,Power BI,Power BI,1.0,keyword
 JD-DA-0001,DATA_ANALYST,keyword,Machine Learning,machine learning,1.0,keyword
 JD-DA-0001,DATA_ANALYST,semantic,Data Visualisation,build our own dashboards and tools,0.6,semantic
-JD-DA-0001,DATA_ANALYST,semantic,Monitoring & Observability,monitoring tools,0.618,semantic
 JD-DA-0001,DATA_ANALYST,semantic,Python,Python,0.775,semantic
 JD-DA-0001,DATA_ANALYST,semantic,Power BI,R. Power BI,0.698,semantic
 JD-DA-0001,DATA_ANALYST,semantic,Machine Learning,machine learning,0.635,semantic
 JD-DA-0001,DATA_ANALYST,hybrid,Data Visualisation,build our own dashboards and tools,0.6,semantic
-JD-DA-0001,DATA_ANALYST,hybrid,Monitoring & Observability,monitoring,1.0,keyword
 JD-DA-0001,DATA_ANALYST,hybrid,AI Literacy,artificial intelligence,1.0,keyword
 JD-DA-0001,DATA_ANALYST,hybrid,SQL,SQL,1.0,keyword
 JD-DA-0001,DATA_ANALYST,hybrid,Python,Python,1.0,keyword
@@ -560,28 +540,26 @@ JD-DA-0002,DATA_ANALYST,keyword,Customer Focus,Customer Service,1.0,keyword
 JD-DA-0002,DATA_ANALYST,keyword,Data Visualisation,Data Visualization,1.0,keyword
 JD-DA-0002,DATA_ANALYST,keyword,Power BI,PowerBI,1.0,keyword
 JD-DA-0002,DATA_ANALYST,keyword,Tableau,Tableau,1.0,keyword
-JD-DA-0002,DATA_ANALYST,keyword,Self-Motivation,initiatives,1.0,keyword
+JD-DA-0002,DATA_ANALYST,keyword,Process Mapping,process mapping,1.0,keyword
+JD-DA-0002,DATA_ANALYST,keyword,User Acceptance Testing,user acceptance testing,1.0,keyword
 JD-DA-0002,DATA_ANALYST,keyword,AI Literacy,Artificial Intelligence,1.0,keyword
 JD-DA-0002,DATA_ANALYST,keyword,Python,Python,1.0,keyword
 JD-DA-0002,DATA_ANALYST,keyword,SQL,SQL,1.0,keyword
 JD-DA-0002,DATA_ANALYST,keyword,Problem Solving,problem-solving,1.0,keyword
 JD-DA-0002,DATA_ANALYST,keyword,Communication,communication skills,1.0,keyword
-JD-DA-0002,DATA_ANALYST,semantic,Bash,basic scripting,0.706,semantic
 JD-DA-0002,DATA_ANALYST,semantic,Data Visualisation,Data Visualization,0.796,semantic
-JD-DA-0002,DATA_ANALYST,semantic,Google Analytics,Analytics,0.657,semantic
 JD-DA-0002,DATA_ANALYST,semantic,Power BI,PowerBI,0.701,semantic
 JD-DA-0002,DATA_ANALYST,semantic,Tableau,Tableau,0.756,semantic
-JD-DA-0002,DATA_ANALYST,semantic,Requirements Analysis,Requirements,0.631,semantic
+JD-DA-0002,DATA_ANALYST,semantic,Process Mapping,process mapping,0.671,semantic
+JD-DA-0002,DATA_ANALYST,semantic,User Acceptance Testing,user acceptance testing,0.782,semantic
 JD-DA-0002,DATA_ANALYST,semantic,Python,Python,0.775,semantic
 JD-DA-0002,DATA_ANALYST,semantic,Communication,Excellent communication skills,0.636,semantic
 JD-DA-0002,DATA_ANALYST,hybrid,Customer Focus,Customer Service,1.0,keyword
-JD-DA-0002,DATA_ANALYST,hybrid,Bash,basic scripting,0.706,semantic
 JD-DA-0002,DATA_ANALYST,hybrid,Data Visualisation,Data Visualization,1.0,keyword
-JD-DA-0002,DATA_ANALYST,hybrid,Google Analytics,Analytics,0.657,semantic
 JD-DA-0002,DATA_ANALYST,hybrid,Power BI,PowerBI,1.0,keyword
 JD-DA-0002,DATA_ANALYST,hybrid,Tableau,Tableau,1.0,keyword
-JD-DA-0002,DATA_ANALYST,hybrid,Self-Motivation,initiatives,1.0,keyword
-JD-DA-0002,DATA_ANALYST,hybrid,Requirements Analysis,Requirements,0.631,semantic
+JD-DA-0002,DATA_ANALYST,hybrid,Process Mapping,process mapping,1.0,keyword
+JD-DA-0002,DATA_ANALYST,hybrid,User Acceptance Testing,user acceptance testing,1.0,keyword
 JD-DA-0002,DATA_ANALYST,hybrid,AI Literacy,Artificial Intelligence,1.0,keyword
 JD-DA-0002,DATA_ANALYST,hybrid,Python,Python,1.0,keyword
 JD-DA-0002,DATA_ANALYST,hybrid,SQL,SQL,1.0,keyword
@@ -642,8 +620,10 @@ JD-DA-0004,DATA_ANALYST,keyword,R,R,0.8,keyword
 JD-DA-0004,DATA_ANALYST,keyword,Python,Python,1.0,keyword
 JD-DA-0004,DATA_ANALYST,semantic,Data Analysis,Conduct exploratory data analysis,0.737,semantic
 JD-DA-0004,DATA_ANALYST,semantic,Teamwork,Collaborate with cross-functional teams,0.672,semantic
+JD-DA-0004,DATA_ANALYST,semantic,Problem Solving,provide analytical solutions,0.671,semantic
 JD-DA-0004,DATA_ANALYST,semantic,Decision Making,data-driven strategies,0.635,semantic
-JD-DA-0004,DATA_ANALYST,semantic,Problem Solving,Strong analytical and problem-solving skills,0.671,semantic
+JD-DA-0004,DATA_ANALYST,semantic,Business Process Improvement,improve business processes,0.646,semantic
+JD-DA-0004,DATA_ANALYST,semantic,Process Mapping,business processes,0.647,semantic
 JD-DA-0004,DATA_ANALYST,semantic,Communication,Excellent communication and interpersonal skills,0.607,semantic
 JD-DA-0004,DATA_ANALYST,semantic,Interpersonal Skills,interpersonal skills,0.685,semantic
 JD-DA-0004,DATA_ANALYST,semantic,Data Visualisation,SQL and data visualisation tools,0.746,semantic
@@ -652,6 +632,8 @@ JD-DA-0004,DATA_ANALYST,semantic,Python,Python,0.775,semantic
 JD-DA-0004,DATA_ANALYST,hybrid,Data Analysis,exploratory data analysis,1.0,keyword
 JD-DA-0004,DATA_ANALYST,hybrid,Teamwork,Collaborate with cross-functional teams,0.672,semantic
 JD-DA-0004,DATA_ANALYST,hybrid,Decision Making,data-driven strategies,0.635,semantic
+JD-DA-0004,DATA_ANALYST,hybrid,Business Process Improvement,improve business processes,0.646,semantic
+JD-DA-0004,DATA_ANALYST,hybrid,Process Mapping,business processes,0.647,semantic
 JD-DA-0004,DATA_ANALYST,hybrid,Statistical Analysis,Statistics,1.0,keyword
 JD-DA-0004,DATA_ANALYST,hybrid,Critical Thinking,analytical,0.77,semantic
 JD-DA-0004,DATA_ANALYST,hybrid,Problem Solving,problem-solving,1.0,keyword
@@ -667,13 +649,13 @@ JD-DA-0005,DATA_ANALYST,keyword,Statistical Analysis,Statistics,1.0,keyword
 JD-DA-0005,DATA_ANALYST,keyword,Excel,Excel,0.8,keyword
 JD-DA-0005,DATA_ANALYST,keyword,Python,Python,1.0,keyword
 JD-DA-0005,DATA_ANALYST,keyword,SQL,SQL,1.0,keyword
+JD-DA-0005,DATA_ANALYST,keyword,Time Management,meet deadlines,1.0,keyword
 JD-DA-0005,DATA_ANALYST,keyword,Communication,communication,1.0,keyword
 JD-DA-0005,DATA_ANALYST,keyword,Interpersonal Skills,interpersonal skills,1.0,keyword
 JD-DA-0005,DATA_ANALYST,keyword,Attention to Detail,attention to details,1.0,keyword
 JD-DA-0005,DATA_ANALYST,semantic,Stakeholder Communication,Communicate with stakeholders,0.762,semantic
 JD-DA-0005,DATA_ANALYST,semantic,Data Cleaning,Clean input data,0.603,semantic
 JD-DA-0005,DATA_ANALYST,semantic,Project Management,project and software team,0.684,semantic
-JD-DA-0005,DATA_ANALYST,semantic,R,programming languages,0.602,semantic
 JD-DA-0005,DATA_ANALYST,semantic,Python,Python,0.775,semantic
 JD-DA-0005,DATA_ANALYST,semantic,Time Management,meet deadlines,0.681,semantic
 JD-DA-0005,DATA_ANALYST,semantic,Interpersonal Skills,interpersonal skills,0.685,semantic
@@ -682,20 +664,20 @@ JD-DA-0005,DATA_ANALYST,hybrid,Data Cleaning,Clean input data,0.603,semantic
 JD-DA-0005,DATA_ANALYST,hybrid,Project Management,project and software team,0.684,semantic
 JD-DA-0005,DATA_ANALYST,hybrid,Statistical Analysis,Statistics,1.0,keyword
 JD-DA-0005,DATA_ANALYST,hybrid,Excel,Excel,0.8,keyword
-JD-DA-0005,DATA_ANALYST,hybrid,R,programming languages,0.602,semantic
 JD-DA-0005,DATA_ANALYST,hybrid,Python,Python,1.0,keyword
 JD-DA-0005,DATA_ANALYST,hybrid,SQL,SQL,1.0,keyword
-JD-DA-0005,DATA_ANALYST,hybrid,Time Management,meet deadlines,0.681,semantic
+JD-DA-0005,DATA_ANALYST,hybrid,Time Management,meet deadlines,1.0,keyword
 JD-DA-0005,DATA_ANALYST,hybrid,Communication,communication,1.0,keyword
 JD-DA-0005,DATA_ANALYST,hybrid,Interpersonal Skills,interpersonal skills,1.0,keyword
 JD-DA-0005,DATA_ANALYST,hybrid,Attention to Detail,attention to details,1.0,keyword
 JD-DA-0006,DATA_ANALYST,keyword,Decision Making,decision-making,1.0,keyword
 JD-DA-0006,DATA_ANALYST,keyword,Data Structures & Algorithms,data structures,1.0,keyword
 JD-DA-0006,DATA_ANALYST,keyword,Documentation,documentation,1.0,keyword
-JD-DA-0006,DATA_ANALYST,keyword,Self-Motivation,initiatives,1.0,keyword
+JD-DA-0006,DATA_ANALYST,keyword,Business Process Improvement,Process Improvement,1.0,keyword
 JD-DA-0006,DATA_ANALYST,keyword,Statistical Analysis,Statistics,1.0,keyword
 JD-DA-0006,DATA_ANALYST,keyword,Excel,Microsoft Excel,1.0,keyword
 JD-DA-0006,DATA_ANALYST,keyword,SQL,SQL,1.0,keyword
+JD-DA-0006,DATA_ANALYST,keyword,CRM Software,CRM,1.0,keyword
 JD-DA-0006,DATA_ANALYST,keyword,Power BI,Power BI,1.0,keyword
 JD-DA-0006,DATA_ANALYST,keyword,Tableau,Tableau,1.0,keyword
 JD-DA-0006,DATA_ANALYST,keyword,Attention to Detail,attention to detail,1.0,keyword
@@ -705,7 +687,9 @@ JD-DA-0006,DATA_ANALYST,keyword,Communication,communication,1.0,keyword
 JD-DA-0006,DATA_ANALYST,semantic,Decision Making,decision-making,0.657,semantic
 JD-DA-0006,DATA_ANALYST,semantic,Data Structures & Algorithms,data structures,0.737,semantic
 JD-DA-0006,DATA_ANALYST,semantic,Documentation,documentation,0.711,semantic
+JD-DA-0006,DATA_ANALYST,semantic,Business Process Improvement,Process Improvement,0.709,semantic
 JD-DA-0006,DATA_ANALYST,semantic,Excel,Advanced Microsoft Excel skills,0.669,semantic
+JD-DA-0006,DATA_ANALYST,semantic,CRM Software,CRM,0.689,semantic
 JD-DA-0006,DATA_ANALYST,semantic,Power BI,Power BI,0.769,semantic
 JD-DA-0006,DATA_ANALYST,semantic,Tableau,Tableau,0.756,semantic
 JD-DA-0006,DATA_ANALYST,semantic,Attention to Detail,Strong attention to detail and accuracy,0.77,semantic
@@ -714,10 +698,11 @@ JD-DA-0006,DATA_ANALYST,semantic,Teamwork,Ability to work independently and coll
 JD-DA-0006,DATA_ANALYST,hybrid,Decision Making,decision-making,1.0,keyword
 JD-DA-0006,DATA_ANALYST,hybrid,Data Structures & Algorithms,data structures,1.0,keyword
 JD-DA-0006,DATA_ANALYST,hybrid,Documentation,documentation,1.0,keyword
-JD-DA-0006,DATA_ANALYST,hybrid,Self-Motivation,initiatives,1.0,keyword
+JD-DA-0006,DATA_ANALYST,hybrid,Business Process Improvement,Process Improvement,1.0,keyword
 JD-DA-0006,DATA_ANALYST,hybrid,Statistical Analysis,Statistics,1.0,keyword
 JD-DA-0006,DATA_ANALYST,hybrid,Excel,Microsoft Excel,1.0,keyword
 JD-DA-0006,DATA_ANALYST,hybrid,SQL,SQL,1.0,keyword
+JD-DA-0006,DATA_ANALYST,hybrid,CRM Software,CRM,1.0,keyword
 JD-DA-0006,DATA_ANALYST,hybrid,Power BI,Power BI,1.0,keyword
 JD-DA-0006,DATA_ANALYST,hybrid,Tableau,Tableau,1.0,keyword
 JD-DA-0006,DATA_ANALYST,hybrid,Attention to Detail,attention to detail,1.0,keyword
@@ -729,14 +714,17 @@ JD-DA-0006,DATA_ANALYST,hybrid,Communication,communication,1.0,keyword
 JD-DA-0007,DATA_ANALYST,keyword,Decision Making,decision making,1.0,keyword
 JD-DA-0007,DATA_ANALYST,keyword,Excel,Excel,0.8,keyword
 JD-DA-0007,DATA_ANALYST,keyword,Power BI,Power BI,1.0,keyword
+JD-DA-0007,DATA_ANALYST,keyword,Market Research,market research,1.0,keyword
 JD-DA-0007,DATA_ANALYST,keyword,Statistical Analysis,Statistics,1.0,keyword
 JD-DA-0007,DATA_ANALYST,semantic,Data Cleaning,collecting and cleaning data,0.762,semantic
 JD-DA-0007,DATA_ANALYST,semantic,Power BI,Power BI,0.769,semantic
+JD-DA-0007,DATA_ANALYST,semantic,Market Research,Support market research,0.684,semantic
 JD-DA-0007,DATA_ANALYST,semantic,Decision Making,Decision Science,0.613,semantic
 JD-DA-0007,DATA_ANALYST,hybrid,Decision Making,decision making,1.0,keyword
 JD-DA-0007,DATA_ANALYST,hybrid,Data Cleaning,collecting and cleaning data,0.762,semantic
 JD-DA-0007,DATA_ANALYST,hybrid,Excel,Excel,0.8,keyword
 JD-DA-0007,DATA_ANALYST,hybrid,Power BI,Power BI,1.0,keyword
+JD-DA-0007,DATA_ANALYST,hybrid,Market Research,market research,1.0,keyword
 JD-DA-0007,DATA_ANALYST,hybrid,Statistical Analysis,Statistics,1.0,keyword
 JD-DA-0008,DATA_ANALYST,keyword,Data Analysis,Data Analysis,1.0,keyword
 JD-DA-0008,DATA_ANALYST,keyword,Data Mining,Data Mining,1.0,keyword
@@ -810,9 +798,7 @@ JD-DA-0010,DATA_ANALYST,semantic,Data Modelling,basic data modelling,0.662,seman
 JD-DA-0010,DATA_ANALYST,semantic,Data Visualisation,data visualisation,0.799,semantic
 JD-DA-0010,DATA_ANALYST,semantic,Data Cleaning,Data Preparation,0.726,semantic
 JD-DA-0010,DATA_ANALYST,semantic,PowerShell,PowerShell,0.793,semantic
-JD-DA-0010,DATA_ANALYST,semantic,Bash,scripts,0.706,semantic
 JD-DA-0010,DATA_ANALYST,semantic,Python,Programming & Integration - Use Python,0.699,semantic
-JD-DA-0010,DATA_ANALYST,semantic,R,programming languages,0.602,semantic
 JD-DA-0010,DATA_ANALYST,semantic,Data Analysis,data analysis,0.632,semantic
 JD-DA-0010,DATA_ANALYST,semantic,Excel,Microsoft Excel,0.783,semantic
 JD-DA-0010,DATA_ANALYST,hybrid,Power BI,Power BI,1.0,keyword
@@ -821,9 +807,7 @@ JD-DA-0010,DATA_ANALYST,hybrid,Data Visualisation,data visualisation,1.0,keyword
 JD-DA-0010,DATA_ANALYST,hybrid,Data Cleaning,Data Preparation,1.0,keyword
 JD-DA-0010,DATA_ANALYST,hybrid,Excel,Excel,1.0,keyword
 JD-DA-0010,DATA_ANALYST,hybrid,PowerShell,PowerShell,1.0,keyword
-JD-DA-0010,DATA_ANALYST,hybrid,Bash,scripts,0.706,semantic
 JD-DA-0010,DATA_ANALYST,hybrid,Python,Python,1.0,keyword
-JD-DA-0010,DATA_ANALYST,hybrid,R,programming languages,0.602,semantic
 JD-DA-0010,DATA_ANALYST,hybrid,Data Analysis,data analysis,1.0,keyword
 JD-DA-0010,DATA_ANALYST,hybrid,Attention to Detail,detail-oriented,1.0,keyword
 JD-DA-0011,DATA_ANALYST,keyword,Data Analysis,Data Analytics,1.0,keyword
@@ -834,7 +818,7 @@ JD-DA-0011,DATA_ANALYST,keyword,Data Structures & Algorithms,data structures,1.0
 JD-DA-0011,DATA_ANALYST,keyword,Decision Making,decision-making,1.0,keyword
 JD-DA-0011,DATA_ANALYST,keyword,Requirements Analysis,requirement analysis,1.0,keyword
 JD-DA-0011,DATA_ANALYST,keyword,Time Management,prioritization,1.0,keyword
-JD-DA-0011,DATA_ANALYST,keyword,Self-Motivation,initiatives,1.0,keyword
+JD-DA-0011,DATA_ANALYST,keyword,Business Process Improvement,Business Process Improvement,1.0,keyword
 JD-DA-0011,DATA_ANALYST,keyword,Statistical Analysis,Statistics,1.0,keyword
 JD-DA-0011,DATA_ANALYST,keyword,Python,Python,1.0,keyword
 JD-DA-0011,DATA_ANALYST,semantic,Data Visualisation,operational dashboards,0.637,semantic
@@ -842,7 +826,7 @@ JD-DA-0011,DATA_ANALYST,semantic,Power BI,Power BI,0.769,semantic
 JD-DA-0011,DATA_ANALYST,semantic,Data Analysis,data analysis,0.632,semantic
 JD-DA-0011,DATA_ANALYST,semantic,Data Structures & Algorithms,data structures,0.737,semantic
 JD-DA-0011,DATA_ANALYST,semantic,Requirements Analysis,Support user requirement analysis,0.618,semantic
-JD-DA-0011,DATA_ANALYST,semantic,A/B Testing,testing,0.616,semantic
+JD-DA-0011,DATA_ANALYST,semantic,Business Process Improvement,Business Process Improvement,0.747,semantic
 JD-DA-0011,DATA_ANALYST,semantic,Decision Making,decision-making,0.657,semantic
 JD-DA-0011,DATA_ANALYST,semantic,Google Analytics,Business Analytics / Data Analytics,0.613,semantic
 JD-DA-0011,DATA_ANALYST,semantic,Statistical Analysis,Statistics / Mathematics,0.658,semantic
@@ -856,9 +840,8 @@ JD-DA-0011,DATA_ANALYST,hybrid,Power BI,Power BI,1.0,keyword
 JD-DA-0011,DATA_ANALYST,hybrid,Data Structures & Algorithms,data structures,1.0,keyword
 JD-DA-0011,DATA_ANALYST,hybrid,Decision Making,decision-making,1.0,keyword
 JD-DA-0011,DATA_ANALYST,hybrid,Requirements Analysis,requirement analysis,1.0,keyword
-JD-DA-0011,DATA_ANALYST,hybrid,A/B Testing,testing,0.616,semantic
 JD-DA-0011,DATA_ANALYST,hybrid,Time Management,prioritization,1.0,keyword
-JD-DA-0011,DATA_ANALYST,hybrid,Self-Motivation,initiatives,1.0,keyword
+JD-DA-0011,DATA_ANALYST,hybrid,Business Process Improvement,Business Process Improvement,1.0,keyword
 JD-DA-0011,DATA_ANALYST,hybrid,Statistical Analysis,Statistics,1.0,keyword
 JD-DA-0011,DATA_ANALYST,hybrid,Python,Python,1.0,keyword
 JD-DS-0001,DATA_SCIENTIST,keyword,Statistical Analysis,Statistics,1.0,keyword
@@ -890,8 +873,6 @@ JD-DS-0001,DATA_SCIENTIST,hybrid,Data Analysis,exploratory data analysis,1.0,key
 JD-DS-0001,DATA_SCIENTIST,hybrid,Data Visualisation,visualisation,0.644,semantic
 JD-DS-0001,DATA_SCIENTIST,hybrid,Leadership,leadership,1.0,keyword
 JD-DS-0002,DATA_SCIENTIST,keyword,Model Evaluation,model evaluation,1.0,keyword
-JD-DS-0002,DATA_SCIENTIST,keyword,Self-Motivation,initiatives,1.0,keyword
-JD-DS-0002,DATA_SCIENTIST,keyword,Monitoring & Observability,monitoring,1.0,keyword
 JD-DS-0002,DATA_SCIENTIST,keyword,Python,Python,1.0,keyword
 JD-DS-0002,DATA_SCIENTIST,keyword,Cloud Computing,Cloud infrastructure,1.0,keyword
 JD-DS-0002,DATA_SCIENTIST,keyword,SQL,SQL,1.0,keyword
@@ -900,8 +881,6 @@ JD-DS-0002,DATA_SCIENTIST,semantic,Cloud Computing,Cloud infrastructure,0.68,sem
 JD-DS-0002,DATA_SCIENTIST,semantic,Data Cleaning,Data manipulation tasks,0.607,semantic
 JD-DS-0002,DATA_SCIENTIST,semantic,Business Analysis,business needs,0.616,semantic
 JD-DS-0002,DATA_SCIENTIST,hybrid,Model Evaluation,model evaluation,1.0,keyword
-JD-DS-0002,DATA_SCIENTIST,hybrid,Self-Motivation,initiatives,1.0,keyword
-JD-DS-0002,DATA_SCIENTIST,hybrid,Monitoring & Observability,monitoring,1.0,keyword
 JD-DS-0002,DATA_SCIENTIST,hybrid,Python,Python,1.0,keyword
 JD-DS-0002,DATA_SCIENTIST,hybrid,Cloud Computing,Cloud infrastructure,1.0,keyword
 JD-DS-0002,DATA_SCIENTIST,hybrid,SQL,SQL,1.0,keyword
@@ -933,7 +912,6 @@ JD-DS-0003,DATA_SCIENTIST,keyword,GCP,Google Cloud,1.0,keyword
 JD-DS-0003,DATA_SCIENTIST,semantic,Computer Vision,Computer Vision,0.762,semantic
 JD-DS-0003,DATA_SCIENTIST,semantic,Business Analysis,understand business requirements,0.807,semantic
 JD-DS-0003,DATA_SCIENTIST,semantic,ETL,Build data pipelines,0.608,semantic
-JD-DS-0003,DATA_SCIENTIST,semantic,A/B Testing,testing,0.616,semantic
 JD-DS-0003,DATA_SCIENTIST,semantic,Documentation,Document technical findings,0.662,semantic
 JD-DS-0003,DATA_SCIENTIST,semantic,Stakeholder Communication,stakeholders,0.668,semantic
 JD-DS-0003,DATA_SCIENTIST,semantic,Generative AI,Generative AI,0.668,semantic
@@ -957,7 +935,6 @@ JD-DS-0003,DATA_SCIENTIST,hybrid,Business Analysis,business requirements,1.0,key
 JD-DS-0003,DATA_SCIENTIST,hybrid,ETL,data pipelines,1.0,keyword
 JD-DS-0003,DATA_SCIENTIST,hybrid,Model Evaluation,model evaluation,1.0,keyword
 JD-DS-0003,DATA_SCIENTIST,hybrid,Attention to Detail,accuracy,0.8,keyword
-JD-DS-0003,DATA_SCIENTIST,hybrid,A/B Testing,testing,0.616,semantic
 JD-DS-0003,DATA_SCIENTIST,hybrid,Documentation,Document technical findings,0.662,semantic
 JD-DS-0003,DATA_SCIENTIST,hybrid,Stakeholder Communication,stakeholders,0.668,semantic
 JD-DS-0003,DATA_SCIENTIST,hybrid,AI Literacy,Artificial Intelligence,1.0,keyword
@@ -979,6 +956,7 @@ JD-DS-0003,DATA_SCIENTIST,hybrid,Azure,Azure,1.0,keyword
 JD-DS-0003,DATA_SCIENTIST,hybrid,GCP,Google Cloud,1.0,keyword
 JD-DS-0004,DATA_SCIENTIST,keyword,Model Evaluation,Model Evaluation,1.0,keyword
 JD-DS-0004,DATA_SCIENTIST,keyword,Data Analysis,Data Analysis,1.0,keyword
+JD-DS-0004,DATA_SCIENTIST,keyword,Business Process Improvement,Process Improvement,1.0,keyword
 JD-DS-0004,DATA_SCIENTIST,keyword,Excel,Excel,0.8,keyword
 JD-DS-0004,DATA_SCIENTIST,keyword,SQL,SQL,1.0,keyword
 JD-DS-0004,DATA_SCIENTIST,keyword,Python,Python,1.0,keyword
@@ -989,17 +967,17 @@ JD-DS-0004,DATA_SCIENTIST,keyword,Communication,communication skills,1.0,keyword
 JD-DS-0004,DATA_SCIENTIST,keyword,Machine Learning,machine learning,1.0,keyword
 JD-DS-0004,DATA_SCIENTIST,semantic,Business Analysis,evaluate business scenarios,0.637,semantic
 JD-DS-0004,DATA_SCIENTIST,semantic,Data Visualisation,Dashboarding,0.684,semantic
-JD-DS-0004,DATA_SCIENTIST,semantic,Google Analytics,Analytics,0.657,semantic
 JD-DS-0004,DATA_SCIENTIST,semantic,Data Analysis,Data Analysis,0.632,semantic
+JD-DS-0004,DATA_SCIENTIST,semantic,Business Process Improvement,Process Improvement,0.709,semantic
 JD-DS-0004,DATA_SCIENTIST,semantic,Python,Python,0.775,semantic
 JD-DS-0004,DATA_SCIENTIST,semantic,Communication,Good communication skills,0.671,semantic
 JD-DS-0004,DATA_SCIENTIST,semantic,Stakeholder Communication,stakeholders,0.668,semantic
 JD-DS-0004,DATA_SCIENTIST,semantic,Machine Learning,machine learning,0.635,semantic
 JD-DS-0004,DATA_SCIENTIST,hybrid,Business Analysis,evaluate business scenarios,0.637,semantic
 JD-DS-0004,DATA_SCIENTIST,hybrid,Data Visualisation,Dashboarding,0.684,semantic
-JD-DS-0004,DATA_SCIENTIST,hybrid,Google Analytics,Analytics,0.657,semantic
 JD-DS-0004,DATA_SCIENTIST,hybrid,Model Evaluation,Model Evaluation,1.0,keyword
 JD-DS-0004,DATA_SCIENTIST,hybrid,Data Analysis,Data Analysis,1.0,keyword
+JD-DS-0004,DATA_SCIENTIST,hybrid,Business Process Improvement,Process Improvement,1.0,keyword
 JD-DS-0004,DATA_SCIENTIST,hybrid,Excel,Excel,0.8,keyword
 JD-DS-0004,DATA_SCIENTIST,hybrid,SQL,SQL,1.0,keyword
 JD-DS-0004,DATA_SCIENTIST,hybrid,Python,Python,1.0,keyword
@@ -1010,7 +988,6 @@ JD-DS-0004,DATA_SCIENTIST,hybrid,Problem Solving,problem-solving,1.0,keyword
 JD-DS-0004,DATA_SCIENTIST,hybrid,Communication,communication skills,1.0,keyword
 JD-DS-0004,DATA_SCIENTIST,hybrid,Stakeholder Communication,stakeholders,0.668,semantic
 JD-DS-0004,DATA_SCIENTIST,hybrid,Machine Learning,machine learning,1.0,keyword
-JD-DS-0005,DATA_SCIENTIST,keyword,Self-Motivation,initiatives,1.0,keyword
 JD-DS-0005,DATA_SCIENTIST,keyword,Machine Learning,machine learning,1.0,keyword
 JD-DS-0005,DATA_SCIENTIST,keyword,R,R,0.8,keyword
 JD-DS-0005,DATA_SCIENTIST,keyword,Python,Python,1.0,keyword
@@ -1018,12 +995,13 @@ JD-DS-0005,DATA_SCIENTIST,keyword,Data Mining,data mining,1.0,keyword
 JD-DS-0005,DATA_SCIENTIST,keyword,Statistical Analysis,statistical modelling,1.0,keyword
 JD-DS-0005,DATA_SCIENTIST,keyword,Communication,verbal communication,1.0,keyword
 JD-DS-0005,DATA_SCIENTIST,keyword,Attention to Detail,attention to detail,1.0,keyword
+JD-DS-0005,DATA_SCIENTIST,keyword,Recruitment,Recruitment,1.0,keyword
 JD-DS-0005,DATA_SCIENTIST,semantic,Data Visualisation,Develop dashboards,0.685,semantic
 JD-DS-0005,DATA_SCIENTIST,semantic,Stakeholder Communication,stakeholders,0.668,semantic
 JD-DS-0005,DATA_SCIENTIST,semantic,Python,Python,0.775,semantic
 JD-DS-0005,DATA_SCIENTIST,semantic,Machine Learning,machine learning,0.635,semantic
 JD-DS-0005,DATA_SCIENTIST,semantic,Communication,verbal communication skills,0.71,semantic
-JD-DS-0005,DATA_SCIENTIST,hybrid,Self-Motivation,initiatives,1.0,keyword
+JD-DS-0005,DATA_SCIENTIST,semantic,Recruitment,Recruitment process,0.704,semantic
 JD-DS-0005,DATA_SCIENTIST,hybrid,Data Visualisation,Develop dashboards,0.685,semantic
 JD-DS-0005,DATA_SCIENTIST,hybrid,Machine Learning,machine learning,1.0,keyword
 JD-DS-0005,DATA_SCIENTIST,hybrid,Stakeholder Communication,stakeholders,0.668,semantic
@@ -1033,6 +1011,7 @@ JD-DS-0005,DATA_SCIENTIST,hybrid,Data Mining,data mining,1.0,keyword
 JD-DS-0005,DATA_SCIENTIST,hybrid,Statistical Analysis,statistical modelling,1.0,keyword
 JD-DS-0005,DATA_SCIENTIST,hybrid,Communication,verbal communication,1.0,keyword
 JD-DS-0005,DATA_SCIENTIST,hybrid,Attention to Detail,attention to detail,1.0,keyword
+JD-DS-0005,DATA_SCIENTIST,hybrid,Recruitment,Recruitment,1.0,keyword
 JD-DS-0006,DATA_SCIENTIST,keyword,Tableau,Tableau,1.0,keyword
 JD-DS-0006,DATA_SCIENTIST,keyword,Business Analysis,business requirements,1.0,keyword
 JD-DS-0006,DATA_SCIENTIST,keyword,SQL,SQL,1.0,keyword
@@ -1064,7 +1043,6 @@ JD-DS-0006,DATA_SCIENTIST,hybrid,C#,C#,1.0,keyword
 JD-DS-0006,DATA_SCIENTIST,hybrid,Problem Solving,problem solving,1.0,keyword
 JD-DS-0006,DATA_SCIENTIST,hybrid,Teamwork,Able to work collaboratively with others,0.734,semantic
 JD-DS-0007,DATA_SCIENTIST,keyword,Leadership,leadership,1.0,keyword
-JD-DS-0007,DATA_SCIENTIST,keyword,Self-Motivation,initiatives,1.0,keyword
 JD-DS-0007,DATA_SCIENTIST,keyword,Project Management,Project Management,1.0,keyword
 JD-DS-0007,DATA_SCIENTIST,keyword,Cloud Computing,Cloud Computing,1.0,keyword
 JD-DS-0007,DATA_SCIENTIST,keyword,Data Analysis,Data Analysis,1.0,keyword
@@ -1078,17 +1056,17 @@ JD-DS-0007,DATA_SCIENTIST,keyword,Tableau,Tableau,1.0,keyword
 JD-DS-0007,DATA_SCIENTIST,keyword,Power BI,Power BI,1.0,keyword
 JD-DS-0007,DATA_SCIENTIST,keyword,Communication,communication skills,1.0,keyword
 JD-DS-0007,DATA_SCIENTIST,keyword,Adaptability,Adaptable,1.0,keyword
+JD-DS-0007,DATA_SCIENTIST,keyword,Self-Motivation,initiative,0.8,keyword
 JD-DS-0007,DATA_SCIENTIST,semantic,Cloud Computing,Cloud Technologies,0.677,semantic
 JD-DS-0007,DATA_SCIENTIST,semantic,Project Management,Project Management,0.804,semantic
 JD-DS-0007,DATA_SCIENTIST,semantic,Data Analysis,Data Analysis,0.632,semantic
 JD-DS-0007,DATA_SCIENTIST,semantic,Teamwork,Collaboration,0.727,semantic
 JD-DS-0007,DATA_SCIENTIST,semantic,Problem Solving,Strong analytical and technical problem-solving abilities,0.747,semantic
-JD-DS-0007,DATA_SCIENTIST,semantic,R,programming languages,0.602,semantic
 JD-DS-0007,DATA_SCIENTIST,semantic,Tableau,Tableau,0.756,semantic
 JD-DS-0007,DATA_SCIENTIST,semantic,Power BI,Power BI,0.769,semantic
 JD-DS-0007,DATA_SCIENTIST,semantic,Communication,Excellent communication skills,0.636,semantic
+JD-DS-0007,DATA_SCIENTIST,semantic,Creativity,think creatively,0.701,semantic
 JD-DS-0007,DATA_SCIENTIST,hybrid,Leadership,leadership,1.0,keyword
-JD-DS-0007,DATA_SCIENTIST,hybrid,Self-Motivation,initiatives,1.0,keyword
 JD-DS-0007,DATA_SCIENTIST,hybrid,Project Management,Project Management,1.0,keyword
 JD-DS-0007,DATA_SCIENTIST,hybrid,Cloud Computing,Cloud Computing,1.0,keyword
 JD-DS-0007,DATA_SCIENTIST,hybrid,Data Analysis,Data Analysis,1.0,keyword
@@ -1096,29 +1074,31 @@ JD-DS-0007,DATA_SCIENTIST,hybrid,Teamwork,Collaboration,1.0,keyword
 JD-DS-0007,DATA_SCIENTIST,hybrid,Problem Solving,Problem-Solving,1.0,keyword
 JD-DS-0007,DATA_SCIENTIST,hybrid,Critical Thinking,analytical,0.721,semantic
 JD-DS-0007,DATA_SCIENTIST,hybrid,Machine Learning,ML,1.0,keyword
-JD-DS-0007,DATA_SCIENTIST,hybrid,R,programming languages,0.602,semantic
 JD-DS-0007,DATA_SCIENTIST,hybrid,Python,Python,1.0,keyword
 JD-DS-0007,DATA_SCIENTIST,hybrid,Java,Java,1.0,keyword
 JD-DS-0007,DATA_SCIENTIST,hybrid,SQL,SQL,1.0,keyword
 JD-DS-0007,DATA_SCIENTIST,hybrid,Tableau,Tableau,1.0,keyword
 JD-DS-0007,DATA_SCIENTIST,hybrid,Power BI,Power BI,1.0,keyword
 JD-DS-0007,DATA_SCIENTIST,hybrid,Communication,communication skills,1.0,keyword
+JD-DS-0007,DATA_SCIENTIST,hybrid,Creativity,think creatively,0.701,semantic
 JD-DS-0007,DATA_SCIENTIST,hybrid,Adaptability,Adaptable,1.0,keyword
+JD-DS-0007,DATA_SCIENTIST,hybrid,Self-Motivation,initiative,0.8,keyword
 JD-DS-0008,DATA_SCIENTIST,keyword,Documentation,documentation,1.0,keyword
 JD-DS-0008,DATA_SCIENTIST,keyword,Python,Python,1.0,keyword
 JD-DS-0008,DATA_SCIENTIST,keyword,R,R,0.8,keyword
 JD-DS-0008,DATA_SCIENTIST,keyword,Data Analysis,data analysis,1.0,keyword
 JD-DS-0008,DATA_SCIENTIST,keyword,Excel,Excel,1.0,keyword
 JD-DS-0008,DATA_SCIENTIST,keyword,SQL,SQL,1.0,keyword
+JD-DS-0008,DATA_SCIENTIST,keyword,Business Process Improvement,process improvement,1.0,keyword
 JD-DS-0008,DATA_SCIENTIST,keyword,Power BI,Power BI,1.0,keyword
 JD-DS-0008,DATA_SCIENTIST,keyword,Tableau,Tableau,1.0,keyword
 JD-DS-0008,DATA_SCIENTIST,keyword,Communication,communication,1.0,keyword
 JD-DS-0008,DATA_SCIENTIST,keyword,Teamwork,teamwork,1.0,keyword
-JD-DS-0008,DATA_SCIENTIST,keyword,Self-Motivation,initiative,1.0,keyword
+JD-DS-0008,DATA_SCIENTIST,keyword,Self-Motivation,initiative,0.8,keyword
 JD-DS-0008,DATA_SCIENTIST,semantic,Data Visualisation,create simple reports or dashboards,0.709,semantic
 JD-DS-0008,DATA_SCIENTIST,semantic,Documentation,Prepare basic documentation on the work,0.678,semantic
-JD-DS-0008,DATA_SCIENTIST,semantic,R,programming language,0.633,semantic
 JD-DS-0008,DATA_SCIENTIST,semantic,Python,Python,0.775,semantic
+JD-DS-0008,DATA_SCIENTIST,semantic,Business Process Improvement,process improvement,0.709,semantic
 JD-DS-0008,DATA_SCIENTIST,semantic,Excel,Microsoft Excel,0.783,semantic
 JD-DS-0008,DATA_SCIENTIST,semantic,Power BI,Power BI,0.769,semantic
 JD-DS-0008,DATA_SCIENTIST,semantic,Tableau,Tableau,0.756,semantic
@@ -1130,16 +1110,17 @@ JD-DS-0008,DATA_SCIENTIST,hybrid,R,R,0.8,keyword
 JD-DS-0008,DATA_SCIENTIST,hybrid,Data Analysis,data analysis,1.0,keyword
 JD-DS-0008,DATA_SCIENTIST,hybrid,Excel,Excel,1.0,keyword
 JD-DS-0008,DATA_SCIENTIST,hybrid,SQL,SQL,1.0,keyword
+JD-DS-0008,DATA_SCIENTIST,hybrid,Business Process Improvement,process improvement,1.0,keyword
 JD-DS-0008,DATA_SCIENTIST,hybrid,Power BI,Power BI,1.0,keyword
 JD-DS-0008,DATA_SCIENTIST,hybrid,Tableau,Tableau,1.0,keyword
 JD-DS-0008,DATA_SCIENTIST,hybrid,Communication,communication,1.0,keyword
 JD-DS-0008,DATA_SCIENTIST,hybrid,Teamwork,teamwork,1.0,keyword
-JD-DS-0008,DATA_SCIENTIST,hybrid,Self-Motivation,initiative,1.0,keyword
+JD-DS-0008,DATA_SCIENTIST,hybrid,Self-Motivation,initiative,0.8,keyword
 JD-DS-0009,DATA_SCIENTIST,keyword,ETL,data pipelines,1.0,keyword
 JD-DS-0009,DATA_SCIENTIST,keyword,Python,Python,1.0,keyword
 JD-DS-0009,DATA_SCIENTIST,keyword,SQL,SQL,1.0,keyword
 JD-DS-0009,DATA_SCIENTIST,keyword,Problem Solving,troubleshooting,1.0,keyword
-JD-DS-0009,DATA_SCIENTIST,keyword,Monitoring & Observability,monitoring,1.0,keyword
+JD-DS-0009,DATA_SCIENTIST,keyword,Monitoring & Observability,monitoring,0.8,keyword
 JD-DS-0009,DATA_SCIENTIST,keyword,Documentation,technical documentation,1.0,keyword
 JD-DS-0009,DATA_SCIENTIST,keyword,Communication,communication,1.0,keyword
 JD-DS-0009,DATA_SCIENTIST,keyword,Teamwork,teamwork,1.0,keyword
@@ -1148,9 +1129,7 @@ JD-DS-0009,DATA_SCIENTIST,keyword,Data Analysis,data analytics,1.0,keyword
 JD-DS-0009,DATA_SCIENTIST,keyword,Power BI,Power BI,1.0,keyword
 JD-DS-0009,DATA_SCIENTIST,keyword,Tableau,Tableau,1.0,keyword
 JD-DS-0009,DATA_SCIENTIST,keyword,Git,Git,1.0,keyword
-JD-DS-0009,DATA_SCIENTIST,semantic,Google Analytics,analytics,0.657,semantic
 JD-DS-0009,DATA_SCIENTIST,semantic,ETL,data pipelines,0.672,semantic
-JD-DS-0009,DATA_SCIENTIST,semantic,A/B Testing,testing,0.616,semantic
 JD-DS-0009,DATA_SCIENTIST,semantic,Documentation,Prepare technical documentation,0.797,semantic
 JD-DS-0009,DATA_SCIENTIST,semantic,Python,Python,0.775,semantic
 JD-DS-0009,DATA_SCIENTIST,semantic,Problem Solving,Strong analytical and problem-solving skills,0.671,semantic
@@ -1158,13 +1137,11 @@ JD-DS-0009,DATA_SCIENTIST,semantic,Teamwork,teamwork,0.768,semantic
 JD-DS-0009,DATA_SCIENTIST,semantic,Cloud Computing,cloud technologies,0.63,semantic
 JD-DS-0009,DATA_SCIENTIST,semantic,Power BI,Power BI,0.769,semantic
 JD-DS-0009,DATA_SCIENTIST,semantic,Tableau,Tableau,0.756,semantic
-JD-DS-0009,DATA_SCIENTIST,hybrid,Google Analytics,analytics,0.657,semantic
 JD-DS-0009,DATA_SCIENTIST,hybrid,ETL,data pipelines,1.0,keyword
 JD-DS-0009,DATA_SCIENTIST,hybrid,Python,Python,1.0,keyword
 JD-DS-0009,DATA_SCIENTIST,hybrid,SQL,SQL,1.0,keyword
 JD-DS-0009,DATA_SCIENTIST,hybrid,Problem Solving,troubleshooting,1.0,keyword
-JD-DS-0009,DATA_SCIENTIST,hybrid,A/B Testing,testing,0.616,semantic
-JD-DS-0009,DATA_SCIENTIST,hybrid,Monitoring & Observability,monitoring,1.0,keyword
+JD-DS-0009,DATA_SCIENTIST,hybrid,Monitoring & Observability,monitoring,0.8,keyword
 JD-DS-0009,DATA_SCIENTIST,hybrid,Documentation,technical documentation,1.0,keyword
 JD-DS-0009,DATA_SCIENTIST,hybrid,Critical Thinking,analytical,0.77,semantic
 JD-DS-0009,DATA_SCIENTIST,hybrid,Communication,communication,1.0,keyword
@@ -1188,24 +1165,24 @@ JD-DS-0010,DATA_SCIENTIST,hybrid,Power BI,Power BI,1.0,keyword
 JD-DS-0010,DATA_SCIENTIST,hybrid,Teamwork,team,0.738,semantic
 JD-DS-0010,DATA_SCIENTIST,hybrid,Communication,communication skills,1.0,keyword
 JD-SD-0001,SOFTWARE_DEV,keyword,Unit Testing,unit tests,1.0,keyword
+JD-SD-0001,SOFTWARE_DEV,keyword,User Acceptance Testing,user acceptance testing,1.0,keyword
 JD-SD-0001,SOFTWARE_DEV,keyword,Documentation,technical documentation,1.0,keyword
 JD-SD-0001,SOFTWARE_DEV,keyword,Agile / Scrum,sprint planning,1.0,keyword
 JD-SD-0001,SOFTWARE_DEV,keyword,Cybersecurity,information security,1.0,keyword
-JD-SD-0001,SOFTWARE_DEV,semantic,A/B Testing,testing,0.616,semantic
 JD-SD-0001,SOFTWARE_DEV,semantic,Business Analysis,based on business and technical requirements,0.75,semantic
+JD-SD-0001,SOFTWARE_DEV,semantic,User Acceptance Testing,user acceptance testing activities,0.746,semantic
 JD-SD-0001,SOFTWARE_DEV,semantic,Requirements Analysis,user requirements,0.61,semantic
 JD-SD-0001,SOFTWARE_DEV,semantic,Documentation,technical documentation,0.777,semantic
 JD-SD-0001,SOFTWARE_DEV,semantic,Project Management,project meetings,0.661,semantic
-JD-SD-0001,SOFTWARE_DEV,semantic,R,programming languages,0.602,semantic
-JD-SD-0001,SOFTWARE_DEV,hybrid,A/B Testing,testing,0.616,semantic
 JD-SD-0001,SOFTWARE_DEV,hybrid,Business Analysis,based on business and technical requirements,0.75,semantic
 JD-SD-0001,SOFTWARE_DEV,hybrid,Unit Testing,unit tests,1.0,keyword
+JD-SD-0001,SOFTWARE_DEV,hybrid,User Acceptance Testing,user acceptance testing,1.0,keyword
 JD-SD-0001,SOFTWARE_DEV,hybrid,Requirements Analysis,user requirements,0.61,semantic
 JD-SD-0001,SOFTWARE_DEV,hybrid,Documentation,technical documentation,1.0,keyword
 JD-SD-0001,SOFTWARE_DEV,hybrid,Project Management,project meetings,0.661,semantic
 JD-SD-0001,SOFTWARE_DEV,hybrid,Agile / Scrum,sprint planning,1.0,keyword
-JD-SD-0001,SOFTWARE_DEV,hybrid,R,programming languages,0.602,semantic
 JD-SD-0001,SOFTWARE_DEV,hybrid,Cybersecurity,information security,1.0,keyword
+JD-SD-0002,SOFTWARE_DEV,keyword,Accounting,Accounting,1.0,keyword
 JD-SD-0002,SOFTWARE_DEV,keyword,Documentation,documentation,1.0,keyword
 JD-SD-0002,SOFTWARE_DEV,keyword,React,React,1.0,keyword
 JD-SD-0002,SOFTWARE_DEV,keyword,C#,C#,1.0,keyword
@@ -1214,18 +1191,18 @@ JD-SD-0002,SOFTWARE_DEV,keyword,CSS,CSS,1.0,keyword
 JD-SD-0002,SOFTWARE_DEV,keyword,JavaScript,Javascript,1.0,keyword
 JD-SD-0002,SOFTWARE_DEV,keyword,REST API,RESTful APIs,1.0,keyword
 JD-SD-0002,SOFTWARE_DEV,keyword,Azure,Azure,1.0,keyword
+JD-SD-0002,SOFTWARE_DEV,keyword,UI/UX Design,UI/UX,1.0,keyword
 JD-SD-0002,SOFTWARE_DEV,semantic,Requirements Analysis,Analyze user needs and software requirement,0.672,semantic
 JD-SD-0002,SOFTWARE_DEV,semantic,Documentation,design documentation,0.777,semantic
-JD-SD-0002,SOFTWARE_DEV,semantic,A/B Testing,testing,0.616,semantic
 JD-SD-0002,SOFTWARE_DEV,semantic,Teamwork,Collaborate and communicate effectively,0.609,semantic
 JD-SD-0002,SOFTWARE_DEV,semantic,HTML,HTML5,0.714,semantic
 JD-SD-0002,SOFTWARE_DEV,semantic,React,Razor/React.js,0.68,semantic
 JD-SD-0002,SOFTWARE_DEV,semantic,JavaScript,Javascript,0.635,semantic
 JD-SD-0002,SOFTWARE_DEV,semantic,REST API,RESTful APIs,0.777,semantic
 JD-SD-0002,SOFTWARE_DEV,semantic,Azure,Azure,0.86,semantic
+JD-SD-0002,SOFTWARE_DEV,hybrid,Accounting,Accounting,1.0,keyword
 JD-SD-0002,SOFTWARE_DEV,hybrid,Requirements Analysis,Analyze user needs and software requirement,0.672,semantic
 JD-SD-0002,SOFTWARE_DEV,hybrid,Documentation,documentation,1.0,keyword
-JD-SD-0002,SOFTWARE_DEV,hybrid,A/B Testing,testing,0.616,semantic
 JD-SD-0002,SOFTWARE_DEV,hybrid,Teamwork,Collaborate and communicate effectively,0.609,semantic
 JD-SD-0002,SOFTWARE_DEV,hybrid,React,React,1.0,keyword
 JD-SD-0002,SOFTWARE_DEV,hybrid,C#,C#,1.0,keyword
@@ -1234,6 +1211,7 @@ JD-SD-0002,SOFTWARE_DEV,hybrid,CSS,CSS,1.0,keyword
 JD-SD-0002,SOFTWARE_DEV,hybrid,JavaScript,Javascript,1.0,keyword
 JD-SD-0002,SOFTWARE_DEV,hybrid,REST API,RESTful APIs,1.0,keyword
 JD-SD-0002,SOFTWARE_DEV,hybrid,Azure,Azure,1.0,keyword
+JD-SD-0002,SOFTWARE_DEV,hybrid,UI/UX Design,UI/UX,1.0,keyword
 JD-SD-0003,SOFTWARE_DEV,keyword,HTML,HTML,1.0,keyword
 JD-SD-0003,SOFTWARE_DEV,keyword,CSS,CSS,1.0,keyword
 JD-SD-0003,SOFTWARE_DEV,keyword,JavaScript,Javascript,1.0,keyword
@@ -1251,11 +1229,9 @@ JD-SD-0004,SOFTWARE_DEV,keyword,Generative AI,Generative AI,1.0,keyword
 JD-SD-0004,SOFTWARE_DEV,keyword,Adaptability,adaptability,1.0,keyword
 JD-SD-0004,SOFTWARE_DEV,keyword,Teamwork,collaboration,1.0,keyword
 JD-SD-0004,SOFTWARE_DEV,semantic,Generative AI,Generative AI,0.668,semantic
-JD-SD-0004,SOFTWARE_DEV,semantic,Google Analytics,analytics,0.657,semantic
 JD-SD-0004,SOFTWARE_DEV,semantic,Adaptability,adaptability,0.694,semantic
 JD-SD-0004,SOFTWARE_DEV,semantic,Teamwork,collaboration,0.727,semantic
 JD-SD-0004,SOFTWARE_DEV,hybrid,Generative AI,Generative AI,1.0,keyword
-JD-SD-0004,SOFTWARE_DEV,hybrid,Google Analytics,analytics,0.657,semantic
 JD-SD-0004,SOFTWARE_DEV,hybrid,Adaptability,adaptability,1.0,keyword
 JD-SD-0004,SOFTWARE_DEV,hybrid,Teamwork,collaboration,1.0,keyword
 JD-SD-0005,SOFTWARE_DEV,keyword,Documentation,Documentation,1.0,keyword
@@ -1269,7 +1245,6 @@ JD-SD-0005,SOFTWARE_DEV,hybrid,Documentation,Documentation,1.0,keyword
 JD-SD-0005,SOFTWARE_DEV,hybrid,Data Mining,Data Mining,1.0,keyword
 JD-SD-0005,SOFTWARE_DEV,hybrid,Communication,Communication,1.0,keyword
 JD-SD-0005,SOFTWARE_DEV,hybrid,Teamwork,Teamwork,1.0,keyword
-JD-SD-0006,SOFTWARE_DEV,keyword,Self-Motivation,initiatives,1.0,keyword
 JD-SD-0006,SOFTWARE_DEV,keyword,Business Analysis,business requirement,1.0,keyword
 JD-SD-0006,SOFTWARE_DEV,keyword,Time Management,organization,0.8,keyword
 JD-SD-0006,SOFTWARE_DEV,keyword,Problem Solving,problem-solving,1.0,keyword
@@ -1280,57 +1255,49 @@ JD-SD-0006,SOFTWARE_DEV,keyword,Java,Java,1.0,keyword
 JD-SD-0006,SOFTWARE_DEV,keyword,JavaScript,Javascript,1.0,keyword
 JD-SD-0006,SOFTWARE_DEV,keyword,SQL,SQL,1.0,keyword
 JD-SD-0006,SOFTWARE_DEV,keyword,MySQL,MySQL,1.0,keyword
-JD-SD-0006,SOFTWARE_DEV,semantic,A/B Testing,testing,0.616,semantic
 JD-SD-0006,SOFTWARE_DEV,semantic,Interpersonal Skills,stakeholder management skills,0.777,semantic
-JD-SD-0006,SOFTWARE_DEV,semantic,R,programming language,0.633,semantic
 JD-SD-0006,SOFTWARE_DEV,semantic,MySQL,MS SQL / MySQL,0.714,semantic
-JD-SD-0006,SOFTWARE_DEV,hybrid,A/B Testing,testing,0.616,semantic
-JD-SD-0006,SOFTWARE_DEV,hybrid,Self-Motivation,initiatives,1.0,keyword
 JD-SD-0006,SOFTWARE_DEV,hybrid,Business Analysis,business requirement,1.0,keyword
 JD-SD-0006,SOFTWARE_DEV,hybrid,Time Management,organization,0.8,keyword
 JD-SD-0006,SOFTWARE_DEV,hybrid,Critical Thinking,analytical,0.77,semantic
 JD-SD-0006,SOFTWARE_DEV,hybrid,Problem Solving,problem-solving,1.0,keyword
 JD-SD-0006,SOFTWARE_DEV,hybrid,Communication,communication,1.0,keyword
 JD-SD-0006,SOFTWARE_DEV,hybrid,Interpersonal Skills,stakeholder management,1.0,keyword
-JD-SD-0006,SOFTWARE_DEV,hybrid,R,programming language,0.633,semantic
 JD-SD-0006,SOFTWARE_DEV,hybrid,C#,C#,1.0,keyword
 JD-SD-0006,SOFTWARE_DEV,hybrid,Java,Java,1.0,keyword
 JD-SD-0006,SOFTWARE_DEV,hybrid,JavaScript,Javascript,1.0,keyword
 JD-SD-0006,SOFTWARE_DEV,hybrid,SQL,SQL,1.0,keyword
 JD-SD-0006,SOFTWARE_DEV,hybrid,MySQL,MySQL,1.0,keyword
 JD-SD-0007,SOFTWARE_DEV,keyword,Business Analysis,business requirements,1.0,keyword
+JD-SD-0007,SOFTWARE_DEV,keyword,UI/UX Design,UI/UX,1.0,keyword
 JD-SD-0007,SOFTWARE_DEV,keyword,Problem Solving,problem-solving,1.0,keyword
 JD-SD-0007,SOFTWARE_DEV,keyword,Linux,Linux,1.0,keyword
 JD-SD-0007,SOFTWARE_DEV,keyword,Networking,networking,1.0,keyword
 JD-SD-0007,SOFTWARE_DEV,semantic,Business Analysis,Turn business requirements and UI/UX,0.783,semantic
-JD-SD-0007,SOFTWARE_DEV,semantic,UI/UX Design,UI/UX,0.691,semantic
+JD-SD-0007,SOFTWARE_DEV,semantic,UI/UX Design,UI/UX,0.735,semantic
 JD-SD-0007,SOFTWARE_DEV,semantic,Project Management,established project structure,0.65,semantic
 JD-SD-0007,SOFTWARE_DEV,semantic,Linux,Linux,0.681,semantic
-JD-SD-0007,SOFTWARE_DEV,semantic,MySQL,database,0.665,semantic
 JD-SD-0007,SOFTWARE_DEV,hybrid,Business Analysis,business requirements,1.0,keyword
-JD-SD-0007,SOFTWARE_DEV,hybrid,UI/UX Design,UI/UX,0.691,semantic
+JD-SD-0007,SOFTWARE_DEV,hybrid,UI/UX Design,UI/UX,1.0,keyword
 JD-SD-0007,SOFTWARE_DEV,hybrid,Project Management,established project structure,0.65,semantic
 JD-SD-0007,SOFTWARE_DEV,hybrid,Problem Solving,problem-solving,1.0,keyword
 JD-SD-0007,SOFTWARE_DEV,hybrid,Linux,Linux,1.0,keyword
-JD-SD-0007,SOFTWARE_DEV,hybrid,MySQL,database,0.665,semantic
 JD-SD-0007,SOFTWARE_DEV,hybrid,Networking,networking,1.0,keyword
 JD-SD-0008,SOFTWARE_DEV,keyword,Self-Motivation,self-driven,1.0,keyword
 JD-SD-0008,SOFTWARE_DEV,keyword,Teamwork,team player,1.0,keyword
 JD-SD-0008,SOFTWARE_DEV,keyword,Problem Solving,trouble-shooting,1.0,keyword
-JD-SD-0008,SOFTWARE_DEV,keyword,Monitoring & Observability,monitoring,1.0,keyword
 JD-SD-0008,SOFTWARE_DEV,keyword,C#,C#,1.0,keyword
 JD-SD-0008,SOFTWARE_DEV,keyword,SQL,SQL,1.0,keyword
 JD-SD-0008,SOFTWARE_DEV,keyword,Python,Python,1.0,keyword
 JD-SD-0008,SOFTWARE_DEV,keyword,Machine Learning,Machine Learning,1.0,keyword
-JD-SD-0008,SOFTWARE_DEV,semantic,Google Analytics,analytics,0.657,semantic
+JD-SD-0008,SOFTWARE_DEV,semantic,Google Analytics,provide analytics,0.618,semantic
 JD-SD-0008,SOFTWARE_DEV,semantic,Project Management,project implementation,0.611,semantic
 JD-SD-0008,SOFTWARE_DEV,semantic,Python,Python,0.775,semantic
 JD-SD-0008,SOFTWARE_DEV,semantic,Machine Learning,Machine Learning,0.635,semantic
 JD-SD-0008,SOFTWARE_DEV,hybrid,Self-Motivation,self-driven,1.0,keyword
 JD-SD-0008,SOFTWARE_DEV,hybrid,Teamwork,team player,1.0,keyword
 JD-SD-0008,SOFTWARE_DEV,hybrid,Problem Solving,trouble-shooting,1.0,keyword
-JD-SD-0008,SOFTWARE_DEV,hybrid,Google Analytics,analytics,0.657,semantic
-JD-SD-0008,SOFTWARE_DEV,hybrid,Monitoring & Observability,monitoring,1.0,keyword
+JD-SD-0008,SOFTWARE_DEV,hybrid,Google Analytics,provide analytics,0.618,semantic
 JD-SD-0008,SOFTWARE_DEV,hybrid,Project Management,project implementation,0.611,semantic
 JD-SD-0008,SOFTWARE_DEV,hybrid,C#,C#,1.0,keyword
 JD-SD-0008,SOFTWARE_DEV,hybrid,SQL,SQL,1.0,keyword
@@ -1354,13 +1321,13 @@ JD-SD-0009,SOFTWARE_DEV,hybrid,Problem Solving,problem-solving,1.0,keyword
 JD-SD-0010,SOFTWARE_DEV,keyword,Problem Solving,troubleshooting,1.0,keyword
 JD-SD-0010,SOFTWARE_DEV,keyword,Teamwork,teamwork,1.0,keyword
 JD-SD-0010,SOFTWARE_DEV,keyword,Object-Oriented Programming,Object-oriented design,1.0,keyword
+JD-SD-0010,SOFTWARE_DEV,keyword,User Acceptance Testing,UAT,1.0,keyword
 JD-SD-0010,SOFTWARE_DEV,keyword,Spring Boot,Spring framework,1.0,keyword
 JD-SD-0010,SOFTWARE_DEV,keyword,Angular,Angular,1.0,keyword
 JD-SD-0010,SOFTWARE_DEV,keyword,React,React,1.0,keyword
 JD-SD-0010,SOFTWARE_DEV,keyword,Kubernetes,Kubernetes,1.0,keyword
 JD-SD-0010,SOFTWARE_DEV,keyword,Docker,Docker,1.0,keyword
 JD-SD-0010,SOFTWARE_DEV,keyword,Microservices,Microservices,1.0,keyword
-JD-SD-0010,SOFTWARE_DEV,semantic,A/B Testing,testing,0.616,semantic
 JD-SD-0010,SOFTWARE_DEV,semantic,Project Management,project team,0.674,semantic
 JD-SD-0010,SOFTWARE_DEV,semantic,Object-Oriented Programming,Object-oriented design,0.832,semantic
 JD-SD-0010,SOFTWARE_DEV,semantic,Teamwork,Collaborate with team and across teams,0.74,semantic
@@ -1369,11 +1336,11 @@ JD-SD-0010,SOFTWARE_DEV,semantic,Angular,Angular,0.755,semantic
 JD-SD-0010,SOFTWARE_DEV,semantic,React,React,0.796,semantic
 JD-SD-0010,SOFTWARE_DEV,semantic,Kubernetes,Kubernetes,0.868,semantic
 JD-SD-0010,SOFTWARE_DEV,semantic,Docker,Docker,0.756,semantic
-JD-SD-0010,SOFTWARE_DEV,hybrid,A/B Testing,testing,0.616,semantic
 JD-SD-0010,SOFTWARE_DEV,hybrid,Problem Solving,troubleshooting,1.0,keyword
 JD-SD-0010,SOFTWARE_DEV,hybrid,Teamwork,teamwork,1.0,keyword
 JD-SD-0010,SOFTWARE_DEV,hybrid,Project Management,project team,0.674,semantic
 JD-SD-0010,SOFTWARE_DEV,hybrid,Object-Oriented Programming,Object-oriented design,1.0,keyword
+JD-SD-0010,SOFTWARE_DEV,hybrid,User Acceptance Testing,UAT,1.0,keyword
 JD-SD-0010,SOFTWARE_DEV,hybrid,Spring Boot,Spring framework,1.0,keyword
 JD-SD-0010,SOFTWARE_DEV,hybrid,Angular,Angular,1.0,keyword
 JD-SD-0010,SOFTWARE_DEV,hybrid,React,React,1.0,keyword
@@ -1389,7 +1356,6 @@ JD-SD-0011,SOFTWARE_DEV,hybrid,Communication,communication skills,1.0,keyword
 JD-SD-0012,SOFTWARE_DEV,keyword,Attention to Detail,detail-oriented,1.0,keyword
 JD-SD-0012,SOFTWARE_DEV,keyword,Business Analysis,business requirements,1.0,keyword
 JD-SD-0012,SOFTWARE_DEV,keyword,Documentation,technical documentation,1.0,keyword
-JD-SD-0012,SOFTWARE_DEV,keyword,A/B Testing,experimentation,1.0,keyword
 JD-SD-0012,SOFTWARE_DEV,keyword,UI/UX Design,user experience,1.0,keyword
 JD-SD-0012,SOFTWARE_DEV,keyword,Problem Solving,troubleshooting,1.0,keyword
 JD-SD-0012,SOFTWARE_DEV,keyword,Self-Motivation,proactive,1.0,keyword
@@ -1404,7 +1370,6 @@ JD-SD-0012,SOFTWARE_DEV,keyword,Git,Git,1.0,keyword
 JD-SD-0012,SOFTWARE_DEV,semantic,AI Literacy,AI development,0.619,semantic
 JD-SD-0012,SOFTWARE_DEV,semantic,Business Analysis,based on product and business requirements,0.72,semantic
 JD-SD-0012,SOFTWARE_DEV,semantic,Documentation,technical documentation,0.777,semantic
-JD-SD-0012,SOFTWARE_DEV,semantic,A/B Testing,testing,0.616,semantic
 JD-SD-0012,SOFTWARE_DEV,semantic,Problem Solving,Good problem-solving and analytical skills,0.703,semantic
 JD-SD-0012,SOFTWARE_DEV,semantic,Communication,Good communication skills,0.671,semantic
 JD-SD-0012,SOFTWARE_DEV,semantic,Python,Python,0.775,semantic
@@ -1417,7 +1382,6 @@ JD-SD-0012,SOFTWARE_DEV,hybrid,Attention to Detail,detail-oriented,1.0,keyword
 JD-SD-0012,SOFTWARE_DEV,hybrid,AI Literacy,AI development,0.619,semantic
 JD-SD-0012,SOFTWARE_DEV,hybrid,Business Analysis,business requirements,1.0,keyword
 JD-SD-0012,SOFTWARE_DEV,hybrid,Documentation,technical documentation,1.0,keyword
-JD-SD-0012,SOFTWARE_DEV,hybrid,A/B Testing,experimentation,1.0,keyword
 JD-SD-0012,SOFTWARE_DEV,hybrid,UI/UX Design,user experience,1.0,keyword
 JD-SD-0012,SOFTWARE_DEV,hybrid,Problem Solving,troubleshooting,1.0,keyword
 JD-SD-0012,SOFTWARE_DEV,hybrid,Critical Thinking,analytical,0.77,semantic
@@ -1439,8 +1403,7 @@ JD-SD-0013,SOFTWARE_DEV,keyword,AWS,AWS,1.0,keyword
 JD-SD-0013,SOFTWARE_DEV,keyword,Cloud Computing,cloud infrastructure,1.0,keyword
 JD-SD-0013,SOFTWARE_DEV,keyword,Docker,Docker,1.0,keyword
 JD-SD-0013,SOFTWARE_DEV,keyword,CI/CD,CI/CD,1.0,keyword
-JD-SD-0013,SOFTWARE_DEV,keyword,Monitoring & Observability,monitoring,1.0,keyword
-JD-SD-0013,SOFTWARE_DEV,keyword,Self-Motivation,initiatives,1.0,keyword
+JD-SD-0013,SOFTWARE_DEV,keyword,Monitoring & Observability,monitoring,0.8,keyword
 JD-SD-0013,SOFTWARE_DEV,keyword,Teamwork,Collaboration,1.0,keyword
 JD-SD-0013,SOFTWARE_DEV,keyword,PHP,PHP,1.0,keyword
 JD-SD-0013,SOFTWARE_DEV,keyword,Java,Java,1.0,keyword
@@ -1450,12 +1413,12 @@ JD-SD-0013,SOFTWARE_DEV,keyword,SQL,SQL,1.0,keyword
 JD-SD-0013,SOFTWARE_DEV,keyword,Cybersecurity,cybersecurity,1.0,keyword
 JD-SD-0013,SOFTWARE_DEV,keyword,Communication,communication,1.0,keyword
 JD-SD-0013,SOFTWARE_DEV,keyword,Interpersonal Skills,interpersonal skills,1.0,keyword
+JD-SD-0013,SOFTWARE_DEV,keyword,Self-Motivation,Proactive,1.0,keyword
 JD-SD-0013,SOFTWARE_DEV,semantic,Requirements Analysis,project requirements,0.601,semantic
 JD-SD-0013,SOFTWARE_DEV,semantic,Git,Git/version control and software development practices,0.852,semantic
 JD-SD-0013,SOFTWARE_DEV,semantic,Documentation,technical documentation,0.777,semantic
 JD-SD-0013,SOFTWARE_DEV,semantic,AWS,AWS/cloud infrastructure,0.78,semantic
 JD-SD-0013,SOFTWARE_DEV,semantic,Docker,Docker,0.756,semantic
-JD-SD-0013,SOFTWARE_DEV,semantic,A/B Testing,testing,0.616,semantic
 JD-SD-0013,SOFTWARE_DEV,semantic,Project Management,Project & Team Collaboration,0.733,semantic
 JD-SD-0013,SOFTWARE_DEV,semantic,Teamwork,Team Collaboration,0.798,semantic
 JD-SD-0013,SOFTWARE_DEV,semantic,Java,Java,0.742,semantic
@@ -1476,9 +1439,7 @@ JD-SD-0013,SOFTWARE_DEV,hybrid,AWS,AWS,1.0,keyword
 JD-SD-0013,SOFTWARE_DEV,hybrid,Cloud Computing,cloud infrastructure,1.0,keyword
 JD-SD-0013,SOFTWARE_DEV,hybrid,Docker,Docker,1.0,keyword
 JD-SD-0013,SOFTWARE_DEV,hybrid,CI/CD,CI/CD,1.0,keyword
-JD-SD-0013,SOFTWARE_DEV,hybrid,Monitoring & Observability,monitoring,1.0,keyword
-JD-SD-0013,SOFTWARE_DEV,hybrid,A/B Testing,testing,0.616,semantic
-JD-SD-0013,SOFTWARE_DEV,hybrid,Self-Motivation,initiatives,1.0,keyword
+JD-SD-0013,SOFTWARE_DEV,hybrid,Monitoring & Observability,monitoring,0.8,keyword
 JD-SD-0013,SOFTWARE_DEV,hybrid,Teamwork,Collaboration,1.0,keyword
 JD-SD-0013,SOFTWARE_DEV,hybrid,Project Management,project meetings,0.661,semantic
 JD-SD-0013,SOFTWARE_DEV,hybrid,PHP,PHP,1.0,keyword
@@ -1490,6 +1451,7 @@ JD-SD-0013,SOFTWARE_DEV,hybrid,Cybersecurity,cybersecurity,1.0,keyword
 JD-SD-0013,SOFTWARE_DEV,hybrid,Critical Thinking,analytical,0.77,semantic
 JD-SD-0013,SOFTWARE_DEV,hybrid,Communication,communication,1.0,keyword
 JD-SD-0013,SOFTWARE_DEV,hybrid,Interpersonal Skills,interpersonal skills,1.0,keyword
+JD-SD-0013,SOFTWARE_DEV,hybrid,Self-Motivation,Proactive,1.0,keyword
 JD-WD-0001,WEB_DEV,keyword,Documentation,documentation,1.0,keyword
 JD-WD-0001,WEB_DEV,keyword,Problem Solving,troubleshooting,1.0,keyword
 JD-WD-0001,WEB_DEV,keyword,Java,Java,1.0,keyword
@@ -1498,7 +1460,6 @@ JD-WD-0001,WEB_DEV,keyword,Vue.js,Vue.js,1.0,keyword
 JD-WD-0001,WEB_DEV,keyword,CSS,Tailwind CSS,1.0,keyword
 JD-WD-0001,WEB_DEV,keyword,Self-Motivation,Self-Driven,1.0,keyword
 JD-WD-0001,WEB_DEV,semantic,Documentation,Assist in preparing software and product documentation,0.697,semantic
-JD-WD-0001,WEB_DEV,semantic,R,programming languages,0.602,semantic
 JD-WD-0001,WEB_DEV,semantic,Java,Java,0.742,semantic
 JD-WD-0001,WEB_DEV,semantic,JavaScript,JavaScript,0.635,semantic
 JD-WD-0001,WEB_DEV,semantic,Vue.js,Vue.js ecosystem,0.804,semantic
@@ -1506,7 +1467,6 @@ JD-WD-0001,WEB_DEV,semantic,CSS,Tailwind CSS,0.653,semantic
 JD-WD-0001,WEB_DEV,semantic,Problem Solving,strong analytical and problem-solving skills,0.671,semantic
 JD-WD-0001,WEB_DEV,hybrid,Documentation,documentation,1.0,keyword
 JD-WD-0001,WEB_DEV,hybrid,Problem Solving,troubleshooting,1.0,keyword
-JD-WD-0001,WEB_DEV,hybrid,R,programming languages,0.602,semantic
 JD-WD-0001,WEB_DEV,hybrid,Java,Java,1.0,keyword
 JD-WD-0001,WEB_DEV,hybrid,JavaScript,JavaScript,1.0,keyword
 JD-WD-0001,WEB_DEV,hybrid,Vue.js,Vue.js,1.0,keyword
@@ -1517,7 +1477,7 @@ JD-WD-0002,WEB_DEV,keyword,PHP,PHP,1.0,keyword
 JD-WD-0002,WEB_DEV,keyword,Git,Git,1.0,keyword
 JD-WD-0002,WEB_DEV,keyword,Teamwork,teamwork,1.0,keyword
 JD-WD-0002,WEB_DEV,keyword,Generative AI,LLMs,1.0,keyword
-JD-WD-0002,WEB_DEV,keyword,Self-Motivation,initiative,1.0,keyword
+JD-WD-0002,WEB_DEV,keyword,Self-Motivation,initiative,0.8,keyword
 JD-WD-0002,WEB_DEV,keyword,Vue.js,Vue,1.0,keyword
 JD-WD-0002,WEB_DEV,keyword,React,React,1.0,keyword
 JD-WD-0002,WEB_DEV,keyword,Docker,Docker,1.0,keyword
@@ -1526,6 +1486,7 @@ JD-WD-0002,WEB_DEV,keyword,Networking,networking,1.0,keyword
 JD-WD-0002,WEB_DEV,semantic,PHP,PHP / Laravel,0.82,semantic
 JD-WD-0002,WEB_DEV,semantic,Git,GitHub,0.615,semantic
 JD-WD-0002,WEB_DEV,semantic,Teamwork,teamwork,0.768,semantic
+JD-WD-0002,WEB_DEV,semantic,Creativity,Innovative mindset,0.655,semantic
 JD-WD-0002,WEB_DEV,semantic,Vue.js,Nice to have: Vue,0.654,semantic
 JD-WD-0002,WEB_DEV,semantic,React,React,0.796,semantic
 JD-WD-0002,WEB_DEV,semantic,Docker,Docker,0.756,semantic
@@ -1535,7 +1496,8 @@ JD-WD-0002,WEB_DEV,hybrid,PHP,PHP,1.0,keyword
 JD-WD-0002,WEB_DEV,hybrid,Git,Git,1.0,keyword
 JD-WD-0002,WEB_DEV,hybrid,Teamwork,teamwork,1.0,keyword
 JD-WD-0002,WEB_DEV,hybrid,Generative AI,LLMs,1.0,keyword
-JD-WD-0002,WEB_DEV,hybrid,Self-Motivation,initiative,1.0,keyword
+JD-WD-0002,WEB_DEV,hybrid,Self-Motivation,initiative,0.8,keyword
+JD-WD-0002,WEB_DEV,hybrid,Creativity,Innovative mindset,0.655,semantic
 JD-WD-0002,WEB_DEV,hybrid,Vue.js,Vue,1.0,keyword
 JD-WD-0002,WEB_DEV,hybrid,React,React,1.0,keyword
 JD-WD-0002,WEB_DEV,hybrid,Docker,Docker,1.0,keyword
@@ -1560,7 +1522,6 @@ JD-WD-0003,WEB_DEV,keyword,Unit Testing,unit testing,1.0,keyword
 JD-WD-0003,WEB_DEV,semantic,React,React.js,0.927,semantic
 JD-WD-0003,WEB_DEV,semantic,Node.js,Node.js,0.94,semantic
 JD-WD-0003,WEB_DEV,semantic,MySQL,managing databases in MS SQL and MySQL,0.807,semantic
-JD-WD-0003,WEB_DEV,semantic,A/B Testing,testing,0.616,semantic
 JD-WD-0003,WEB_DEV,semantic,TypeScript,JavaScript/TypeScript,0.843,semantic
 JD-WD-0003,WEB_DEV,semantic,REST API,Understanding of RESTful API design,0.724,semantic
 JD-WD-0003,WEB_DEV,semantic,Git,Familiarity with Git and version control systems,0.815,semantic
@@ -1574,7 +1535,6 @@ JD-WD-0003,WEB_DEV,hybrid,Node.js,Node.js,1.0,keyword
 JD-WD-0003,WEB_DEV,hybrid,SQL,SQL,1.0,keyword
 JD-WD-0003,WEB_DEV,hybrid,MySQL,MySQL,1.0,keyword
 JD-WD-0003,WEB_DEV,hybrid,C#,C#,1.0,keyword
-JD-WD-0003,WEB_DEV,hybrid,A/B Testing,testing,0.616,semantic
 JD-WD-0003,WEB_DEV,hybrid,Documentation,documentation,1.0,keyword
 JD-WD-0003,WEB_DEV,hybrid,TypeScript,TypeScript,1.0,keyword
 JD-WD-0003,WEB_DEV,hybrid,REST API,RESTful API,1.0,keyword
@@ -1587,6 +1547,8 @@ JD-WD-0003,WEB_DEV,hybrid,CI/CD,CI/CD,1.0,keyword
 JD-WD-0003,WEB_DEV,hybrid,Unit Testing,unit testing,1.0,keyword
 JD-WD-0004,WEB_DEV,keyword,JavaScript,js,1.0,keyword
 JD-WD-0004,WEB_DEV,keyword,Identity & Access Management,access control,1.0,keyword
+JD-WD-0004,WEB_DEV,keyword,CRM Software,CRM,1.0,keyword
+JD-WD-0004,WEB_DEV,keyword,Email Marketing,Email Marketing,1.0,keyword
 JD-WD-0004,WEB_DEV,keyword,Problem Solving,troubleshooting,1.0,keyword
 JD-WD-0004,WEB_DEV,keyword,TypeScript,TypeScript,1.0,keyword
 JD-WD-0004,WEB_DEV,keyword,Python,Python,1.0,keyword
@@ -1594,15 +1556,17 @@ JD-WD-0004,WEB_DEV,keyword,React,React,1.0,keyword
 JD-WD-0004,WEB_DEV,keyword,SQL,SQL,1.0,keyword
 JD-WD-0004,WEB_DEV,keyword,PostgreSQL,PostgreSQL,1.0,keyword
 JD-WD-0004,WEB_DEV,keyword,Git,Git,1.0,keyword
-JD-WD-0004,WEB_DEV,semantic,MySQL,database,0.665,semantic
+JD-WD-0004,WEB_DEV,semantic,CRM Software,CRM,0.689,semantic
+JD-WD-0004,WEB_DEV,semantic,Email Marketing,CRM & Email Marketing,0.687,semantic
 JD-WD-0004,WEB_DEV,semantic,TypeScript,JavaScript/TypeScript,0.843,semantic
 JD-WD-0004,WEB_DEV,semantic,Python,Python,0.775,semantic
 JD-WD-0004,WEB_DEV,semantic,React,React,0.796,semantic
 JD-WD-0004,WEB_DEV,semantic,PostgreSQL,PostgreSQL,0.827,semantic
 JD-WD-0004,WEB_DEV,semantic,Git,Familiarity with Git and GitHub,0.696,semantic
 JD-WD-0004,WEB_DEV,hybrid,JavaScript,js,1.0,keyword
-JD-WD-0004,WEB_DEV,hybrid,MySQL,database,0.665,semantic
 JD-WD-0004,WEB_DEV,hybrid,Identity & Access Management,access control,1.0,keyword
+JD-WD-0004,WEB_DEV,hybrid,CRM Software,CRM,1.0,keyword
+JD-WD-0004,WEB_DEV,hybrid,Email Marketing,Email Marketing,1.0,keyword
 JD-WD-0004,WEB_DEV,hybrid,Problem Solving,troubleshooting,1.0,keyword
 JD-WD-0004,WEB_DEV,hybrid,TypeScript,TypeScript,1.0,keyword
 JD-WD-0004,WEB_DEV,hybrid,Python,Python,1.0,keyword
@@ -1624,7 +1588,6 @@ JD-WD-0005,WEB_DEV,semantic,TypeScript,TypeScript,0.899,semantic
 JD-WD-0005,WEB_DEV,semantic,CSS,Tailwind CSS,0.686,semantic
 JD-WD-0005,WEB_DEV,semantic,Data Modelling,data modeling,0.62,semantic
 JD-WD-0005,WEB_DEV,semantic,JavaScript,Strong ES6+ JavaScript fundamentals,0.77,semantic
-JD-WD-0005,WEB_DEV,semantic,MySQL,Database,0.665,semantic
 JD-WD-0005,WEB_DEV,semantic,Data Visualisation,Data visualization experience,0.789,semantic
 JD-WD-0005,WEB_DEV,hybrid,React,React,1.0,keyword
 JD-WD-0005,WEB_DEV,hybrid,Teamwork,collaborate with cross-functional teams,0.634,semantic
@@ -1633,7 +1596,6 @@ JD-WD-0005,WEB_DEV,hybrid,CSS,Tailwind CSS,1.0,keyword
 JD-WD-0005,WEB_DEV,hybrid,Data Modelling,data modeling,1.0,keyword
 JD-WD-0005,WEB_DEV,hybrid,SQL,SQL queries,1.0,keyword
 JD-WD-0005,WEB_DEV,hybrid,JavaScript,ES6,1.0,keyword
-JD-WD-0005,WEB_DEV,hybrid,MySQL,Database,0.665,semantic
 JD-WD-0005,WEB_DEV,hybrid,Data Visualisation,Data visualization,1.0,keyword
 JD-WD-0005,WEB_DEV,hybrid,Documentation,documentation,1.0,keyword
 JD-WD-0006,WEB_DEV,keyword,Vue.js,VueJS,1.0,keyword
@@ -1648,20 +1610,20 @@ JD-WD-0006,WEB_DEV,keyword,Problem Solving,problem-solving,1.0,keyword
 JD-WD-0006,WEB_DEV,keyword,Self-Motivation,proactive,1.0,keyword
 JD-WD-0006,WEB_DEV,keyword,Communication,communication,1.0,keyword
 JD-WD-0006,WEB_DEV,keyword,Interpersonal Skills,interpersonal skills,1.0,keyword
+JD-WD-0006,WEB_DEV,keyword,Search Engine Optimisation,SEO,1.0,keyword
 JD-WD-0006,WEB_DEV,semantic,Vue.js,Nuxt / VueJS,0.646,semantic
 JD-WD-0006,WEB_DEV,semantic,REST API,RESTful APIs,0.777,semantic
-JD-WD-0006,WEB_DEV,semantic,UI/UX Design,Ensure UI/UX designs,0.796,semantic
-JD-WD-0006,WEB_DEV,semantic,A/B Testing,testing,0.616,semantic
+JD-WD-0006,WEB_DEV,semantic,UI/UX Design,UI/UX designs,0.75,semantic
 JD-WD-0006,WEB_DEV,semantic,HTML,HTML5,0.714,semantic
 JD-WD-0006,WEB_DEV,semantic,CSS,CSS3,0.696,semantic
 JD-WD-0006,WEB_DEV,semantic,JavaScript,JavaScript,0.635,semantic
 JD-WD-0006,WEB_DEV,semantic,Git,Git/GitHub,0.716,semantic
 JD-WD-0006,WEB_DEV,semantic,Communication,Strong communication and interpersonal skills,0.631,semantic
 JD-WD-0006,WEB_DEV,semantic,Interpersonal Skills,interpersonal skills,0.685,semantic
+JD-WD-0006,WEB_DEV,semantic,Search Engine Optimisation,SEO,0.641,semantic
 JD-WD-0006,WEB_DEV,hybrid,Vue.js,VueJS,1.0,keyword
 JD-WD-0006,WEB_DEV,hybrid,REST API,RESTful APIs,1.0,keyword
 JD-WD-0006,WEB_DEV,hybrid,UI/UX Design,UI/UX designs,1.0,keyword
-JD-WD-0006,WEB_DEV,hybrid,A/B Testing,testing,0.616,semantic
 JD-WD-0006,WEB_DEV,hybrid,React,React,1.0,keyword
 JD-WD-0006,WEB_DEV,hybrid,HTML,HTML5,1.0,keyword
 JD-WD-0006,WEB_DEV,hybrid,CSS,CSS3,1.0,keyword
@@ -1672,6 +1634,7 @@ JD-WD-0006,WEB_DEV,hybrid,Critical Thinking,analytical,0.77,semantic
 JD-WD-0006,WEB_DEV,hybrid,Self-Motivation,proactive,1.0,keyword
 JD-WD-0006,WEB_DEV,hybrid,Communication,communication,1.0,keyword
 JD-WD-0006,WEB_DEV,hybrid,Interpersonal Skills,interpersonal skills,1.0,keyword
+JD-WD-0006,WEB_DEV,hybrid,Search Engine Optimisation,SEO,1.0,keyword
 JD-WD-0007,WEB_DEV,keyword,React,React,1.0,keyword
 JD-WD-0007,WEB_DEV,keyword,Generative AI,LLMs,1.0,keyword
 JD-WD-0007,WEB_DEV,keyword,Documentation,documentation,1.0,keyword
@@ -1683,7 +1646,6 @@ JD-WD-0007,WEB_DEV,keyword,HTML,HTML,1.0,keyword
 JD-WD-0007,WEB_DEV,keyword,CSS,CSS,1.0,keyword
 JD-WD-0007,WEB_DEV,keyword,REST API,REST APIs,1.0,keyword
 JD-WD-0007,WEB_DEV,semantic,React,React,0.796,semantic
-JD-WD-0007,WEB_DEV,semantic,A/B Testing,testing,0.616,semantic
 JD-WD-0007,WEB_DEV,semantic,Documentation,documentation,0.711,semantic
 JD-WD-0007,WEB_DEV,semantic,Problem Solving,problem-solving skills,0.677,semantic
 JD-WD-0007,WEB_DEV,semantic,TypeScript,JavaScript / TypeScript,0.843,semantic
@@ -1692,7 +1654,6 @@ JD-WD-0007,WEB_DEV,semantic,HTML,HTML,0.663,semantic
 JD-WD-0007,WEB_DEV,semantic,REST API,REST APIs,0.779,semantic
 JD-WD-0007,WEB_DEV,hybrid,React,React,1.0,keyword
 JD-WD-0007,WEB_DEV,hybrid,Generative AI,LLMs,1.0,keyword
-JD-WD-0007,WEB_DEV,hybrid,A/B Testing,testing,0.616,semantic
 JD-WD-0007,WEB_DEV,hybrid,Documentation,documentation,1.0,keyword
 JD-WD-0007,WEB_DEV,hybrid,Problem Solving,problem-solving,1.0,keyword
 JD-WD-0007,WEB_DEV,hybrid,JavaScript,JavaScript,1.0,keyword
@@ -1723,7 +1684,6 @@ JD-WD-0008,WEB_DEV,keyword,AWS,AWS,1.0,keyword
 JD-WD-0008,WEB_DEV,keyword,Azure,Azure,1.0,keyword
 JD-WD-0008,WEB_DEV,keyword,Unit Testing,Jest,1.0,keyword
 JD-WD-0008,WEB_DEV,semantic,Teamwork,collaborative,0.635,semantic
-JD-WD-0008,WEB_DEV,semantic,UI/UX Design,Convert UI/UX designs,0.609,semantic
 JD-WD-0008,WEB_DEV,semantic,REST API,Build RESTful APIs,0.777,semantic
 JD-WD-0008,WEB_DEV,semantic,Data Modelling,database design,0.621,semantic
 JD-WD-0008,WEB_DEV,semantic,Documentation,documentation,0.711,semantic
@@ -1761,13 +1721,16 @@ JD-WD-0008,WEB_DEV,hybrid,AWS,AWS,1.0,keyword
 JD-WD-0008,WEB_DEV,hybrid,Azure,Azure,1.0,keyword
 JD-WD-0008,WEB_DEV,hybrid,Unit Testing,Jest,1.0,keyword
 JD-WD-0009,WEB_DEV,keyword,HTML,HTML,1.0,keyword
+JD-WD-0009,WEB_DEV,keyword,Email Marketing,email campaigns,1.0,keyword
 JD-WD-0009,WEB_DEV,keyword,CSS,CSS,1.0,keyword
 JD-WD-0009,WEB_DEV,keyword,JavaScript,JavaScript,1.0,keyword
 JD-WD-0009,WEB_DEV,keyword,PHP,PHP,1.0,keyword
 JD-WD-0009,WEB_DEV,keyword,Excel,Microsoft Excel,1.0,keyword
+JD-WD-0009,WEB_DEV,semantic,Email Marketing,email campaigns,0.664,semantic
 JD-WD-0009,WEB_DEV,semantic,HTML,HTML,0.663,semantic
 JD-WD-0009,WEB_DEV,semantic,Excel,Microsoft Excel,0.783,semantic
 JD-WD-0009,WEB_DEV,hybrid,HTML,HTML,1.0,keyword
+JD-WD-0009,WEB_DEV,hybrid,Email Marketing,email campaigns,1.0,keyword
 JD-WD-0009,WEB_DEV,hybrid,CSS,CSS,1.0,keyword
 JD-WD-0009,WEB_DEV,hybrid,JavaScript,JavaScript,1.0,keyword
 JD-WD-0009,WEB_DEV,hybrid,PHP,PHP,1.0,keyword

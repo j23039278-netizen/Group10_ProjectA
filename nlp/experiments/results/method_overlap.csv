@@ -1,66 +1,66 @@
 jd_ref,role_code,n_keyword,n_semantic,n_both,n_only_keyword,n_only_semantic,jaccard,only_keyword,only_semantic
 JD-CE-0001,CLOUD_ENGINEER,14,11,10,4,1,0.667,Attention to Detail; Identity & Access Management; Monitoring & Observability; Self-Motivation,Teamwork
-JD-CE-0002,CLOUD_ENGINEER,11,8,5,6,3,0.357,Cloud Computing; Communication; Documentation; Problem Solving; SQL; UI/UX Design,A/B Testing; Prompt Engineering; Windows Server
-JD-CE-0003,CLOUD_ENGINEER,24,18,15,9,3,0.556,CI/CD; Git; Identity & Access Management; Incident Response; Monitoring & Observability; PHP; Python; SQL; VPN,Firewall Management; Log Analysis; Vulnerability Assessment
+JD-CE-0002,CLOUD_ENGINEER,11,6,5,6,1,0.417,Cloud Computing; Communication; Documentation; Problem Solving; SQL; UI/UX Design,Prompt Engineering
+JD-CE-0003,CLOUD_ENGINEER,27,18,17,10,1,0.607,CI/CD; Git; Identity & Access Management; Incident Response; Monitoring & Observability; PHP; Python; SQL; User Acceptance Testing; VPN,Vulnerability Assessment
 JD-CE-0004,CLOUD_ENGINEER,4,3,3,1,0,0.75,Agile / Scrum,
 JD-CE-0005,CLOUD_ENGINEER,1,1,1,0,0,1.0,,
 JD-CE-0006,CLOUD_ENGINEER,8,4,4,4,0,0.5,Communication; Customer Focus; Networking; Problem Solving,
 JD-CE-0007,CLOUD_ENGINEER,7,4,3,4,1,0.375,CI/CD; Monitoring & Observability; Self-Motivation; Teamwork,Critical Thinking
 JD-CE-0008,CLOUD_ENGINEER,12,10,7,5,3,0.467,Azure; Communication; GCP; Problem Solving; Self-Motivation,Requirements Analysis; Stakeholder Communication; Teamwork
-JD-CE-0009,CLOUD_ENGINEER,7,7,5,2,2,0.556,CSS; Problem Solving,R; Windows Server
-JD-CE-0010,CLOUD_ENGINEER,14,11,7,7,4,0.389,AWS; GCP; Identity & Access Management; Linux; Machine Learning; Monitoring & Observability; PowerShell,A/B Testing; Bash; MySQL; Presentation Skills
+JD-CE-0009,CLOUD_ENGINEER,7,5,5,2,0,0.714,CSS; Problem Solving,
+JD-CE-0010,CLOUD_ENGINEER,14,8,7,7,1,0.467,AWS; GCP; Identity & Access Management; Linux; Machine Learning; Monitoring & Observability; PowerShell,Presentation Skills
 JD-CY-0001,CYBER_ANALYST,4,2,1,3,1,0.2,Communication; Cybersecurity; Time Management,Network Security
-JD-CY-0002,CYBER_ANALYST,12,8,6,6,2,0.429,Communication; Customer Focus; Monitoring & Observability; React; Security Operations (SOC); Systems Thinking,Log Analysis; Windows Server
+JD-CY-0002,CYBER_ANALYST,11,8,6,5,2,0.462,Communication; Customer Focus; React; Security Operations (SOC); Systems Thinking,Content Marketing; Log Analysis
 JD-CY-0003,CYBER_ANALYST,9,9,9,0,0,1.0,,
 JD-CY-0004,CYBER_ANALYST,7,8,6,1,2,0.667,SIEM,Digital Forensics; Log Analysis
-JD-CY-0005,CYBER_ANALYST,6,9,4,2,5,0.364,Documentation; SIEM,Firewall Management; Log Analysis; Risk Analysis; Teamwork; Vulnerability Assessment
-JD-CY-0006,CYBER_ANALYST,5,4,3,2,1,0.5,Monitoring & Observability; Security Operations (SOC),Firewall Management
-JD-CY-0007,CYBER_ANALYST,9,9,7,2,2,0.636,Log Analysis; Security Operations (SOC),Firewall Management; Security Frameworks
-JD-CY-0008,CYBER_ANALYST,3,3,0,3,3,0.0,Monitoring & Observability; SIEM; Teamwork,A/B Testing; Network Security; Security Frameworks
-JD-CY-0009,CYBER_ANALYST,6,4,3,3,1,0.429,Customer Focus; PHP; Self-Motivation,Teamwork
-JD-CY-0010,CYBER_ANALYST,11,10,7,4,3,0.5,Communication; Monitoring & Observability; Teamwork; Threat Intelligence,Firewall Management; Log Analysis; SIEM
-JD-DA-0001,DATA_ANALYST,9,5,4,5,1,0.4,AI Literacy; Excel; R; SQL; Statistical Analysis,Data Visualisation
-JD-DA-0002,DATA_ANALYST,10,8,5,5,3,0.385,AI Literacy; Customer Focus; Problem Solving; SQL; Self-Motivation,Bash; Google Analytics; Requirements Analysis
+JD-CY-0005,CYBER_ANALYST,7,8,5,2,3,0.5,Documentation; SIEM,Risk Analysis; Teamwork; Vulnerability Assessment
+JD-CY-0006,CYBER_ANALYST,5,4,4,1,0,0.8,Security Operations (SOC),
+JD-CY-0007,CYBER_ANALYST,10,10,9,1,1,0.818,Security Operations (SOC),Security Frameworks
+JD-CY-0008,CYBER_ANALYST,2,2,0,2,2,0.0,SIEM; Teamwork,Network Security; Security Frameworks
+JD-CY-0009,CYBER_ANALYST,5,4,3,2,1,0.5,Customer Focus; PHP,Teamwork
+JD-CY-0010,CYBER_ANALYST,11,10,8,3,2,0.615,Communication; Teamwork; Threat Intelligence,Log Analysis; SIEM
+JD-DA-0001,DATA_ANALYST,8,4,3,5,1,0.333,AI Literacy; Excel; R; SQL; Statistical Analysis,Data Visualisation
+JD-DA-0002,DATA_ANALYST,11,7,7,4,0,0.636,AI Literacy; Customer Focus; Problem Solving; SQL,
 JD-DA-0003,DATA_ANALYST,15,11,9,6,2,0.529,Attention to Detail; Critical Thinking; Generative AI; SQL; Statistical Analysis; Teamwork,Data Cleaning; Stakeholder Communication
-JD-DA-0004,DATA_ANALYST,11,9,7,4,2,0.538,Attention to Detail; R; SQL; Statistical Analysis,Decision Making; Teamwork
-JD-DA-0005,DATA_ANALYST,7,7,2,5,5,0.167,Attention to Detail; Communication; Excel; SQL; Statistical Analysis,Data Cleaning; Project Management; R; Stakeholder Communication; Time Management
-JD-DA-0006,DATA_ANALYST,13,9,8,5,1,0.571,Communication; SQL; Self-Motivation; Statistical Analysis; Time Management,Teamwork
-JD-DA-0007,DATA_ANALYST,4,3,2,2,1,0.4,Excel; Statistical Analysis,Data Cleaning
+JD-DA-0004,DATA_ANALYST,11,11,7,4,4,0.467,Attention to Detail; R; SQL; Statistical Analysis,Business Process Improvement; Decision Making; Process Mapping; Teamwork
+JD-DA-0005,DATA_ANALYST,8,6,3,5,3,0.273,Attention to Detail; Communication; Excel; SQL; Statistical Analysis,Data Cleaning; Project Management; Stakeholder Communication
+JD-DA-0006,DATA_ANALYST,14,11,10,4,1,0.667,Communication; SQL; Statistical Analysis; Time Management,Teamwork
+JD-DA-0007,DATA_ANALYST,5,4,3,2,1,0.5,Excel; Statistical Analysis,Data Cleaning
 JD-DA-0008,DATA_ANALYST,12,9,8,4,1,0.615,Data Modelling; Excel; SQL; Statistical Analysis,Data Visualisation
 JD-DA-0009,DATA_ANALYST,7,6,4,3,2,0.444,Data Analysis; ETL; Problem Solving,Documentation; Teamwork
-JD-DA-0010,DATA_ANALYST,9,10,8,1,2,0.727,Attention to Detail,Bash; R
-JD-DA-0011,DATA_ANALYST,11,11,8,3,3,0.571,Excel; SQL; Self-Motivation,A/B Testing; Data Visualisation; Google Analytics
+JD-DA-0010,DATA_ANALYST,9,8,8,1,0,0.889,Attention to Detail,
+JD-DA-0011,DATA_ANALYST,11,11,9,2,2,0.692,Excel; SQL,Data Visualisation; Google Analytics
 JD-DS-0001,DATA_SCIENTIST,10,7,6,4,1,0.545,Machine Learning; SQL; Scikit-learn; Statistical Analysis,Data Visualisation
-JD-DS-0002,DATA_SCIENTIST,6,4,2,4,2,0.25,Model Evaluation; Monitoring & Observability; SQL; Self-Motivation,Business Analysis; Data Cleaning
-JD-DS-0003,DATA_SCIENTIST,23,20,17,6,3,0.654,AI Literacy; Attention to Detail; Deep Learning; Model Evaluation; Self-Motivation; UI/UX Design,A/B Testing; Documentation; Stakeholder Communication
-JD-DS-0004,DATA_SCIENTIST,10,8,4,6,4,0.286,Excel; Model Evaluation; Pandas; Problem Solving; SQL; Scikit-learn,Business Analysis; Data Visualisation; Google Analytics; Stakeholder Communication
-JD-DS-0005,DATA_SCIENTIST,8,5,3,5,2,0.3,Attention to Detail; Data Mining; R; Self-Motivation; Statistical Analysis,Data Visualisation; Stakeholder Communication
+JD-DS-0002,DATA_SCIENTIST,4,4,2,2,2,0.333,Model Evaluation; SQL,Business Analysis; Data Cleaning
+JD-DS-0003,DATA_SCIENTIST,23,19,17,6,2,0.68,AI Literacy; Attention to Detail; Deep Learning; Model Evaluation; Self-Motivation; UI/UX Design,Documentation; Stakeholder Communication
+JD-DS-0004,DATA_SCIENTIST,11,8,5,6,3,0.357,Excel; Model Evaluation; Pandas; Problem Solving; SQL; Scikit-learn,Business Analysis; Data Visualisation; Stakeholder Communication
+JD-DS-0005,DATA_SCIENTIST,8,6,4,4,2,0.4,Attention to Detail; Data Mining; R; Statistical Analysis,Data Visualisation; Stakeholder Communication
 JD-DS-0006,DATA_SCIENTIST,10,8,6,4,2,0.5,C#; Problem Solving; R; SQL,Data Visualisation; Teamwork
-JD-DS-0007,DATA_SCIENTIST,15,9,8,7,1,0.5,Adaptability; Java; Leadership; Machine Learning; Python; SQL; Self-Motivation,R
-JD-DS-0008,DATA_SCIENTIST,11,8,7,4,1,0.583,Communication; Data Analysis; SQL; Self-Motivation,Data Visualisation
-JD-DS-0009,DATA_SCIENTIST,13,10,7,6,3,0.438,Communication; Data Analysis; Git; Monitoring & Observability; SQL; Self-Motivation,A/B Testing; Cloud Computing; Google Analytics
+JD-DS-0007,DATA_SCIENTIST,15,9,8,7,1,0.5,Adaptability; Java; Leadership; Machine Learning; Python; SQL; Self-Motivation,Creativity
+JD-DS-0008,DATA_SCIENTIST,12,8,7,5,1,0.538,Communication; Data Analysis; R; SQL; Self-Motivation,Data Visualisation
+JD-DS-0009,DATA_SCIENTIST,13,8,7,6,1,0.5,Communication; Data Analysis; Git; Monitoring & Observability; SQL; Self-Motivation,Cloud Computing
 JD-DS-0010,DATA_SCIENTIST,4,3,3,1,0,0.75,AI Literacy,
-JD-SD-0001,SOFTWARE_DEV,4,6,1,3,5,0.111,Agile / Scrum; Cybersecurity; Unit Testing,A/B Testing; Business Analysis; Project Management; R; Requirements Analysis
-JD-SD-0002,SOFTWARE_DEV,8,9,6,2,3,0.545,C#; CSS,A/B Testing; Requirements Analysis; Teamwork
+JD-SD-0001,SOFTWARE_DEV,5,5,2,3,3,0.25,Agile / Scrum; Cybersecurity; Unit Testing,Business Analysis; Project Management; Requirements Analysis
+JD-SD-0002,SOFTWARE_DEV,10,8,6,4,2,0.5,Accounting; C#; CSS; UI/UX Design,Requirements Analysis; Teamwork
 JD-SD-0003,SOFTWARE_DEV,5,3,3,2,0,0.6,C#; CSS,
-JD-SD-0004,SOFTWARE_DEV,3,4,3,0,1,0.75,,Google Analytics
+JD-SD-0004,SOFTWARE_DEV,3,3,3,0,0,1.0,,
 JD-SD-0005,SOFTWARE_DEV,4,3,3,1,0,0.75,Communication,
-JD-SD-0006,SOFTWARE_DEV,11,4,2,9,2,0.154,Business Analysis; C#; Communication; Java; JavaScript; Problem Solving; SQL; Self-Motivation; Time Management,A/B Testing; R
-JD-SD-0007,SOFTWARE_DEV,4,5,2,2,3,0.286,Networking; Problem Solving,MySQL; Project Management; UI/UX Design
-JD-SD-0008,SOFTWARE_DEV,8,4,2,6,2,0.2,C#; Monitoring & Observability; Problem Solving; SQL; Self-Motivation; Teamwork,Google Analytics; Project Management
+JD-SD-0006,SOFTWARE_DEV,10,2,2,8,0,0.2,Business Analysis; C#; Communication; Java; JavaScript; Problem Solving; SQL; Time Management,
+JD-SD-0007,SOFTWARE_DEV,5,4,3,2,1,0.5,Networking; Problem Solving,Project Management
+JD-SD-0008,SOFTWARE_DEV,7,4,2,5,2,0.222,C#; Problem Solving; SQL; Self-Motivation; Teamwork,Google Analytics; Project Management
 JD-SD-0009,SOFTWARE_DEV,6,3,3,3,0,0.5,Agile / Scrum; CI/CD; Problem Solving,
-JD-SD-0010,SOFTWARE_DEV,9,9,7,2,2,0.636,Microservices; Problem Solving,A/B Testing; Project Management
+JD-SD-0010,SOFTWARE_DEV,10,8,7,3,1,0.636,Microservices; Problem Solving; User Acceptance Testing,Project Management
 JD-SD-0011,SOFTWARE_DEV,2,1,1,1,0,0.5,Problem Solving,
-JD-SD-0012,SOFTWARE_DEV,15,12,11,4,1,0.688,Attention to Detail; JavaScript; Self-Motivation; UI/UX Design,AI Literacy
-JD-SD-0013,SOFTWARE_DEV,20,16,13,7,3,0.565,CI/CD; Monitoring & Observability; PHP; REST API; SQL; Self-Motivation; Unit Testing,A/B Testing; Project Management; Requirements Analysis
-JD-WD-0001,WEB_DEV,7,7,6,1,1,0.75,Self-Motivation,R
-JD-WD-0002,WEB_DEV,10,8,8,2,0,0.8,Generative AI; Self-Motivation,
-JD-WD-0003,WEB_DEV,16,11,10,6,1,0.588,C#; Documentation; JavaScript; SQL; Teamwork; Unit Testing,A/B Testing
-JD-WD-0004,WEB_DEV,9,6,5,4,1,0.5,Identity & Access Management; JavaScript; Problem Solving; SQL,MySQL
-JD-WD-0005,WEB_DEV,8,8,6,2,2,0.6,Documentation; SQL,MySQL; Teamwork
-JD-WD-0006,WEB_DEV,12,10,9,3,1,0.692,Problem Solving; React; Self-Motivation,A/B Testing
-JD-WD-0007,WEB_DEV,10,8,7,3,1,0.636,CSS; Generative AI; JavaScript,A/B Testing
-JD-WD-0008,WEB_DEV,21,15,13,8,2,0.565,CI/CD; CSS; HTML; JavaScript; MongoDB; PostgreSQL; Self-Motivation; Unit Testing,Data Modelling; Teamwork
-JD-WD-0009,WEB_DEV,5,2,2,3,0,0.4,CSS; JavaScript; PHP,
+JD-SD-0012,SOFTWARE_DEV,14,11,10,4,1,0.667,Attention to Detail; JavaScript; Self-Motivation; UI/UX Design,AI Literacy
+JD-SD-0013,SOFTWARE_DEV,20,15,13,7,2,0.591,CI/CD; Monitoring & Observability; PHP; REST API; SQL; Self-Motivation; Unit Testing,Project Management; Requirements Analysis
+JD-WD-0001,WEB_DEV,7,6,6,1,0,0.857,Self-Motivation,
+JD-WD-0002,WEB_DEV,10,9,8,2,1,0.727,Generative AI; Self-Motivation,Creativity
+JD-WD-0003,WEB_DEV,16,10,10,6,0,0.625,C#; Documentation; JavaScript; SQL; Teamwork; Unit Testing,
+JD-WD-0004,WEB_DEV,11,7,7,4,0,0.636,Identity & Access Management; JavaScript; Problem Solving; SQL,
+JD-WD-0005,WEB_DEV,8,7,6,2,1,0.667,Documentation; SQL,Teamwork
+JD-WD-0006,WEB_DEV,13,10,10,3,0,0.769,Problem Solving; React; Self-Motivation,
+JD-WD-0007,WEB_DEV,10,7,7,3,0,0.7,CSS; Generative AI; JavaScript,
+JD-WD-0008,WEB_DEV,21,14,12,9,2,0.522,CI/CD; CSS; HTML; JavaScript; MongoDB; PostgreSQL; Self-Motivation; UI/UX Design; Unit Testing,Data Modelling; Teamwork
+JD-WD-0009,WEB_DEV,6,3,3,3,0,0.5,CSS; JavaScript; PHP,
 JD-WD-0010,WEB_DEV,5,4,3,2,1,0.5,CSS; PHP,Project Management
 JD-WD-0011,WEB_DEV,6,5,3,3,2,0.375,CSS; Communication; PHP,Project Management; Time Management

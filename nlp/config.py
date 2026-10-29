@@ -21,7 +21,11 @@ SKILL_TEXT_MODE = "name_aliases"
 # Change it whenever nlp/matcher.py would classify a stored assessment differently:
 # start_backend.bat (data/run_assessments.py --auto) then re-assesses every
 # synthetic student once, so the advisor dashboard shows the new rules.
-MATCH_RULES_VERSION = "2026-10-28"   # rules A and C adopted
+# 2026-10-28: rules A and C adopted.
+# 2026-10-29: "Monitoring", "Initiative" and "Experimentation" became ambiguous aliases, so they left
+# the embedded skill texts; Log Analysis vs Monitoring & Observability fell from
+# 0.508 to 0.487 (below RELATED), which turns Developing into Gap for 16 synthetic students.
+MATCH_RULES_VERSION = "2026-10-29"
 
 # Cosine similarity thresholds.
 #   MATCH:   a JD phrase at or above this counts as the skill; a different
