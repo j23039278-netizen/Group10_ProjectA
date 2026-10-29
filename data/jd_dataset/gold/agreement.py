@@ -9,9 +9,14 @@ Skill presence (Cohen's kappa + raw percent agreement)
 
   * Union only: the skills either annotator used in that JD. Every unit is
     present for at least one annotator, so the absent/absent cell is always 0.
-    Kappa then ignores all the easy agreement on skills the JD clearly lacks;
-    it is a strict, pessimistic figure, and percent agreement equals the
-    overlap |A and B| / |A or B|.
+    Kappa is NOT interpretable here: with no absent/absent cell and most
+    units marked present by both, chance agreement is so high that kappa
+    sits near or below 0 however well the annotators agree. It is still
+    reported (as requested), flagged as such. The figure to use for this set
+    is positive specific agreement, 2|A and B| / (|A| + |B|), which equals the
+    F1 of one annotator against the other and needs no absent class
+    (Hripcsak & Rothschild 2005). Percent agreement here equals the overlap
+    |A and B| / |A or B|.
   * Union + negatives: the union plus a per-JD random sample of catalogue
     skills neither annotator used (by default as many as the union, so the
     two classes are about the same size; --neg-ratio changes this). This gives
@@ -116,9 +121,11 @@ def presence_stats(units):
     x = [PRESENT if u["a"] else ABSENT for u in units]
     y = [PRESENT if u["b"] else ABSENT for u in units]
     pairs = Counter(zip(x, y))
+    both, a_only, b_only = pairs[(PRESENT, PRESENT)], pairs[(PRESENT, ABSENT)], pairs[(ABSENT, PRESENT)]
+    marked = 2 * both + a_only + b_only
     return {"units": len(units), "kappa": cohen_kappa(x, y), "percent": percent(x, y),
-            "both": pairs[(PRESENT, PRESENT)], "a_only": pairs[(PRESENT, ABSENT)],
-            "b_only": pairs[(ABSENT, PRESENT)], "neither": pairs[(ABSENT, ABSENT)]}
+            "positive": 2 * both / marked if marked else float("nan"),
+            "both": both, "a_only": a_only, "b_only": b_only, "neither": pairs[(ABSENT, ABSENT)]}
 
 
 def importance_stats(units):
@@ -167,20 +174,28 @@ def report_md(refs, pres_union, pres_neg, imp, n_dis, args):
         "",
         f"JDs labelled by both: **{len(refs)}** ({', '.join(refs)}).",
         "",
-        "## Skill presence (Cohen's kappa)",
+        "## Skill presence",
+        "",
+        f"- **Positive specific agreement (F1 between annotators): {fmt(pres_union['positive'])}** "
+        f"= 2 x {pres_union['both']} / ({pres_union['both'] + pres_union['a_only']} A + "
+        f"{pres_union['both'] + pres_union['b_only']} B skills)",
+        f"- **Cohen's kappa with sampled negatives: {fmt(pres_neg['kappa'])}** ({band(pres_neg['kappa'])})",
         "",
         "| Units scored | Units | Both | A only | B only | Neither | Agreement | kappa |",
         "|---|---|---|---|---|---|---|---|",
     ]
     for name, s in (("Union of both annotators' skills", pres_union),
                     (f"Union + sampled negatives (ratio {args.neg_ratio}, seed {args.seed})", pres_neg)):
+        label = band(s["kappa"]) if s["neither"] else "not interpretable: no absent/absent cell"
         lines.append(f"| {name} | {s['units']} | {s['both']} | {s['a_only']} | {s['b_only']} | "
-                     f"{s['neither']} | {fmt(s['percent'], 1)}% | {fmt(s['kappa'])} ({band(s['kappa'])}) |")
+                     f"{s['neither']} | {fmt(s['percent'], 1)}% | {fmt(s['kappa'])} ({label}) |")
     lines += [
         "",
-        "Union only has no absent/absent cell, so it is the strict figure; the sampled "
-        "negatives are mostly easy, so that figure is optimistic. The true agreement lies "
-        "between them (see the `agreement.py` docstring).",
+        "Kappa on the union alone is not a valid agreement figure: without an absent/absent "
+        "cell it stays near or below 0 even when the annotators agree on most skills. Use "
+        "positive specific agreement for that set. Kappa with sampled negatives is valid but "
+        "optimistic, because random catalogue skills are mostly easy negatives (see the "
+        "`agreement.py` docstring).",
         "",
         "## Importance (skills both marked present)",
         "",
@@ -229,6 +244,7 @@ def main(argv=None):
                                       encoding="utf-8")
 
     print(f"JDs labelled by both: {len(refs)}")
+    print(f"presence positive specific agreement (F1): {fmt(pres_union['positive'])}")
     for name, s in (("union only", pres_union), ("union + negatives", pres_neg)):
         print(f"presence kappa ({name}): {fmt(s['kappa'])}  agreement {fmt(s['percent'], 1)}%  "
               f"units {s['units']}")

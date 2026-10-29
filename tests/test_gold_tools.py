@@ -296,7 +296,8 @@ def test_agreement_units_and_outputs(tmp_path):
     s = agreement.presence_stats(union)
     assert (s["both"], s["a_only"], s["b_only"], s["neither"]) == (2, 1, 1, 0)
     assert s["percent"] == pytest.approx(50.0)
-    imp = agreement.importance_stats(union)
+    assert s["positive"] == pytest.approx(2 * 2 / (3 + 3))  # 2|A and B| / (|A| + |B|)
+    imp =agreement.importance_stats(union)
     assert imp["units"] == 2 and imp["percent"] == pytest.approx(50.0)
 
     rc = agreement.main(["--a", str(pa), "--b", str(pb), "--out-dir", str(tmp_path)])
