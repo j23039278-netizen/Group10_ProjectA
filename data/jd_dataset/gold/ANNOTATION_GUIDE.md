@@ -41,6 +41,17 @@ A duty listed under *Responsibilities* with no qualifier counts as `required`. I
 
 Write `NEW: <term>` in `skill_name`, for example `NEW: DevOps`. After annotation, these rows and `unmatched_terms.csv` together tell us which skills to add to the library. Adding a skill later does not change the gold labels. Only the `NEW:` rows need to be re-mapped.
 
+## Rules added after the A/B resolution (2026-10-29)
+
+These came out of resolving the A/B disagreements (`resolution.xlsx`, AI-assisted adjudication) and apply to all 60 JDs.
+
+- **R1. One name per `NEW:` skill.** Use the same `NEW:` name everywhere: `NEW: IT Support` (not "Technical Support"), `NEW: BigQuery`, `NEW: Robotic Process Automation`, `NEW: UiPath`, `NEW: Intrusion Detection/Prevention`. Before adding a new `NEW:` term, check whether one already exists for the same skill.
+- **R2. Soft skills.** A soft skill counts when the JD asks it of the candidate (*Requirements*, *About you*, *What we expect*) or names it in a duty. It does not count when it only describes what the intern will learn or experience (*What you'll learn*, *Learning & Development Plan*). "Willing / eager to learn" maps to `Self-Motivation`.
+- **R3. Umbrella and specific.** Label both, as above. This also covers a tool and its practice: `CSS` + `NEW: Tailwind CSS`, `GCP` + `NEW: BigQuery`, `NEW: Robotic Process Automation` + `NEW: UiPath`.
+- **R4. AI skills.** LLM / generative AI tools (ChatGPT, Copilot, "AI coding tools") → `Generative AI`. General AI concepts or AI use cases → `AI Literacy`. Do not label both from the same sentence.
+- **R5. A field with years of experience.** For "1+ year of experience in cybersecurity", label the field (`Cybersecurity`) and ignore the duration.
+- **Degree subjects are never evidence.** If a skill is real but the only evidence you picked is a degree subject, find a duty or requirement sentence instead.
+
 ## Process
 
 Labelling happens in an Excel workbook (one sheet per JD: the JD text on top, the label table below). The scripts only move labels between the workbook and the CSV files and check them. They never create labels. Run every command from the repo root.
@@ -67,6 +78,6 @@ Labelling happens in an Excel workbook (one sheet per JD: the JD text on top, th
    python data/jd_dataset/gold/agreement.py
    ```
    This writes `gold/AGREEMENT.md` (Cohen's κ on skill presence, with and without sampled negatives, percent agreement, and weighted κ on importance) and `gold/agreement_disagreements.csv`. Put the κ figures in the report.
-3. **Resolve the disagreements together.** Fix `gold_workbook.xlsx`, run `collect_workbook.py` again, then freeze `gold_labels.csv` with a commit.
+3. **Resolve the disagreements together.** Record each decision in `resolution.xlsx`, fix `gold_workbook.xlsx`, run `collect_workbook.py` again, then freeze `gold_labels.csv` with a commit. Do **not** run `agreement.py` again after the resolution: `AGREEMENT.md` must keep the figures from before it. (In this project the disagreements were adjudicated with AI assistance, at annotator A's request; `resolution.xlsx` records every decision and its reason. State this in the report.)
 
 `make_workbook.py` never overwrites an existing workbook, because it may already hold labels. Use `--force` only if you really want to start again.

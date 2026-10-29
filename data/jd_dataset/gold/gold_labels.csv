@@ -13,8 +13,9 @@ JD-CE-0001,Self-Motivation,required,"* Willingness to learn, take initiative and
 JD-CE-0001,Communication,required,* Good communication skills and attention to detail
 JD-CE-0001,Attention to Detail,required,* Good communication skills and attention to detail
 JD-CE-0001,Teamwork,required,work collaboratively with the technical team
-JD-CE-0001,Cybersecurity,preferred,Learn and follow IT security practices?
+JD-CE-0001,Cybersecurity,preferred,Learn and follow IT security practices
 JD-CE-0001,NEW: Virtualisation,bonus,virtual machines or networking technologies is an advantage
+JD-CE-0001,Identity & Access Management,preferred,"Learn and follow IT security practices, access control procedures"
 JD-CE-0002,Documentation,required,"* Maintain accurate and up-to-date documentation of IT systems, configurations, processes and procedures to support transparency and knowledge sharing"
 JD-CE-0002,Generative AI,required,"* Research, evaluate and introduce emerging technologies and solutions, including Generative AI, automation and robotics to drive organizational improvement"
 JD-CE-0002,Communication,required,* Strong communication and interpersonal abilities
@@ -34,6 +35,8 @@ JD-CE-0002,NEW: Microsoft Copilot,required,Microsoft Copilot
 JD-CE-0002,NEW: Power Automate,required,Microsoft Power Automate
 JD-CE-0002,NEW: Robotic Process Automation,bonus,UiPath (RPA)
 JD-CE-0002,NEW: IT Support,required,"Provide first-level technical support for hardware, software and network issues"
+JD-CE-0002,NEW: UiPath,bonus,UiPath (RPA)
+JD-CE-0002,NEW: IT Asset Management,required,"IT asset management, inventory tracking"
 JD-CE-0003,Cloud Computing,required,"* Build, deploy and maintain the cloud infrastructure that runs our own platforms and our clients’ hosted environments, working to designs set by senior engineers and architects"
 JD-CE-0003,Monitoring & Observability,required,"* Run day-to-day operations across cloud and on-premises environments — provisioning, patching, monitoring, backup and incident response"
 JD-CE-0003,Incident Response,required,"* Run day-to-day operations across cloud and on-premises environments — provisioning, patching, monitoring, backup and incident response"
@@ -155,7 +158,7 @@ JD-CY-0001,Time Management,required,* Strong organizational and time management 
 JD-CY-0001,Self-Motivation,required,Quick learner and always look for ways to improve own self.
 JD-CY-0001,Teamwork,required,Work closely with technical support team
 JD-CY-0001,NEW: Organisational Skills,required,Strong organizational and time management skills.
-JD-CY-0001,NEW: Technical Support,required,providing technical support for the assigned cybersecurity products
+JD-CY-0001,NEW: IT Support,required,providing technical support for the assigned cybersecurity products
 JD-CY-0002,Communication,required,i) Communication
 JD-CY-0002,SIEM,required,"* General SIEM monitoring, analysis, content development, and maintenance"
 JD-CY-0002,Documentation,required,including log retrieval and documentation
@@ -201,6 +204,8 @@ JD-CY-0004,NEW: Windows,required,"Working comfort with at least one of Windows, 
 JD-CY-0004,NEW: macOS,required,"Working comfort with at least one of Windows, Linux, or macOS"
 JD-CY-0004,NEW: Working Under Pressure,required,Calm under pressure
 JD-CY-0004,NEW: EDR,preferred,"Hands-on exposure to EDR, SIEM, or forensic tooling"
+JD-CY-0004,Cloud Computing,required,"Windows, Linux, macOS, and cloud environments"
+JD-CY-0004,NEW: Chain of Custody,required,chain-of-custody requirements
 JD-CY-0005,SIEM,required,"* Monitor security alerts and logs from various security tools such as SIEM (Security Information and Event Management) systems, firewalls, antivirus, and intrusion detection/prevention systems"
 JD-CY-0005,Incident Response,required,* Investigate and analyze potential security incidents or breaches and escalate as necessary to senior analysts or incident response teams
 JD-CY-0005,Documentation,required,"* Assist in maintaining and updating security documentation, policies, and procedures"
@@ -214,8 +219,10 @@ JD-CY-0005,Teamwork,required,Collaborate with IT teams to implement security con
 JD-CY-0005,Risk Analysis,required,mitigate identified risks
 JD-CY-0005,Log Analysis,required,Monitor security alerts and logs
 JD-CY-0005,Security Operations (SOC),required,Monitor security alerts and logs from various security tools
-JD-CY-0005,Firewall Management,preferred,"Familiarity with security tools like SIEM, firewalls"
-JD-CY-0005,NEW: Intrusion Detection,required,intrusion detection/prevention systems
+JD-CY-0005,Firewall Management,required,"Monitor security alerts and logs from various security tools such as SIEM (Security Information and Event Management) systems, firewalls"
+JD-CY-0005,NEW: Intrusion Detection/Prevention,required,intrusion detection/prevention systems
+JD-CY-0005,NEW: Antivirus,required,antivirus
+JD-CY-0005,NEW: Operating Systems,required,"Basic understanding of network protocols, operating systems"
 JD-CY-0006,Security Operations (SOC),required,Continuous Security Monitoring Execute 24/7
 JD-CY-0006,SIEM,required,* Continuous monitoring of security events across enterprise infrastructure using SIEM platforms
 JD-CY-0006,Incident Response,required,"* Escalate complex or high-severity threats to L2 SOC Analysts, Incident Response, or Engineering units"
@@ -268,7 +275,6 @@ JD-CY-0010,Incident Response,required,Support Incident Investigations
 JD-CY-0010,Documentation,required,document findings
 JD-CY-0010,Self-Motivation,required,Eager to learn & grow
 JD-CY-0010,Research Skills,required,Participate in Cybersecurity Research & Training
-JD-DA-0001,AI Literacy,required,"Use artificial intelligence (AI) to build: write SQL and Python with AI tools such as Claude, ChatGPT or Copilot, and turn an idea into a working tool in days, not months"
 JD-DA-0001,SQL,required,"Use artificial intelligence (AI) to build: write SQL and Python with AI tools such as Claude, ChatGPT or Copilot, and turn an idea into a working tool in days, not months"
 JD-DA-0001,Python,required,"Use artificial intelligence (AI) to build: write SQL and Python with AI tools such as Claude, ChatGPT or Copilot, and turn an idea into a working tool in days, not months"
 JD-DA-0001,Statistical Analysis,required,We need a statistician who wants to use that data to decide where the company grows next
@@ -438,7 +444,6 @@ JD-DS-0002,Python,preferred,Learn and gain exposure to:
 JD-DS-0002,Cloud Computing,preferred,Learn and gain exposure to:
 JD-DS-0002,SQL,preferred,Learn and gain exposure to:
 JD-DS-0002,Data Visualisation,required,Building monitoring dashboards.
-JD-DS-0002,Research Skills,required,research and development (R&D)
 JD-DS-0002,AI Literacy,required,Assist the team to develop and deploy AI use cases
 JD-DS-0002,NEW: Robotic Process Automation,required,building RPA pipelines
 JD-DS-0002,NEW: Data Labelling,required,Helping build labelled datasets for model evaluation.
@@ -446,7 +451,7 @@ JD-DS-0003,Computer Vision,required,"We are looking for passionate AI Interns wh
 JD-DS-0003,Requirements Analysis,required,* Collaborate with customers and internal stakeholders to understand business requirements and translate them into AI solutions
 JD-DS-0003,ETL,required,"* Build data pipelines, model evaluation workflows, and proof-of-concept demonstrations"
 JD-DS-0003,Model Evaluation,required,"* Build data pipelines, model evaluation workflows, and proof-of-concept demonstrations"
-JD-DS-0003,AI Literacy,required,* Artificial Intelligence
+JD-DS-0003,AI Literacy,required,Participate in AI projects serving external customers
 JD-DS-0003,Generative AI,required,"* Strong interest in Generative AI, Computer Vision, and Multimodal AI"
 JD-DS-0003,Python,required,* Solid programming skills in Python
 JD-DS-0003,Machine Learning,preferred,* Familiarity with machine learning and deep learning fundamentals
@@ -661,7 +666,7 @@ JD-SD-0008,NEW: Web Development,required,Web Programming
 JD-SD-0008,NEW: SECS/GEM,required,SECS/GEM
 JD-SD-0009,Java,required,We are looking for a passionate and driven Java Developer Intern to join our growing engineering team
 JD-SD-0009,Agile / Scrum,required,"* Collaborate with cross-functional teams (PM, QA, DevOps) in an Agile environment"
-JD-SD-0009,CI/CD,preferred,Learn and contribute to internal tooling and CI/CD pipelines
+JD-SD-0009,CI/CD,required,Learn and contribute to internal tooling and CI/CD pipelines
 JD-SD-0009,Spring Boot,preferred,* Familiarity with Spring Boot or willingness to learn quickly
 JD-SD-0009,SQL,required,* Basic understanding of SQL / relational databases
 JD-SD-0009,REST API,required,Java-based backend services and APIs
@@ -670,6 +675,9 @@ JD-SD-0009,Teamwork,required,"Collaborate with cross-functional teams (PM, QA, D
 JD-SD-0009,Self-Motivation,required,willingness to learn
 JD-SD-0009,NEW: Relational Databases,required,Basic understanding of SQL / relational databases
 JD-SD-0009,NEW: SDLC,required,Participate in the full software development lifecycle
+JD-SD-0009,Documentation,required,well-documented code
+JD-SD-0009,NEW: Backend Development,required,Java-based backend services and APIs
+JD-SD-0009,NEW: Debugging,required,Debug and troubleshoot application issues
 JD-SD-0010,Problem Solving,required,"The Software Developer Intern supports the development of enterprise financial applications, assisting in coding, testing, and troubleshooting"
 JD-SD-0010,Teamwork,required,Collaborate with team and across teams.
 JD-SD-0010,Spring Boot,preferred,Expose to different development framework and tools: Spring framework
@@ -723,9 +731,9 @@ JD-WD-0001,JavaScript,required,* Basic knowledge in programming languages such a
 JD-WD-0001,Vue.js,required,* Basic knowledge in development frameworks such as Vue.js ecosystem and UI styling with Tailwind CSS
 JD-WD-0001,CSS,required,js ecosystem and UI styling with Tailwind CSS
 JD-WD-0001,Self-Motivation,required,* Self-Driven with strong analytical and problem-solving skills
-JD-WD-0001,Teamwork,required,working together with software development team
 JD-WD-0001,NEW: Tailwind CSS,required,UI styling with Tailwind CSS
 JD-WD-0001,NEW: Software Testing,required,Perform testing and debugging
+JD-WD-0001,NEW: Debugging,required,Perform testing and debugging
 JD-WD-0002,PHP,required,"* PHP / Laravel, or another modern web framework"
 JD-WD-0002,Git,required,"* Git and GitHub (branches, pull requests, teamwork)"
 JD-WD-0002,Teamwork,required,"* Git and GitHub (branches, pull requests, teamwork)"
@@ -882,3 +890,4 @@ JD-WD-0011,NEW: Web Development,required,Build and maintain high-quality web app
 JD-WD-0011,NEW: Bootstrap,preferred,"Familiarity with Sourcetree, Bootstrap, and CodeIgniter Framework."
 JD-WD-0011,NEW: CodeIgniter,preferred,"Familiarity with Sourcetree, Bootstrap, and CodeIgniter Framework."
 JD-WD-0011,NEW: Sourcetree,preferred,"Familiarity with Sourcetree, Bootstrap, and CodeIgniter Framework."
+JD-WD-0011,NEW: Backend Development,required,Expand and enhance existing backend services
