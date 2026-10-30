@@ -207,9 +207,25 @@ function Outbox() {
   const [data, setData]   = useState(null)
   const [open, setOpen]   = useState(null)
   const [error, setError] = useState('')
-  useEffect(() => {
-    intakeAPI.outbox().then(r => setData(r.data)).catch(err => setError(errorText(err, 'Could not load the outbox.')))
-  }, [])
+  const [notice, setNotice] = useState('')
+  const [busy, setBusy]   = useState('')
+  const load = () => intakeAPI.outbox().then(r => setData(r.data)).catch(err => setError(errorText(err, 'Could not load the outbox.')))
+  useEffect(() => { load() }, [])
+
+  // Send a stored email again, e.g. after the mail server was set up or after a failure
+  const resend = async (e) => {
+    setBusy(e.email_id); setError(''); setNotice('')
+    try {
+      const r = await intakeAPI.resend(e.email_id)
+      if (r.data.status === 'sent') setNotice(`Sent to ${e.to_address}.`)
+      else setError(`Not sent to ${e.to_address}: ${r.data.error || r.data.status}`)
+      await load()
+    } catch (err) {
+      setError(errorText(err, 'Could not send the email.'))
+    } finally {
+      setBusy('')
+    }
+  }
   if (error) return <Alert>{error}</Alert>
   if (!data) return <div style={{ color: C.muted }}>Loading…</div>
   return (
@@ -217,17 +233,32 @@ function Outbox() {
       <div style={{ fontSize: '13px', color: C.body, marginBottom: '14px' }}>
         {data.mail_server
           ? 'A mail server is configured: emails are sent and also listed here.'
-          : <>No mail server is configured (<code>SMTP_HOST</code> in backend/.env), so emails are <b>not sent</b>. Open one to pass the login details to the student.</>}
+          : <>No mail server is configured (<code>SMTP_HOST</code> in backend/.env, see System Settings), so emails are <b>not sent</b>. Open one to pass the login details on, or set up the mail server and use <b>Resend</b>.</>}
         {' '}The newest 50 are shown.
       </div>
+      {notice && <Alert type="success">{notice}</Alert>}
       {data.emails.length === 0 ? <div style={{ color: C.muted, fontSize: '13px' }}>No emails yet.</div> : data.emails.map(e => (
         <div key={e.email_id} style={{ borderBottom: '1px solid #f0f1f5', padding: '10px 0' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
             <div style={{ fontSize: '13px' }}>
               <b style={{ color: C.ink }}>{e.to_address}</b> <span style={{ color: C.muted }}>· {e.subject} · {fmtDate(e.created_at)}</span>
+              {e.related_user_name && <span style={{ color: C.muted }}> · for {e.related_user_name}</span>}
+              {(e.attempts > 1 || e.sent_at) && (
+                <div style={{ fontSize: '11px', color: C.muted, marginTop: '2px' }}>
+                  {e.attempts > 1 && `${e.attempts} attempts`}{e.attempts > 1 && e.sent_at && ' · '}{e.sent_at && `sent ${fmtDate(e.sent_at)}`}
+                </div>
+              )}
             </div>
             <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
               <Pill s={MAIL[e.status] || MAIL.not_sent} />
+              {data.mail_server && (
+                <button style={smallBtn(e.status === 'sent' ? 'secondary' : 'primary')} disabled={busy === e.email_id}
+                  title={e.body.includes('Temporary password') && !e.password_still_temporary
+                    ? 'This person already chose their own password: reset it in User Management instead' : undefined}
+                  onClick={() => resend(e)}>
+                  {busy === e.email_id ? 'Sending…' : e.status === 'sent' ? 'Send again' : 'Resend'}
+                </button>
+              )}
               <button style={smallBtn()} onClick={() => setOpen(open === e.email_id ? null : e.email_id)}>{open === e.email_id ? 'Hide' : 'Open'}</button>
             </div>
           </div>

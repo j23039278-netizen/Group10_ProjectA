@@ -159,6 +159,34 @@ GPA and CGPA and are reminded to update them at the start of each semester (Janu
 September). The advisor's **Download the template** gives an Excel file whose Course column is
 a drop-down list.
 
+**Work experience and career paths.** Students list internships, jobs, freelance work and
+volunteering on My Profile → Experience (paid work and internships count towards Industry
+Experience in an assessment). **Career Paths** ranks the job roles of the student's course by how
+many of their required / preferred / bonus skills the student lists, shows what is missing and
+suggests a free resource for the main missing skills.
+
+**System settings (Admin → System Settings).** Semester start dates (GPA / CGPA reminder),
+readiness bands for the advisor dashboard (On Track / Needs Support limits) and upload limits.
+The same page shows whether a mail server is set up and can send a test email; the SMTP settings
+themselves (`SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURITY`, `SMTP_USER`, `SMTP_PASSWORD`, `SMTP_FROM`)
+stay in `backend/.env`, never in git. Stored emails can be resent from Student Intake → Email outbox
+(a temporary password is not resent once the person has chosen their own).
+
+**Advisor dashboard.** Tabs: Overview (readiness distribution, student status, top skill gaps,
+target roles, learning activity), Skill Gaps (filter by assessed job role), Students (search, filters,
+sortable columns) and Learning Progress (most completed resources, activity per student); every table
+exports as CSV. A student's page adds the CV download, a printable report and **advisor notes**:
+general notes and reviews of the latest AI result (agree / disagree with a reason), seen by staff of
+the course only, never by the student. The pages remind advisors that scores are decision support.
+Students below 40% readiness are shown as "Needs Support".
+
+**CV.** On My Profile → Skills a student can upload a CV (PDF or Word .docx, max 5 MB). The NLP
+module finds the skills it mentions that are in the skills library (others are not picked up);
+skills outside the student's course list are shown but cannot be added, and nothing is added until
+the student ticks the skills and confirms (with a level for each). **Export CV** on My Profile shows
+a one-page CV of the current skills, projects, certifications and completed learning, saved as PDF
+from the browser. PDF reading needs `pypdf` (in `backend/requirements.txt`).
+
 Advisors only see and add students of their own courses:
 
 | Position | Courses | Staff ID |

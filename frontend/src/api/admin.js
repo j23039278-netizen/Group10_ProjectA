@@ -4,6 +4,10 @@ import { API } from './client';
 
 // ── Admin ─────────────────────────────────────────────────────
 export const adminAPI = {
+  // System settings (FR-16) and the mail server check
+  settings:       ()       => API.get('/admin/settings'),
+  saveSettings:   (values) => API.put('/admin/settings', { values }),
+  testEmail:      (to)     => API.post('/admin/settings/test-email', { to }),
   stats:         ()           => API.get('/admin/stats'),
   users:         (params)     => API.get('/admin/users', { params }),
   createUser:    (data)       => API.post('/admin/users', data),

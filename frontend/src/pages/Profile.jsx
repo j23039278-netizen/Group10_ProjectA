@@ -6,6 +6,9 @@ import { courseLabel } from '../utils/courses'
 import EvidenceFiles, { PendingFiles } from '../components/EvidenceFiles'
 import { MAX_FILES } from '../components/evidenceRules'
 import ResultsReminder from '../components/ResultsReminder'
+import CvUpload from '../components/CvUpload'
+import ExperienceTab from '../components/ExperienceTab'
+import { useNavigate } from 'react-router-dom'
 
 const CATEGORIES = ['Technical','AI_Digital','Analytical','Soft']
 const PROFICIENCY = ['beginner','intermediate','advanced']
@@ -19,6 +22,7 @@ const errMsg = (e, fallback) => {
 }
 
 export default function Profile() {
+  const navigate = useNavigate()
   const [profile,  setProfile]  = useState(null)
   const [skills,   setSkills]   = useState([])
   const [library,  setLibrary]  = useState([])
@@ -273,7 +277,7 @@ export default function Profile() {
     <div style={{ fontSize: '13px', fontWeight: '700', color: '#1a1f2e', marginBottom: '16px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{t}</div>
   )
 
-  const tabs = ['info','skills','projects','certifications']
+  const tabs = ['info','skills','experience','projects','certifications']
 
   const errorBox = itemError && (
     <div role="alert" style={{ background: '#fee2e2', color: '#dc2626', padding: '10px', borderRadius: '8px', marginBottom: '12px', fontSize: '13px' }}>{itemError}</div>
@@ -283,9 +287,15 @@ export default function Profile() {
 
   return (
     <div style={{ padding: '28px 32px' }}>
-      <div style={{ marginBottom: '24px' }}>
-        <div style={{ fontSize: '26px', fontWeight: '700', color: '#1a1f2e' }}>My Profile</div>
-        <div style={{ fontSize: '13px', color: '#4a5168', marginTop: '4px' }}>Manage your employability profile</div>
+      <div style={{ marginBottom: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px', flexWrap: 'wrap' }}>
+        <div>
+          <div style={{ fontSize: '26px', fontWeight: '700', color: '#1a1f2e' }}>My Profile</div>
+          <div style={{ fontSize: '13px', color: '#4a5168', marginTop: '4px' }}>Manage your employability profile</div>
+        </div>
+        {/* A one-page CV of the current skills and records, saved as PDF from the browser */}
+        <button onClick={() => navigate('/cv')} style={{ padding: '9px 16px', fontSize: '13px', fontWeight: '600', border: 'none', borderRadius: '8px', background: '#2d5be3', color: '#fff', cursor: 'pointer' }}>
+          Export CV
+        </button>
       </div>
 
       {/* Who the student is: the account details come from the university */}
@@ -392,6 +402,7 @@ export default function Profile() {
       {/* TAB: Skills */}
       {tab === 'skills' && (
         <>
+          <CvUpload onSkillsAdded={loadAll} />
           {card(
             <>
               {cardTitle('Add Skill')}
@@ -444,6 +455,8 @@ export default function Profile() {
       )}
 
       {/* TAB: Projects */}
+      {tab === 'experience' && <ExperienceTab />}
+
       {tab === 'projects' && (
         <>
           {card(

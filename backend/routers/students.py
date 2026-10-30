@@ -16,6 +16,7 @@ from uuid import UUID
 import audit
 from advisor_scope import COURSE_NAMES, courses_of
 import evidence
+import settings
 import programmes
 from database import get_db
 from routers.auth import get_current_user
@@ -63,6 +64,7 @@ class CertificationAdd(BaseModel):
 def sync_experience_counts(db, profile_id):
     """Update the profile's project / certification / internship counters from its records.
 
+    Internships = internship-type projects + internship work experiences.
     internship_count never goes down: synthetic profiles set it directly, without
     internship-type projects.
     """
@@ -76,7 +78,10 @@ def sync_experience_counts(db, profile_id):
                 internship_count    = GREATEST(COALESCE(sp.internship_count, 0),
                                        (SELECT COUNT(*) FROM student_projects p
                                         WHERE p.profile_id = sp.profile_id
-                                          AND p.project_type = 'internship')),
+                                          AND p.project_type = 'internship')
+                                       + (SELECT COUNT(*) FROM student_experiences e
+                                          WHERE e.profile_id = sp.profile_id
+                                            AND e.experience_type = 'internship')),
                 updated_at          = CURRENT_TIMESTAMP
             WHERE sp.profile_id = :pid
         """),
@@ -134,18 +139,18 @@ def ensure_profile(db, current_user):
 
 
 # ── Profile Endpoints ─────────────────────────────────────────
-# Semester starts (month, day) for the GPA / CGPA reminder: the January, May and
-# September intakes. Change them here if the academic calendar changes.
+# Default semester starts (month, day) for the GPA / CGPA reminder: the January, May
+# and September intakes. Admins change them in System Settings (settings.py).
 SEMESTER_STARTS = ((1, 1), (5, 1), (9, 1))
 
 
-def current_semester_start(today=None):
+def current_semester_start(today=None, semester_starts=SEMESTER_STARTS):
     """The start date of the semester that today falls in"""
     today = today or date.today()
-    starts = [date(today.year, m, d) for m, d in SEMESTER_STARTS if date(today.year, m, d) <= today]
+    starts = [date(today.year, m, d) for m, d in semester_starts if date(today.year, m, d) <= today]
     if starts:
         return max(starts)
-    m, d = SEMESTER_STARTS[-1]
+    m, d = semester_starts[-1]
     return date(today.year - 1, m, d)
 
 
@@ -175,7 +180,7 @@ def get_my_profile(
 
     row = dict(profile._mapping)
     # Remind the student to enter this semester's GPA / CGPA
-    start = current_semester_start()
+    start = current_semester_start(semester_starts=settings.semester_starts(db))
     updated = row["results_updated_at"]
     row["semester_start"] = start.isoformat()
     row["results_reminder"] = updated is None or updated.date() < start

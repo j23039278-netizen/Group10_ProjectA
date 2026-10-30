@@ -25,6 +25,8 @@ const ACTION_LABEL = {
   'intake.upload': 'Uploaded new students', 'intake.accounts_create': 'Created student accounts', 'intake.reject': 'Rejected new student',
   'assessment.run': 'Ran assessment', 'jd.analyse': 'Analysed JD',
   'advisor.view_student': 'Viewed student', 'advisor.view_file': 'Opened evidence file',
+  'advisor.view_cv': 'Downloaded student CV', 'advisor.note_create': 'Added advisor note',
+  'advisor.note_update': 'Changed advisor note', 'advisor.note_delete': 'Deleted advisor note',
   'admin.user_create': 'Created account', 'admin.user_update': 'Changed account',
   'admin.password_reset': 'Reset password',
   'admin.skill_create': 'Added skill', 'admin.skill_update': 'Changed skill',

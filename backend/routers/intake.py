@@ -542,7 +542,35 @@ def list_outbox(limit: int = 50, current_user=Depends(get_current_user), db: Ses
     """Notification emails, newest first. Without a mail server they are only stored here."""
     require_admin(current_user)
     rows = db.execute(text("""
-        SELECT email_id, to_address, subject, body, status, error, created_at
-        FROM email_outbox ORDER BY created_at DESC LIMIT :n
+        SELECT o.email_id, o.to_address, o.subject, o.body, o.status, o.error, o.created_at,
+               o.attempts, o.last_attempt_at, o.sent_at, o.related_user_id,
+               u.full_name AS related_user_name, COALESCE(u.must_change_password, FALSE) AS password_still_temporary
+        FROM email_outbox o LEFT JOIN users u ON u.user_id = o.related_user_id
+        ORDER BY o.created_at DESC LIMIT :n
     """), {"n": max(1, min(limit, 200))}).fetchall()
     return {"mail_server": notifications.smtp_configured(), "emails": [dict(r._mapping) for r in rows]}
+
+
+@router.post("/outbox/{email_id}/resend")
+def resend_email(email_id: str, request: Request, current_user=Depends(get_current_user), db: Session = Depends(get_db)):
+    """Send a stored email again. An account email with a temporary password is only
+    resent while that password is still the one in use."""
+    require_admin(current_user)
+    eid = parse_id(email_id, "Email not found")
+    row = db.execute(text("""
+        SELECT o.email_id, o.body, o.related_user_id, u.must_change_password
+        FROM email_outbox o LEFT JOIN users u ON u.user_id = o.related_user_id WHERE o.email_id = :e
+    """), {"e": eid}).fetchone()
+    if not row:
+        raise HTTPException(status_code=404, detail="Email not found")
+    if not notifications.smtp_configured():
+        raise HTTPException(status_code=400, detail="No mail server is set up (SMTP settings in backend/.env), so nothing can be sent yet.")
+    if "Temporary password" in row.body and row.related_user_id and not row.must_change_password:
+        raise HTTPException(status_code=400, detail=(
+            "This person has already chosen their own password, so this temporary password no longer works. "
+            "Reset their password in User Management instead."))
+    status, error = notifications.resend(db, row.email_id)
+    audit.record(db, "admin.email_resend", user=current_user, request=request, target_type="email",
+                 target_id=row.email_id, details={"status": status})
+    db.commit()
+    return {"status": status, "error": error}

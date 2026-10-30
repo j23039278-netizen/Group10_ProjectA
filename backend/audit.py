@@ -19,10 +19,11 @@ ACTIONS = (
     "auth.login", "auth.login_failed", "auth.register", "auth.password_change",
     "intake.upload", "intake.accounts_create", "intake.reject",
     "assessment.run", "jd.analyse",
-    "advisor.view_student", "advisor.view_file",
+    "advisor.view_student", "advisor.view_file", "advisor.view_cv",
+    "advisor.note_create", "advisor.note_update", "advisor.note_delete",
     "admin.user_create", "admin.user_update", "admin.password_reset",
     "admin.skill_create", "admin.skill_update", "admin.role_create", "admin.role_update",
-    "admin.resource_create", "admin.resource_update",
+    "admin.resource_create", "admin.resource_update", "admin.settings_update", "admin.email_resend",
 )
 
 
