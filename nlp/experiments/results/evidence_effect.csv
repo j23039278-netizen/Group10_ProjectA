@@ -1,0 +1,37 @@
+scenario,group_by,group,students,rows,developing_to_strong,students_changed,mean_without,mean_with,mean_delta
+website,all,all,5000,122038,2133,1455,48.98,50.01,1.02
+website,archetype,strong,1228,29996,166,143,73.0,73.34,0.33
+website,archetype,average,2446,59604,1091,810,50.21,51.27,1.07
+website,archetype,weak,1326,32438,876,502,24.49,26.06,1.58
+website,role,Business Analyst,417,9591,177,122,52.33,53.4,1.07
+website,role,Cloud Engineer,350,8750,165,110,47.13,48.2,1.07
+website,role,Cybersecurity Analyst,426,11928,165,115,48.45,49.16,0.71
+website,role,Data Analyst,682,16368,300,195,47.8,48.94,1.13
+website,role,Data Scientist,412,10712,199,133,47.71,48.87,1.16
+website,role,Financial Analyst,417,9591,141,101,45.15,46.08,0.92
+website,role,HR Executive,416,9568,150,111,48.9,49.72,0.81
+website,role,Marketing Executive,417,9591,199,136,51.55,52.8,1.26
+website,role,Software Developer,827,20675,366,245,48.34,49.32,0.98
+website,role,Web Developer,636,15264,271,187,51.98,53.05,1.07
+website,projects + certifications,0,411,10035,0,0,21.0,21.0,0.0
+website,projects + certifications,1,937,22916,448,304,31.27,32.4,1.13
+website,projects + certifications,2,1184,28793,755,489,43.82,45.34,1.53
+website,projects + certifications,3+,2468,60294,930,662,62.85,63.76,0.91
+stored,all,all,5000,122038,14,14,50.21,50.21,0.01
+stored,archetype,strong,1228,29996,4,4,73.37,73.38,0.01
+stored,archetype,average,2446,59604,9,9,51.48,51.49,0.01
+stored,archetype,weak,1326,32438,1,1,26.41,26.41,0.0
+stored,role,Business Analyst,417,9591,1,1,53.58,53.58,0.0
+stored,role,Cloud Engineer,350,8750,9,9,48.32,48.39,0.07
+stored,role,Cybersecurity Analyst,426,11928,0,0,49.4,49.4,0.0
+stored,role,Data Analyst,682,16368,0,0,49.18,49.18,0.0
+stored,role,Data Scientist,412,10712,0,0,49.12,49.12,0.0
+stored,role,Financial Analyst,417,9591,0,0,46.26,46.26,0.0
+stored,role,HR Executive,416,9568,0,0,49.9,49.9,0.0
+stored,role,Marketing Executive,417,9591,4,4,52.94,52.96,0.02
+stored,role,Software Developer,827,20675,0,0,49.53,49.53,0.0
+stored,role,Web Developer,636,15264,0,0,53.25,53.25,0.0
+stored,projects + certifications,0,411,10035,0,0,21.12,21.12,0.0
+stored,projects + certifications,1,937,22916,1,1,32.7,32.7,0.0
+stored,projects + certifications,2,1184,28793,4,4,45.61,45.62,0.01
+stored,projects + certifications,3+,2468,60294,9,9,63.9,63.91,0.01

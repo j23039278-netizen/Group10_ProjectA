@@ -25,7 +25,15 @@ SKILL_TEXT_MODE = "name_aliases"
 # 2026-10-29: "Monitoring", "Initiative" and "Experimentation" became ambiguous aliases, so they left
 # the embedded skill texts; Log Analysis vs Monitoring & Observability fell from
 # 0.508 to 0.487 (below RELATED), which turns Developing into Gap for 16 synthetic students.
-MATCH_RULES_VERSION = "2026-10-29"
+# 2026-10-30: evidence derived from projects and certifications (nlp/evidence.py) is
+# merged into evidence_type before matching, and reasons name the project / certification.
+MATCH_RULES_VERSION = "2026-10-30"
+
+# nlp/evidence.py: count a project / certification as evidence only when it has at
+# least one evidence file or link (student_evidence_files). Off: listing it is enough.
+# Trade-off in docs/NLP_CLASSIFICATION_RULES.md, section 4a. Changing it changes
+# classifications, so bump MATCH_RULES_VERSION with it.
+DERIVED_EVIDENCE_NEEDS_PROOF = False
 
 # Cosine similarity thresholds.
 #   MATCH:   a JD phrase at or above this counts as the skill; a different
