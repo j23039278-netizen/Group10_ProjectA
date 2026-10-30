@@ -8,6 +8,7 @@ import JobAnalysis from '../pages/JobAnalysis'
 import SkillGap from '../pages/SkillGap'
 import Recommendations from '../pages/Recommendations'
 import ProgressTracking from '../pages/ProgressTracking'
+import CvExport from '../pages/CvExport'
 
 const NAV = [
   { path: '/',                label: 'Dashboard',       icon: '📊' },
@@ -28,6 +29,7 @@ export default function StudentPortal({ user, onLogout }) {
         <Route path="/skill-gap"       element={<SkillGap />} />
         <Route path="/recommendations" element={<Recommendations />} />
         <Route path="/progress"        element={<ProgressTracking />} />
+        <Route path="/cv"              element={<CvExport />} />
         <Route path="*"                element={<Navigate to="/" />} />
       </Routes>
     </PortalLayout>

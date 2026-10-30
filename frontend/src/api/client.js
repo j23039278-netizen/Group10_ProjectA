@@ -107,6 +107,19 @@ export const assessAPI = {
 };
  
 // ── Progress (FR-11: Development Tracking) ────────────────────
+// Student CV: upload, the skills found in it, add the ticked skills (routers/cv.py)
+export const cvAPI = {
+  upload: (file) => {
+    const form = new FormData();
+    form.append('file', file);
+    return API.post('/students/cv', form);
+  },
+  get:       ()       => API.get('/students/cv'),
+  download:  ()       => API.get('/students/cv/file', { responseType: 'blob' }),
+  remove:    ()       => API.delete('/students/cv'),
+  addSkills: (skills) => API.post('/students/cv/skills', { skills }),
+};
+
 export const progressAPI = {
   // Get progress status for all resources in an assessment
   getAssessmentProgress: (assessmentId) =>

@@ -11,6 +11,7 @@ from fastapi.middleware.cors import CORSMiddleware
  
 from routers import auth, students, jobs, assessments, advisor, admin, intake
 from routers.progress import router as progress_router
+from routers.cv import router as cv_router
 import nlp_service
  
 # Load the NLP model in the background so the first assessment does not wait for it
@@ -38,6 +39,7 @@ app.add_middleware(
  
 # Register routers
 app.include_router(auth.router,        prefix="/api/auth",        tags=["Authentication"])
+app.include_router(cv_router,          prefix="/api/students/cv", tags=["Students"])
 app.include_router(students.router,    prefix="/api/students",    tags=["Students"])
 app.include_router(jobs.router,        prefix="/api/jobs",        tags=["Jobs"])
 app.include_router(assessments.router, prefix="/api/assessments", tags=["Assessments"])

@@ -1053,6 +1053,40 @@ UPDATE student_profiles sp SET is_complete = (
 FROM users u
 WHERE u.user_id = sp.user_id AND u.email NOT LIKE '%@synthetic.example.com';
 
+
+-- ── Student CVs (30 October) ────────────────────────────────
+-- One CV per student (a new upload replaces it). extracted_text is the text read
+-- from the PDF / .docx; the skills it mentions are worked out from it on request
+-- (backend/routers/cv.py) and only added after the student confirms them.
+CREATE TABLE IF NOT EXISTS student_cvs (
+    profile_id      UUID PRIMARY KEY REFERENCES student_profiles(profile_id) ON DELETE CASCADE,
+    file_name       VARCHAR(255) NOT NULL,
+    content_type    VARCHAR(100) NOT NULL,
+    size_bytes      INTEGER      NOT NULL CHECK (size_bytes BETWEEN 1 AND 5242880),
+    data            BYTEA        NOT NULL,
+    extracted_text  TEXT,
+    uploaded_at     TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+
+-- ── Advisor notes (30 October) ──────────────────────────────
+-- Notes advisors keep on a student; never shown to the student. note_type
+-- 'ai_review' records whether the advisor agrees with the AI result of one
+-- assessment (human oversight of the automated scores).
+CREATE TABLE IF NOT EXISTS advisor_notes (
+    note_id        UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    student_id     UUID NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+    author_id      UUID REFERENCES users(user_id) ON DELETE SET NULL,
+    body           TEXT NOT NULL CHECK (char_length(body) BETWEEN 1 AND 2000),
+    note_type      VARCHAR(10) NOT NULL DEFAULT 'general' CHECK (note_type IN ('general', 'ai_review')),
+    ai_verdict     VARCHAR(10) CHECK (ai_verdict IN ('agree', 'disagree')),
+    assessment_id  UUID REFERENCES assessments(assessment_id) ON DELETE SET NULL,
+    created_at     TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at     TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT chk_note_verdict CHECK ((note_type = 'ai_review') = (ai_verdict IS NOT NULL))
+);
+CREATE INDEX IF NOT EXISTS idx_advisor_notes_student ON advisor_notes(student_id, created_at DESC);
+
 -- ============================================================
 -- END OF SCHEMA
 -- ============================================================
