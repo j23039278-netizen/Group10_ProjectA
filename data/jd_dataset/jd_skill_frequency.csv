@@ -1,234 +1,601 @@
 role_code,skill_name,category,subcategory,jd_count,role_jd_total,pct_of_jds,suggested_importance,current_importance
-CLOUD_ENGINEER,Azure,AI_Digital,Cloud,6,10,60.0,required,preferred
-CLOUD_ENGINEER,Communication,Soft,Soft,6,10,60.0,required,
-CLOUD_ENGINEER,Problem Solving,Analytical,Analytical,6,10,60.0,required,preferred
-CLOUD_ENGINEER,Cloud Computing,AI_Digital,Cloud,6,10,60.0,required,required
-CLOUD_ENGINEER,Monitoring & Observability,Technical,DevOps,5,10,50.0,required,preferred
-CLOUD_ENGINEER,Linux,Technical,Infrastructure,5,10,50.0,required,required
-CLOUD_ENGINEER,AWS,AI_Digital,Cloud,5,10,50.0,required,required
-CLOUD_ENGINEER,Documentation,Soft,Soft,4,10,40.0,preferred,bonus
-CLOUD_ENGINEER,GCP,AI_Digital,Cloud,4,10,40.0,preferred,preferred
-CLOUD_ENGINEER,Networking,Technical,Infrastructure,3,10,30.0,preferred,required
-CLOUD_ENGINEER,Identity & Access Management,Technical,Security Practice,3,10,30.0,preferred,required
-CLOUD_ENGINEER,Self-Motivation,Soft,Soft,3,10,30.0,preferred,
-CLOUD_ENGINEER,Bash,Technical,Programming Language,3,10,30.0,preferred,preferred
-CLOUD_ENGINEER,SQL,Technical,Programming Language,3,10,30.0,preferred,bonus
-CLOUD_ENGINEER,PowerShell,Technical,Programming Language,2,10,20.0,preferred,bonus
-CLOUD_ENGINEER,Windows Server,Technical,Infrastructure,2,10,20.0,preferred,
-CLOUD_ENGINEER,Ansible,Technical,DevOps,2,10,20.0,preferred,preferred
-CLOUD_ENGINEER,Python,Technical,Programming Language,2,10,20.0,preferred,preferred
-CLOUD_ENGINEER,PHP,Technical,Programming Language,2,10,20.0,preferred,
-CLOUD_ENGINEER,CI/CD,Technical,DevOps,2,10,20.0,preferred,required
-CLOUD_ENGINEER,Cybersecurity,Technical,Security Practice,2,10,20.0,preferred,
-CLOUD_ENGINEER,Attention to Detail,Soft,Soft,1,10,10.0,bonus,
-CLOUD_ENGINEER,Generative AI,AI_Digital,ML/AI,1,10,10.0,bonus,
-CLOUD_ENGINEER,UI/UX Design,Technical,Design,1,10,10.0,bonus,
-CLOUD_ENGINEER,Time Management,Soft,Soft,1,10,10.0,bonus,
-CLOUD_ENGINEER,VPN,Technical,Security Tool,1,10,10.0,bonus,
-CLOUD_ENGINEER,Kubernetes,Technical,DevOps,1,10,10.0,bonus,required
-CLOUD_ENGINEER,MySQL,Technical,Database,1,10,10.0,bonus,
-CLOUD_ENGINEER,Docker,Technical,DevOps,1,10,10.0,bonus,required
-CLOUD_ENGINEER,Terraform,Technical,DevOps,1,10,10.0,bonus,required
-CLOUD_ENGINEER,Security Frameworks,Technical,Security Practice,1,10,10.0,bonus,
-CLOUD_ENGINEER,Git,Technical,DevOps,1,10,10.0,bonus,required
-CLOUD_ENGINEER,Incident Response,Technical,Security Practice,1,10,10.0,bonus,
-CLOUD_ENGINEER,Agile / Scrum,Soft,Soft,1,10,10.0,bonus,
-CLOUD_ENGINEER,Customer Focus,Soft,Soft,1,10,10.0,bonus,
-CLOUD_ENGINEER,Teamwork,Soft,Soft,1,10,10.0,bonus,preferred
-CLOUD_ENGINEER,React,Technical,Web Framework,1,10,10.0,bonus,
-CLOUD_ENGINEER,JavaScript,Technical,Programming Language,1,10,10.0,bonus,
-CLOUD_ENGINEER,CSS,Technical,Web Development,1,10,10.0,bonus,
-CLOUD_ENGINEER,Node.js,Technical,Web Framework,1,10,10.0,bonus,
-CLOUD_ENGINEER,HTML,Technical,Web Development,1,10,10.0,bonus,
-CLOUD_ENGINEER,AI Literacy,AI_Digital,ML/AI,1,10,10.0,bonus,
-CLOUD_ENGINEER,Machine Learning,AI_Digital,ML/AI,1,10,10.0,bonus,
-CYBER_ANALYST,Cybersecurity,Technical,Security Practice,7,10,70.0,required,required
-CYBER_ANALYST,SIEM,Technical,Security Tool,6,10,60.0,required,required
-CYBER_ANALYST,Incident Response,Technical,Security Practice,5,10,50.0,required,required
-CYBER_ANALYST,Communication,Soft,Soft,4,10,40.0,preferred,preferred
-CYBER_ANALYST,Networking,Technical,Infrastructure,4,10,40.0,preferred,required
-CYBER_ANALYST,Monitoring & Observability,Technical,DevOps,4,10,40.0,preferred,
-CYBER_ANALYST,Security Operations (SOC),Technical,Security Practice,4,10,40.0,preferred,required
-CYBER_ANALYST,Documentation,Soft,Soft,3,10,30.0,preferred,
-CYBER_ANALYST,Threat Intelligence,Technical,Security Practice,3,10,30.0,preferred,preferred
-CYBER_ANALYST,Customer Focus,Soft,Soft,2,10,20.0,preferred,
-CYBER_ANALYST,Malware Analysis,Technical,Security Practice,2,10,20.0,preferred,
-CYBER_ANALYST,Vulnerability Assessment,Technical,Security Practice,2,10,20.0,preferred,required
-CYBER_ANALYST,Ethical Hacking,Technical,Security Practice,2,10,20.0,preferred,bonus
-CYBER_ANALYST,Linux,Technical,Infrastructure,2,10,20.0,preferred,required
-CYBER_ANALYST,Time Management,Soft,Soft,1,10,10.0,bonus,
-CYBER_ANALYST,React,Technical,Web Framework,1,10,10.0,bonus,
-CYBER_ANALYST,Interpersonal Skills,Soft,Soft,1,10,10.0,bonus,
-CYBER_ANALYST,Kali Linux,Technical,Security Tool,1,10,10.0,bonus,bonus
-CYBER_ANALYST,Burp Suite,Technical,Security Tool,1,10,10.0,bonus,
-CYBER_ANALYST,Nmap,Technical,Security Tool,1,10,10.0,bonus,bonus
-CYBER_ANALYST,PowerShell,Technical,Programming Language,1,10,10.0,bonus,
-CYBER_ANALYST,Python,Technical,Programming Language,1,10,10.0,bonus,preferred
-CYBER_ANALYST,Bash,Technical,Programming Language,1,10,10.0,bonus,bonus
-CYBER_ANALYST,Log Analysis,Technical,Security Practice,1,10,10.0,bonus,required
-CYBER_ANALYST,Splunk,Technical,Security Tool,1,10,10.0,bonus,bonus
-CYBER_ANALYST,Network Security,Technical,Security Practice,1,10,10.0,bonus,required
-CYBER_ANALYST,Java,Technical,Programming Language,1,10,10.0,bonus,
-CYBER_ANALYST,Problem Solving,Analytical,Analytical,1,10,10.0,bonus,required
-CYBER_ANALYST,PHP,Technical,Programming Language,1,10,10.0,bonus,
-CYBER_ANALYST,Security Frameworks,Technical,Security Practice,1,10,10.0,bonus,preferred
-CYBER_ANALYST,Teamwork,Soft,Soft,1,10,10.0,bonus,
-DATA_ANALYST,SQL,Technical,Programming Language,9,11,81.8,required,required
-DATA_ANALYST,Statistical Analysis,Analytical,Analytical,9,11,81.8,required,required
-DATA_ANALYST,Python,Technical,Programming Language,8,11,72.7,required,required
-DATA_ANALYST,Power BI,Technical,Data & BI,6,11,54.5,required,required
-DATA_ANALYST,Communication,Soft,Soft,6,11,54.5,required,preferred
-DATA_ANALYST,Data Analysis,Analytical,Analytical,6,11,54.5,required,required
-DATA_ANALYST,Attention to Detail,Soft,Soft,4,11,36.4,preferred,preferred
-DATA_ANALYST,Tableau,Technical,Data & BI,3,11,27.3,preferred,preferred
-DATA_ANALYST,Data Visualisation,AI_Digital,Data & BI,3,11,27.3,preferred,required
-DATA_ANALYST,Decision Making,Analytical,Analytical,3,11,27.3,preferred,
-DATA_ANALYST,AI Literacy,AI_Digital,ML/AI,2,11,18.2,bonus,
-DATA_ANALYST,Machine Learning,AI_Digital,ML/AI,2,11,18.2,bonus,bonus
-DATA_ANALYST,Interpersonal Skills,Soft,Soft,2,11,18.2,bonus,
-DATA_ANALYST,Excel,Technical,Data & BI,2,11,18.2,bonus,required
-DATA_ANALYST,Data Structures & Algorithms,Technical,Software Engineering,2,11,18.2,bonus,
-DATA_ANALYST,Data Modelling,Analytical,Analytical,2,11,18.2,bonus,
-DATA_ANALYST,Monitoring & Observability,Technical,DevOps,1,11,9.1,,
-DATA_ANALYST,Customer Focus,Soft,Soft,1,11,9.1,,
-DATA_ANALYST,Generative AI,AI_Digital,ML/AI,1,11,9.1,,
-DATA_ANALYST,NumPy,Technical,Data & BI,1,11,9.1,,
-DATA_ANALYST,Critical Thinking,Analytical,Analytical,1,11,9.1,,preferred
-DATA_ANALYST,GCP,AI_Digital,Cloud,1,11,9.1,,
-DATA_ANALYST,Teamwork,Soft,Soft,1,11,9.1,,
-DATA_ANALYST,Pandas,Technical,Data & BI,1,11,9.1,,required
-DATA_ANALYST,Data Warehousing,Technical,Data & BI,1,11,9.1,,bonus
-DATA_ANALYST,Looker,Technical,Data & BI,1,11,9.1,,bonus
-DATA_ANALYST,Documentation,Soft,Soft,1,11,9.1,,
-DATA_ANALYST,Time Management,Soft,Soft,1,11,9.1,,
-DATA_ANALYST,Adaptability,Soft,Soft,1,11,9.1,,
-DATA_ANALYST,Data Mining,Analytical,Analytical,1,11,9.1,,
-DATA_ANALYST,ETL,Technical,Data & BI,1,11,9.1,,preferred
-DATA_ANALYST,Business Analysis,Analytical,Analytical,1,11,9.1,,
-DATA_ANALYST,Problem Solving,Analytical,Analytical,1,11,9.1,,preferred
-DATA_ANALYST,Presentation Skills,Soft,Soft,1,11,9.1,,preferred
-DATA_ANALYST,PowerShell,Technical,Programming Language,1,11,9.1,,
-DATA_ANALYST,Data Cleaning,Analytical,Data & BI,1,11,9.1,,required
-DATA_SCIENTIST,Python,Technical,Programming Language,9,10,90.0,required,required
-DATA_SCIENTIST,SQL,Technical,Programming Language,7,10,70.0,required,required
-DATA_SCIENTIST,Communication,Soft,Soft,7,10,70.0,required,preferred
-DATA_SCIENTIST,Data Analysis,Analytical,Analytical,6,10,60.0,required,required
-DATA_SCIENTIST,Machine Learning,AI_Digital,ML/AI,5,10,50.0,required,required
-DATA_SCIENTIST,Power BI,Technical,Data & BI,5,10,50.0,required,
-DATA_SCIENTIST,Self-Motivation,Soft,Soft,4,10,40.0,preferred,
-DATA_SCIENTIST,Tableau,Technical,Data & BI,4,10,40.0,preferred,
-DATA_SCIENTIST,Cloud Computing,AI_Digital,Cloud,3,10,30.0,preferred,bonus
-DATA_SCIENTIST,Model Evaluation,AI_Digital,ML/AI,3,10,30.0,preferred,required
-DATA_SCIENTIST,Problem Solving,Analytical,Analytical,3,10,30.0,preferred,preferred
-DATA_SCIENTIST,Teamwork,Soft,Soft,3,10,30.0,preferred,
-DATA_SCIENTIST,Leadership,Soft,Soft,2,10,20.0,preferred,
-DATA_SCIENTIST,Statistical Analysis,Analytical,Analytical,2,10,20.0,preferred,required
-DATA_SCIENTIST,Pandas,Technical,Data & BI,2,10,20.0,preferred,required
-DATA_SCIENTIST,Scikit-learn,AI_Digital,ML/AI,2,10,20.0,preferred,required
-DATA_SCIENTIST,Monitoring & Observability,Technical,DevOps,2,10,20.0,preferred,
-DATA_SCIENTIST,AI Literacy,AI_Digital,ML/AI,2,10,20.0,preferred,
-DATA_SCIENTIST,ETL,Technical,Data & BI,2,10,20.0,preferred,
-DATA_SCIENTIST,Business Analysis,Analytical,Analytical,2,10,20.0,preferred,
-DATA_SCIENTIST,Documentation,Soft,Soft,2,10,20.0,preferred,
-DATA_SCIENTIST,NumPy,Technical,Data & BI,1,10,10.0,bonus,preferred
-DATA_SCIENTIST,Data Cleaning,Analytical,Data & BI,1,10,10.0,bonus,preferred
-DATA_SCIENTIST,Azure,AI_Digital,Cloud,1,10,10.0,bonus,
-DATA_SCIENTIST,Prompt Engineering,AI_Digital,ML/AI,1,10,10.0,bonus,
-DATA_SCIENTIST,GCP,AI_Digital,Cloud,1,10,10.0,bonus,
-DATA_SCIENTIST,Deep Learning,AI_Digital,ML/AI,1,10,10.0,bonus,preferred
-DATA_SCIENTIST,Hugging Face,AI_Digital,ML/AI,1,10,10.0,bonus,
-DATA_SCIENTIST,Computer Vision,AI_Digital,ML/AI,1,10,10.0,bonus,
-DATA_SCIENTIST,TensorFlow,AI_Digital,ML/AI,1,10,10.0,bonus,bonus
-DATA_SCIENTIST,Generative AI,AI_Digital,ML/AI,1,10,10.0,bonus,bonus
-DATA_SCIENTIST,AWS,AI_Digital,Cloud,1,10,10.0,bonus,
-DATA_SCIENTIST,UI/UX Design,Technical,Design,1,10,10.0,bonus,
-DATA_SCIENTIST,PyTorch,AI_Digital,ML/AI,1,10,10.0,bonus,bonus
-DATA_SCIENTIST,Attention to Detail,Soft,Soft,1,10,10.0,bonus,
-DATA_SCIENTIST,Data Mining,Analytical,Analytical,1,10,10.0,bonus,
-DATA_SCIENTIST,Hadoop,Technical,Data & BI,1,10,10.0,bonus,
-DATA_SCIENTIST,C++,Technical,Programming Language,1,10,10.0,bonus,
-DATA_SCIENTIST,C#,Technical,Programming Language,1,10,10.0,bonus,
-DATA_SCIENTIST,Adaptability,Soft,Soft,1,10,10.0,bonus,
-DATA_SCIENTIST,Java,Technical,Programming Language,1,10,10.0,bonus,
-DATA_SCIENTIST,Project Management,Soft,Soft,1,10,10.0,bonus,
-DATA_SCIENTIST,Excel,Technical,Data & BI,1,10,10.0,bonus,
-DATA_SCIENTIST,Git,Technical,DevOps,1,10,10.0,bonus,preferred
-SOFTWARE_DEV,Documentation,Soft,Soft,6,13,46.2,preferred,
-SOFTWARE_DEV,JavaScript,Technical,Programming Language,5,13,38.5,preferred,required
-SOFTWARE_DEV,Teamwork,Soft,Soft,5,13,38.5,preferred,preferred
-SOFTWARE_DEV,Communication,Soft,Soft,5,13,38.5,preferred,preferred
-SOFTWARE_DEV,C#,Technical,Programming Language,4,13,30.8,preferred,preferred
-SOFTWARE_DEV,SQL,Technical,Programming Language,4,13,30.8,preferred,required
-SOFTWARE_DEV,Java,Technical,Programming Language,3,13,23.1,preferred,required
-SOFTWARE_DEV,Python,Technical,Programming Language,3,13,23.1,preferred,required
-SOFTWARE_DEV,Self-Motivation,Soft,Soft,3,13,23.1,preferred,
-SOFTWARE_DEV,Problem Solving,Analytical,Analytical,3,13,23.1,preferred,required
-SOFTWARE_DEV,Agile / Scrum,Soft,Soft,2,13,15.4,bonus,preferred
-SOFTWARE_DEV,Cybersecurity,Technical,Security Practice,2,13,15.4,bonus,
-SOFTWARE_DEV,Unit Testing,Technical,Software Engineering,2,13,15.4,bonus,required
-SOFTWARE_DEV,React,Technical,Web Framework,2,13,15.4,bonus,bonus
-SOFTWARE_DEV,CSS,Technical,Web Development,2,13,15.4,bonus,
-SOFTWARE_DEV,HTML,Technical,Web Development,2,13,15.4,bonus,
-SOFTWARE_DEV,Interpersonal Skills,Soft,Soft,2,13,15.4,bonus,
-SOFTWARE_DEV,Business Analysis,Analytical,Analytical,2,13,15.4,bonus,
-SOFTWARE_DEV,Monitoring & Observability,Technical,DevOps,2,13,15.4,bonus,
-SOFTWARE_DEV,Machine Learning,AI_Digital,ML/AI,2,13,15.4,bonus,
-SOFTWARE_DEV,CI/CD,Technical,DevOps,2,13,15.4,bonus,preferred
-SOFTWARE_DEV,Spring Boot,Technical,Web Framework,2,13,15.4,bonus,preferred
-SOFTWARE_DEV,Docker,Technical,DevOps,2,13,15.4,bonus,preferred
-SOFTWARE_DEV,Git,Technical,DevOps,2,13,15.4,bonus,required
-SOFTWARE_DEV,Azure,AI_Digital,Cloud,1,13,7.7,,
-SOFTWARE_DEV,Generative AI,AI_Digital,ML/AI,1,13,7.7,,
-SOFTWARE_DEV,Adaptability,Soft,Soft,1,13,7.7,,
-SOFTWARE_DEV,Data Mining,Analytical,Analytical,1,13,7.7,,
-SOFTWARE_DEV,MySQL,Technical,Database,1,13,7.7,,
-SOFTWARE_DEV,Networking,Technical,Infrastructure,1,13,7.7,,
-SOFTWARE_DEV,Linux,Technical,Infrastructure,1,13,7.7,,preferred
-SOFTWARE_DEV,Microservices,Technical,Software Engineering,1,13,7.7,,bonus
-SOFTWARE_DEV,Kubernetes,Technical,DevOps,1,13,7.7,,
-SOFTWARE_DEV,Angular,Technical,Web Framework,1,13,7.7,,
-SOFTWARE_DEV,A/B Testing,Analytical,Analytical,1,13,7.7,,
-SOFTWARE_DEV,Attention to Detail,Soft,Soft,1,13,7.7,,
-SOFTWARE_DEV,C++,Technical,Programming Language,1,13,7.7,,bonus
-SOFTWARE_DEV,UI/UX Design,Technical,Design,1,13,7.7,,
-SOFTWARE_DEV,Data Analysis,Analytical,Analytical,1,13,7.7,,
-SOFTWARE_DEV,TypeScript,Technical,Programming Language,1,13,7.7,,bonus
-SOFTWARE_DEV,Cloud Computing,AI_Digital,Cloud,1,13,7.7,,bonus
-SOFTWARE_DEV,REST API,Technical,Web Development,1,13,7.7,,required
-SOFTWARE_DEV,PHP,Technical,Programming Language,1,13,7.7,,
-SOFTWARE_DEV,AWS,AI_Digital,Cloud,1,13,7.7,,
-WEB_DEV,JavaScript,Technical,Programming Language,10,11,90.9,required,required
-WEB_DEV,CSS,Technical,Web Development,8,11,72.7,required,required
-WEB_DEV,React,Technical,Web Framework,7,11,63.6,required,required
-WEB_DEV,HTML,Technical,Web Development,6,11,54.5,required,required
-WEB_DEV,Documentation,Soft,Soft,5,11,45.5,preferred,
-WEB_DEV,Vue.js,Technical,Web Framework,5,11,45.5,preferred,bonus
-WEB_DEV,Git,Technical,DevOps,5,11,45.5,preferred,required
-WEB_DEV,Self-Motivation,Soft,Soft,4,11,36.4,preferred,
-WEB_DEV,PHP,Technical,Programming Language,4,11,36.4,preferred,bonus
-WEB_DEV,MySQL,Technical,Database,4,11,36.4,preferred,
-WEB_DEV,TypeScript,Technical,Programming Language,4,11,36.4,preferred,required
-WEB_DEV,Docker,Technical,DevOps,3,11,27.3,preferred,bonus
-WEB_DEV,SQL,Technical,Programming Language,3,11,27.3,preferred,required
-WEB_DEV,Communication,Soft,Soft,3,11,27.3,preferred,preferred
-WEB_DEV,Problem Solving,Analytical,Analytical,2,11,18.2,bonus,preferred
-WEB_DEV,Teamwork,Soft,Soft,2,11,18.2,bonus,preferred
-WEB_DEV,CI/CD,Technical,DevOps,2,11,18.2,bonus,
-WEB_DEV,Unit Testing,Technical,Software Engineering,2,11,18.2,bonus,preferred
-WEB_DEV,Node.js,Technical,Web Framework,2,11,18.2,bonus,required
-WEB_DEV,PostgreSQL,Technical,Database,2,11,18.2,bonus,preferred
-WEB_DEV,Java,Technical,Programming Language,1,11,9.1,,
-WEB_DEV,Networking,Technical,Infrastructure,1,11,9.1,,
-WEB_DEV,Linux,Technical,Infrastructure,1,11,9.1,,
-WEB_DEV,REST API,Technical,Web Development,1,11,9.1,,required
-WEB_DEV,Agile / Scrum,Soft,Soft,1,11,9.1,,preferred
-WEB_DEV,C#,Technical,Programming Language,1,11,9.1,,
-WEB_DEV,Identity & Access Management,Technical,Security Practice,1,11,9.1,,
-WEB_DEV,Python,Technical,Programming Language,1,11,9.1,,bonus
-WEB_DEV,Interpersonal Skills,Soft,Soft,1,11,9.1,,
-WEB_DEV,Azure,AI_Digital,Cloud,1,11,9.1,,
-WEB_DEV,Cloud Computing,AI_Digital,Cloud,1,11,9.1,,
-WEB_DEV,MongoDB,Technical,Database,1,11,9.1,,bonus
-WEB_DEV,AWS,AI_Digital,Cloud,1,11,9.1,,
-WEB_DEV,Angular,Technical,Web Framework,1,11,9.1,,
-WEB_DEV,Excel,Technical,Data & BI,1,11,9.1,,
+BUSINESS_ANALYST,Communication,Soft,Soft,22,35,62.9,required,
+BUSINESS_ANALYST,Business Analysis,Analytical,Analytical,16,35,45.7,preferred,required
+BUSINESS_ANALYST,Documentation,Soft,Soft,16,35,45.7,preferred,required
+BUSINESS_ANALYST,Agile / Scrum,Soft,Soft,11,35,31.4,preferred,preferred
+BUSINESS_ANALYST,SQL,Technical,Programming Language,9,35,25.7,preferred,required
+BUSINESS_ANALYST,Data Analysis,Analytical,Analytical,7,35,20.0,preferred,required
+BUSINESS_ANALYST,Teamwork,Soft,Soft,7,35,20.0,preferred,
+BUSINESS_ANALYST,Project Management,Soft,Soft,7,35,20.0,preferred,preferred
+BUSINESS_ANALYST,Interpersonal Skills,Soft,Soft,6,35,17.1,bonus,
+BUSINESS_ANALYST,Python,Technical,Programming Language,5,35,14.3,bonus,bonus
+BUSINESS_ANALYST,Decision Making,Analytical,Analytical,5,35,14.3,bonus,bonus
+BUSINESS_ANALYST,Attention to Detail,Soft,Soft,4,35,11.4,bonus,
+BUSINESS_ANALYST,Problem Solving,Analytical,Analytical,4,35,11.4,bonus,required
+BUSINESS_ANALYST,Accounting,Technical,Finance & Accounting,4,35,11.4,bonus,
+BUSINESS_ANALYST,Customer Focus,Soft,Soft,3,35,8.6,,
+BUSINESS_ANALYST,User Acceptance Testing,Technical,Business Process,3,35,8.6,,preferred
+BUSINESS_ANALYST,Critical Thinking,Analytical,Analytical,3,35,8.6,,preferred
+BUSINESS_ANALYST,Statistical Analysis,Analytical,Analytical,3,35,8.6,,bonus
+BUSINESS_ANALYST,Recruitment,Technical,Human Resources,3,35,8.6,,
+BUSINESS_ANALYST,Power BI,Technical,Data & BI,3,35,8.6,,preferred
+BUSINESS_ANALYST,Tableau,Technical,Data & BI,2,35,5.7,,bonus
+BUSINESS_ANALYST,Negotiation,Soft,Soft,2,35,5.7,,
+BUSINESS_ANALYST,Cybersecurity,Technical,Security Practice,2,35,5.7,,
+BUSINESS_ANALYST,Data Warehousing,Technical,Data & BI,2,35,5.7,,
+BUSINESS_ANALYST,CRM Software,Technical,Business Software,2,35,5.7,,bonus
+BUSINESS_ANALYST,Risk Analysis,Analytical,Analytical,2,35,5.7,,
+BUSINESS_ANALYST,Presentation Skills,Soft,Soft,2,35,5.7,,preferred
+BUSINESS_ANALYST,Leadership,Soft,Soft,2,35,5.7,,
+BUSINESS_ANALYST,Azure,AI_Digital,Cloud,2,35,5.7,,
+BUSINESS_ANALYST,Adaptability,Soft,Soft,2,35,5.7,,
+BUSINESS_ANALYST,Brand Management,Technical,Marketing,1,35,2.9,,
+BUSINESS_ANALYST,Systems Thinking,Analytical,Analytical,1,35,2.9,,
+BUSINESS_ANALYST,Excel,Technical,Data & BI,1,35,2.9,,required
+BUSINESS_ANALYST,Networking,Technical,Infrastructure,1,35,2.9,,
+BUSINESS_ANALYST,Git,Technical,DevOps,1,35,2.9,,
+BUSINESS_ANALYST,Machine Learning,AI_Digital,ML/AI,1,35,2.9,,
+BUSINESS_ANALYST,Training & Development,Technical,Human Resources,1,35,2.9,,
+BUSINESS_ANALYST,Figma,Technical,Design,1,35,2.9,,
+BUSINESS_ANALYST,UI/UX Design,Technical,Design,1,35,2.9,,
+BUSINESS_ANALYST,Requirements Analysis,Analytical,Analytical,1,35,2.9,,required
+BUSINESS_ANALYST,Market Research,Analytical,Marketing,1,35,2.9,,
+BUSINESS_ANALYST,Creativity,Soft,Soft,1,35,2.9,,
+BUSINESS_ANALYST,Business Process Improvement,Analytical,Business Process,1,35,2.9,,preferred
+BUSINESS_ANALYST,Looker,Technical,Data & BI,1,35,2.9,,
+BUSINESS_ANALYST,GCP,AI_Digital,Cloud,1,35,2.9,,
+CLOUD_ENGINEER,AWS,AI_Digital,Cloud,21,35,60.0,required,required
+CLOUD_ENGINEER,Cloud Computing,AI_Digital,Cloud,19,35,54.3,required,required
+CLOUD_ENGINEER,Communication,Soft,Soft,18,35,51.4,required,
+CLOUD_ENGINEER,Azure,AI_Digital,Cloud,18,35,51.4,required,preferred
+CLOUD_ENGINEER,Python,Technical,Programming Language,17,35,48.6,preferred,preferred
+CLOUD_ENGINEER,Linux,Technical,Infrastructure,13,35,37.1,preferred,required
+CLOUD_ENGINEER,GCP,AI_Digital,Cloud,12,35,34.3,preferred,preferred
+CLOUD_ENGINEER,CI/CD,Technical,DevOps,12,35,34.3,preferred,required
+CLOUD_ENGINEER,Problem Solving,Analytical,Analytical,11,35,31.4,preferred,preferred
+CLOUD_ENGINEER,Bash,Technical,Programming Language,10,35,28.6,preferred,preferred
+CLOUD_ENGINEER,Networking,Technical,Infrastructure,10,35,28.6,preferred,required
+CLOUD_ENGINEER,Git,Technical,DevOps,10,35,28.6,preferred,required
+CLOUD_ENGINEER,Java,Technical,Programming Language,10,35,28.6,preferred,
+CLOUD_ENGINEER,Terraform,Technical,DevOps,9,35,25.7,preferred,required
+CLOUD_ENGINEER,Documentation,Soft,Soft,8,35,22.9,preferred,bonus
+CLOUD_ENGINEER,SQL,Technical,Programming Language,8,35,22.9,preferred,bonus
+CLOUD_ENGINEER,Docker,Technical,DevOps,8,35,22.9,preferred,required
+CLOUD_ENGINEER,Kubernetes,Technical,DevOps,8,35,22.9,preferred,required
+CLOUD_ENGINEER,Agile / Scrum,Soft,Soft,8,35,22.9,preferred,
+CLOUD_ENGINEER,Ansible,Technical,DevOps,7,35,20.0,preferred,preferred
+CLOUD_ENGINEER,Identity & Access Management,Technical,Security Practice,6,35,17.1,bonus,required
+CLOUD_ENGINEER,PowerShell,Technical,Programming Language,6,35,17.1,bonus,bonus
+CLOUD_ENGINEER,Monitoring & Observability,Technical,DevOps,6,35,17.1,bonus,preferred
+CLOUD_ENGINEER,Teamwork,Soft,Soft,6,35,17.1,bonus,preferred
+CLOUD_ENGINEER,JavaScript,Technical,Programming Language,6,35,17.1,bonus,
+CLOUD_ENGINEER,Splunk,Technical,Security Tool,5,35,14.3,bonus,
+CLOUD_ENGINEER,Apache Spark,Technical,Data & BI,5,35,14.3,bonus,
+CLOUD_ENGINEER,C++,Technical,Programming Language,4,35,11.4,bonus,
+CLOUD_ENGINEER,Windows Server,Technical,Infrastructure,3,35,8.6,,
+CLOUD_ENGINEER,Attention to Detail,Soft,Soft,3,35,8.6,,
+CLOUD_ENGINEER,Self-Motivation,Soft,Soft,3,35,8.6,,
+CLOUD_ENGINEER,HTML,Technical,Web Development,3,35,8.6,,
+CLOUD_ENGINEER,Leadership,Soft,Soft,3,35,8.6,,
+CLOUD_ENGINEER,Microservices,Technical,Software Engineering,3,35,8.6,,bonus
+CLOUD_ENGINEER,UI/UX Design,Technical,Design,2,35,5.7,,
+CLOUD_ENGINEER,Incident Response,Technical,Security Practice,2,35,5.7,,
+CLOUD_ENGINEER,PHP,Technical,Programming Language,2,35,5.7,,
+CLOUD_ENGINEER,MySQL,Technical,Database,2,35,5.7,,
+CLOUD_ENGINEER,Cybersecurity,Technical,Security Practice,2,35,5.7,,
+CLOUD_ENGINEER,Customer Focus,Soft,Soft,2,35,5.7,,
+CLOUD_ENGINEER,React,Technical,Web Framework,2,35,5.7,,
+CLOUD_ENGINEER,CSS,Technical,Web Development,2,35,5.7,,
+CLOUD_ENGINEER,Machine Learning,AI_Digital,ML/AI,2,35,5.7,,
+CLOUD_ENGINEER,Interpersonal Skills,Soft,Soft,2,35,5.7,,
+CLOUD_ENGINEER,C#,Technical,Programming Language,2,35,5.7,,
+CLOUD_ENGINEER,TypeScript,Technical,Programming Language,2,35,5.7,,
+CLOUD_ENGINEER,Unit Testing,Technical,Software Engineering,2,35,5.7,,
+CLOUD_ENGINEER,PostgreSQL,Technical,Database,2,35,5.7,,
+CLOUD_ENGINEER,Spring Boot,Technical,Web Framework,2,35,5.7,,
+CLOUD_ENGINEER,REST API,Technical,Web Development,2,35,5.7,,
+CLOUD_ENGINEER,Data Warehousing,Technical,Data & BI,2,35,5.7,,
+CLOUD_ENGINEER,Time Management,Soft,Soft,1,35,2.9,,
+CLOUD_ENGINEER,Generative AI,AI_Digital,ML/AI,1,35,2.9,,
+CLOUD_ENGINEER,Firewall Management,Technical,Security Tool,1,35,2.9,,
+CLOUD_ENGINEER,User Acceptance Testing,Technical,Business Process,1,35,2.9,,
+CLOUD_ENGINEER,Security Frameworks,Technical,Security Practice,1,35,2.9,,
+CLOUD_ENGINEER,VPN,Technical,Security Tool,1,35,2.9,,
+CLOUD_ENGINEER,Node.js,Technical,Web Framework,1,35,2.9,,
+CLOUD_ENGINEER,AI Literacy,AI_Digital,ML/AI,1,35,2.9,,
+CLOUD_ENGINEER,Data Analysis,Analytical,Analytical,1,35,2.9,,
+CLOUD_ENGINEER,Risk Analysis,Analytical,Analytical,1,35,2.9,,
+CLOUD_ENGINEER,Training & Development,Technical,Human Resources,1,35,2.9,,
+CLOUD_ENGINEER,Project Management,Soft,Soft,1,35,2.9,,
+CLOUD_ENGINEER,Threat Intelligence,Technical,Security Practice,1,35,2.9,,
+CLOUD_ENGINEER,Jupyter,Technical,Data & BI,1,35,2.9,,
+CLOUD_ENGINEER,Accounting,Technical,Finance & Accounting,1,35,2.9,,
+CLOUD_ENGINEER,Payroll,Technical,Human Resources,1,35,2.9,,
+CLOUD_ENGINEER,Redis,Technical,Database,1,35,2.9,,
+CLOUD_ENGINEER,Kotlin,Technical,Programming Language,1,35,2.9,,
+CLOUD_ENGINEER,MongoDB,Technical,Database,1,35,2.9,,
+CLOUD_ENGINEER,Adaptability,Soft,Soft,1,35,2.9,,
+CLOUD_ENGINEER,Decision Making,Analytical,Analytical,1,35,2.9,,
+CLOUD_ENGINEER,Recruitment,Technical,Human Resources,1,35,2.9,,
+CLOUD_ENGINEER,ETL,Technical,Data & BI,1,35,2.9,,
+CLOUD_ENGINEER,Auditing,Technical,Finance & Accounting,1,35,2.9,,
+CLOUD_ENGINEER,CRM Software,Technical,Business Software,1,35,2.9,,
+CLOUD_ENGINEER,Business Process Improvement,Analytical,Business Process,1,35,2.9,,
+CLOUD_ENGINEER,Object-Oriented Programming,Technical,Software Engineering,1,35,2.9,,
+CLOUD_ENGINEER,Serverless,AI_Digital,Cloud,1,35,2.9,,preferred
+CLOUD_ENGINEER,GraphQL,Technical,Web Development,1,35,2.9,,
+CLOUD_ENGINEER,Performance Management,Technical,Human Resources,1,35,2.9,,
+CYBER_ANALYST,Cybersecurity,Technical,Security Practice,26,35,74.3,required,required
+CYBER_ANALYST,Communication,Soft,Soft,16,35,45.7,preferred,preferred
+CYBER_ANALYST,Networking,Technical,Infrastructure,14,35,40.0,preferred,required
+CYBER_ANALYST,Incident Response,Technical,Security Practice,11,35,31.4,preferred,required
+CYBER_ANALYST,Python,Technical,Programming Language,10,35,28.6,preferred,preferred
+CYBER_ANALYST,SIEM,Technical,Security Tool,9,35,25.7,preferred,required
+CYBER_ANALYST,Documentation,Soft,Soft,9,35,25.7,preferred,
+CYBER_ANALYST,Linux,Technical,Infrastructure,9,35,25.7,preferred,required
+CYBER_ANALYST,Threat Intelligence,Technical,Security Practice,8,35,22.9,preferred,preferred
+CYBER_ANALYST,Azure,AI_Digital,Cloud,7,35,20.0,preferred,
+CYBER_ANALYST,Ethical Hacking,Technical,Security Practice,6,35,17.1,bonus,bonus
+CYBER_ANALYST,Teamwork,Soft,Soft,6,35,17.1,bonus,
+CYBER_ANALYST,Security Frameworks,Technical,Security Practice,6,35,17.1,bonus,preferred
+CYBER_ANALYST,Security Operations (SOC),Technical,Security Practice,5,35,14.3,bonus,required
+CYBER_ANALYST,Vulnerability Assessment,Technical,Security Practice,5,35,14.3,bonus,required
+CYBER_ANALYST,Problem Solving,Analytical,Analytical,5,35,14.3,bonus,required
+CYBER_ANALYST,Identity & Access Management,Technical,Security Practice,5,35,14.3,bonus,preferred
+CYBER_ANALYST,AWS,AI_Digital,Cloud,5,35,14.3,bonus,preferred
+CYBER_ANALYST,Cloud Computing,AI_Digital,Cloud,5,35,14.3,bonus,preferred
+CYBER_ANALYST,Customer Focus,Soft,Soft,4,35,11.4,bonus,
+CYBER_ANALYST,Interpersonal Skills,Soft,Soft,4,35,11.4,bonus,
+CYBER_ANALYST,Bash,Technical,Programming Language,4,35,11.4,bonus,bonus
+CYBER_ANALYST,PowerShell,Technical,Programming Language,4,35,11.4,bonus,
+CYBER_ANALYST,Risk Analysis,Analytical,Analytical,4,35,11.4,bonus,bonus
+CYBER_ANALYST,Malware Analysis,Technical,Security Practice,3,35,8.6,,
+CYBER_ANALYST,Nmap,Technical,Security Tool,3,35,8.6,,bonus
+CYBER_ANALYST,Splunk,Technical,Security Tool,3,35,8.6,,bonus
+CYBER_ANALYST,Network Security,Technical,Security Practice,3,35,8.6,,required
+CYBER_ANALYST,Java,Technical,Programming Language,3,35,8.6,,
+CYBER_ANALYST,Windows Server,Technical,Infrastructure,3,35,8.6,,preferred
+CYBER_ANALYST,Leadership,Soft,Soft,3,35,8.6,,
+CYBER_ANALYST,Self-Motivation,Soft,Soft,3,35,8.6,,
+CYBER_ANALYST,Agile / Scrum,Soft,Soft,3,35,8.6,,
+CYBER_ANALYST,OWASP Top 10,Technical,Security Practice,3,35,8.6,,
+CYBER_ANALYST,Time Management,Soft,Soft,2,35,5.7,,
+CYBER_ANALYST,Burp Suite,Technical,Security Tool,2,35,5.7,,
+CYBER_ANALYST,Kali Linux,Technical,Security Tool,2,35,5.7,,bonus
+CYBER_ANALYST,SQL,Technical,Programming Language,2,35,5.7,,
+CYBER_ANALYST,JavaScript,Technical,Programming Language,2,35,5.7,,
+CYBER_ANALYST,Business Analysis,Analytical,Analytical,2,35,5.7,,
+CYBER_ANALYST,GCP,AI_Digital,Cloud,2,35,5.7,,
+CYBER_ANALYST,Firewall Management,Technical,Security Tool,2,35,5.7,,preferred
+CYBER_ANALYST,Attention to Detail,Soft,Soft,2,35,5.7,,
+CYBER_ANALYST,Kubernetes,Technical,DevOps,2,35,5.7,,
+CYBER_ANALYST,React,Technical,Web Framework,1,35,2.9,,
+CYBER_ANALYST,Log Analysis,Technical,Security Practice,1,35,2.9,,required
+CYBER_ANALYST,PHP,Technical,Programming Language,1,35,2.9,,
+CYBER_ANALYST,Training & Development,Technical,Human Resources,1,35,2.9,,
+CYBER_ANALYST,Recruitment,Technical,Human Resources,1,35,2.9,,
+CYBER_ANALYST,Nessus,Technical,Security Tool,1,35,2.9,,
+CYBER_ANALYST,Presentation Skills,Soft,Soft,1,35,2.9,,
+CYBER_ANALYST,Research Skills,Analytical,Analytical,1,35,2.9,,
+CYBER_ANALYST,Auditing,Technical,Finance & Accounting,1,35,2.9,,
+CYBER_ANALYST,C++,Technical,Programming Language,1,35,2.9,,
+CYBER_ANALYST,Data Analysis,Analytical,Analytical,1,35,2.9,,
+CYBER_ANALYST,Cryptography,Technical,Security Practice,1,35,2.9,,bonus
+CYBER_ANALYST,Data Structures & Algorithms,Technical,Software Engineering,1,35,2.9,,
+CYBER_ANALYST,Creativity,Soft,Soft,1,35,2.9,,
+CYBER_ANALYST,Project Management,Soft,Soft,1,35,2.9,,
+CYBER_ANALYST,CRM Software,Technical,Business Software,1,35,2.9,,
+CYBER_ANALYST,Critical Thinking,Analytical,Analytical,1,35,2.9,,
+CYBER_ANALYST,Decision Making,Analytical,Analytical,1,35,2.9,,
+CYBER_ANALYST,Ansible,Technical,DevOps,1,35,2.9,,
+CYBER_ANALYST,Terraform,Technical,DevOps,1,35,2.9,,
+DATA_ANALYST,SQL,Technical,Programming Language,23,35,65.7,required,required
+DATA_ANALYST,Communication,Soft,Soft,19,35,54.3,required,preferred
+DATA_ANALYST,Python,Technical,Programming Language,15,35,42.9,preferred,required
+DATA_ANALYST,Data Analysis,Analytical,Analytical,14,35,40.0,preferred,required
+DATA_ANALYST,Statistical Analysis,Analytical,Analytical,12,35,34.3,preferred,required
+DATA_ANALYST,Power BI,Technical,Data & BI,12,35,34.3,preferred,required
+DATA_ANALYST,Tableau,Technical,Data & BI,8,35,22.9,preferred,preferred
+DATA_ANALYST,Attention to Detail,Soft,Soft,8,35,22.9,preferred,preferred
+DATA_ANALYST,Data Structures & Algorithms,Technical,Software Engineering,8,35,22.9,preferred,
+DATA_ANALYST,Documentation,Soft,Soft,8,35,22.9,preferred,
+DATA_ANALYST,Leadership,Soft,Soft,8,35,22.9,preferred,
+DATA_ANALYST,Data Warehousing,Technical,Data & BI,7,35,20.0,preferred,bonus
+DATA_ANALYST,Customer Focus,Soft,Soft,6,35,17.1,bonus,
+DATA_ANALYST,Teamwork,Soft,Soft,6,35,17.1,bonus,
+DATA_ANALYST,Excel,Technical,Data & BI,6,35,17.1,bonus,required
+DATA_ANALYST,Business Process Improvement,Analytical,Business Process,6,35,17.1,bonus,
+DATA_ANALYST,Agile / Scrum,Soft,Soft,6,35,17.1,bonus,
+DATA_ANALYST,Machine Learning,AI_Digital,ML/AI,5,35,14.3,bonus,bonus
+DATA_ANALYST,Decision Making,Analytical,Analytical,5,35,14.3,bonus,
+DATA_ANALYST,Business Analysis,Analytical,Analytical,5,35,14.3,bonus,
+DATA_ANALYST,ETL,Technical,Data & BI,5,35,14.3,bonus,preferred
+DATA_ANALYST,Problem Solving,Analytical,Analytical,5,35,14.3,bonus,preferred
+DATA_ANALYST,Azure,AI_Digital,Cloud,5,35,14.3,bonus,
+DATA_ANALYST,Data Visualisation,AI_Digital,Data & BI,4,35,11.4,bonus,required
+DATA_ANALYST,Interpersonal Skills,Soft,Soft,4,35,11.4,bonus,
+DATA_ANALYST,Presentation Skills,Soft,Soft,4,35,11.4,bonus,preferred
+DATA_ANALYST,AI Literacy,AI_Digital,ML/AI,3,35,8.6,,
+DATA_ANALYST,Looker,Technical,Data & BI,3,35,8.6,,bonus
+DATA_ANALYST,Adaptability,Soft,Soft,3,35,8.6,,
+DATA_ANALYST,AWS,AI_Digital,Cloud,3,35,8.6,,
+DATA_ANALYST,Self-Motivation,Soft,Soft,3,35,8.6,,
+DATA_ANALYST,Hadoop,Technical,Data & BI,3,35,8.6,,
+DATA_ANALYST,Apache Spark,Technical,Data & BI,3,35,8.6,,
+DATA_ANALYST,Java,Technical,Programming Language,3,35,8.6,,
+DATA_ANALYST,Git,Technical,DevOps,3,35,8.6,,bonus
+DATA_ANALYST,User Acceptance Testing,Technical,Business Process,2,35,5.7,,
+DATA_ANALYST,Critical Thinking,Analytical,Analytical,2,35,5.7,,preferred
+DATA_ANALYST,GCP,AI_Digital,Cloud,2,35,5.7,,
+DATA_ANALYST,Time Management,Soft,Soft,2,35,5.7,,
+DATA_ANALYST,Market Research,Analytical,Marketing,2,35,5.7,,
+DATA_ANALYST,Data Mining,Analytical,Analytical,2,35,5.7,,
+DATA_ANALYST,Data Modelling,Analytical,Analytical,2,35,5.7,,
+DATA_ANALYST,Data Cleaning,Analytical,Data & BI,2,35,5.7,,required
+DATA_ANALYST,Jupyter,Technical,Data & BI,2,35,5.7,,
+DATA_ANALYST,C++,Technical,Programming Language,2,35,5.7,,
+DATA_ANALYST,Recruitment,Technical,Human Resources,2,35,5.7,,
+DATA_ANALYST,JavaScript,Technical,Programming Language,2,35,5.7,,
+DATA_ANALYST,Process Mapping,Analytical,Business Process,1,35,2.9,,
+DATA_ANALYST,NumPy,Technical,Data & BI,1,35,2.9,,
+DATA_ANALYST,Pandas,Technical,Data & BI,1,35,2.9,,required
+DATA_ANALYST,Generative AI,AI_Digital,ML/AI,1,35,2.9,,
+DATA_ANALYST,CRM Software,Technical,Business Software,1,35,2.9,,
+DATA_ANALYST,PowerShell,Technical,Programming Language,1,35,2.9,,
+DATA_ANALYST,Brand Management,Technical,Marketing,1,35,2.9,,
+DATA_ANALYST,Negotiation,Soft,Soft,1,35,2.9,,
+DATA_ANALYST,PostgreSQL,Technical,Database,1,35,2.9,,
+DATA_ANALYST,MySQL,Technical,Database,1,35,2.9,,
+DATA_ANALYST,Training & Development,Technical,Human Resources,1,35,2.9,,
+DATA_ANALYST,Project Management,Soft,Soft,1,35,2.9,,
+DATA_ANALYST,Computer Vision,AI_Digital,ML/AI,1,35,2.9,,
+DATA_ANALYST,Bash,Technical,Programming Language,1,35,2.9,,
+DATA_ANALYST,Identity & Access Management,Technical,Security Practice,1,35,2.9,,
+DATA_ANALYST,HTML,Technical,Web Development,1,35,2.9,,
+DATA_ANALYST,CSS,Technical,Web Development,1,35,2.9,,
+DATA_ANALYST,Terraform,Technical,DevOps,1,35,2.9,,
+DATA_ANALYST,HRIS,Technical,Human Resources,1,35,2.9,,
+DATA_ANALYST,Cloud Computing,AI_Digital,Cloud,1,35,2.9,,
+DATA_ANALYST,MongoDB,Technical,Database,1,35,2.9,,
+DATA_ANALYST,Docker,Technical,DevOps,1,35,2.9,,
+DATA_ANALYST,Cybersecurity,Technical,Security Practice,1,35,2.9,,
+DATA_ANALYST,Network Security,Technical,Security Practice,1,35,2.9,,
+DATA_ANALYST,Kubernetes,Technical,DevOps,1,35,2.9,,
+DATA_SCIENTIST,Python,Technical,Programming Language,30,35,85.7,required,required
+DATA_SCIENTIST,Statistical Analysis,Analytical,Analytical,23,35,65.7,required,required
+DATA_SCIENTIST,Machine Learning,AI_Digital,ML/AI,22,35,62.9,required,required
+DATA_SCIENTIST,SQL,Technical,Programming Language,18,35,51.4,required,required
+DATA_SCIENTIST,Data Analysis,Analytical,Analytical,18,35,51.4,required,required
+DATA_SCIENTIST,Communication,Soft,Soft,18,35,51.4,required,preferred
+DATA_SCIENTIST,Tableau,Technical,Data & BI,10,35,28.6,preferred,
+DATA_SCIENTIST,Teamwork,Soft,Soft,10,35,28.6,preferred,
+DATA_SCIENTIST,Data Structures & Algorithms,Technical,Software Engineering,9,35,25.7,preferred,
+DATA_SCIENTIST,Leadership,Soft,Soft,7,35,20.0,preferred,
+DATA_SCIENTIST,ETL,Technical,Data & BI,7,35,20.0,preferred,
+DATA_SCIENTIST,Power BI,Technical,Data & BI,7,35,20.0,preferred,
+DATA_SCIENTIST,Recruitment,Technical,Human Resources,6,35,17.1,bonus,
+DATA_SCIENTIST,Documentation,Soft,Soft,6,35,17.1,bonus,
+DATA_SCIENTIST,Pandas,Technical,Data & BI,5,35,14.3,bonus,required
+DATA_SCIENTIST,Generative AI,AI_Digital,ML/AI,5,35,14.3,bonus,bonus
+DATA_SCIENTIST,Business Process Improvement,Analytical,Business Process,5,35,14.3,bonus,
+DATA_SCIENTIST,Problem Solving,Analytical,Analytical,5,35,14.3,bonus,preferred
+DATA_SCIENTIST,Natural Language Processing,AI_Digital,ML/AI,5,35,14.3,bonus,preferred
+DATA_SCIENTIST,Decision Making,Analytical,Analytical,5,35,14.3,bonus,
+DATA_SCIENTIST,Scikit-learn,AI_Digital,ML/AI,4,35,11.4,bonus,required
+DATA_SCIENTIST,Cloud Computing,AI_Digital,Cloud,4,35,11.4,bonus,bonus
+DATA_SCIENTIST,Model Evaluation,AI_Digital,ML/AI,4,35,11.4,bonus,required
+DATA_SCIENTIST,PyTorch,AI_Digital,ML/AI,4,35,11.4,bonus,bonus
+DATA_SCIENTIST,Deep Learning,AI_Digital,ML/AI,4,35,11.4,bonus,preferred
+DATA_SCIENTIST,AI Literacy,AI_Digital,ML/AI,4,35,11.4,bonus,
+DATA_SCIENTIST,Data Mining,Analytical,Analytical,4,35,11.4,bonus,
+DATA_SCIENTIST,C++,Technical,Programming Language,4,35,11.4,bonus,
+DATA_SCIENTIST,Adaptability,Soft,Soft,4,35,11.4,bonus,
+DATA_SCIENTIST,Project Management,Soft,Soft,4,35,11.4,bonus,
+DATA_SCIENTIST,Agile / Scrum,Soft,Soft,4,35,11.4,bonus,
+DATA_SCIENTIST,Creativity,Soft,Soft,4,35,11.4,bonus,
+DATA_SCIENTIST,Business Analysis,Analytical,Analytical,3,35,8.6,,
+DATA_SCIENTIST,Azure,AI_Digital,Cloud,3,35,8.6,,
+DATA_SCIENTIST,UI/UX Design,Technical,Design,3,35,8.6,,
+DATA_SCIENTIST,Attention to Detail,Soft,Soft,3,35,8.6,,
+DATA_SCIENTIST,Hadoop,Technical,Data & BI,3,35,8.6,,
+DATA_SCIENTIST,Java,Technical,Programming Language,3,35,8.6,,
+DATA_SCIENTIST,Risk Analysis,Analytical,Analytical,3,35,8.6,,
+DATA_SCIENTIST,Apache Spark,Technical,Data & BI,3,35,8.6,,bonus
+DATA_SCIENTIST,Data Cleaning,Analytical,Data & BI,2,35,5.7,,preferred
+DATA_SCIENTIST,Computer Vision,AI_Digital,ML/AI,2,35,5.7,,
+DATA_SCIENTIST,GCP,AI_Digital,Cloud,2,35,5.7,,
+DATA_SCIENTIST,Self-Motivation,Soft,Soft,2,35,5.7,,
+DATA_SCIENTIST,AWS,AI_Digital,Cloud,2,35,5.7,,
+DATA_SCIENTIST,TensorFlow,AI_Digital,ML/AI,2,35,5.7,,bonus
+DATA_SCIENTIST,C#,Technical,Programming Language,2,35,5.7,,
+DATA_SCIENTIST,Git,Technical,DevOps,2,35,5.7,,preferred
+DATA_SCIENTIST,Linux,Technical,Infrastructure,2,35,5.7,,
+DATA_SCIENTIST,PostgreSQL,Technical,Database,2,35,5.7,,
+DATA_SCIENTIST,Critical Thinking,Analytical,Analytical,2,35,5.7,,
+DATA_SCIENTIST,Docker,Technical,DevOps,2,35,5.7,,
+DATA_SCIENTIST,CI/CD,Technical,DevOps,2,35,5.7,,
+DATA_SCIENTIST,Networking,Technical,Infrastructure,2,35,5.7,,
+DATA_SCIENTIST,NumPy,Technical,Data & BI,1,35,2.9,,preferred
+DATA_SCIENTIST,Prompt Engineering,AI_Digital,ML/AI,1,35,2.9,,
+DATA_SCIENTIST,Hugging Face,AI_Digital,ML/AI,1,35,2.9,,
+DATA_SCIENTIST,Excel,Technical,Data & BI,1,35,2.9,,
+DATA_SCIENTIST,Content Marketing,Technical,Marketing,1,35,2.9,,
+DATA_SCIENTIST,MLOps,AI_Digital,ML/AI,1,35,2.9,,bonus
+DATA_SCIENTIST,HTML,Technical,Web Development,1,35,2.9,,
+DATA_SCIENTIST,CSS,Technical,Web Development,1,35,2.9,,
+DATA_SCIENTIST,Responsible AI,AI_Digital,ML/AI,1,35,2.9,,
+DATA_SCIENTIST,Performance Management,Technical,Human Resources,1,35,2.9,,
+DATA_SCIENTIST,Accounting,Technical,Finance & Accounting,1,35,2.9,,
+DATA_SCIENTIST,Google Analytics,Technical,Data & BI,1,35,2.9,,
+DATA_SCIENTIST,Jupyter,Technical,Data & BI,1,35,2.9,,preferred
+DATA_SCIENTIST,Data Warehousing,Technical,Data & BI,1,35,2.9,,
+DATA_SCIENTIST,Feature Engineering,AI_Digital,ML/AI,1,35,2.9,,required
+DATA_SCIENTIST,Research Skills,Analytical,Analytical,1,35,2.9,,bonus
+DATA_SCIENTIST,JavaScript,Technical,Programming Language,1,35,2.9,,
+DATA_SCIENTIST,Microservices,Technical,Software Engineering,1,35,2.9,,
+DATA_SCIENTIST,REST API,Technical,Web Development,1,35,2.9,,
+DATA_SCIENTIST,Looker,Technical,Data & BI,1,35,2.9,,
+DATA_SCIENTIST,React,Technical,Web Framework,1,35,2.9,,
+DATA_SCIENTIST,Splunk,Technical,Security Tool,1,35,2.9,,
+DATA_SCIENTIST,Ansible,Technical,DevOps,1,35,2.9,,
+DATA_SCIENTIST,Terraform,Technical,DevOps,1,35,2.9,,
+DATA_SCIENTIST,Digital Marketing,Technical,Marketing,1,35,2.9,,
+FINANCIAL_ANALYST,Accounting,Technical,Finance & Accounting,25,35,71.4,required,required
+FINANCIAL_ANALYST,Communication,Soft,Soft,13,35,37.1,preferred,
+FINANCIAL_ANALYST,Financial Reporting,Technical,Finance & Accounting,12,35,34.3,preferred,required
+FINANCIAL_ANALYST,Budgeting & Forecasting,Analytical,Finance & Accounting,12,35,34.3,preferred,required
+FINANCIAL_ANALYST,Financial Analysis,Analytical,Analytical,9,35,25.7,preferred,required
+FINANCIAL_ANALYST,Decision Making,Analytical,Analytical,8,35,22.9,preferred,preferred
+FINANCIAL_ANALYST,Financial Modelling,Analytical,Finance & Accounting,8,35,22.9,preferred,required
+FINANCIAL_ANALYST,Attention to Detail,Soft,Soft,7,35,20.0,preferred,required
+FINANCIAL_ANALYST,Leadership,Soft,Soft,7,35,20.0,preferred,
+FINANCIAL_ANALYST,Excel,Technical,Data & BI,6,35,17.1,bonus,required
+FINANCIAL_ANALYST,SQL,Technical,Programming Language,5,35,14.3,bonus,bonus
+FINANCIAL_ANALYST,Data Analysis,Analytical,Analytical,5,35,14.3,bonus,required
+FINANCIAL_ANALYST,Tableau,Technical,Data & BI,5,35,14.3,bonus,bonus
+FINANCIAL_ANALYST,Risk Analysis,Analytical,Analytical,4,35,11.4,bonus,preferred
+FINANCIAL_ANALYST,Interpersonal Skills,Soft,Soft,4,35,11.4,bonus,
+FINANCIAL_ANALYST,Teamwork,Soft,Soft,4,35,11.4,bonus,
+FINANCIAL_ANALYST,Time Management,Soft,Soft,3,35,8.6,,bonus
+FINANCIAL_ANALYST,Recruitment,Technical,Human Resources,3,35,8.6,,
+FINANCIAL_ANALYST,Business Analysis,Analytical,Analytical,3,35,8.6,,
+FINANCIAL_ANALYST,Problem Solving,Analytical,Analytical,3,35,8.6,,
+FINANCIAL_ANALYST,Presentation Skills,Soft,Soft,3,35,8.6,,preferred
+FINANCIAL_ANALYST,Power BI,Technical,Data & BI,3,35,8.6,,preferred
+FINANCIAL_ANALYST,Agile / Scrum,Soft,Soft,2,35,5.7,,
+FINANCIAL_ANALYST,Statistical Analysis,Analytical,Analytical,2,35,5.7,,preferred
+FINANCIAL_ANALYST,Data Mining,Analytical,Analytical,2,35,5.7,,
+FINANCIAL_ANALYST,Customer Focus,Soft,Soft,2,35,5.7,,
+FINANCIAL_ANALYST,HRIS,Technical,Human Resources,2,35,5.7,,
+FINANCIAL_ANALYST,Documentation,Soft,Soft,2,35,5.7,,
+FINANCIAL_ANALYST,Creativity,Soft,Soft,1,35,2.9,,
+FINANCIAL_ANALYST,Market Research,Analytical,Marketing,1,35,2.9,,
+FINANCIAL_ANALYST,Business Process Improvement,Analytical,Business Process,1,35,2.9,,
+FINANCIAL_ANALYST,Adaptability,Soft,Soft,1,35,2.9,,
+FINANCIAL_ANALYST,Apache Spark,Technical,Data & BI,1,35,2.9,,
+FINANCIAL_ANALYST,Accounting Software,Technical,Business Software,1,35,2.9,,preferred
+FINANCIAL_ANALYST,Payroll,Technical,Human Resources,1,35,2.9,,
+HR_EXEC,Communication,Soft,Soft,27,35,77.1,required,required
+HR_EXEC,Recruitment,Technical,Human Resources,21,35,60.0,required,required
+HR_EXEC,HRIS,Technical,Human Resources,15,35,42.9,preferred,required
+HR_EXEC,Documentation,Soft,Soft,11,35,31.4,preferred,preferred
+HR_EXEC,Attention to Detail,Soft,Soft,9,35,25.7,preferred,required
+HR_EXEC,Payroll,Technical,Human Resources,8,35,22.9,preferred,required
+HR_EXEC,Self-Motivation,Soft,Soft,8,35,22.9,preferred,
+HR_EXEC,Interpersonal Skills,Soft,Soft,7,35,20.0,preferred,required
+HR_EXEC,Customer Focus,Soft,Soft,7,35,20.0,preferred,preferred
+HR_EXEC,Time Management,Soft,Soft,6,35,17.1,bonus,required
+HR_EXEC,Employee Relations,Technical,Human Resources,6,35,17.1,bonus,required
+HR_EXEC,Leadership,Soft,Soft,6,35,17.1,bonus,bonus
+HR_EXEC,Decision Making,Analytical,Analytical,5,35,14.3,bonus,
+HR_EXEC,Networking,Technical,Infrastructure,5,35,14.3,bonus,
+HR_EXEC,Teamwork,Soft,Soft,4,35,11.4,bonus,preferred
+HR_EXEC,Performance Management,Technical,Human Resources,4,35,11.4,bonus,preferred
+HR_EXEC,Problem Solving,Analytical,Analytical,3,35,8.6,,preferred
+HR_EXEC,Adaptability,Soft,Soft,3,35,8.6,,bonus
+HR_EXEC,Data Analysis,Analytical,Analytical,3,35,8.6,,bonus
+HR_EXEC,Project Management,Soft,Soft,3,35,8.6,,bonus
+HR_EXEC,Training & Development,Technical,Human Resources,2,35,5.7,,preferred
+HR_EXEC,Budgeting & Forecasting,Analytical,Finance & Accounting,2,35,5.7,,
+HR_EXEC,Employment Law,Technical,Human Resources,2,35,5.7,,required
+HR_EXEC,Presentation Skills,Soft,Soft,2,35,5.7,,bonus
+HR_EXEC,Creativity,Soft,Soft,2,35,5.7,,
+HR_EXEC,Brand Management,Technical,Marketing,2,35,5.7,,
+HR_EXEC,Power BI,Technical,Data & BI,1,35,2.9,,bonus
+HR_EXEC,Tableau,Technical,Data & BI,1,35,2.9,,
+HR_EXEC,Accounting,Technical,Finance & Accounting,1,35,2.9,,
+HR_EXEC,Vue.js,Technical,Web Framework,1,35,2.9,,
+HR_EXEC,Content Marketing,Technical,Marketing,1,35,2.9,,
+HR_EXEC,User Acceptance Testing,Technical,Business Process,1,35,2.9,,
+HR_EXEC,Critical Thinking,Analytical,Analytical,1,35,2.9,,
+HR_EXEC,Statistical Analysis,Analytical,Analytical,1,35,2.9,,
+HR_EXEC,Excel,Technical,Data & BI,1,35,2.9,,preferred
+HR_EXEC,CRM Software,Technical,Business Software,1,35,2.9,,
+MARKETING_EXEC,Communication,Soft,Soft,25,35,71.4,required,required
+MARKETING_EXEC,Digital Marketing,Technical,Marketing,11,35,31.4,preferred,required
+MARKETING_EXEC,Content Marketing,Technical,Marketing,10,35,28.6,preferred,required
+MARKETING_EXEC,Attention to Detail,Soft,Soft,8,35,22.9,preferred,
+MARKETING_EXEC,Email Marketing,Technical,Marketing,7,35,20.0,preferred,preferred
+MARKETING_EXEC,Project Management,Soft,Soft,6,35,17.1,bonus,preferred
+MARKETING_EXEC,Market Research,Analytical,Marketing,5,35,14.3,bonus,required
+MARKETING_EXEC,Social Media Marketing,Technical,Marketing,5,35,14.3,bonus,required
+MARKETING_EXEC,Teamwork,Soft,Soft,5,35,14.3,bonus,bonus
+MARKETING_EXEC,Brand Management,Technical,Marketing,5,35,14.3,bonus,preferred
+MARKETING_EXEC,Customer Focus,Soft,Soft,4,35,11.4,bonus,bonus
+MARKETING_EXEC,Search Engine Optimisation,Technical,Marketing,4,35,11.4,bonus,required
+MARKETING_EXEC,Search Engine Marketing,Technical,Marketing,4,35,11.4,bonus,preferred
+MARKETING_EXEC,Leadership,Soft,Soft,4,35,11.4,bonus,
+MARKETING_EXEC,Interpersonal Skills,Soft,Soft,4,35,11.4,bonus,
+MARKETING_EXEC,Creativity,Soft,Soft,3,35,8.6,,required
+MARKETING_EXEC,Recruitment,Technical,Human Resources,3,35,8.6,,
+MARKETING_EXEC,A/B Testing,Analytical,Analytical,3,35,8.6,,preferred
+MARKETING_EXEC,Google Analytics,Technical,Data & BI,3,35,8.6,,required
+MARKETING_EXEC,Time Management,Soft,Soft,2,35,5.7,,
+MARKETING_EXEC,Decision Making,Analytical,Analytical,2,35,5.7,,
+MARKETING_EXEC,Documentation,Soft,Soft,2,35,5.7,,
+MARKETING_EXEC,CRM Software,Technical,Business Software,2,35,5.7,,preferred
+MARKETING_EXEC,Accounting,Technical,Finance & Accounting,2,35,5.7,,
+MARKETING_EXEC,SQL,Technical,Programming Language,2,35,5.7,,
+MARKETING_EXEC,Data Analysis,Analytical,Analytical,2,35,5.7,,preferred
+MARKETING_EXEC,Accounting Software,Technical,Business Software,1,35,2.9,,
+MARKETING_EXEC,Risk Analysis,Analytical,Analytical,1,35,2.9,,
+MARKETING_EXEC,Self-Motivation,Soft,Soft,1,35,2.9,,
+MARKETING_EXEC,Performance Management,Technical,Human Resources,1,35,2.9,,
+MARKETING_EXEC,Payroll,Technical,Human Resources,1,35,2.9,,
+MARKETING_EXEC,HRIS,Technical,Human Resources,1,35,2.9,,
+MARKETING_EXEC,Presentation Skills,Soft,Soft,1,35,2.9,,required
+MARKETING_EXEC,UI/UX Design,Technical,Design,1,35,2.9,,
+MARKETING_EXEC,Auditing,Technical,Finance & Accounting,1,35,2.9,,
+MARKETING_EXEC,Cloud Computing,AI_Digital,Cloud,1,35,2.9,,
+MARKETING_EXEC,Cybersecurity,Technical,Security Practice,1,35,2.9,,
+MARKETING_EXEC,Data Structures & Algorithms,Technical,Software Engineering,1,35,2.9,,
+MARKETING_EXEC,HTML,Technical,Web Development,1,35,2.9,,
+MARKETING_EXEC,Networking,Technical,Infrastructure,1,35,2.9,,
+SOFTWARE_DEV,Communication,Soft,Soft,14,35,40.0,preferred,preferred
+SOFTWARE_DEV,Java,Technical,Programming Language,14,35,40.0,preferred,required
+SOFTWARE_DEV,JavaScript,Technical,Programming Language,13,35,37.1,preferred,required
+SOFTWARE_DEV,Python,Technical,Programming Language,13,35,37.1,preferred,required
+SOFTWARE_DEV,Documentation,Soft,Soft,11,35,31.4,preferred,
+SOFTWARE_DEV,SQL,Technical,Programming Language,10,35,28.6,preferred,required
+SOFTWARE_DEV,Agile / Scrum,Soft,Soft,9,35,25.7,preferred,preferred
+SOFTWARE_DEV,Teamwork,Soft,Soft,9,35,25.7,preferred,preferred
+SOFTWARE_DEV,C#,Technical,Programming Language,7,35,20.0,preferred,preferred
+SOFTWARE_DEV,React,Technical,Web Framework,7,35,20.0,preferred,bonus
+SOFTWARE_DEV,C++,Technical,Programming Language,7,35,20.0,preferred,bonus
+SOFTWARE_DEV,AWS,AI_Digital,Cloud,7,35,20.0,preferred,
+SOFTWARE_DEV,Problem Solving,Analytical,Analytical,6,35,17.1,bonus,required
+SOFTWARE_DEV,Unit Testing,Technical,Software Engineering,5,35,14.3,bonus,required
+SOFTWARE_DEV,UI/UX Design,Technical,Design,5,35,14.3,bonus,
+SOFTWARE_DEV,Git,Technical,DevOps,5,35,14.3,bonus,required
+SOFTWARE_DEV,Node.js,Technical,Web Framework,5,35,14.3,bonus,bonus
+SOFTWARE_DEV,HTML,Technical,Web Development,4,35,11.4,bonus,
+SOFTWARE_DEV,CSS,Technical,Web Development,4,35,11.4,bonus,
+SOFTWARE_DEV,Interpersonal Skills,Soft,Soft,4,35,11.4,bonus,
+SOFTWARE_DEV,Business Analysis,Analytical,Analytical,4,35,11.4,bonus,
+SOFTWARE_DEV,Linux,Technical,Infrastructure,4,35,11.4,bonus,preferred
+SOFTWARE_DEV,Machine Learning,AI_Digital,ML/AI,4,35,11.4,bonus,
+SOFTWARE_DEV,Spring Boot,Technical,Web Framework,4,35,11.4,bonus,preferred
+SOFTWARE_DEV,Angular,Technical,Web Framework,4,35,11.4,bonus,
+SOFTWARE_DEV,Microservices,Technical,Software Engineering,4,35,11.4,bonus,bonus
+SOFTWARE_DEV,Docker,Technical,DevOps,4,35,11.4,bonus,preferred
+SOFTWARE_DEV,TypeScript,Technical,Programming Language,4,35,11.4,bonus,bonus
+SOFTWARE_DEV,REST API,Technical,Web Development,4,35,11.4,bonus,required
+SOFTWARE_DEV,Leadership,Soft,Soft,4,35,11.4,bonus,
+SOFTWARE_DEV,User Acceptance Testing,Technical,Business Process,3,35,8.6,,
+SOFTWARE_DEV,Cybersecurity,Technical,Security Practice,3,35,8.6,,
+SOFTWARE_DEV,MySQL,Technical,Database,3,35,8.6,,
+SOFTWARE_DEV,Networking,Technical,Infrastructure,3,35,8.6,,
+SOFTWARE_DEV,Self-Motivation,Soft,Soft,3,35,8.6,,
+SOFTWARE_DEV,CI/CD,Technical,DevOps,3,35,8.6,,preferred
+SOFTWARE_DEV,Attention to Detail,Soft,Soft,3,35,8.6,,
+SOFTWARE_DEV,Recruitment,Technical,Human Resources,3,35,8.6,,
+SOFTWARE_DEV,Azure,AI_Digital,Cloud,2,35,5.7,,
+SOFTWARE_DEV,Kubernetes,Technical,DevOps,2,35,5.7,,
+SOFTWARE_DEV,Data Analysis,Analytical,Analytical,2,35,5.7,,
+SOFTWARE_DEV,Project Management,Soft,Soft,2,35,5.7,,
+SOFTWARE_DEV,Creativity,Soft,Soft,2,35,5.7,,
+SOFTWARE_DEV,Kotlin,Technical,Programming Language,2,35,5.7,,
+SOFTWARE_DEV,PostgreSQL,Technical,Database,2,35,5.7,,
+SOFTWARE_DEV,Bash,Technical,Programming Language,2,35,5.7,,
+SOFTWARE_DEV,GraphQL,Technical,Web Development,2,35,5.7,,
+SOFTWARE_DEV,Accounting,Technical,Finance & Accounting,1,35,2.9,,
+SOFTWARE_DEV,Generative AI,AI_Digital,ML/AI,1,35,2.9,,
+SOFTWARE_DEV,Adaptability,Soft,Soft,1,35,2.9,,
+SOFTWARE_DEV,Data Mining,Analytical,Analytical,1,35,2.9,,
+SOFTWARE_DEV,Cloud Computing,AI_Digital,Cloud,1,35,2.9,,bonus
+SOFTWARE_DEV,PHP,Technical,Programming Language,1,35,2.9,,
+SOFTWARE_DEV,Object-Oriented Programming,Technical,Software Engineering,1,35,2.9,,required
+SOFTWARE_DEV,PowerShell,Technical,Programming Language,1,35,2.9,,
+SOFTWARE_DEV,Systems Thinking,Analytical,Analytical,1,35,2.9,,
+SOFTWARE_DEV,Risk Analysis,Analytical,Analytical,1,35,2.9,,
+SOFTWARE_DEV,Redis,Technical,Database,1,35,2.9,,
+SOFTWARE_DEV,GCP,AI_Digital,Cloud,1,35,2.9,,
+SOFTWARE_DEV,Training & Development,Technical,Human Resources,1,35,2.9,,
+SOFTWARE_DEV,Data Structures & Algorithms,Technical,Software Engineering,1,35,2.9,,required
+SOFTWARE_DEV,Presentation Skills,Soft,Soft,1,35,2.9,,
+SOFTWARE_DEV,Computer Vision,AI_Digital,ML/AI,1,35,2.9,,
+SOFTWARE_DEV,Rust,Technical,Programming Language,1,35,2.9,,
+SOFTWARE_DEV,Taxation,Technical,Finance & Accounting,1,35,2.9,,
+SOFTWARE_DEV,MongoDB,Technical,Database,1,35,2.9,,
+SOFTWARE_DEV,Express.js,Technical,Web Framework,1,35,2.9,,
+SOFTWARE_DEV,Go,Technical,Programming Language,1,35,2.9,,
+SOFTWARE_DEV,Customer Focus,Soft,Soft,1,35,2.9,,
+SOFTWARE_DEV,Statistical Analysis,Analytical,Analytical,1,35,2.9,,
+SOFTWARE_DEV,Apache Spark,Technical,Data & BI,1,35,2.9,,
+SOFTWARE_DEV,R,Technical,Programming Language,1,35,2.9,,
+SOFTWARE_DEV,Negotiation,Soft,Soft,1,35,2.9,,
+SOFTWARE_DEV,Hadoop,Technical,Data & BI,1,35,2.9,,
+SOFTWARE_DEV,ETL,Technical,Data & BI,1,35,2.9,,
+SOFTWARE_DEV,PyTorch,AI_Digital,ML/AI,1,35,2.9,,
+SOFTWARE_DEV,TensorFlow,AI_Digital,ML/AI,1,35,2.9,,
+WEB_DEV,JavaScript,Technical,Programming Language,25,35,71.4,required,required
+WEB_DEV,CSS,Technical,Web Development,23,35,65.7,required,required
+WEB_DEV,React,Technical,Web Framework,21,35,60.0,required,required
+WEB_DEV,HTML,Technical,Web Development,18,35,51.4,required,required
+WEB_DEV,Angular,Technical,Web Framework,15,35,42.9,preferred,
+WEB_DEV,CI/CD,Technical,DevOps,14,35,40.0,preferred,
+WEB_DEV,Agile / Scrum,Soft,Soft,13,35,37.1,preferred,preferred
+WEB_DEV,SQL,Technical,Programming Language,13,35,37.1,preferred,required
+WEB_DEV,Git,Technical,DevOps,12,35,34.3,preferred,required
+WEB_DEV,Documentation,Soft,Soft,10,35,28.6,preferred,
+WEB_DEV,Teamwork,Soft,Soft,10,35,28.6,preferred,preferred
+WEB_DEV,Communication,Soft,Soft,10,35,28.6,preferred,preferred
+WEB_DEV,Java,Technical,Programming Language,9,35,25.7,preferred,
+WEB_DEV,Node.js,Technical,Web Framework,9,35,25.7,preferred,required
+WEB_DEV,Unit Testing,Technical,Software Engineering,9,35,25.7,preferred,preferred
+WEB_DEV,Vue.js,Technical,Web Framework,8,35,22.9,preferred,bonus
+WEB_DEV,TypeScript,Technical,Programming Language,7,35,20.0,preferred,required
+WEB_DEV,MySQL,Technical,Database,7,35,20.0,preferred,
+WEB_DEV,Azure,AI_Digital,Cloud,7,35,20.0,preferred,
+WEB_DEV,AWS,AI_Digital,Cloud,7,35,20.0,preferred,
+WEB_DEV,PHP,Technical,Programming Language,6,35,17.1,bonus,bonus
+WEB_DEV,Docker,Technical,DevOps,6,35,17.1,bonus,bonus
+WEB_DEV,C#,Technical,Programming Language,6,35,17.1,bonus,
+WEB_DEV,PostgreSQL,Technical,Database,6,35,17.1,bonus,preferred
+WEB_DEV,UI/UX Design,Technical,Design,6,35,17.1,bonus,preferred
+WEB_DEV,Self-Motivation,Soft,Soft,4,35,11.4,bonus,
+WEB_DEV,Problem Solving,Analytical,Analytical,4,35,11.4,bonus,preferred
+WEB_DEV,Python,Technical,Programming Language,4,35,11.4,bonus,bonus
+WEB_DEV,REST API,Technical,Web Development,3,35,8.6,,required
+WEB_DEV,Identity & Access Management,Technical,Security Practice,3,35,8.6,,
+WEB_DEV,Cloud Computing,AI_Digital,Cloud,3,35,8.6,,
+WEB_DEV,Spring Boot,Technical,Web Framework,3,35,8.6,,
+WEB_DEV,Microservices,Technical,Software Engineering,3,35,8.6,,
+WEB_DEV,Data Structures & Algorithms,Technical,Software Engineering,3,35,8.6,,
+WEB_DEV,Linux,Technical,Infrastructure,2,35,5.7,,
+WEB_DEV,Email Marketing,Technical,Marketing,2,35,5.7,,
+WEB_DEV,Interpersonal Skills,Soft,Soft,2,35,5.7,,
+WEB_DEV,MongoDB,Technical,Database,2,35,5.7,,bonus
+WEB_DEV,Excel,Technical,Data & BI,2,35,5.7,,
+WEB_DEV,Kubernetes,Technical,DevOps,2,35,5.7,,
+WEB_DEV,Recruitment,Technical,Human Resources,2,35,5.7,,
+WEB_DEV,Attention to Detail,Soft,Soft,2,35,5.7,,
+WEB_DEV,Risk Analysis,Analytical,Analytical,2,35,5.7,,
+WEB_DEV,Leadership,Soft,Soft,2,35,5.7,,
+WEB_DEV,Serverless,AI_Digital,Cloud,2,35,5.7,,
+WEB_DEV,Terraform,Technical,DevOps,2,35,5.7,,
+WEB_DEV,Networking,Technical,Infrastructure,1,35,2.9,,
+WEB_DEV,CRM Software,Technical,Business Software,1,35,2.9,,
+WEB_DEV,Search Engine Optimisation,Technical,Marketing,1,35,2.9,,
+WEB_DEV,Process Mapping,Analytical,Business Process,1,35,2.9,,
+WEB_DEV,Figma,Technical,Design,1,35,2.9,,bonus
+WEB_DEV,User Acceptance Testing,Technical,Business Process,1,35,2.9,,
+WEB_DEV,Data Modelling,Analytical,Analytical,1,35,2.9,,
+WEB_DEV,Ansible,Technical,DevOps,1,35,2.9,,
+WEB_DEV,C++,Technical,Programming Language,1,35,2.9,,
+WEB_DEV,Data Analysis,Analytical,Analytical,1,35,2.9,,
+WEB_DEV,Power BI,Technical,Data & BI,1,35,2.9,,
+WEB_DEV,Hadoop,Technical,Data & BI,1,35,2.9,,
+WEB_DEV,ETL,Technical,Data & BI,1,35,2.9,,
+WEB_DEV,Machine Learning,AI_Digital,ML/AI,1,35,2.9,,
+WEB_DEV,Django,Technical,Web Framework,1,35,2.9,,
+WEB_DEV,Creativity,Soft,Soft,1,35,2.9,,
+WEB_DEV,Adaptability,Soft,Soft,1,35,2.9,,
+WEB_DEV,Business Analysis,Analytical,Analytical,1,35,2.9,,
+WEB_DEV,Performance Management,Technical,Human Resources,1,35,2.9,,
+WEB_DEV,Cybersecurity,Technical,Security Practice,1,35,2.9,,
+WEB_DEV,Object-Oriented Programming,Technical,Software Engineering,1,35,2.9,,
+WEB_DEV,Monitoring & Observability,Technical,DevOps,1,35,2.9,,
+WEB_DEV,Digital Marketing,Technical,Marketing,1,35,2.9,,
+WEB_DEV,GraphQL,Technical,Web Development,1,35,2.9,,bonus
+WEB_DEV,GCP,AI_Digital,Cloud,1,35,2.9,,

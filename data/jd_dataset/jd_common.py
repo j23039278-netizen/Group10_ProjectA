@@ -21,17 +21,34 @@ from skills_lib import load_skills  # noqa: E402
 DATASET_PATH = JD_DIR / "jd_dataset.csv"
 ROLE_SKILLS_SEED_PATH = REPO_ROOT / "database" / "seed_job_role_skills.sql"
 
-DATASET_FIELDS = ["jd_ref", "role_code", "title", "company", "location", "seniority",
+DATASET_FIELDS = ["jd_ref", "role_code", "title", "company", "location", "region", "seniority",
                   "source", "source_url", "source_license", "collected_date", "raw_text"]
 
 ROLE_ABBR = {
     "DATA_ANALYST": "DA", "DATA_SCIENTIST": "DS", "SOFTWARE_DEV": "SD",
     "CYBER_ANALYST": "CY", "CLOUD_ENGINEER": "CE", "WEB_DEV": "WD",
+    "BUSINESS_ANALYST": "BA", "FINANCIAL_ANALYST": "FA", "HR_EXEC": "HR", "MARKETING_EXEC": "MK",
 }
 
 # Title keyword rules, checked in this order (first match wins).
+# - BUSINESS_ANALYST and FINANCIAL_ANALYST come first: their phrases name the job
+#   ("IT Business Analyst", "Cloud Financial Analyst"). "Business intelligence
+#   analyst" and "business data analyst" do not contain "business analyst", so they
+#   stay DATA_ANALYST. "Financial reporting analyst" is FINANCIAL_ANALYST (it must
+#   beat "reporting analyst"), while "financial data analyst" is deliberately
+#   DATA_ANALYST: its head noun is "data analyst" and the work is SQL / BI on
+#   finance data, not budgeting or forecasting.
+# - Recruiter titles often name the field they hire for ("Technical Recruiter -
+#   Cloud"), so they come before the IT rules. Other HR and marketing titles come
+#   last, so "HR Data Analyst" and "Marketing Analytics Specialist" stay DATA_ANALYST.
 ROLE_TITLE_RULES = [
-    ("CYBER_ANALYST", ["security", "cyber", "soc analyst", "penetration", "infosec", "pentest"]),
+    ("BUSINESS_ANALYST", ["business analyst", "business systems analyst", "business system analyst",
+                          "business process analyst", "business analysis"]),
+    ("FINANCIAL_ANALYST", ["financial analyst", "finance analyst", "fp&a", "financial planning analyst",
+                           "financial planning and analysis", "financial planning & analysis",
+                           "financial reporting analyst", "budget analyst"]),
+    ("HR_EXEC", ["recruiter", "recruiting coordinator", "recruitment", "talent acquisition"]),
+    ("CYBER_ANALYST", ["security", "cyber", "cybersecurity", "soc analyst", "penetration", "infosec", "pentest"]),
     ("CLOUD_ENGINEER", ["cloud", "devops", "site reliability", "sre", "platform engineer"]),
     ("DATA_SCIENTIST", ["data scientist", "machine learning", "ml engineer", "ai engineer", "data science"]),
     ("DATA_ANALYST", ["data analyst", "business intelligence", "bi analyst", "bi developer",
@@ -41,19 +58,79 @@ ROLE_TITLE_RULES = [
     ("SOFTWARE_DEV", ["software engineer", "software developer", "backend", "back-end", "back end",
                       "java developer", "python developer", "application developer", "programmer",
                       ".net developer", "software development"]),
+    ("HR_EXEC", ["hr", "hris", "human resources", "human resource", "people operations", "people partner"]),
+    ("MARKETING_EXEC", ["marketing executive", "marketing coordinator", "marketing specialist",
+                        "marketing assistant", "marketing associate", "marketing intern", "marketing internship",
+                        "marketing officer", "marketing analyst", "marketing generalist",
+                        "marketing communications", "digital marketing", "social media", "content marketing",
+                        "seo specialist", "seo executive", "brand executive", "brand coordinator"]),
 ]
+
+# Some keywords are too broad on their own. They only count when the title also
+# matches the context pattern: bare "security" must look like IT security (so
+# "Security Officer" and "Armed Security Guard" are skipped, while "Information
+# System Security Officer" stays CYBER_ANALYST), and "front end" must look like
+# development (US retail uses "Front End Supervisor" for the checkout area).
+KEYWORD_CONTEXT = {
+    "security": re.compile(
+        r"\b(?:information|info|it|ict|cyber|network|computer|application|app|cloud|data|soc|isso|issm|iam|"
+        r"identity|email|siem|software|devsecops|vulnerability|threat|incident|blockchain|sap|"
+        r"analyst|engineer|engineering|developer|researcher|tester|administrator|operations center)\b", re.I),
+    **{w: re.compile(r"\b(?:developer|engineer|engineering|software|web|ui|react|angular|vue|javascript|"
+                     r"typescript|dev)\b", re.I) for w in ("frontend", "front-end", "front end")},
+}
+# Titles that match a role's keyword but are not that job.
+ROLE_TITLE_EXCLUDE = {
+    # "Retail Sales Print & Marketing Associate", "Sales and Marketing Representative"
+    "MARKETING_EXEC": re.compile(r"\b(?:sales|retail|door[- ]to[- ]door)\b", re.I),
+    # "Associate Client Advisor - Cyber" (cyber insurance)
+    "CYBER_ANALYST": re.compile(r"\b(?:insurance|underwrit\w*|claims|client advisor|broker)\b", re.I),
+    # "HVAC Programmer", "Machinist/Programmer", "Computer Numerical Control Programmer"
+    "SOFTWARE_DEV": re.compile(r"\b(?:hvac|cnc|plc|machinist|manufacturing|numerical control)\b", re.I),
+    # "LVN - HR Employee Occupational Health"
+    "HR_EXEC": re.compile(r"\blvn\b", re.I),
+    # "Online Data Analyst" is a search / maps rating gig (no SQL, Excel or BI work)
+    "DATA_ANALYST": re.compile(r"\bonline data analyst\b", re.I),
+}
+# Titles that are never one of the target jobs ("Volunteer: Finance Coordinator
+# needed for Cyber Defense Center", "Assistant Teaching Professor in Business
+# Analytics", "Enterprise Cloud Sales Representative", "Talent Acquisition Sales Representative").
+NON_TARGET_TITLE_RE = re.compile(
+    r"\b(?:volunteer|professor|faculty|lecturer|teacher|instructor|account executive"
+    r"|sales (?:representative|rep|associate|executive|specialist|consultant|engineer))\b", re.I)
+# Phrases removed from a title before matching: the part after "for" / "with" /
+# "supporting" ("Jr. Python Developer for Cyber Program", "Data Analyst Supporting
+# the FBI"), clearance wording, product and place names ("Salesforce Marketing
+# Cloud", "Teller St Cloud South") and pay or shift rates ("$26.00/hr", "Operator 12-hr").
+TITLE_NOISE_RE = re.compile(
+    r"\s(?:for|with|supporting)\s.*$"
+    r"|\b(?:(?:with|requires?|active|ts/sci|top secret|secret)\s+)*security clearance\b"
+    r"|\bclearance required\b|\b(?:social|national|homeland) security\b"
+    r"|\b(?:salesforce\s+)?(?:marketing|sales|service|commerce|ecommerce|experience|health|analytics) cloud\b"
+    r"|\b(?:oracle|genesys|workday|netsuite) cloud\b|\bst\.?\s+cloud\b"
+    r"|\$?\s*\d[\d,.]*\s*(?:/|-|per|an|a)?\s*(?:hr|hour|yr|year)s?\b|\$\s*\d[\d,.]*k?|/\s*hr\b|\bper\s+hr\b", re.I)
 # SEAGAS targets graduates, so senior / management postings are skipped.
-SENIOR_WORDS = re.compile(r"\b(senior|sr\.?|lead|principal|manager|head|director|architect|staff|vp)\b", re.I)
+SENIOR_WORDS = re.compile(
+    r"\b(senior|sr\.?|lead|principal|manager|mgr|head|director|architect|staff|vp|avp|svp|evp|chief|president|leader|supervisor)\b",
+    re.I)
 ENTRY_WORDS = re.compile(r"\b(intern|internship|graduate|trainee|entry[- ]level|fresh(?:er|\s+grad)?)\b", re.I)
 JUNIOR_WORDS = re.compile(r"\b(junior|jr\.?|associate)\b", re.I)
 
 
 def classify_role(title):
-    t = f" {title.lower()} "
+    t = f" {TITLE_NOISE_RE.sub(' ', title.lower())} "
+    if NON_TARGET_TITLE_RE.search(t):
+        return None
     for code, words in ROLE_TITLE_RULES:
+        if code in ROLE_TITLE_EXCLUDE and ROLE_TITLE_EXCLUDE[code].search(t):
+            continue
         for w in words:
-            if re.search(r"(?<![a-z])" + re.escape(w) + r"(?![a-z])", t):
-                return code
+            if not re.search(r"(?<![a-z])" + re.escape(w) + r"(?![a-z])", t):
+                continue
+            context = KEYWORD_CONTEXT.get(w)
+            if context and not context.search(t.replace(w, " ")):
+                continue
+            return code
     return None
 
 
@@ -70,9 +147,62 @@ def classify_seniority(title, text=""):
     return "mid"
 
 
+# Experience-level column of some Kaggle files (LinkedIn: "Internship", "Entry level",
+# "Associate", "Mid-Senior level", "Director", "Executive"). "Mid-Senior level"
+# is left to the title rules because LinkedIn uses it for most mid-level jobs.
+LEVEL_SENIORITY = {"internship": "entry", "entry level": "entry", "entry-level": "entry",
+                   "associate": "junior", "director": "senior", "executive": "senior"}
+
+
+def combine_seniority(title_seniority, level):
+    """Title rules first (a senior title is always skipped, an intern title is
+    always entry); the experience-level column only refines a plain 'mid' title."""
+    level_seniority = LEVEL_SENIORITY.get((level or "").strip().lower())
+    if title_seniority == "senior" or level_seniority == "senior":
+        return "senior"
+    if title_seniority == "mid" and level_seniority:
+        return level_seniority
+    return title_seniority
+
+
+# ── Region (for the JD-bias report) ────────────────────────────────────────
+REGIONS = ["Malaysia", "other APAC", "remote", "other"]
+MALAYSIA_RE = re.compile(
+    r"\b(?:malaysia|kuala lumpur|selangor|penang|pulau pinang|johor|johor bahru|petaling jaya|cyberjaya|"
+    r"putrajaya|shah alam|subang|puchong|klang|bangsar|mont kiara|sabah|kota kinabalu|sarawak|kuching|"
+    r"melaka|malacca|perak|ipoh|kedah|negeri sembilan|seremban|pahang|kuantan|terengganu|kelantan|"
+    r"perlis|labuan)\b", re.I)
+APAC_RE = re.compile(
+    r"\b(?:apac|asia|asia pacific|singapore|indonesia|jakarta|thailand|bangkok|vietnam|viet nam|hanoi|"
+    r"ho chi minh|philippines|manila|cebu|india|bangalore|bengaluru|mumbai|new delhi|gurgaon|gurugram|noida|"
+    r"hyderabad|pune|chennai|kolkata|china|shanghai|beijing|shenzhen|guangzhou|hong kong|taiwan|taipei|"
+    r"japan|tokyo|osaka|korea|seoul|australia|sydney|new zealand|auckland|sri lanka|"
+    r"colombo|bangladesh|dhaka|pakistan|karachi|lahore|nepal|cambodia|myanmar|brunei|macau|mongolia)\b", re.I)
+REMOTE_RE = re.compile(r"\b(?:remote|anywhere|worldwide|work from home|wfh)\b", re.I)
+# Cities that are also US towns (Melbourne, Brisbane, Delhi) are left out of APAC_RE;
+# "Sydney, NS"-style locations end in a two-letter region code and count as other.
+US_RE = re.compile(r"\bunited states\b|\busa?\b|,\s*[A-Z]{2}(?:\s+\d{5})?\s*$")
+
+
+def region_of(location):
+    """Malaysia / other APAC / remote / other, from the location text only.
+    A Malaysian or APAC place wins over "remote" ("Remote, Malaysia" is Malaysia)."""
+    loc = location or ""
+    if MALAYSIA_RE.search(loc):
+        return "Malaysia"
+    if APAC_RE.search(loc) and not US_RE.search(loc):
+        return "other APAC"
+    if REMOTE_RE.search(loc):
+        return "remote"
+    return "other"
+
+
 # ── Cleaning ───────────────────────────────────────────────────────────────
-EMAIL_RE = re.compile(r"[\w.+-]+@[\w-]+(?:\.[\w-]+)+")
-URL_RE = re.compile(r"(?:https?://|www\.)\S+", re.I)
+# "jobs@acme.example", and a bare e-mail domain ("only from @acme.example addresses")
+EMAIL_RE = re.compile(r"(?:[\w.+-]+)?@[\w-]+(?:\.[\w-]+)+")
+URL_RE = re.compile(r"(?:https?:?\s?//|www\.)\S+", re.I)
+# Social-media handles ("follow @AcmeCorp") name the employer.
+HANDLE_RE = re.compile(r"(?<![\w.\[])@[A-Za-z_]\w{2,}")
 PHONE_RE = re.compile(r"(?<!\w)(?:\+?\d{1,3}[\s-]?)?(?:\(?\d{2,4}\)?[\s-]?){2,4}\d{3,4}(?!\w)")
 
 
@@ -104,6 +234,43 @@ def company_variants(name):
     return {v for v in (name, core, short) if len(v) >= 3}
 
 
+# Words that appear in many employer names but say nothing about the employer
+# (or are skills / job words), so brand_words() never masks them on their own.
+GENERIC_NAME_WORDS = set("""
+the and of at for a an by on in to inc llc ltd corp corporation company companies co cie et group holdings
+international global worldwide systems solutions services service technologies technology tech consulting
+consultants partners partner health healthcare medical hospital insurance life financial finance bank
+banking credit union energy resources resource university college school institute state county city
+department national american america north south east west new york united states u.s us usa federal
+career careers connections staffing recruiting recruitment talent network job jobs search products product
+business process research laboratory laboratories lab media studios pictures entertainment express
+aviation risk wealth court superior family region fleet readiness first true red blue green applied
+digital management data cloud software security marketing analytics engineering design creative
+professional professionals productions equipment diagnostics construction line association division
+community mobility capital office retail logistics manufacturing industries industry enterprises
+enterprise agency foundation trust care home homes center centre labs ventures innovation innovations
+government public private people human hr it ai of
+""".split())
+
+
+def brand_words(name):
+    """Distinctive single words of an employer name, e.g. "Apex Systems" -> {"Apex"},
+    "Alaska Native Tribal Health Consortium (ANTHC)" -> {"Alaska", "Native", "Tribal",
+    "Consortium", "ANTHC"}. Used for Kaggle rows, whose texts often use the short brand."""
+    words = set()
+    for w in re.findall(r"[A-Za-z][A-Za-z0-9&'+]*[A-Za-z0-9]", name or ""):
+        if len(w) >= 3 and w[0].isupper() and w.lower().strip("'") not in GENERIC_NAME_WORDS:
+            words.add(w)
+    return words
+
+
+def mask_words(text, words):
+    """Replace each word (case-sensitive, whole word) with [COMPANY]."""
+    for w in sorted(words, key=len, reverse=True):
+        text = re.sub(r"(?<![\w\[])" + re.escape(w) + r"(?![\w\]])", "[COMPANY]", text)
+    return text
+
+
 def mask_companies(text, companies=()):
     """Replace every known company name (longest first) with [COMPANY]."""
     t = text
@@ -126,7 +293,9 @@ def clean_text(text, companies=()):
     t = re.sub(r"<[^>]+>", " ", t)
     t = ABOUT_COMPANY_RE.sub("", t)
     t = EMAIL_RE.sub("[EMAIL]", t)
+    t = re.sub(r"(?:\[EMAIL\])+", "[EMAIL]", t)
     t = URL_RE.sub("[URL]", t)
+    t = HANDLE_RE.sub("[URL]", t)
     t = PHONE_RE.sub(lambda m: "[PHONE]" if sum(c.isdigit() for c in m.group()) >= 8 else m.group(), t)
     t = mask_companies(t, companies)
     t = COMPANY_SUFFIX_RE.sub("[COMPANY]", t)
