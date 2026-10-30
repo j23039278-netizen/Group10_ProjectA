@@ -27,7 +27,8 @@ def test_classify_role_and_seniority():
     assert classify_role("BI Analyst") == "DATA_ANALYST"
     assert classify_role("Frontend Developer") == "WEB_DEV"
     assert classify_role("Backend Software Engineer") == "SOFTWARE_DEV"
-    assert classify_role("Marketing Executive") is None
+    assert classify_role("Marketing Executive") == "MARKETING_EXEC"
+    assert classify_role("Accounts Payable Clerk") is None
     assert classify_seniority("Senior Data Analyst") == "senior"
     assert classify_seniority("Data Analyst Intern") == "entry"
     assert classify_seniority("Junior Web Developer") == "junior"

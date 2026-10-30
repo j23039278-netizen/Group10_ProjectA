@@ -1,190 +1,258 @@
 role_code,skill_name,role_jd_total,pct_of_jds,current_importance,suggested_importance
-CLOUD_ENGINEER,AI Literacy,10,10.0,(not mapped),bonus
-CLOUD_ENGINEER,Agile / Scrum,10,10.0,(not mapped),bonus
-CLOUD_ENGINEER,Attention to Detail,10,10.0,(not mapped),bonus
-CLOUD_ENGINEER,Azure,10,60.0,preferred,required
-CLOUD_ENGINEER,CI/CD,10,20.0,required,preferred
-CLOUD_ENGINEER,CSS,10,10.0,(not mapped),bonus
-CLOUD_ENGINEER,Communication,10,60.0,(not mapped),required
-CLOUD_ENGINEER,Customer Focus,10,10.0,(not mapped),bonus
-CLOUD_ENGINEER,Cybersecurity,10,20.0,(not mapped),preferred
-CLOUD_ENGINEER,Docker,10,10.0,required,bonus
-CLOUD_ENGINEER,Documentation,10,40.0,bonus,preferred
-CLOUD_ENGINEER,Generative AI,10,10.0,(not mapped),bonus
-CLOUD_ENGINEER,Git,10,10.0,required,bonus
-CLOUD_ENGINEER,Go,10,0.0,bonus,(drop / below 10%)
-CLOUD_ENGINEER,HTML,10,10.0,(not mapped),bonus
-CLOUD_ENGINEER,Identity & Access Management,10,30.0,required,preferred
-CLOUD_ENGINEER,Incident Response,10,10.0,(not mapped),bonus
-CLOUD_ENGINEER,JavaScript,10,10.0,(not mapped),bonus
-CLOUD_ENGINEER,Kubernetes,10,10.0,required,bonus
-CLOUD_ENGINEER,Machine Learning,10,10.0,(not mapped),bonus
-CLOUD_ENGINEER,Microservices,10,0.0,bonus,(drop / below 10%)
-CLOUD_ENGINEER,Monitoring & Observability,10,50.0,preferred,required
-CLOUD_ENGINEER,MySQL,10,10.0,(not mapped),bonus
-CLOUD_ENGINEER,Network Security,10,0.0,bonus,(drop / below 10%)
-CLOUD_ENGINEER,Networking,10,30.0,required,preferred
-CLOUD_ENGINEER,Node.js,10,10.0,(not mapped),bonus
-CLOUD_ENGINEER,PHP,10,20.0,(not mapped),preferred
-CLOUD_ENGINEER,PowerShell,10,20.0,bonus,preferred
-CLOUD_ENGINEER,Problem Solving,10,60.0,preferred,required
-CLOUD_ENGINEER,React,10,10.0,(not mapped),bonus
-CLOUD_ENGINEER,SQL,10,30.0,bonus,preferred
-CLOUD_ENGINEER,Security Frameworks,10,10.0,(not mapped),bonus
-CLOUD_ENGINEER,Self-Motivation,10,30.0,(not mapped),preferred
-CLOUD_ENGINEER,Serverless,10,0.0,preferred,(drop / below 10%)
-CLOUD_ENGINEER,Teamwork,10,10.0,preferred,bonus
-CLOUD_ENGINEER,Terraform,10,10.0,required,bonus
-CLOUD_ENGINEER,Time Management,10,10.0,(not mapped),bonus
-CLOUD_ENGINEER,UI/UX Design,10,10.0,(not mapped),bonus
-CLOUD_ENGINEER,VPN,10,10.0,(not mapped),bonus
-CLOUD_ENGINEER,Windows Server,10,20.0,(not mapped),preferred
-CYBER_ANALYST,AWS,10,0.0,preferred,(drop / below 10%)
-CYBER_ANALYST,Burp Suite,10,10.0,(not mapped),bonus
-CYBER_ANALYST,Cloud Computing,10,0.0,preferred,(drop / below 10%)
-CYBER_ANALYST,Cryptography,10,0.0,bonus,(drop / below 10%)
-CYBER_ANALYST,Customer Focus,10,20.0,(not mapped),preferred
-CYBER_ANALYST,Digital Forensics,10,0.0,bonus,(drop / below 10%)
-CYBER_ANALYST,Documentation,10,30.0,(not mapped),preferred
-CYBER_ANALYST,Ethical Hacking,10,20.0,bonus,preferred
-CYBER_ANALYST,Firewall Management,10,0.0,preferred,(drop / below 10%)
-CYBER_ANALYST,Identity & Access Management,10,0.0,preferred,(drop / below 10%)
-CYBER_ANALYST,Interpersonal Skills,10,10.0,(not mapped),bonus
-CYBER_ANALYST,Java,10,10.0,(not mapped),bonus
-CYBER_ANALYST,Linux,10,20.0,required,preferred
-CYBER_ANALYST,Log Analysis,10,10.0,required,bonus
-CYBER_ANALYST,Malware Analysis,10,20.0,(not mapped),preferred
-CYBER_ANALYST,Monitoring & Observability,10,40.0,(not mapped),preferred
-CYBER_ANALYST,Network Security,10,10.0,required,bonus
-CYBER_ANALYST,Networking,10,40.0,required,preferred
-CYBER_ANALYST,PHP,10,10.0,(not mapped),bonus
-CYBER_ANALYST,PowerShell,10,10.0,(not mapped),bonus
-CYBER_ANALYST,Problem Solving,10,10.0,required,bonus
-CYBER_ANALYST,Python,10,10.0,preferred,bonus
-CYBER_ANALYST,React,10,10.0,(not mapped),bonus
-CYBER_ANALYST,Risk Analysis,10,0.0,bonus,(drop / below 10%)
-CYBER_ANALYST,Security Frameworks,10,10.0,preferred,bonus
-CYBER_ANALYST,Security Operations (SOC),10,40.0,required,preferred
-CYBER_ANALYST,Teamwork,10,10.0,(not mapped),bonus
-CYBER_ANALYST,Time Management,10,10.0,(not mapped),bonus
-CYBER_ANALYST,Vulnerability Assessment,10,20.0,required,preferred
-CYBER_ANALYST,Windows Server,10,0.0,preferred,(drop / below 10%)
-CYBER_ANALYST,Wireshark,10,0.0,preferred,(drop / below 10%)
-DATA_ANALYST,A/B Testing,11,0.0,bonus,(drop / below 10%)
-DATA_ANALYST,AI Literacy,11,18.2,(not mapped),bonus
-DATA_ANALYST,Communication,11,54.5,preferred,required
-DATA_ANALYST,Critical Thinking,11,9.1,preferred,(drop / below 10%)
-DATA_ANALYST,Data Cleaning,11,9.1,required,(drop / below 10%)
-DATA_ANALYST,Data Modelling,11,18.2,(not mapped),bonus
-DATA_ANALYST,Data Structures & Algorithms,11,18.2,(not mapped),bonus
-DATA_ANALYST,Data Visualisation,11,27.3,required,preferred
-DATA_ANALYST,Data Warehousing,11,9.1,bonus,(drop / below 10%)
-DATA_ANALYST,Decision Making,11,27.3,(not mapped),preferred
-DATA_ANALYST,ETL,11,9.1,preferred,(drop / below 10%)
-DATA_ANALYST,Excel,11,18.2,required,bonus
-DATA_ANALYST,Git,11,0.0,bonus,(drop / below 10%)
-DATA_ANALYST,Google Analytics,11,0.0,bonus,(drop / below 10%)
-DATA_ANALYST,Interpersonal Skills,11,18.2,(not mapped),bonus
-DATA_ANALYST,Looker,11,9.1,bonus,(drop / below 10%)
-DATA_ANALYST,Pandas,11,9.1,required,(drop / below 10%)
-DATA_ANALYST,Presentation Skills,11,9.1,preferred,(drop / below 10%)
-DATA_ANALYST,Problem Solving,11,9.1,preferred,(drop / below 10%)
-DATA_ANALYST,R,11,0.0,bonus,(drop / below 10%)
-DATA_ANALYST,Stakeholder Communication,11,0.0,preferred,(drop / below 10%)
-DATA_SCIENTIST,AI Literacy,10,20.0,(not mapped),preferred
-DATA_SCIENTIST,AWS,10,10.0,(not mapped),bonus
-DATA_SCIENTIST,Adaptability,10,10.0,(not mapped),bonus
-DATA_SCIENTIST,Apache Spark,10,0.0,bonus,(drop / below 10%)
-DATA_SCIENTIST,Attention to Detail,10,10.0,(not mapped),bonus
-DATA_SCIENTIST,Azure,10,10.0,(not mapped),bonus
-DATA_SCIENTIST,Business Analysis,10,20.0,(not mapped),preferred
-DATA_SCIENTIST,C#,10,10.0,(not mapped),bonus
-DATA_SCIENTIST,C++,10,10.0,(not mapped),bonus
-DATA_SCIENTIST,Cloud Computing,10,30.0,bonus,preferred
-DATA_SCIENTIST,Communication,10,70.0,preferred,required
-DATA_SCIENTIST,Computer Vision,10,10.0,(not mapped),bonus
-DATA_SCIENTIST,Data Cleaning,10,10.0,preferred,bonus
-DATA_SCIENTIST,Data Mining,10,10.0,(not mapped),bonus
-DATA_SCIENTIST,Data Visualisation,10,0.0,preferred,(drop / below 10%)
-DATA_SCIENTIST,Deep Learning,10,10.0,preferred,bonus
-DATA_SCIENTIST,Documentation,10,20.0,(not mapped),preferred
-DATA_SCIENTIST,ETL,10,20.0,(not mapped),preferred
-DATA_SCIENTIST,Excel,10,10.0,(not mapped),bonus
-DATA_SCIENTIST,Feature Engineering,10,0.0,required,(drop / below 10%)
-DATA_SCIENTIST,GCP,10,10.0,(not mapped),bonus
-DATA_SCIENTIST,Git,10,10.0,preferred,bonus
-DATA_SCIENTIST,Hadoop,10,10.0,(not mapped),bonus
-DATA_SCIENTIST,Hugging Face,10,10.0,(not mapped),bonus
-DATA_SCIENTIST,Java,10,10.0,(not mapped),bonus
-DATA_SCIENTIST,Jupyter,10,0.0,preferred,(drop / below 10%)
-DATA_SCIENTIST,Leadership,10,20.0,(not mapped),preferred
-DATA_SCIENTIST,MLOps,10,0.0,bonus,(drop / below 10%)
-DATA_SCIENTIST,Model Evaluation,10,30.0,required,preferred
-DATA_SCIENTIST,Monitoring & Observability,10,20.0,(not mapped),preferred
-DATA_SCIENTIST,Natural Language Processing,10,0.0,preferred,(drop / below 10%)
-DATA_SCIENTIST,NumPy,10,10.0,preferred,bonus
-DATA_SCIENTIST,Pandas,10,20.0,required,preferred
-DATA_SCIENTIST,Power BI,10,50.0,(not mapped),required
-DATA_SCIENTIST,Project Management,10,10.0,(not mapped),bonus
-DATA_SCIENTIST,Prompt Engineering,10,10.0,(not mapped),bonus
-DATA_SCIENTIST,R,10,0.0,bonus,(drop / below 10%)
-DATA_SCIENTIST,Research Skills,10,0.0,bonus,(drop / below 10%)
-DATA_SCIENTIST,Scikit-learn,10,20.0,required,preferred
-DATA_SCIENTIST,Self-Motivation,10,40.0,(not mapped),preferred
-DATA_SCIENTIST,Statistical Analysis,10,20.0,required,preferred
-DATA_SCIENTIST,Tableau,10,40.0,(not mapped),preferred
-DATA_SCIENTIST,Teamwork,10,30.0,(not mapped),preferred
-DATA_SCIENTIST,UI/UX Design,10,10.0,(not mapped),bonus
-SOFTWARE_DEV,Agile / Scrum,13,15.4,preferred,bonus
-SOFTWARE_DEV,Business Analysis,13,15.4,(not mapped),bonus
-SOFTWARE_DEV,C++,13,7.7,bonus,(drop / below 10%)
-SOFTWARE_DEV,CI/CD,13,15.4,preferred,bonus
-SOFTWARE_DEV,CSS,13,15.4,(not mapped),bonus
-SOFTWARE_DEV,Cloud Computing,13,7.7,bonus,(drop / below 10%)
-SOFTWARE_DEV,Cybersecurity,13,15.4,(not mapped),bonus
-SOFTWARE_DEV,Data Structures & Algorithms,13,0.0,required,(drop / below 10%)
-SOFTWARE_DEV,Docker,13,15.4,preferred,bonus
-SOFTWARE_DEV,Documentation,13,46.2,(not mapped),preferred
-SOFTWARE_DEV,FastAPI,13,0.0,bonus,(drop / below 10%)
-SOFTWARE_DEV,Git,13,15.4,required,bonus
-SOFTWARE_DEV,HTML,13,15.4,(not mapped),bonus
-SOFTWARE_DEV,Interpersonal Skills,13,15.4,(not mapped),bonus
-SOFTWARE_DEV,Java,13,23.1,required,preferred
-SOFTWARE_DEV,JavaScript,13,38.5,required,preferred
-SOFTWARE_DEV,Linux,13,7.7,preferred,(drop / below 10%)
-SOFTWARE_DEV,Machine Learning,13,15.4,(not mapped),bonus
-SOFTWARE_DEV,Microservices,13,7.7,bonus,(drop / below 10%)
-SOFTWARE_DEV,Monitoring & Observability,13,15.4,(not mapped),bonus
-SOFTWARE_DEV,Node.js,13,0.0,bonus,(drop / below 10%)
-SOFTWARE_DEV,Object-Oriented Programming,13,0.0,required,(drop / below 10%)
-SOFTWARE_DEV,Problem Solving,13,23.1,required,preferred
-SOFTWARE_DEV,Python,13,23.1,required,preferred
-SOFTWARE_DEV,REST API,13,7.7,required,(drop / below 10%)
-SOFTWARE_DEV,SQL,13,30.8,required,preferred
-SOFTWARE_DEV,Self-Motivation,13,23.1,(not mapped),preferred
-SOFTWARE_DEV,Spring Boot,13,15.4,preferred,bonus
-SOFTWARE_DEV,TypeScript,13,7.7,bonus,(drop / below 10%)
-SOFTWARE_DEV,Unit Testing,13,15.4,required,bonus
-WEB_DEV,Agile / Scrum,11,9.1,preferred,(drop / below 10%)
-WEB_DEV,CI/CD,11,18.2,(not mapped),bonus
-WEB_DEV,Docker,11,27.3,bonus,preferred
-WEB_DEV,Documentation,11,45.5,(not mapped),preferred
-WEB_DEV,Express.js,11,0.0,preferred,(drop / below 10%)
-WEB_DEV,Figma,11,0.0,bonus,(drop / below 10%)
-WEB_DEV,Git,11,45.5,required,preferred
-WEB_DEV,GraphQL,11,0.0,bonus,(drop / below 10%)
-WEB_DEV,MongoDB,11,9.1,bonus,(drop / below 10%)
-WEB_DEV,MySQL,11,36.4,(not mapped),preferred
-WEB_DEV,Node.js,11,18.2,required,bonus
-WEB_DEV,PHP,11,36.4,bonus,preferred
-WEB_DEV,PostgreSQL,11,18.2,preferred,bonus
-WEB_DEV,Problem Solving,11,18.2,preferred,bonus
-WEB_DEV,Python,11,9.1,bonus,(drop / below 10%)
-WEB_DEV,REST API,11,9.1,required,(drop / below 10%)
-WEB_DEV,SQL,11,27.3,required,preferred
-WEB_DEV,Self-Motivation,11,36.4,(not mapped),preferred
-WEB_DEV,Teamwork,11,18.2,preferred,bonus
-WEB_DEV,TypeScript,11,36.4,required,preferred
-WEB_DEV,UI/UX Design,11,0.0,preferred,(drop / below 10%)
-WEB_DEV,Unit Testing,11,18.2,preferred,bonus
-WEB_DEV,Vue.js,11,45.5,bonus,preferred
+BUSINESS_ANALYST,Accounting,35,11.4,(not mapped),bonus
+BUSINESS_ANALYST,Attention to Detail,35,11.4,(not mapped),bonus
+BUSINESS_ANALYST,Business Analysis,35,45.7,required,preferred
+BUSINESS_ANALYST,Business Process Improvement,35,2.9,preferred,(drop / below 10%)
+BUSINESS_ANALYST,CRM Software,35,5.7,bonus,(drop / below 10%)
+BUSINESS_ANALYST,Communication,35,62.9,(not mapped),required
+BUSINESS_ANALYST,Critical Thinking,35,8.6,preferred,(drop / below 10%)
+BUSINESS_ANALYST,Data Analysis,35,20.0,required,preferred
+BUSINESS_ANALYST,Data Visualisation,35,0.0,preferred,(drop / below 10%)
+BUSINESS_ANALYST,Documentation,35,45.7,required,preferred
+BUSINESS_ANALYST,Excel,35,2.9,required,(drop / below 10%)
+BUSINESS_ANALYST,Financial Analysis,35,0.0,bonus,(drop / below 10%)
+BUSINESS_ANALYST,Interpersonal Skills,35,17.1,(not mapped),bonus
+BUSINESS_ANALYST,Power BI,35,8.6,preferred,(drop / below 10%)
+BUSINESS_ANALYST,Presentation Skills,35,5.7,preferred,(drop / below 10%)
+BUSINESS_ANALYST,Problem Solving,35,11.4,required,bonus
+BUSINESS_ANALYST,Process Mapping,35,0.0,required,(drop / below 10%)
+BUSINESS_ANALYST,Requirements Analysis,35,2.9,required,(drop / below 10%)
+BUSINESS_ANALYST,SQL,35,25.7,required,preferred
+BUSINESS_ANALYST,Stakeholder Communication,35,0.0,required,(drop / below 10%)
+BUSINESS_ANALYST,Statistical Analysis,35,8.6,bonus,(drop / below 10%)
+BUSINESS_ANALYST,Tableau,35,5.7,bonus,(drop / below 10%)
+BUSINESS_ANALYST,Teamwork,35,20.0,(not mapped),preferred
+BUSINESS_ANALYST,User Acceptance Testing,35,8.6,preferred,(drop / below 10%)
+CLOUD_ENGINEER,Agile / Scrum,35,22.9,(not mapped),preferred
+CLOUD_ENGINEER,Apache Spark,35,14.3,(not mapped),bonus
+CLOUD_ENGINEER,Azure,35,51.4,preferred,required
+CLOUD_ENGINEER,C++,35,11.4,(not mapped),bonus
+CLOUD_ENGINEER,CI/CD,35,34.3,required,preferred
+CLOUD_ENGINEER,Communication,35,51.4,(not mapped),required
+CLOUD_ENGINEER,Docker,35,22.9,required,preferred
+CLOUD_ENGINEER,Documentation,35,22.9,bonus,preferred
+CLOUD_ENGINEER,Git,35,28.6,required,preferred
+CLOUD_ENGINEER,Go,35,0.0,bonus,(drop / below 10%)
+CLOUD_ENGINEER,Identity & Access Management,35,17.1,required,bonus
+CLOUD_ENGINEER,Java,35,28.6,(not mapped),preferred
+CLOUD_ENGINEER,JavaScript,35,17.1,(not mapped),bonus
+CLOUD_ENGINEER,Kubernetes,35,22.9,required,preferred
+CLOUD_ENGINEER,Linux,35,37.1,required,preferred
+CLOUD_ENGINEER,Microservices,35,8.6,bonus,(drop / below 10%)
+CLOUD_ENGINEER,Monitoring & Observability,35,17.1,preferred,bonus
+CLOUD_ENGINEER,Network Security,35,0.0,bonus,(drop / below 10%)
+CLOUD_ENGINEER,Networking,35,28.6,required,preferred
+CLOUD_ENGINEER,SQL,35,22.9,bonus,preferred
+CLOUD_ENGINEER,Serverless,35,2.9,preferred,(drop / below 10%)
+CLOUD_ENGINEER,Splunk,35,14.3,(not mapped),bonus
+CLOUD_ENGINEER,Teamwork,35,17.1,preferred,bonus
+CLOUD_ENGINEER,Terraform,35,25.7,required,preferred
+CYBER_ANALYST,AWS,35,14.3,preferred,bonus
+CYBER_ANALYST,Azure,35,20.0,(not mapped),preferred
+CYBER_ANALYST,Cloud Computing,35,14.3,preferred,bonus
+CYBER_ANALYST,Cryptography,35,2.9,bonus,(drop / below 10%)
+CYBER_ANALYST,Customer Focus,35,11.4,(not mapped),bonus
+CYBER_ANALYST,Digital Forensics,35,0.0,bonus,(drop / below 10%)
+CYBER_ANALYST,Documentation,35,25.7,(not mapped),preferred
+CYBER_ANALYST,Firewall Management,35,5.7,preferred,(drop / below 10%)
+CYBER_ANALYST,Identity & Access Management,35,14.3,preferred,bonus
+CYBER_ANALYST,Incident Response,35,31.4,required,preferred
+CYBER_ANALYST,Interpersonal Skills,35,11.4,(not mapped),bonus
+CYBER_ANALYST,Kali Linux,35,5.7,bonus,(drop / below 10%)
+CYBER_ANALYST,Linux,35,25.7,required,preferred
+CYBER_ANALYST,Log Analysis,35,2.9,required,(drop / below 10%)
+CYBER_ANALYST,Network Security,35,8.6,required,(drop / below 10%)
+CYBER_ANALYST,Networking,35,40.0,required,preferred
+CYBER_ANALYST,Nmap,35,8.6,bonus,(drop / below 10%)
+CYBER_ANALYST,PowerShell,35,11.4,(not mapped),bonus
+CYBER_ANALYST,Problem Solving,35,14.3,required,bonus
+CYBER_ANALYST,SIEM,35,25.7,required,preferred
+CYBER_ANALYST,Security Frameworks,35,17.1,preferred,bonus
+CYBER_ANALYST,Security Operations (SOC),35,14.3,required,bonus
+CYBER_ANALYST,Splunk,35,8.6,bonus,(drop / below 10%)
+CYBER_ANALYST,Teamwork,35,17.1,(not mapped),bonus
+CYBER_ANALYST,Vulnerability Assessment,35,14.3,required,bonus
+CYBER_ANALYST,Windows Server,35,8.6,preferred,(drop / below 10%)
+CYBER_ANALYST,Wireshark,35,0.0,preferred,(drop / below 10%)
+DATA_ANALYST,A/B Testing,35,0.0,bonus,(drop / below 10%)
+DATA_ANALYST,Agile / Scrum,35,17.1,(not mapped),bonus
+DATA_ANALYST,Azure,35,14.3,(not mapped),bonus
+DATA_ANALYST,Business Analysis,35,14.3,(not mapped),bonus
+DATA_ANALYST,Business Process Improvement,35,17.1,(not mapped),bonus
+DATA_ANALYST,Communication,35,54.3,preferred,required
+DATA_ANALYST,Critical Thinking,35,5.7,preferred,(drop / below 10%)
+DATA_ANALYST,Customer Focus,35,17.1,(not mapped),bonus
+DATA_ANALYST,Data Analysis,35,40.0,required,preferred
+DATA_ANALYST,Data Cleaning,35,5.7,required,(drop / below 10%)
+DATA_ANALYST,Data Structures & Algorithms,35,22.9,(not mapped),preferred
+DATA_ANALYST,Data Visualisation,35,11.4,required,bonus
+DATA_ANALYST,Data Warehousing,35,20.0,bonus,preferred
+DATA_ANALYST,Decision Making,35,14.3,(not mapped),bonus
+DATA_ANALYST,Documentation,35,22.9,(not mapped),preferred
+DATA_ANALYST,ETL,35,14.3,preferred,bonus
+DATA_ANALYST,Excel,35,17.1,required,bonus
+DATA_ANALYST,Git,35,8.6,bonus,(drop / below 10%)
+DATA_ANALYST,Google Analytics,35,0.0,bonus,(drop / below 10%)
+DATA_ANALYST,Interpersonal Skills,35,11.4,(not mapped),bonus
+DATA_ANALYST,Leadership,35,22.9,(not mapped),preferred
+DATA_ANALYST,Looker,35,8.6,bonus,(drop / below 10%)
+DATA_ANALYST,Pandas,35,2.9,required,(drop / below 10%)
+DATA_ANALYST,Power BI,35,34.3,required,preferred
+DATA_ANALYST,Presentation Skills,35,11.4,preferred,bonus
+DATA_ANALYST,Problem Solving,35,14.3,preferred,bonus
+DATA_ANALYST,Python,35,42.9,required,preferred
+DATA_ANALYST,R,35,0.0,bonus,(drop / below 10%)
+DATA_ANALYST,Stakeholder Communication,35,0.0,preferred,(drop / below 10%)
+DATA_ANALYST,Statistical Analysis,35,34.3,required,preferred
+DATA_ANALYST,Teamwork,35,17.1,(not mapped),bonus
+DATA_SCIENTIST,AI Literacy,35,11.4,(not mapped),bonus
+DATA_SCIENTIST,Adaptability,35,11.4,(not mapped),bonus
+DATA_SCIENTIST,Agile / Scrum,35,11.4,(not mapped),bonus
+DATA_SCIENTIST,Apache Spark,35,8.6,bonus,(drop / below 10%)
+DATA_SCIENTIST,Business Process Improvement,35,14.3,(not mapped),bonus
+DATA_SCIENTIST,C++,35,11.4,(not mapped),bonus
+DATA_SCIENTIST,Communication,35,51.4,preferred,required
+DATA_SCIENTIST,Creativity,35,11.4,(not mapped),bonus
+DATA_SCIENTIST,Data Cleaning,35,5.7,preferred,(drop / below 10%)
+DATA_SCIENTIST,Data Mining,35,11.4,(not mapped),bonus
+DATA_SCIENTIST,Data Structures & Algorithms,35,25.7,(not mapped),preferred
+DATA_SCIENTIST,Data Visualisation,35,0.0,preferred,(drop / below 10%)
+DATA_SCIENTIST,Decision Making,35,14.3,(not mapped),bonus
+DATA_SCIENTIST,Deep Learning,35,11.4,preferred,bonus
+DATA_SCIENTIST,Documentation,35,17.1,(not mapped),bonus
+DATA_SCIENTIST,ETL,35,20.0,(not mapped),preferred
+DATA_SCIENTIST,Feature Engineering,35,2.9,required,(drop / below 10%)
+DATA_SCIENTIST,Git,35,5.7,preferred,(drop / below 10%)
+DATA_SCIENTIST,Jupyter,35,2.9,preferred,(drop / below 10%)
+DATA_SCIENTIST,Leadership,35,20.0,(not mapped),preferred
+DATA_SCIENTIST,MLOps,35,2.9,bonus,(drop / below 10%)
+DATA_SCIENTIST,Model Evaluation,35,11.4,required,bonus
+DATA_SCIENTIST,Natural Language Processing,35,14.3,preferred,bonus
+DATA_SCIENTIST,NumPy,35,2.9,preferred,(drop / below 10%)
+DATA_SCIENTIST,Pandas,35,14.3,required,bonus
+DATA_SCIENTIST,Power BI,35,20.0,(not mapped),preferred
+DATA_SCIENTIST,Problem Solving,35,14.3,preferred,bonus
+DATA_SCIENTIST,Project Management,35,11.4,(not mapped),bonus
+DATA_SCIENTIST,R,35,0.0,bonus,(drop / below 10%)
+DATA_SCIENTIST,Recruitment,35,17.1,(not mapped),bonus
+DATA_SCIENTIST,Research Skills,35,2.9,bonus,(drop / below 10%)
+DATA_SCIENTIST,Scikit-learn,35,11.4,required,bonus
+DATA_SCIENTIST,Tableau,35,28.6,(not mapped),preferred
+DATA_SCIENTIST,Teamwork,35,28.6,(not mapped),preferred
+DATA_SCIENTIST,TensorFlow,35,5.7,bonus,(drop / below 10%)
+FINANCIAL_ANALYST,Accounting Software,35,2.9,preferred,(drop / below 10%)
+FINANCIAL_ANALYST,Attention to Detail,35,20.0,required,preferred
+FINANCIAL_ANALYST,Auditing,35,0.0,bonus,(drop / below 10%)
+FINANCIAL_ANALYST,Budgeting & Forecasting,35,34.3,required,preferred
+FINANCIAL_ANALYST,Communication,35,37.1,(not mapped),preferred
+FINANCIAL_ANALYST,Critical Thinking,35,0.0,required,(drop / below 10%)
+FINANCIAL_ANALYST,Data Analysis,35,14.3,required,bonus
+FINANCIAL_ANALYST,Data Visualisation,35,0.0,bonus,(drop / below 10%)
+FINANCIAL_ANALYST,Excel,35,17.1,required,bonus
+FINANCIAL_ANALYST,Financial Analysis,35,25.7,required,preferred
+FINANCIAL_ANALYST,Financial Modelling,35,22.9,required,preferred
+FINANCIAL_ANALYST,Financial Reporting,35,34.3,required,preferred
+FINANCIAL_ANALYST,Interpersonal Skills,35,11.4,(not mapped),bonus
+FINANCIAL_ANALYST,Leadership,35,20.0,(not mapped),preferred
+FINANCIAL_ANALYST,Power BI,35,8.6,preferred,(drop / below 10%)
+FINANCIAL_ANALYST,Presentation Skills,35,8.6,preferred,(drop / below 10%)
+FINANCIAL_ANALYST,Python,35,0.0,bonus,(drop / below 10%)
+FINANCIAL_ANALYST,Risk Analysis,35,11.4,preferred,bonus
+FINANCIAL_ANALYST,Stakeholder Communication,35,0.0,preferred,(drop / below 10%)
+FINANCIAL_ANALYST,Statistical Analysis,35,5.7,preferred,(drop / below 10%)
+FINANCIAL_ANALYST,Taxation,35,0.0,preferred,(drop / below 10%)
+FINANCIAL_ANALYST,Teamwork,35,11.4,(not mapped),bonus
+FINANCIAL_ANALYST,Time Management,35,8.6,bonus,(drop / below 10%)
+HR_EXEC,Adaptability,35,8.6,bonus,(drop / below 10%)
+HR_EXEC,Attention to Detail,35,25.7,required,preferred
+HR_EXEC,Data Analysis,35,8.6,bonus,(drop / below 10%)
+HR_EXEC,Decision Making,35,14.3,(not mapped),bonus
+HR_EXEC,Employee Relations,35,17.1,required,bonus
+HR_EXEC,Employment Law,35,5.7,required,(drop / below 10%)
+HR_EXEC,Excel,35,2.9,preferred,(drop / below 10%)
+HR_EXEC,HRIS,35,42.9,required,preferred
+HR_EXEC,Interpersonal Skills,35,20.0,required,preferred
+HR_EXEC,Negotiation,35,0.0,preferred,(drop / below 10%)
+HR_EXEC,Networking,35,14.3,(not mapped),bonus
+HR_EXEC,Payroll,35,22.9,required,preferred
+HR_EXEC,Performance Management,35,11.4,preferred,bonus
+HR_EXEC,Power BI,35,2.9,bonus,(drop / below 10%)
+HR_EXEC,Presentation Skills,35,5.7,bonus,(drop / below 10%)
+HR_EXEC,Problem Solving,35,8.6,preferred,(drop / below 10%)
+HR_EXEC,Project Management,35,8.6,bonus,(drop / below 10%)
+HR_EXEC,Self-Motivation,35,22.9,(not mapped),preferred
+HR_EXEC,Teamwork,35,11.4,preferred,bonus
+HR_EXEC,Time Management,35,17.1,required,bonus
+HR_EXEC,Training & Development,35,5.7,preferred,(drop / below 10%)
+MARKETING_EXEC,A/B Testing,35,8.6,preferred,(drop / below 10%)
+MARKETING_EXEC,Attention to Detail,35,22.9,(not mapped),preferred
+MARKETING_EXEC,Brand Management,35,14.3,preferred,bonus
+MARKETING_EXEC,CRM Software,35,5.7,preferred,(drop / below 10%)
+MARKETING_EXEC,Content Marketing,35,28.6,required,preferred
+MARKETING_EXEC,Creativity,35,8.6,required,(drop / below 10%)
+MARKETING_EXEC,Data Analysis,35,5.7,preferred,(drop / below 10%)
+MARKETING_EXEC,Data Visualisation,35,0.0,bonus,(drop / below 10%)
+MARKETING_EXEC,Digital Marketing,35,31.4,required,preferred
+MARKETING_EXEC,Excel,35,0.0,preferred,(drop / below 10%)
+MARKETING_EXEC,Figma,35,0.0,bonus,(drop / below 10%)
+MARKETING_EXEC,Google Analytics,35,8.6,required,(drop / below 10%)
+MARKETING_EXEC,Interpersonal Skills,35,11.4,(not mapped),bonus
+MARKETING_EXEC,Leadership,35,11.4,(not mapped),bonus
+MARKETING_EXEC,Looker,35,0.0,bonus,(drop / below 10%)
+MARKETING_EXEC,Market Research,35,14.3,required,bonus
+MARKETING_EXEC,Negotiation,35,0.0,bonus,(drop / below 10%)
+MARKETING_EXEC,Presentation Skills,35,2.9,required,(drop / below 10%)
+MARKETING_EXEC,Project Management,35,17.1,preferred,bonus
+MARKETING_EXEC,Search Engine Marketing,35,11.4,preferred,bonus
+MARKETING_EXEC,Search Engine Optimisation,35,11.4,required,bonus
+MARKETING_EXEC,Social Media Marketing,35,14.3,required,bonus
+SOFTWARE_DEV,AWS,35,20.0,(not mapped),preferred
+SOFTWARE_DEV,Angular,35,11.4,(not mapped),bonus
+SOFTWARE_DEV,Business Analysis,35,11.4,(not mapped),bonus
+SOFTWARE_DEV,C++,35,20.0,bonus,preferred
+SOFTWARE_DEV,CI/CD,35,8.6,preferred,(drop / below 10%)
+SOFTWARE_DEV,CSS,35,11.4,(not mapped),bonus
+SOFTWARE_DEV,Cloud Computing,35,2.9,bonus,(drop / below 10%)
+SOFTWARE_DEV,Data Structures & Algorithms,35,2.9,required,(drop / below 10%)
+SOFTWARE_DEV,Docker,35,11.4,preferred,bonus
+SOFTWARE_DEV,Documentation,35,31.4,(not mapped),preferred
+SOFTWARE_DEV,FastAPI,35,0.0,bonus,(drop / below 10%)
+SOFTWARE_DEV,Git,35,14.3,required,bonus
+SOFTWARE_DEV,HTML,35,11.4,(not mapped),bonus
+SOFTWARE_DEV,Interpersonal Skills,35,11.4,(not mapped),bonus
+SOFTWARE_DEV,Java,35,40.0,required,preferred
+SOFTWARE_DEV,JavaScript,35,37.1,required,preferred
+SOFTWARE_DEV,Leadership,35,11.4,(not mapped),bonus
+SOFTWARE_DEV,Linux,35,11.4,preferred,bonus
+SOFTWARE_DEV,Machine Learning,35,11.4,(not mapped),bonus
+SOFTWARE_DEV,Object-Oriented Programming,35,2.9,required,(drop / below 10%)
+SOFTWARE_DEV,Problem Solving,35,17.1,required,bonus
+SOFTWARE_DEV,Python,35,37.1,required,preferred
+SOFTWARE_DEV,REST API,35,11.4,required,bonus
+SOFTWARE_DEV,React,35,20.0,bonus,preferred
+SOFTWARE_DEV,SQL,35,28.6,required,preferred
+SOFTWARE_DEV,Spring Boot,35,11.4,preferred,bonus
+SOFTWARE_DEV,UI/UX Design,35,14.3,(not mapped),bonus
+SOFTWARE_DEV,Unit Testing,35,14.3,required,bonus
+WEB_DEV,AWS,35,20.0,(not mapped),preferred
+WEB_DEV,Angular,35,42.9,(not mapped),preferred
+WEB_DEV,Azure,35,20.0,(not mapped),preferred
+WEB_DEV,C#,35,17.1,(not mapped),bonus
+WEB_DEV,CI/CD,35,40.0,(not mapped),preferred
+WEB_DEV,Documentation,35,28.6,(not mapped),preferred
+WEB_DEV,Express.js,35,0.0,preferred,(drop / below 10%)
+WEB_DEV,Figma,35,2.9,bonus,(drop / below 10%)
+WEB_DEV,Git,35,34.3,required,preferred
+WEB_DEV,GraphQL,35,2.9,bonus,(drop / below 10%)
+WEB_DEV,Java,35,25.7,(not mapped),preferred
+WEB_DEV,MongoDB,35,5.7,bonus,(drop / below 10%)
+WEB_DEV,MySQL,35,20.0,(not mapped),preferred
+WEB_DEV,Node.js,35,25.7,required,preferred
+WEB_DEV,PostgreSQL,35,17.1,preferred,bonus
+WEB_DEV,Problem Solving,35,11.4,preferred,bonus
+WEB_DEV,REST API,35,8.6,required,(drop / below 10%)
+WEB_DEV,SQL,35,37.1,required,preferred
+WEB_DEV,Self-Motivation,35,11.4,(not mapped),bonus
+WEB_DEV,TypeScript,35,20.0,required,preferred
+WEB_DEV,UI/UX Design,35,17.1,preferred,bonus
+WEB_DEV,Vue.js,35,22.9,bonus,preferred
