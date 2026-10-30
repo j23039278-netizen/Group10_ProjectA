@@ -13,6 +13,7 @@ rules in docs/NLP_CLASSIFICATION_RULES.md.
 from sqlalchemy import text
 
 import nlp_service
+from nlp import derive_evidence  # importable once nlp_service has put the repo root on the path
 
 IMPORTANCE_WEIGHTS = {"required": 3, "preferred": 2, "bonus": 1}
 STATUS_CREDIT      = {"strong": 1.0, "developing": 0.5, "gap": 0.0}
@@ -94,6 +95,26 @@ def run_for_profile(db, profile, *, role_id=None, jd_id=None,
     students = [{"skill_id": str(sk.skill_id), "skill_name": sk.skill_name,
                  "proficiency_level": sk.proficiency_level,
                  "evidence_type": list(sk.evidence_type or [])} for sk in student_skills]
+    # Evidence from the student's projects and certifications, added at assessment
+    # time (nlp/evidence.py): the website does not ask for evidence_type when a skill
+    # is added. Stored evidence_type is kept and never overwritten.
+    records = db.execute(
+        text("""
+            SELECT 'project' AS kind, p.project_title, p.description, p.technologies,
+                   p.project_type, NULL::varchar AS cert_name, NULL::varchar AS issuer,
+                   (SELECT COUNT(*) FROM student_evidence_files f
+                     WHERE f.project_id = p.project_id) AS proof_count
+            FROM student_projects p WHERE p.profile_id = :pid
+            UNION ALL
+            SELECT 'certification', NULL, NULL, NULL, NULL, c.cert_name, c.issuer,
+                   (SELECT COUNT(*) FROM student_evidence_files f WHERE f.cert_id = c.cert_id)
+            FROM student_certifications c WHERE c.profile_id = :pid
+        """),
+        {"pid": str(profile.profile_id)}
+    ).fetchall()
+    students = derive_evidence(students,
+                               [r for r in records if r.kind == "project"],
+                               [r for r in records if r.kind == "certification"])
     required = [{"skill_id": str(r.skill_id) if r.skill_id else None,
                  "skill_name": r.skill_name,
                  "importance": r.importance or "required"} for r in required_skills]

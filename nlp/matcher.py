@@ -44,7 +44,10 @@ _STATUS_RANK = {"gap": 0, "developing": 1, "strong": 2}
 # ── Reasons ───────────────────────────────────────────────────
 # One template per case (docs/NLP_CLASSIFICATION_RULES.md, section 4).
 # {skill}: the required skill; {student}: the student skill that decided;
-# {detail}: its level and evidence, e.g. "advanced, with project evidence".
+# {detail}: its level and evidence, e.g. "advanced, with project evidence", and
+# the projects / certifications behind derived evidence (nlp/evidence.py), at most
+# MAX_TITLES of them: "beginner, with project evidence from Sales Dashboard".
+MAX_TITLES = 2
 REASONS = {
     "same_strong": "You list {student} ({detail}), which matches this skill, so this is marked Strong.",
     "same_developing": ("You list {student} ({detail}). A beginner skill needs project, certification "
@@ -70,6 +73,7 @@ class _Skill(NamedTuple):
     level: str | None = None   # student skills only
     evidence: tuple = ()       # student skills only
     importance: str | None = None   # required skills only
+    sources: tuple = ()        # student skills only: titles behind derived evidence (nlp/evidence.py)
 
 
 def _row(item, what):
@@ -99,6 +103,16 @@ def _evidence(value):
     return tuple(w for w in words if w)
 
 
+def _sources(value, name):
+    """evidence_sources ({"project": ["Sales Dashboard"], ...}) as one tuple of distinct titles."""
+    if value is None:
+        return ()
+    if not isinstance(value, Mapping):
+        raise ValueError(f"student skill evidence_sources must be a dict; got {type(value).__name__} for {name!r}")
+    titles = (str(t).strip() for ts in value.values() for t in (ts or ()) if t is not None)
+    return tuple(dict.fromkeys(t for t in titles if t))
+
+
 def _skill(index, item, catalogue, what):
     row = _row(item, what)
     name = row.get("skill_name")
@@ -110,7 +124,8 @@ def _skill(index, item, catalogue, what):
     skill = _Skill(index, str(skill_id) if skill_id else None, name, canonical, skill_key(canonical))
     if what == "student skill":
         level = _choice(row.get("proficiency_level"), PROFICIENCY_LEVELS, "proficiency_level", what, name)
-        return skill._replace(level=level, evidence=_evidence(row.get("evidence_type")))
+        return skill._replace(level=level, evidence=_evidence(row.get("evidence_type")),
+                              sources=_sources(row.get("evidence_sources"), name))
     importance = row.get("importance") or "required"            # NULL -> the DB default
     return skill._replace(importance=_choice(importance, IMPORTANCE_LEVELS, "importance", what, name))
 
@@ -214,12 +229,20 @@ def _best_similar(required, students, sims):
     return best
 
 
+def _joined(words):
+    return words[0] if len(words) == 1 else ", ".join(words[:-1]) + " and " + words[-1]
+
+
 def _detail(student):
     if not student.evidence:
         return student.level
-    words = list(dict.fromkeys(student.evidence))
-    joined = words[0] if len(words) == 1 else ", ".join(words[:-1]) + " and " + words[-1]
-    return f"{student.level}, with {joined} evidence"
+    detail = f"{student.level}, with {_joined(list(dict.fromkeys(student.evidence)))} evidence"
+    if student.sources:
+        titles = list(student.sources[:MAX_TITLES])
+        if len(student.sources) > MAX_TITLES:
+            titles.append(f"{len(student.sources) - MAX_TITLES} more")
+        detail += " from " + _joined(titles)
+    return detail
 
 
 def _result(required, decision, method, has_students):

@@ -294,6 +294,29 @@ class TestAssessment:
         assert after["project_experience"] > before["project_experience"]
         assert after["certification"] > before["certification"]
 
+    def test_project_gives_evidence_without_changing_stored_skills(self, env):
+        # The website has no evidence input for a skill; a project listing it counts (nlp/evidence.py)
+        c, conn = env["client"], env["conn"]
+        pw = bcrypt.hashpw(PASSWORD.encode(), bcrypt.gensalt()).decode()
+        uid = conn.execute("INSERT INTO users (email, password_hash, role, full_name) VALUES "
+                           "('dana@student.newinti.edu.my', %s, 'student', 'Dana') RETURNING user_id::text",
+                           (pw,)).fetchone()[0]
+        pid = conn.execute("INSERT INTO student_profiles (user_id, target_role) VALUES (%s, 'Data Analyst') "
+                           "RETURNING profile_id::text", (uid,)).fetchone()[0]
+        conn.execute("INSERT INTO student_skills (profile_id, skill_id, proficiency_level) "
+                     "SELECT %s, skill_id, 'beginner' FROM skills_library WHERE skill_name = 'Power BI'", (pid,))
+        dana = token(env, "dana@student.newinti.edu.my")
+        power_bi = lambda: next(m for m in run(env, dana, role_id=env["da"]).json()["match_results"]
+                                if m["skill_name"] == "Power BI")
+        assert power_bi()["match_status"] == "developing"
+        assert c.post("/api/students/projects", headers=dana, json={
+            "project_title": "Sales Dashboard", "technologies": ["PowerBI"]}).status_code == 201
+        m = power_bi()
+        assert m["match_status"] == "strong"
+        assert "beginner, with project evidence from Sales Dashboard" in m["reason"]
+        stored = conn.execute("SELECT evidence_type FROM student_skills WHERE profile_id = %s", (pid,)).fetchone()[0]
+        assert stored == []
+
     def test_pasted_jd_flow(self, env, alice):
         c = env["client"]
         jd = c.post("/api/jobs/descriptions", headers=alice, json={

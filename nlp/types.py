@@ -9,7 +9,7 @@ Import as `from nlp.types import ...`. Never put the nlp/ folder itself on
 sys.path: this module would then shadow Python's standard `types` module.
 """
 
-from typing import Literal, TypedDict
+from typing import Literal, NotRequired, TypedDict
 
 # ── Allowed values ────────────────────────────────────────────
 # Mirrors the CHECK constraints in database/schema.sql.
@@ -58,6 +58,10 @@ class StudentSkill(TypedDict):
     skill_name: str
     proficiency_level: ProficiencyLevel
     evidence_type: list[str]        # e.g. ["project", "certification", "coursework", "internship"]
+    # Optional, set by nlp.derive_evidence(): titles of the projects / certifications
+    # behind each derived evidence type, e.g. {"project": ["Sales Dashboard"]}.
+    # match_skills() names them in the reason.
+    evidence_sources: NotRequired[dict[str, list[str]]]
 
 
 class RequiredSkill(TypedDict):

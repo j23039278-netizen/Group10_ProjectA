@@ -85,8 +85,9 @@ def test_type_fields_line_up_with_contract():
     assert set(ExtractedSkill.__annotations__) == {
         "skill_id", "skill_name", "raw_skill_text", "method",
         "confidence_score", "start_char", "end_char"}
-    assert set(StudentSkill.__annotations__) == {
+    assert set(StudentSkill.__required_keys__) == {
         "skill_id", "skill_name", "proficiency_level", "evidence_type"}
+    assert set(StudentSkill.__optional_keys__) == {"evidence_sources"}   # set by derive_evidence()
     assert set(RequiredSkill.__annotations__) == {"skill_id", "skill_name", "importance"}
     assert set(MatchResult.__annotations__) == {
         "skill_id", "skill_name", "importance", "match_status", "similarity_score",

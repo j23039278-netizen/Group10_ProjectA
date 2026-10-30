@@ -118,7 +118,13 @@ column default (`'required'`).
 | `skill_id` | `str \| None` | UUID | `student_skills.skill_id` |
 | `skill_name` | `str` | Canonical name | `skills_library.skill_name` |
 | `proficiency_level` | `"beginner" \| "intermediate" \| "advanced"` | Self-rated level (case-insensitive) | `student_skills.proficiency_level` |
-| `evidence_type` | `list[str]` | `project`, `certification`, `coursework`, `internship`; `[]` or `None` if there is none. A PostgreSQL array literal (`"{project,coursework}"`) is accepted too | `student_skills.evidence_type` |
+| `evidence_type` | `list[str]` | `project`, `certification`, `coursework`, `internship`; `[]` or `None` if there is none. A PostgreSQL array literal (`"{project,coursework}"`) is accepted too | `student_skills.evidence_type`, plus what `derive_evidence()` adds |
+| `evidence_sources` | `dict[str, list[str]]`, optional | Set by `nlp.derive_evidence()`: the project / certification titles behind each derived evidence type, e.g. `{"project": ["Sales Dashboard"]}`. The reason names them. Leave it out when not calling `derive_evidence()` | computed at assessment time, not stored |
+
+`nlp.derive_evidence(student_skills, projects, certifications)` returns the same
+list with `evidence_type` extended from the student's `student_projects` and
+`student_certifications` rows (rules: `docs/NLP_CLASSIFICATION_RULES.md`, section 4a).
+Call it on the `StudentSkill` list just before `match_skills()`.
 
 ### `RequiredSkill` (input)
 
