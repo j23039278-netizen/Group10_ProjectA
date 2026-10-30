@@ -159,6 +159,19 @@ GPA and CGPA and are reminded to update them at the start of each semester (Janu
 September). The advisor's **Download the template** gives an Excel file whose Course column is
 a drop-down list.
 
+**Work experience and career paths.** Students list internships, jobs, freelance work and
+volunteering on My Profile → Experience (paid work and internships count towards Industry
+Experience in an assessment). **Career Paths** ranks the job roles of the student's course by how
+many of their required / preferred / bonus skills the student lists, shows what is missing and
+suggests a free resource for the main missing skills.
+
+**System settings (Admin → System Settings).** Semester start dates (GPA / CGPA reminder),
+readiness bands for the advisor dashboard (On Track / Needs Support limits) and upload limits.
+The same page shows whether a mail server is set up and can send a test email; the SMTP settings
+themselves (`SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURITY`, `SMTP_USER`, `SMTP_PASSWORD`, `SMTP_FROM`)
+stay in `backend/.env`, never in git. Stored emails can be resent from Student Intake → Email outbox
+(a temporary password is not resent once the person has chosen their own).
+
 **Advisor dashboard.** Tabs: Overview (readiness distribution, student status, top skill gaps,
 target roles, learning activity), Skill Gaps (filter by assessed job role), Students (search, filters,
 sortable columns) and Learning Progress (most completed resources, activity per student); every table

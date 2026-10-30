@@ -1421,6 +1421,190 @@ class TestAdvisorFeatures:
                             (uid,)).fetchone()[0] == 1
 
 
+# ── Work experience ──────────────────────────────────────────
+class TestExperience:
+    def test_add_edit_delete_and_scores(self, env, advisor):
+        c, conn = env["client"], env["conn"]
+        h = course_student(env, "maya@student.newinti.edu.my", "Maya", "CS")
+        uid = conn.execute("SELECT user_id::text FROM users WHERE email = 'maya@student.newinti.edu.my'").fetchone()[0]
+        ex = "/api/students/experiences"
+        assert c.get(ex, headers=h).json() == []
+        job = {"job_title": "Data Analyst Intern", "company": "Acme Sdn Bhd", "experience_type": "internship",
+               "location": "Kuala Lumpur", "start_date": "2026-01-05", "end_date": "2026-04-03",
+               "description": "Built Power BI dashboards."}
+        assert c.post(ex, headers=h, json={**job, "start_date": "2099-01-01", "end_date": None}).status_code == 422
+        assert c.post(ex, headers=h, json={**job, "end_date": "2025-12-01"}).status_code == 422
+        assert c.post(ex, headers=h, json={**job, "experience_type": "astronaut"}).status_code == 422
+        r = c.post(ex, headers=h, json=job)
+        assert r.status_code == 201
+        eid = r.json()["experience_id"]
+        c.post(ex, headers=h, json={"job_title": "Tutor", "company": "Campus Club", "experience_type": "volunteer",
+                                    "start_date": "2025-06-01"})                       # still going on
+        listed = c.get(ex, headers=h).json()
+        assert [e["job_title"] for e in listed] == ["Tutor", "Data Analyst Intern"]    # current first
+        assert c.put(f"{ex}/{eid}", headers=h, json={**job, "job_title": "BI Intern"}).status_code == 200
+        assert "BI Intern" in {e["job_title"] for e in c.get(ex, headers=h).json()}
+        assert conn.execute("SELECT internship_count FROM student_profiles sp JOIN users u USING (user_id) "
+                            "WHERE u.user_id = %s", (uid,)).fetchone()[0] == 1
+        # Another student cannot change it
+        other = course_student(env, "nora@student.newinti.edu.my", "Nora", "CS")
+        assert c.put(f"{ex}/{eid}", headers=other, json=job).status_code == 404
+        assert c.delete(f"{ex}/{eid}", headers=other).status_code == 404
+        # Advisors see it on the student's page
+        detail = c.get(f"/api/advisor/students/{uid}", headers=advisor).json()
+        assert {e["job_title"] for e in detail["experiences"]} == {"BI Intern", "Tutor"}
+        # Paid experience counts as industry experience; volunteering does not
+        sid = conn.execute("SELECT skill_id::text FROM skills_library WHERE skill_name = 'SQL'").fetchone()[0]
+        c.post("/api/students/skills", headers=h, json={"skill_id": sid})
+        result = run(env, h, role_id=env["da"]).json()
+        assert float(result["dimension_scores"]["industry_experience"]) == 50.0
+        assert c.delete(f"{ex}/{eid}", headers=h).status_code == 200
+        assert [e["job_title"] for e in c.get(ex, headers=h).json()] == ["Tutor"]
+
+
+# ── Career paths (FR-15) ─────────────────────────────────────
+class TestCareerPaths:
+    def test_paths_for_the_course(self, env, advisor):
+        c, conn = env["client"], env["conn"]
+        h = course_student(env, "omar@student.newinti.edu.my", "Omar", "CS")
+        empty = c.get("/api/students/career-paths", headers=h).json()
+        assert empty["skill_count"] == 0 and all(p["match_pct"] == 0 for p in empty["paths"])
+        for skill in ("SQL", "Python", "Excel", "Power BI", "Tableau", "Data Visualisation", "Communication"):
+            sid = conn.execute("SELECT skill_id::text FROM skills_library WHERE skill_name = %s", (skill,)).fetchone()[0]
+            c.post("/api/students/skills", headers=h, json={"skill_id": sid})
+        c.put("/api/students/profile", headers=h, json={"target_role": "Data Analyst"})
+        body = c.get("/api/students/career-paths", headers=h).json()
+        names = [p["role_name"] for p in body["paths"]]
+        assert {"Software Developer", "Data Scientist", "Data Analyst"} <= set(names)
+        assert "Financial Analyst" not in names                                     # Business role
+        assert [p["match_pct"] for p in body["paths"]] == sorted((p["match_pct"] for p in body["paths"]), reverse=True)
+        da = next(p for p in body["paths"] if p["role_name"] == "Data Analyst")
+        assert da["is_target_role"] is True and da["match_pct"] > 0
+        assert "SQL" in da["matched_skills"] and da["required"]["have"] >= 2
+        assert all(m["skill_name"] not in da["matched_skills"] for m in da["missing_skills"])
+        assert all(s["importance"] == "required" for s in da["next_steps"]) and len(da["next_steps"]) <= 3
+        assert any(s["resource"] and s["resource"]["url"] for s in da["next_steps"])
+        biz = course_student(env, "pia@student.newinti.edu.my", "Pia", "BUSINESS")
+        assert {p["role_name"] for p in c.get("/api/students/career-paths", headers=biz).json()["paths"]} == \
+            {"Business Analyst", "Marketing Executive", "Financial Analyst", "HR Executive"}
+        assert c.get("/api/students/career-paths", headers=advisor).status_code == 403
+
+
+# ── System settings (FR-16) ──────────────────────────────────
+class TestSettings:
+    def test_admin_changes_settings(self, env, admin, advisor, alice):
+        c, conn = env["client"], env["conn"]
+        defaults = c.get("/api/settings", headers=alice).json()
+        assert defaults == {"semester_starts": ["01-01", "05-01", "09-01"], "readiness_on_track": 70,
+                            "readiness_needs_support": 40, "max_upload_mb": 5, "max_evidence_per_item": 5}
+        assert c.get("/api/admin/settings", headers=advisor).status_code == 403
+        assert c.put("/api/admin/settings", headers=advisor, json={"values": {"max_upload_mb": 1}}).status_code == 403
+        view = c.get("/api/admin/settings", headers=admin).json()
+        assert {x["key"] for x in view["settings"]} == set(defaults) and view["email"]["configured"] is False
+        put = lambda values: c.put("/api/admin/settings", headers=admin, json={"values": values})
+        assert put({"readiness_needs_support": 80}).status_code == 400              # not below On Track
+        assert put({"max_upload_mb": 6}).status_code == 400                         # database limit is 5 MB
+        assert put({"semester_starts": ["13-01"]}).status_code == 400
+        assert put({"semester_starts": []}).status_code == 400
+        assert put({"colour": "blue"}).status_code == 400
+        assert put({"readiness_on_track": 2.5}).status_code == 400
+        try:
+            r = put({"readiness_on_track": 60, "readiness_needs_support": 30, "max_evidence_per_item": 1, "max_upload_mb": 1})
+            assert r.status_code == 200
+            row = next(x for x in r.json()["settings"] if x["key"] == "max_upload_mb")
+            assert row["value"] == 1 and row["updated_by"] == "Admin A"
+            assert c.get("/api/advisor/cohort/overview", headers=advisor).json()["bands"] == {"on_track": 60, "needs_support": 30}
+            # Upload limits apply at once
+            h = course_student(env, "quinn@student.newinti.edu.my", "Quinn", "CS")
+            big = cv_docx("x") + b"0" * (1024 * 1024 + 10)
+            r = c.post("/api/students/cv?method=keyword", headers=h, files={"file": ("big.docx", big, TestCv.DOCX)})
+            assert r.status_code == 413 and "1 MB" in r.json()["detail"]
+            pid = c.post("/api/students/projects", headers=h, json={"project_title": "Site"}).json()["project_id"]
+            link = lambda: c.post(f"/api/students/projects/{pid}/links", headers=h, json={"url": "https://example.com/a"})
+            assert link().status_code == 201
+            r2 = link()
+            assert r2.status_code == 400 and "at most 1" in r2.json()["detail"]
+            assert conn.execute("SELECT count(*) FROM audit_log WHERE action = 'admin.settings_update'").fetchone()[0] >= 1
+        finally:
+            assert put({"readiness_on_track": 70, "readiness_needs_support": 40, "max_evidence_per_item": 5,
+                        "max_upload_mb": 5}).status_code == 200
+        assert c.get("/api/settings", headers=alice).json() == defaults
+
+    def test_semester_starts_setting(self, env, admin):
+        from datetime import date
+        from routers.students import current_semester_start
+        assert current_semester_start(date(2026, 8, 1), ((2, 15), (8, 1))) == date(2026, 8, 1)
+        assert current_semester_start(date(2026, 1, 10), ((2, 15), (8, 1))) == date(2025, 8, 1)
+
+
+# ── Email: test email, resend, fake mail server ──────────────
+class FakeSMTP:
+    sent, fail = [], False
+
+    def __init__(self, host, port, timeout=None):
+        self.host, self.port = host, port
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *a):
+        return False
+
+    def starttls(self):
+        pass
+
+    def login(self, user, password):
+        pass
+
+    def send_message(self, msg):
+        if FakeSMTP.fail:
+            raise OSError("connection refused")
+        FakeSMTP.sent.append(msg)
+
+
+class TestEmail:
+    def test_test_email_and_resend(self, env, admin, monkeypatch):
+        import notifications
+        c, conn = env["client"], env["conn"]
+        assert c.post("/api/admin/settings/test-email", headers=admin, json={"to": "ops@example.com"}).status_code == 400
+        # An account email stored while no mail server was set up
+        pw = bcrypt.hashpw(PASSWORD.encode(), bcrypt.gensalt()).decode()
+        uid = conn.execute("INSERT INTO users (email, password_hash, role, full_name, course, must_change_password) "
+                           "VALUES ('rae@student.newinti.edu.my', %s, 'student', 'Rae', 'CS', TRUE) RETURNING user_id::text",
+                           (pw,)).fetchone()[0]
+        eid = conn.execute("INSERT INTO email_outbox (to_address, subject, body, status, related_user_id) VALUES "
+                           "('rae.personal@example.com', 'Your SEAGAS student account', 'Temporary password:  Abc#1234x', "
+                           "'not_sent', %s) RETURNING email_id::text", (uid,)).fetchone()[0]
+        assert c.post(f"/api/intake/outbox/{eid}/resend", headers=admin).status_code == 400   # no mail server
+
+        monkeypatch.setenv("SMTP_HOST", "smtp.example.com")
+        monkeypatch.setenv("SMTP_FROM", "seagas@example.com")
+        monkeypatch.setattr(notifications.smtplib, "SMTP", FakeSMTP)
+        FakeSMTP.sent.clear()
+        status = c.get("/api/admin/settings", headers=admin).json()["email"]
+        assert status["configured"] and status["host"] == "smtp.example.com" and status["security"] == "starttls"
+        assert "password" not in str(status).lower()
+        r = c.post("/api/admin/settings/test-email", headers=admin, json={"to": "ops@example.com"})
+        assert r.json() == {"status": "sent", "error": None} and FakeSMTP.sent[-1]["To"] == "ops@example.com"
+
+        r = c.post(f"/api/intake/outbox/{eid}/resend", headers=admin)
+        assert r.json()["status"] == "sent" and FakeSMTP.sent[-1]["To"] == "rae.personal@example.com"
+        row = next(e for e in c.get("/api/intake/outbox", headers=admin).json()["emails"] if e["email_id"] == eid)
+        assert row["status"] == "sent" and row["attempts"] == 2 and row["sent_at"] and row["password_still_temporary"] is True
+        FakeSMTP.fail = True
+        try:
+            r = c.post(f"/api/intake/outbox/{eid}/resend", headers=admin)
+            assert r.json()["status"] == "failed" and "connection refused" in r.json()["error"]
+        finally:
+            FakeSMTP.fail = False
+        # After the person chose their own password the old temporary one must not be sent again
+        conn.execute("UPDATE users SET must_change_password = FALSE WHERE user_id = %s", (uid,))
+        r = c.post(f"/api/intake/outbox/{eid}/resend", headers=admin)
+        assert r.status_code == 400 and "Reset their password" in r.json()["detail"]
+        assert c.post(f"/api/intake/outbox/{eid}/resend", headers=course_student(env, "sam@student.newinti.edu.my", "Sam", "CS")).status_code == 403
+        assert conn.execute("SELECT count(*) FROM audit_log WHERE action = 'admin.email_resend'").fetchone()[0] >= 2
+
+
 class TestNewStudent:
     def test_new_student_without_profile_can_add_skills(self, env):
         c, conn = env["client"], env["conn"]

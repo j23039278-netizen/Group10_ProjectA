@@ -107,6 +107,21 @@ export const assessAPI = {
 };
  
 // ── Progress (FR-11: Development Tracking) ────────────────────
+// Work experience (routers/experiences.py) and career paths (routers/career.py)
+export const experienceAPI = {
+  list:   ()         => API.get('/students/experiences'),
+  add:    (data)     => API.post('/students/experiences', data),
+  update: (id, data) => API.put(`/students/experiences/${id}`, data),
+  remove: (id)       => API.delete(`/students/experiences/${id}`),
+};
+export const careerAPI = {
+  paths: () => API.get('/students/career-paths'),
+};
+// System settings that pages need (readiness bands, upload limits); admins change them
+export const settingsAPI = {
+  get: () => API.get('/settings'),
+};
+
 // Student CV: upload, the skills found in it, add the ticked skills (routers/cv.py)
 export const cvAPI = {
   upload: (file) => {

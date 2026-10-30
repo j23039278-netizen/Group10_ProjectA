@@ -7,6 +7,7 @@ import EvidenceFiles, { PendingFiles } from '../components/EvidenceFiles'
 import { MAX_FILES } from '../components/evidenceRules'
 import ResultsReminder from '../components/ResultsReminder'
 import CvUpload from '../components/CvUpload'
+import ExperienceTab from '../components/ExperienceTab'
 import { useNavigate } from 'react-router-dom'
 
 const CATEGORIES = ['Technical','AI_Digital','Analytical','Soft']
@@ -276,7 +277,7 @@ export default function Profile() {
     <div style={{ fontSize: '13px', fontWeight: '700', color: '#1a1f2e', marginBottom: '16px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{t}</div>
   )
 
-  const tabs = ['info','skills','projects','certifications']
+  const tabs = ['info','skills','experience','projects','certifications']
 
   const errorBox = itemError && (
     <div role="alert" style={{ background: '#fee2e2', color: '#dc2626', padding: '10px', borderRadius: '8px', marginBottom: '12px', fontSize: '13px' }}>{itemError}</div>
@@ -454,6 +455,8 @@ export default function Profile() {
       )}
 
       {/* TAB: Projects */}
+      {tab === 'experience' && <ExperienceTab />}
+
       {tab === 'projects' && (
         <>
           {card(

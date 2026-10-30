@@ -7,6 +7,7 @@ import AdminIntake from '../pages/AdminIntake'
 import AdminLibrary from '../pages/AdminLibrary'
 import AdminResources from '../pages/AdminResources'
 import AdminAudit from '../pages/AdminAudit'
+import AdminSettings from '../pages/AdminSettings'
 
 const NAV = [
   { path: '/',        label: 'User Management', icon: '👥' },
@@ -14,6 +15,7 @@ const NAV = [
   { path: '/library', label: 'Skills & Roles',  icon: '📚' },
   { path: '/resources', label: 'Learning Resources', icon: '🎓' },
   { path: '/audit',   label: 'Audit Log',       icon: '🧾' },
+  { path: '/settings', label: 'System Settings', icon: '⚙️' },
 ]
 
 export default function AdminPortal({ user, onLogout }) {
@@ -25,6 +27,7 @@ export default function AdminPortal({ user, onLogout }) {
         <Route path="/library" element={<AdminLibrary />} />
         <Route path="/resources" element={<AdminResources />} />
         <Route path="/audit"   element={<AdminAudit />} />
+        <Route path="/settings" element={<AdminSettings />} />
         <Route path="*"        element={<Navigate to="/" />} />
       </Routes>
     </PortalLayout>

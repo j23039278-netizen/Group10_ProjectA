@@ -17,4 +17,5 @@ export const intakeAPI = {
   createAccounts: (id, rowIds = null) => API.post(`/intake/batches/${id}/create-accounts`, { row_ids: rowIds }),
   reject:         (rowId, note)    => API.post(`/intake/rows/${rowId}/reject`, { note }),
   outbox:         ()               => API.get('/intake/outbox'),
+  resend:         (emailId)        => API.post(`/intake/outbox/${emailId}/resend`),
 };

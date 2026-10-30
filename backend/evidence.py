@@ -24,8 +24,11 @@ from urllib.parse import urlparse
 from fastapi import HTTPException
 from sqlalchemy import text
 
+import settings
+
+# Hard limits; the limits in use are system settings (settings.py), at most these
 MAX_BYTES = 5 * 1024 * 1024      # keep in sync with chk_evidence_kind in database/schema.sql
-MAX_PER_ITEM = 5
+MAX_PER_ITEM = 10
 MAX_LINK_LENGTH = 2000
 
 DOCX = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
@@ -99,9 +102,10 @@ def clean_link(url, title):
 def _check_room(db, key, parent_id):
     count = db.execute(text(f"SELECT COUNT(*) FROM student_evidence_files WHERE {key} = :p"),
                        {"p": str(parent_id)}).scalar()
-    if count >= MAX_PER_ITEM:
+    limit = settings.get(db, "max_evidence_per_item")
+    if count >= limit:
         raise HTTPException(status_code=400,
-                            detail=f"You can attach at most {MAX_PER_ITEM} pieces of evidence. Delete one first.")
+                            detail=f"You can attach at most {limit} pieces of evidence. Delete one first.")
 
 
 def save_file(db, profile_id, key, parent_id, upload):
@@ -110,10 +114,11 @@ def save_file(db, profile_id, key, parent_id, upload):
     The caller has checked that the parent belongs to profile_id. Commits.
     """
     _check_room(db, key, parent_id)
-    data = upload.file.read(MAX_BYTES + 1)
+    max_bytes = settings.max_upload_bytes(db)
+    data = upload.file.read(max_bytes + 1)
     if not data:
         raise HTTPException(status_code=400, detail="The file is empty.")
-    if len(data) > MAX_BYTES:
+    if len(data) > max_bytes:
         raise HTTPException(status_code=413, detail="The file is larger than 5 MB.")
     content_type = detect_type(data)
     if not content_type:

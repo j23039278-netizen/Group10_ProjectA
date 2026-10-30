@@ -30,7 +30,7 @@ const TABS = [
   { id: 'progress',   label: 'Learning Progress' },
 ]
 
-// Readiness bands (the same limits as the backend: 70 and 40). A score of 0 is a real result.
+// Readiness bands come from System Settings (overview.bands; defaults 70 and 40). A score of 0 is a real result.
 const STATUS = {
   on_track:      { label: 'On Track',      bg: '#dcfce7', color: C.green },
   developing:    { label: 'Developing',    bg: '#fef3c7', color: C.amber },
@@ -38,8 +38,9 @@ const STATUS = {
   none:          { label: 'No Assessment', bg: C.bg,      color: C.muted },
 }
 const num = (v) => (v == null ? null : parseFloat(v))
-const statusOf = (score) => score == null ? 'none' : score >= 70 ? 'on_track' : score >= 40 ? 'developing' : 'needs_support'
-const scoreColor = (s) => s == null ? C.muted : s >= 70 ? C.green : s >= 40 ? C.amber : C.red
+let BANDS = { on_track: 70, needs_support: 40 }
+const statusOf = (score) => score == null ? 'none' : score >= BANDS.on_track ? 'on_track' : score >= BANDS.needs_support ? 'developing' : 'needs_support'
+const scoreColor = (s) => s == null ? C.muted : s >= BANDS.on_track ? C.green : s >= BANDS.needs_support ? C.amber : C.red
 const fmtDate = (d) => d ? new Date(d).toLocaleDateString('en-GB') : '—'
 const pct = (n, total) => total ? Math.round((n / total) * 100) : 0
 
@@ -110,7 +111,11 @@ export default function AdvisorDashboard() {
   useEffect(() => {
     let current = true
     Promise.all([advisorAPI.overview(course), advisorAPI.skillGaps(course)])
-      .then(([ov, sg]) => { if (current) { setOverview(ov.data); setGaps(sg.data); setError('') } })
+      .then(([ov, sg]) => {
+        if (!current) return
+        if (ov.data.bands) BANDS = ov.data.bands
+        setOverview(ov.data); setGaps(sg.data); setError('')
+      })
       .catch(() => current && setError('Could not load the cohort figures.'))
       .finally(() => current && setLoading(false))
     return () => { current = false }
@@ -232,7 +237,7 @@ export default function AdvisorDashboard() {
             <StatCard label="Students" value={total} sub={`${overview.profiles_complete} profiles complete (${pct(overview.profiles_complete, total)}%)`} />
             <StatCard label="Assessed" value={overview.students_assessed} sub={`${pct(overview.students_assessed, total)}% of students`} color={C.blue} />
             <StatCard label="Avg Readiness" value={`${overview.avg_readiness_score}%`} sub="latest assessment of each student" color={scoreColor(overview.avg_readiness_score)} />
-            <StatCard label="Needs Support" value={sc.needs_support ?? 0} sub="latest readiness below 40%" color={C.red} />
+            <StatCard label="Needs Support" value={sc.needs_support ?? 0} sub={`latest readiness below ${BANDS.needs_support}%`} color={C.red} />
             <StatCard label="Activities Completed" value={overview.activities?.completed ?? 0}
               sub={`by ${overview.activities?.students_completed ?? 0} students`} color={C.green} />
           </div>
@@ -260,7 +265,9 @@ export default function AdvisorDashboard() {
             {/* Status breakdown */}
             <div style={card}>
               <div style={{ ...heading, marginBottom: '4px' }}>Student Status</div>
-              <div style={{ fontSize: '12px', color: C.muted, marginBottom: '16px' }}>On Track ≥ 70% · Developing 40–69% · Needs Support &lt; 40%</div>
+              <div style={{ fontSize: '12px', color: C.muted, marginBottom: '16px' }}>
+                On Track ≥ {BANDS.on_track}% · Developing {BANDS.needs_support}–{BANDS.on_track - 1}% · Needs Support &lt; {BANDS.needs_support}%
+              </div>
               {[['on_track', sc.on_track], ['developing', sc.developing], ['needs_support', sc.needs_support], ['none', sc.not_assessed]].map(([k, n]) => (
                 <button key={k} onClick={() => { setStatus(k); setTab('students'); setShownRows(PAGE_SIZE) }}
                   title="Show these students" style={{ display: 'block', width: '100%', textAlign: 'left', border: 'none', background: 'none', padding: '0 0 14px', cursor: 'pointer' }}>

@@ -18,6 +18,7 @@ from sqlalchemy import text
 
 import audit
 import evidence
+import settings
 from advisor_scope import ALL_COURSES, courses_of
 from database import get_db
 from routers.auth import get_current_user
@@ -66,8 +67,6 @@ LATEST_ASSESSMENTS = f"""
     ORDER BY a.profile_id, a.created_at DESC
 """
 
-# Readiness bands, the same as the dashboard's status labels
-ON_TRACK, NEEDS_SUPPORT = 70, 40
 
 
 def role_param(role_id):
@@ -89,6 +88,9 @@ def get_cohort_overview(
     """Cohort-level summary for the advisor dashboard (one course, or all of the advisor's)"""
     require_advisor(current_user)
     params = {"courses": course_param(course, current_user), "role_id": None}
+    # Readiness bands (System Settings): On Track >= on_track, Needs Support < needs_support
+    on_track, needs_support = settings.get(db, "readiness_on_track"), settings.get(db, "readiness_needs_support")
+    params.update(on_track=on_track, needs_support=needs_support)
 
     counts = db.execute(
         text(f"""
@@ -105,10 +107,10 @@ def get_cohort_overview(
     scores = db.execute(
         text(f"""
             SELECT ROUND(AVG(readiness_score), 1)                            AS avg_score,
-                   COUNT(*) FILTER (WHERE readiness_score < {NEEDS_SUPPORT})  AS needs_support,
-                   COUNT(*) FILTER (WHERE readiness_score >= {NEEDS_SUPPORT}
-                                      AND readiness_score < {ON_TRACK})      AS developing,
-                   COUNT(*) FILTER (WHERE readiness_score >= {ON_TRACK})      AS on_track,
+                   COUNT(*) FILTER (WHERE readiness_score < :needs_support)  AS needs_support,
+                   COUNT(*) FILTER (WHERE readiness_score >= :needs_support
+                                      AND readiness_score < :on_track)       AS developing,
+                   COUNT(*) FILTER (WHERE readiness_score >= :on_track)      AS on_track,
                    COUNT(*)                                                  AS assessed
             FROM ({LATEST_ASSESSMENTS}) latest
         """),
@@ -153,7 +155,8 @@ def get_cohort_overview(
         "profiles_complete":   counts.complete,
         "students_assessed":   scores.assessed,
         "avg_readiness_score": float(scores.avg_score) if scores.avg_score else 0,
-        "students_at_risk":    scores.needs_support,     # below 40: "Needs support" on the dashboard
+        "students_at_risk":    scores.needs_support,     # below the Needs Support limit
+        "bands":               {"on_track": on_track, "needs_support": needs_support},
         "status_counts": {
             "on_track": scores.on_track, "developing": scores.developing,
             "needs_support": scores.needs_support, "not_assessed": counts.total - scores.assessed,
@@ -376,6 +379,11 @@ def get_student_detail(
 
     cv = db.execute(text("SELECT file_name, size_bytes, uploaded_at FROM student_cvs WHERE profile_id = :pid"),
                     pid).fetchone()
+    experiences = db.execute(text("""
+        SELECT experience_id, job_title, company, experience_type, location, start_date, end_date, description
+        FROM student_experiences WHERE profile_id = :pid
+        ORDER BY (end_date IS NULL) DESC, COALESCE(end_date, start_date) DESC
+    """), pid).fetchall()
 
     return {
         "student":        dict(student._mapping),
@@ -387,6 +395,7 @@ def get_student_detail(
         "certifications": evidence.attach_files(db, [dict(c._mapping) for c in certifications], "cert_id"),
         "progress":       evidence.attach_files(db, [dict(p._mapping) for p in progress], "progress_id"),
         "cv":             dict(cv._mapping) if cv else None,
+        "experiences":    [dict(e._mapping) for e in experiences],
         "notes":          list_notes(db, user_id, current_user),
     }
 

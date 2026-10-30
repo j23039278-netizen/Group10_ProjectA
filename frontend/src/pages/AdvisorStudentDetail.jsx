@@ -9,6 +9,7 @@ import { label } from '../utils/labels'
 import EvidenceFiles from '../components/EvidenceFiles'
 import DecisionNotice from '../components/DecisionNotice'
 import { courseLabel } from '../utils/courses'
+import { experienceTypeLabel, period } from '../utils/experience'
 
 const C = { ink: '#1a1f2e', body: '#4a5168', muted: '#8b92a8', line: '#e4e6ef',
             blue: '#2d5be3', green: '#16a34a', amber: '#d97706', red: '#dc2626' }
@@ -266,7 +267,7 @@ export default function AdvisorStudentDetail() {
     </div>
   )
 
-  const { student, assessment, skills, skill_gaps, history, projects, certifications, progress, cv, notes = [] } = data
+  const { student, assessment, skills, skill_gaps, history, projects, certifications, progress, cv, notes = [], experiences = [] } = data
   const score  = num(assessment?.readiness_score)
   const groups = ['strong', 'developing', 'gap'].map(k => ({ key: k, items: skill_gaps.filter(g => g.match_status === k) }))
   const done   = progress.filter(p => p.status === 'completed').length
@@ -334,7 +335,7 @@ export default function AdvisorStudentDetail() {
             <Field label="GPA / CGPA" value={(student.gpa != null || student.cgpa != null) && `${student.gpa ?? '—'} / ${student.cgpa ?? '—'}`} />
             <Field label="Results Updated" value={student.results_updated_at && fmtDate(student.results_updated_at)} />
             <Field label="Target Role" value={student.target_role} />
-            <Field label="Internships" value={String(student.internship_count ?? 0)} />
+            <Field label="Work Experience" value={experiences.length ? `${experiences.length} listed` : 'None listed'} />
             <div style={{ gridColumn: '1 / -1' }}><Field label="Career Interests" value={(student.career_interests || []).join(', ')} /></div>
           </div>
         </div>
@@ -462,6 +463,20 @@ export default function AdvisorStudentDetail() {
             </div>
           ))}
         </div>
+      </div>
+
+      {/* Work experience */}
+      <div className="report-card" style={card}>
+        <div style={heading}>Work Experience ({experiences.length})</div>
+        {experiences.length === 0 ? <div style={muted}>No work experience listed.</div> : experiences.map(x => (
+          <div key={x.experience_id} style={{ padding: '8px 0', borderBottom: '1px solid #f0f1f5' }}>
+            <div style={{ fontSize: '13px', fontWeight: '600', color: C.ink }}>
+              {x.job_title} <span style={{ fontWeight: '500', color: C.body }}>· {x.company}{x.location ? `, ${x.location}` : ''}</span>
+            </div>
+            <div style={{ fontSize: '11px', color: C.muted, marginTop: '2px' }}>{experienceTypeLabel(x.experience_type)} · {period(x.start_date, x.end_date)}</div>
+            {x.description && <div style={{ fontSize: '12px', color: C.body, marginTop: '3px', whiteSpace: 'pre-wrap' }}>{x.description}</div>}
+          </div>
+        ))}
       </div>
 
       {/* Development progress */}

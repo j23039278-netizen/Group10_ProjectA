@@ -26,6 +26,7 @@ from sqlalchemy.orm import Session
 
 import evidence
 import nlp_service
+import settings
 from cv_text import read_cv
 from database import get_db
 from routers.auth import get_current_user
@@ -108,9 +109,10 @@ def upload_cv(file: UploadFile = File(...), method: str = nlp_service.DEFAULT_ME
               current_user=Depends(get_current_user), db: Session = Depends(get_db)):
     """Store the CV (replacing an older one) and return the library skills it mentions"""
     require_student(current_user)
-    data = file.file.read(evidence.MAX_BYTES + 1)
-    if len(data) > evidence.MAX_BYTES:
-        raise HTTPException(status_code=413, detail="The CV is larger than 5 MB.")
+    max_bytes = settings.max_upload_bytes(db)
+    data = file.file.read(max_bytes + 1)
+    if len(data) > max_bytes:
+        raise HTTPException(status_code=413, detail=f"The CV is larger than {max_bytes // (1024 * 1024)} MB.")
     content_type, cv = read_cv(data)
     if len(cv) < MIN_TEXT:
         raise HTTPException(status_code=400, detail=(

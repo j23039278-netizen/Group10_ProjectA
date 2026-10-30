@@ -118,19 +118,22 @@ def run_for_profile(db, profile, *, role_id=None, jd_id=None,
         got, top = weighted(rows)
         return round(got / top * 100, 2) if top > 0 else 0
 
-    # Experience dimensions from the student's records; internship_count is also a
-    # profile field (synthetic data sets it directly), so the larger value is used.
+    # Experience dimensions from the student's records. Industry experience counts
+    # internship projects and work experience other than volunteering; internship_count
+    # is also a profile field (synthetic data sets it directly), so the larger value is used.
     exp = db.execute(
         text("""
             SELECT
                 (SELECT COUNT(*) FROM student_projects WHERE profile_id = :pid)       AS projects,
                 (SELECT COUNT(*) FROM student_projects
                   WHERE profile_id = :pid AND project_type = 'internship')            AS internship_projects,
+                (SELECT COUNT(*) FROM student_experiences
+                  WHERE profile_id = :pid AND experience_type <> 'volunteer')         AS work_experiences,
                 (SELECT COUNT(*) FROM student_certifications WHERE profile_id = :pid) AS certifications
         """),
         {"pid": str(profile.profile_id)}
     ).fetchone()
-    internships = max(profile.internship_count or 0, exp.internship_projects)
+    internships = max(profile.internship_count or 0, exp.internship_projects + exp.work_experiences)
     dims = {
         "technical_skills":    category_score("Technical"),
         "ai_digital_skills":   category_score("AI_Digital"),

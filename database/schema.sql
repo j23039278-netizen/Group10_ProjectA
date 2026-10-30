@@ -1087,6 +1087,45 @@ CREATE TABLE IF NOT EXISTS advisor_notes (
 );
 CREATE INDEX IF NOT EXISTS idx_advisor_notes_student ON advisor_notes(student_id, created_at DESC);
 
+
+-- ── Work experience (30 October) ────────────────────────────
+-- Internships, part-time / full-time jobs, freelance work and volunteering.
+-- end_date NULL = still working there. Everything but volunteering counts as
+-- industry experience in an assessment (backend/assessment_service.py).
+CREATE TABLE IF NOT EXISTS student_experiences (
+    experience_id   UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    profile_id      UUID NOT NULL REFERENCES student_profiles(profile_id) ON DELETE CASCADE,
+    job_title       VARCHAR(150) NOT NULL,
+    company         VARCHAR(150) NOT NULL,
+    experience_type VARCHAR(15)  NOT NULL DEFAULT 'internship'
+                    CHECK (experience_type IN ('internship', 'part_time', 'full_time', 'freelance', 'volunteer')),
+    location        VARCHAR(150),
+    start_date      DATE NOT NULL,
+    end_date        DATE CHECK (end_date IS NULL OR end_date >= start_date),
+    description     TEXT,
+    created_at      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS idx_student_experiences_profile ON student_experiences(profile_id);
+
+
+-- ── System settings (30 October) ────────────────────────────
+-- Values an admin changes in Admin -> System Settings (backend/settings.py has the
+-- list, defaults and limits). A key that is not stored uses its default. Mail
+-- server settings and passwords stay in backend/.env, never here.
+CREATE TABLE IF NOT EXISTS system_settings (
+    key         VARCHAR(50) PRIMARY KEY,
+    value       JSONB       NOT NULL,
+    updated_by  UUID REFERENCES users(user_id) ON DELETE SET NULL,
+    updated_at  TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+
+-- ── Email outbox: resend (30 October) ───────────────────────
+ALTER TABLE email_outbox ADD COLUMN IF NOT EXISTS attempts SMALLINT NOT NULL DEFAULT 1;
+ALTER TABLE email_outbox ADD COLUMN IF NOT EXISTS last_attempt_at TIMESTAMP;
+ALTER TABLE email_outbox ADD COLUMN IF NOT EXISTS sent_at TIMESTAMP;
+UPDATE email_outbox SET sent_at = created_at WHERE status = 'sent' AND sent_at IS NULL;
+
 -- ============================================================
 -- END OF SCHEMA
 -- ============================================================

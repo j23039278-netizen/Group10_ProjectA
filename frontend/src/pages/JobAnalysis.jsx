@@ -1,6 +1,6 @@
 // SEAGAS — Job Analysis Page
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { jobsAPI, assessAPI, authAPI } from '../api/client'
 
 // Matching methods of the NLP module (docs/NLP_INTERFACE.md). Keyword is Level 1,
@@ -15,7 +15,9 @@ export default function JobAnalysis() {
   const navigate = useNavigate()
   const [roles,     setRoles]     = useState([])
   const [mode,      setMode]      = useState('template') // 'template' | 'custom'
-  const [selRole,   setSelRole]   = useState('')
+  const location = useLocation()
+  // Career Paths opens this page with a role already chosen
+  const [selRole,   setSelRole]   = useState(location.state?.roleId || '')
   const [jdText,    setJdText]    = useState('')
   const [jdTitle,   setJdTitle]   = useState('')
   const [loading,   setLoading]   = useState(false)

@@ -2,7 +2,8 @@
 // "Save as PDF" opens the browser's print dialog; only the CV sheet is printed.
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { authAPI, studentAPI, progressAPI } from '../api/client'
+import { authAPI, studentAPI, progressAPI, experienceAPI } from '../api/client'
+import { experienceTypeLabel, period } from '../utils/experience'
 import { courseLabel } from '../utils/courses'
 
 const CATEGORIES = [
@@ -33,14 +34,15 @@ export default function CvExport() {
 
   useEffect(() => {
     Promise.allSettled([authAPI.me(), studentAPI.getProfile(), studentAPI.getSkills(),
-                        studentAPI.getProjects(), studentAPI.getCerts(), progressAPI.getMy('completed')])
-      .then(([me, profile, skills, projects, certs, done]) => {
+                        studentAPI.getProjects(), studentAPI.getCerts(), progressAPI.getMy('completed'), experienceAPI.list()])
+      .then(([me, profile, skills, projects, certs, done, experiences]) => {
         if (me.status !== 'fulfilled') return setError('Could not load your details. Please sign in again.')
         const val = (r, fallback) => (r.status === 'fulfilled' ? r.value.data : fallback)
         setData({
           me: me.value.data, profile: val(profile, {}), skills: val(skills, []),
           projects: val(projects, []), certs: val(certs, []),
           activities: val(done, {}).progress || [],
+          experiences: val(experiences, []),
         })
       })
   }, [])
@@ -48,7 +50,7 @@ export default function CvExport() {
   if (error) return <div style={{ padding: '40px', color: '#dc2626' }}>{error}</div>
   if (!data) return <div style={{ padding: '40px', color: '#8b92a8' }}>Loading...</div>
 
-  const { me, profile, skills, projects, certs, activities } = data
+  const { me, profile, skills, projects, certs, activities, experiences } = data
   const h2 = { fontSize: '13px', fontWeight: '700', color: '#2d5be3', textTransform: 'uppercase', letterSpacing: '0.6px',
                borderBottom: '1.5px solid #dbe3fb', paddingBottom: '4px', margin: '18px 0 8px' }
   const small = { fontSize: '12px', color: '#4a5168' }
@@ -117,6 +119,22 @@ export default function CvExport() {
           })}
           {skills.length > 0 && <div style={{ fontSize: '10px', color: '#8b92a8', marginTop: '4px' }}>●○○ Beginner · ●●○ Intermediate · ●●● Advanced</div>}
         </div>
+
+        {/* Work experience */}
+        {experiences.length > 0 && (
+          <div className="cv-section">
+            <div style={h2}>Experience</div>
+            {experiences.map(x => (
+              <div key={x.experience_id} style={{ marginBottom: '8px' }}>
+                <div style={{ fontSize: '13px', fontWeight: '600' }}>
+                  {x.job_title} <span style={{ fontWeight: '400' }}>· {x.company}{x.location ? `, ${x.location}` : ''}</span>
+                </div>
+                <div style={{ ...small, color: '#8b92a8' }}>{experienceTypeLabel(x.experience_type)} · {period(x.start_date, x.end_date)}</div>
+                {x.description && <div style={small}>{x.description}</div>}
+              </div>
+            ))}
+          </div>
+        )}
 
         {/* Projects */}
         {projects.length > 0 && (
