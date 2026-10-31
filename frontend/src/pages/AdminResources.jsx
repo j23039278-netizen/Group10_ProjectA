@@ -1,21 +1,25 @@
-// SEAGAS — Admin: Learning Resources (recommendations library, FR-16)
+// SEAGAS — Learning Resources (recommendations library, FR-16; admin and advisor portals)
 // The courses, certifications and projects the recommendation engine suggests for
-// each skill gap. Admins can add resources, edit the ones they added, and switch
-// any of them on or off; inactive resources are no longer recommended. Seed
-// resources come from database/seed_recommendations_library_final.sql and are
-// only switched on/off here, the same rule as the skills and roles library.
+// each skill gap. Staff can add resources, edit the ones added on the website, and
+// switch them on or off; inactive resources are no longer recommended. Advisors add
+// resources for the skills of their courses and change the ones of their courses or
+// that they added (can_edit from routers/library.py). Seed resources come from
+// database/seed_recommendations_library_final.sql and are only switched on/off here,
+// the same rule as the skills and roles library.
 import { useState, useEffect } from 'react'
-import { adminAPI } from '../api/admin'
+import { authAPI } from '../api/client'
+import { libraryAPI } from '../api/library'
 import { label as labelText } from '../utils/labels'
+import { COURSES, coursesText } from '../utils/courses'
 import { C, card, th, td, input, label, btn, smallBtn, heading, errorText } from './admin/adminStyles'
-import { Modal, Alert, StatusPill, SourcePill } from './admin/AdminUi'
+import { Modal, Alert, StatusPill, SourcePill, SharedNote } from './admin/AdminUi'
 
 const TYPES = ['course', 'certification', 'project', 'workshop', 'competition', 'internship']
 const DIFFICULTIES = ['beginner', 'intermediate', 'advanced']
 const select = { ...input, width: 'auto' }
 
 // ── Add / edit a resource ────────────────────────────────────
-function ResourceModal({ resource, skills, onClose, onSaved }) {
+function ResourceModal({ resource, skills, allowed, onClose, onSaved }) {
   const editing = !!resource
   const [form, setForm] = useState({
     skill_id: resource?.skill_id || '', resource_title: resource?.resource_title || '',
@@ -44,7 +48,7 @@ function ResourceModal({ resource, skills, onClose, onSaved }) {
     setSaving(true)
     setError('')
     try {
-      const res = editing ? await adminAPI.updateResource(resource.resource_id, body) : await adminAPI.createResource(body)
+      const res = editing ? await libraryAPI.updateResource(resource.resource_id, body) : await libraryAPI.createResource(body)
       onSaved(res.data, editing)
     } catch (err) {
       setError(errorText(err, 'Could not save the resource.'))
@@ -52,7 +56,8 @@ function ResourceModal({ resource, skills, onClose, onSaved }) {
     }
   }
 
-  const activeSkills = skills.filter(s => s.is_active || s.skill_id === form.skill_id)
+  const activeSkills = skills.filter(s => s.skill_id === form.skill_id ||
+    (s.is_active && (s.courses || []).some(c => allowed.includes(c))))
 
   return (
     <Modal title={editing ? `Edit ${resource.resource_title}` : 'Add learning resource'} onClose={onClose} width="560px">
@@ -117,6 +122,9 @@ function ResourceModal({ resource, skills, onClose, onSaved }) {
 
 // ── Page ─────────────────────────────────────────────────────
 export default function AdminResources() {
+  const [myCourses, setMyCourses] = useState([])     // courses the user manages (every course for admins)
+  const [isAdmin, setIsAdmin]     = useState(false)
+  const [course, setCourse]       = useState('')     // '' = all; resources of skills of one course
   const [resources, setResources] = useState([])
   const [skills, setSkills]       = useState([])
   const [search, setSearch]       = useState('')
@@ -128,18 +136,21 @@ export default function AdminResources() {
   const [modal, setModal]         = useState(null)   // null | 'new' | resource
   const [busy, setBusy]           = useState(null)
 
-  const load = () => Promise.all([adminAPI.resources(), adminAPI.skills()])
+  const load = () => Promise.all([libraryAPI.resources(), libraryAPI.skills()])
     .then(([r, s]) => { setResources(r.data); setSkills(s.data); setError('') })
     .catch(err => setError(errorText(err, 'Could not load the learning resources.')))
     .finally(() => setLoading(false))
 
-  useEffect(() => { load() }, [])
+  useEffect(() => {
+    authAPI.me().then(r => { setMyCourses(r.data.advisor_courses || []); setIsAdmin(r.data.role === 'admin') }).catch(() => {})
+    load()
+  }, [])
 
   const toggle = async (r) => {
     setBusy(r.resource_id)
     setNotice('')
     try {
-      await adminAPI.updateResource(r.resource_id, { is_active: !r.is_active })
+      await libraryAPI.updateResource(r.resource_id, { is_active: !r.is_active })
       setNotice(`${r.resource_title} is now ${r.is_active ? 'inactive: it is no longer recommended' : 'active'}.`)
       await load()
     } catch (err) {
@@ -150,7 +161,9 @@ export default function AdminResources() {
   }
 
   const q = search.trim().toLowerCase()
+  const forCourse = (r) => !course || (r.skill_courses || []).includes(course)
   const shown = resources.filter(r =>
+    forCourse(r) &&
     (showInactive || r.is_active) &&
     (!type || r.resource_type === type) &&
     (!q || [r.resource_title, r.skill_name, r.provider].some(v => (v || '').toLowerCase().includes(q)))
@@ -167,13 +180,29 @@ export default function AdminResources() {
         <div style={{ fontSize: '26px', fontWeight: '700', color: C.ink }}>Learning Resources</div>
         <div style={{ fontSize: '13px', color: C.body, marginTop: '4px', maxWidth: '760px' }}>
           {active.length} active resources covering {covered} of {activeSkills} active skills. The recommendation engine suggests these for the skill gaps students have.
-          Entries marked <SourcePill source="admin" /> were added here and can be edited.
+          Entries marked <SourcePill source="admin" /> were added on the website and can be edited.
           Seed entries come from database/seed_recommendations_library_final.sql: edit them there; here they can only be switched on or off.
+          {!isAdmin && <> You can add resources for the skills of your courses ({coursesText(myCourses)}) and change the ones you added or that only your courses use.</>}
         </div>
       </div>
 
       {notice && <Alert type="success">{notice}</Alert>}
       {error && <Alert>{error}</Alert>}
+
+      {/* Course: resources for the skills of one course */}
+      <div role="tablist" aria-label="Course" style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '16px' }}>
+        {[{ id: '', label: 'All courses' }, ...COURSES].map(c => {
+          const selected = course === c.id
+          return (
+            <button key={c.id || 'all'} role="tab" aria-selected={selected} onClick={() => setCourse(c.id)}
+              style={{ padding: '6px 14px', borderRadius: '20px', fontSize: '12px', fontWeight: '600', cursor: 'pointer',
+                       background: selected ? C.blue : '#fff', color: selected ? '#fff' : C.body,
+                       border: `1.5px solid ${selected ? C.blue : C.line}` }}>
+              {c.label} ({active.filter(r => !c.id || (r.skill_courses || []).includes(c.id)).length})
+            </button>
+          )
+        })}
+      </div>
 
       <div style={{ ...card, padding: '20px 24px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px', marginBottom: '14px', flexWrap: 'wrap' }}>
@@ -214,12 +243,14 @@ export default function AdminResources() {
                   <td style={td}><SourcePill source={r.source} /></td>
                   <td style={td}><StatusPill active={r.is_active} /></td>
                   <td style={{ ...td, textAlign: 'right', whiteSpace: 'nowrap' }}>
-                    {r.source === 'admin' && (
+                    {r.source === 'admin' && r.can_edit && (
                       <button style={{ ...smallBtn(), marginRight: '6px' }} onClick={() => { setNotice(''); setModal(r) }}>Edit</button>
                     )}
-                    <button style={smallBtn(r.is_active ? 'danger' : 'secondary')} disabled={busy === r.resource_id} onClick={() => toggle(r)}>
-                      {r.is_active ? 'Deactivate' : 'Activate'}
-                    </button>
+                    {r.can_edit ? (
+                      <button style={smallBtn(r.is_active ? 'danger' : 'secondary')} disabled={busy === r.resource_id} onClick={() => toggle(r)}>
+                        {r.is_active ? 'Deactivate' : 'Activate'}
+                      </button>
+                    ) : <SharedNote />}
                   </td>
                 </tr>
               ))}
@@ -229,7 +260,7 @@ export default function AdminResources() {
       </div>
 
       {modal && (
-        <ResourceModal resource={modal === 'new' ? null : modal} skills={skills} onClose={() => setModal(null)}
+        <ResourceModal resource={modal === 'new' ? null : modal} skills={skills} allowed={myCourses} onClose={() => setModal(null)}
           onSaved={(r, edited) => { setModal(null); setNotice(`${r.resource_title} ${edited ? 'saved' : 'added'}.`); load() }} />
       )}
     </div>

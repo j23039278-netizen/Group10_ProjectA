@@ -35,14 +35,24 @@ export function StatusPill({ active }) {
   )
 }
 
-// Where a library entry comes from: the seed files or the Admin page
+// Where a library entry comes from: the seed files or the website (source = 'admin':
+// added by an admin or an advisor)
 export function SourcePill({ source }) {
-  const admin = source === 'admin'
+  const added = source === 'admin'
   return (
-    <span title={admin ? 'Added in the Admin page; editable here' : 'From the seed files (skills_library.csv); edit it there'}
+    <span title={added ? 'Added on the website by an admin or advisor; editable here' : 'From the seed files (skills_library.csv); edit it there'}
       style={{ padding: '2px 8px', borderRadius: '999px', fontSize: '11px', fontWeight: '600',
-        background: admin ? '#ede9fe' : '#f1f5f9', color: admin ? '#6d28d9' : '#475569' }}>
-      {admin ? 'admin' : source || 'seed'}
+        background: added ? '#ede9fe' : '#f1f5f9', color: added ? '#6d28d9' : '#475569' }}>
+      {added ? 'added' : source || 'seed'}
+    </span>
+  )
+}
+
+// Shown instead of Activate / Deactivate on library entries shared with courses the advisor does not manage
+export function SharedNote() {
+  return (
+    <span title="Also used by courses you do not manage; an admin can change it" style={{ fontSize: '11px', color: C.muted, whiteSpace: 'nowrap' }}>
+      Shared · admin only
     </span>
   )
 }

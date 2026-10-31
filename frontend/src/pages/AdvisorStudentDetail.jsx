@@ -8,6 +8,9 @@ import { advisorAPI } from '../api/advisor'
 import { label } from '../utils/labels'
 import EvidenceFiles from '../components/EvidenceFiles'
 import DecisionNotice from '../components/DecisionNotice'
+import DimensionBar from '../components/DimensionBar'
+import { DIMENSIONS } from '../utils/dimensions'
+import { SKILL_CATEGORIES, levelDots } from '../utils/skillCategories'
 import { courseLabel } from '../utils/courses'
 import { experienceTypeLabel, period } from '../utils/experience'
 
@@ -20,16 +23,6 @@ const btn     = (primary) => ({ padding: '8px 14px', fontSize: '13px', fontWeigh
                                 border: primary ? 'none' : `1px solid ${C.line}`, background: primary ? C.blue : '#fff', color: primary ? '#fff' : C.body })
 const small   = (color = C.body) => ({ background: 'none', border: `1px solid ${C.line}`, borderRadius: '6px', padding: '3px 9px', fontSize: '11px', fontWeight: '600', color, cursor: 'pointer' })
 
-const DIMENSIONS = [
-  ['score_technical',     'Technical Skills'],
-  ['score_ai_digital',    'AI / Digital Skills'],
-  ['score_analytical',    'Analytical Skills'],
-  ['score_communication', 'Communication'],
-  ['score_project_exp',   'Project Experience'],
-  ['score_certification', 'Certification'],
-  ['score_industry_exp',  'Industry Experience'],
-]
-const CATEGORIES = [['Technical', 'Technical'], ['AI_Digital', 'AI / Digital'], ['Analytical', 'Analytical'], ['Soft', 'Soft skills']]
 
 const STATUS = {
   strong:     { label: 'Strong',     bg: '#dcfce7', color: C.green },
@@ -350,19 +343,9 @@ export default function AdvisorStudentDetail() {
               <div style={{ fontSize: '12px', color: C.body, marginBottom: '12px' }}>
                 {assessment.role_name || 'Pasted job description'} · {label(assessment.matching_method)} matching · {fmtDate(assessment.created_at)}
               </div>
-              {DIMENSIONS.map(([key, name]) => {
-                const v = num(assessment[key])
-                return (
-                  <div key={key} style={{ marginBottom: '8px' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: C.body, marginBottom: '3px' }}>
-                      <span>{name}</span><span style={{ fontWeight: '600' }}>{v == null ? 'n/a' : `${v}%`}</span>
-                    </div>
-                    <div style={{ height: '6px', background: C.line, borderRadius: '99px', overflow: 'hidden' }}>
-                      <div style={{ height: '100%', width: `${Math.min(v ?? 0, 100)}%`, background: scoreColor(v), borderRadius: '99px' }} />
-                    </div>
-                  </div>
-                )
-              })}
+              {DIMENSIONS.map(dim => (
+                <DimensionBar key={dim.key} dim={dim} value={assessment[dim.key]} skills={skills} colorOf={scoreColor} height={6} />
+              ))}
               <div style={{ marginTop: '12px', paddingTop: '10px', borderTop: '1px solid #f0f1f5', fontSize: '12px', color: C.body }}>
                 {latestReview
                   ? <>Your review: <Pill bg={VERDICT[latestReview.ai_verdict].bg} color={VERDICT[latestReview.ai_verdict].color}>{VERDICT[latestReview.ai_verdict].label}</Pill></>
@@ -421,19 +404,23 @@ export default function AdvisorStudentDetail() {
         {/* Skills by category */}
         <div className="report-card" style={card}>
           <div style={heading}>Skills ({skills.length})</div>
-          {skills.length === 0 ? <div style={muted}>No skills listed.</div> : CATEGORIES.map(([cat, name]) => {
-            const list = skills.filter(s => s.category === cat)
-            if (!list.length) return null
+          {skills.length === 0 ? <div style={muted}>No skills listed.</div> : SKILL_CATEGORIES.map(cat => {
+            const list = skills.filter(s => s.category === cat.id)
             return (
-              <div key={cat} style={{ marginBottom: '10px' }}>
-                <div style={{ fontSize: '11px', fontWeight: '700', color: C.muted, textTransform: 'uppercase', marginBottom: '5px' }}>{name}</div>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-                  {list.map(s => (
-                    <span key={s.skill_name} style={{ fontSize: '12px', padding: '4px 9px', borderRadius: '8px', background: '#f5f6fa', color: C.ink }}>
-                      {s.skill_name} <span style={{ color: C.muted }}>· {label(s.proficiency_level)}</span>
-                    </span>
-                  ))}
+              <div key={cat.id} style={{ marginBottom: '10px' }}>
+                <div style={{ fontSize: '11px', fontWeight: '700', color: cat.color, textTransform: 'uppercase', marginBottom: '5px' }}>
+                  {cat.title} ({list.length})
                 </div>
+                {list.length === 0 ? <div style={{ ...muted, fontSize: '12px' }}>None listed.</div> : (
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                    {list.map(s => (
+                      <span key={s.skill_name} title={label(s.proficiency_level)}
+                        style={{ fontSize: '12px', padding: '4px 9px', borderRadius: '8px', background: cat.bg, border: `1px solid ${cat.border}`, color: C.ink }}>
+                        {s.skill_name} <span style={{ color: cat.color, letterSpacing: '1px' }}>{levelDots(s.proficiency_level)}</span>
+                      </span>
+                    ))}
+                  </div>
+                )}
               </div>
             )
           })}

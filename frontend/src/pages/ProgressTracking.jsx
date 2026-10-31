@@ -4,6 +4,9 @@
 // because readiness for different roles measures different skills.
 // Unfinished activities can be completed or given up from here, so students do
 // not have to find them again among all their recommendations.
+// Reassessment (S2-13-03): "Run again" assesses the student against the same role
+// (or the same pasted job description) with the same method, using the current
+// profile, so the effect of finished activities and new skills shows in the chart.
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
@@ -64,6 +67,7 @@ export default function ProgressTracking() {
   const [busy, setBusy]         = useState(null)   // resource_id while a button's request runs
   // Activity whose "Complete" dialog is open (evidence is required to complete)
   const [completing, setCompleting] = useState(null)
+  const [rerunning, setRerunning]   = useState(false)
   const [loading, setLoading]   = useState(true)
 
   const load = () => Promise.all([assessAPI.history(), progressAPI.getMy()])
@@ -113,6 +117,26 @@ export default function ProgressTracking() {
     }
   }
 
+  // Assess again against the latest assessment's role or job description
+  const runAgain = async (last) => {
+    setRerunning(true)
+    setNotice('')
+    setError('')
+    try {
+      const body = last.role_id ? { role_id: last.role_id } : { jd_id: last.jd_id }
+      const res = await assessAPI.run({ ...body, matching_method: last.matching_method })
+      await load()
+      const before = parseFloat(last.readiness_score)
+      const now = parseFloat(res.data.readiness_score)
+      const diff = Math.round((now - before) * 100) / 100
+      setNotice(`New assessment for ${last.role_name}: ${now}% (${diff > 0 ? '+' : ''}${diff}% since ${fmtDate(last.created_at)}).`)
+    } catch (err) {
+      setError(err.response?.data?.detail || 'Could not run the assessment. Please try again.')
+    } finally {
+      setRerunning(false)
+    }
+  }
+
   const activeActions = (p) => (
     <>
       <button onClick={() => { setNotice(''); setCompleting(p) }} disabled={busy === p.resource_id} style={actionBtn(C.green, '#fff')}>✓ Mark Complete</button>
@@ -153,6 +177,17 @@ export default function ProgressTracking() {
   const doneList  = progress.filter(p => p.status === 'completed')
   const active    = progress.filter(p => p.status !== 'completed')
   const chart     = forRole.map(h => ({ date: fmtDate(h.created_at), score: parseFloat(h.readiness_score), method: h.matching_method }))
+  const last      = forRole.length ? forRole[forRole.length - 1] : null
+  const canRerun  = !!(last && (last.role_id || last.jd_id))
+  // Activities finished after the latest assessment for this role: time to run it again
+  const doneSince = last ? doneList.filter(p => p.completed_at && new Date(p.completed_at) > new Date(last.created_at)) : []
+  const runAgainBtn = (primary) => (
+    <button onClick={() => runAgain(last)} disabled={rerunning}
+      title={`Assess your current profile against ${last?.role_name} again (${last?.matching_method} matching)`}
+      style={actionBtn(primary ? C.blue : '#fff', primary ? '#fff' : C.blue, primary ? C.blue : C.line)}>
+      {rerunning ? 'Assessing…' : '↻ Run again'}
+    </button>
+  )
 
   return (
     <div style={{ padding: '28px 32px' }}>
@@ -167,6 +202,19 @@ export default function ProgressTracking() {
       )}
 
       {notice && <div role="status" style={{ background: '#dcfce7', color: C.green, padding: '10px 12px', borderRadius: '8px', fontSize: '13px', marginBottom: '14px' }}>{notice}</div>}
+
+      {/* Reassessment reminder after finishing activities */}
+      {canRerun && doneSince.length > 0 && (
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px', flexWrap: 'wrap',
+                      background: '#eef3ff', border: '1px solid #cddbfb', borderRadius: '10px', padding: '12px 16px', marginBottom: '16px' }}>
+          <div style={{ fontSize: '13px', color: C.body }}>
+            You completed <b>{doneSince.length}</b> {doneSince.length === 1 ? 'activity' : 'activities'} since your last <b>{last.role_name}</b> assessment
+            ({fmtDate(last.created_at)}). Add any new skills on{' '}
+            <a href="/profile" onClick={e => { e.preventDefault(); navigate('/profile') }} style={{ color: C.blue }}>My Profile</a>, then run it again to see your progress.
+          </div>
+          {runAgainBtn(true)}
+        </div>
+      )}
       {error && <div role="alert" style={{ background: '#fee2e2', color: C.red, padding: '10px 12px', borderRadius: '8px', fontSize: '13px', marginBottom: '14px' }}>{error}</div>}
 
       {/* Stat cards */}
@@ -192,12 +240,15 @@ export default function ProgressTracking() {
       <div style={card}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px', flexWrap: 'wrap', marginBottom: '14px' }}>
           <div style={{ ...heading, marginBottom: 0 }}>Readiness Over Time</div>
-          {roles.length > 1 && (
-            <select aria-label="Role" value={role} onChange={e => setRole(e.target.value)}
-              style={{ padding: '7px 11px', fontSize: '13px', border: `1px solid ${C.line}`, borderRadius: '8px', background: '#fff' }}>
-              {roles.map(r => <option key={r} value={r}>{r}</option>)}
-            </select>
-          )}
+          <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
+            {roles.length > 1 && (
+              <select aria-label="Role" value={role} onChange={e => setRole(e.target.value)}
+                style={{ padding: '7px 11px', fontSize: '13px', border: `1px solid ${C.line}`, borderRadius: '8px', background: '#fff' }}>
+                {roles.map(r => <option key={r} value={r}>{r}</option>)}
+              </select>
+            )}
+            {canRerun && runAgainBtn(false)}
+          </div>
         </div>
         {history.length === 0 ? (
           <div style={muted}>

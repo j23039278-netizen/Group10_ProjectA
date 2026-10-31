@@ -236,11 +236,15 @@ class TestAuth:
 
 # ── Role-based access ────────────────────────────────────────
 class TestRoles:
-    @pytest.mark.parametrize("path", ["/api/admin/users", "/api/admin/audit-log", "/api/admin/skills",
-                                      "/api/admin/resources"])
+    @pytest.mark.parametrize("path", ["/api/admin/users", "/api/admin/audit-log"])
     def test_admin_api_needs_admin(self, env, alice, advisor, path):
         assert env["client"].get(path, headers=alice).status_code == 403
         assert env["client"].get(path, headers=advisor).status_code == 403
+
+    @pytest.mark.parametrize("path", ["/api/library/skills", "/api/library/roles", "/api/library/resources"])
+    def test_library_needs_staff(self, env, alice, advisor, path):
+        assert env["client"].get(path, headers=alice).status_code == 403
+        assert env["client"].get(path, headers=advisor).status_code == 200
 
     def test_advisor_api_needs_staff(self, env, alice, advisor):
         assert env["client"].get("/api/advisor/cohort/overview", headers=alice).status_code == 403
@@ -281,6 +285,11 @@ class TestAssessment:
         run(env, alice, role_id=env["da"])
         h = env["client"].get("/api/assessments/my/history", headers=alice).json()[0]
         assert {"score_technical", "score_project_exp", "score_certification"} <= set(h)
+        # "Run again" on the Progress page reuses the role (or JD) and method of the latest assessment
+        assert h["role_id"] == str(env["da"]) and h["jd_id"] is None
+        again = run(env, alice, role_id=h["role_id"], matching_method=h["matching_method"])
+        assert again.status_code == 201
+        assert env["client"].get("/api/assessments/my/history", headers=alice).json()[0]["assessment_id"] == again.json()["assessment_id"]
 
     def test_unknown_method_is_400(self, env, alice):
         assert run(env, alice, role_id=env["da"], matching_method="spacy_ner").status_code == 400
@@ -421,23 +430,23 @@ class TestAdmin:
     def test_seed_skill_locked_admin_skill_editable(self, env, admin):
         c = env["client"]
         excel = env["conn"].execute("SELECT skill_id::text FROM skills_library WHERE skill_name='Excel'").fetchone()[0]
-        assert c.patch(f"/api/admin/skills/{excel}", json={"description": "x"}, headers=admin).status_code == 400
-        new = c.post("/api/admin/skills", headers=admin, json={"skill_name": "Quantum Computing", "category": "AI_Digital",
+        assert c.patch(f"/api/library/skills/{excel}", json={"description": "x"}, headers=admin).status_code == 400
+        new = c.post("/api/library/skills", headers=admin, json={"skill_name": "Quantum Computing", "category": "AI_Digital",
                                                                "aliases": ["qc", "QC"]})
         assert new.status_code == 201 and new.json()["source"] == "admin" and new.json()["aliases"] == ["qc"]
-        upd = c.patch(f"/api/admin/skills/{new.json()['skill_id']}", json={"description": "Qubits"}, headers=admin)
+        upd = c.patch(f"/api/library/skills/{new.json()['skill_id']}", json={"description": "Qubits"}, headers=admin)
         assert upd.status_code == 200 and upd.json()["description"] == "Qubits"
 
     def test_admin_role_with_skills_can_be_assessed(self, env, admin, alice):
         c = env["client"]
-        rid = c.post("/api/admin/roles", headers=admin, json={"role_name": "BI Developer"}).json()["role_id"]
+        rid = c.post("/api/library/roles", headers=admin, json={"role_name": "BI Developer"}).json()["role_id"]
         sids = [r[0] for r in env["conn"].execute(
             "SELECT skill_id::text FROM skills_library WHERE skill_name IN ('SQL','Power BI','Communication')").fetchall()]
-        r = c.put(f"/api/admin/roles/{rid}/skills", headers=admin,
+        r = c.put(f"/api/library/roles/{rid}/skills", headers=admin,
                   json=[{"skill_id": s, "importance": "required"} for s in sids])
         assert r.status_code == 200 and len(r.json()["skills"]) == 3
         assert run(env, alice, role_id=rid).json()["skill_summary"]["total"] == 3
-        assert c.put(f"/api/admin/roles/{env['da']}/skills", headers=admin, json=[]).status_code == 400
+        assert c.put(f"/api/library/roles/{env['da']}/skills", headers=admin, json=[]).status_code == 400
 
     def test_audit_log_records_events(self, env, admin, advisor):
         c = env["client"]
@@ -456,26 +465,26 @@ class TestAdmin:
 
     def test_seed_resource_locked_admin_resource_editable(self, env, admin):
         c = env["client"]
-        listed = c.get("/api/admin/resources", headers=admin)
+        listed = c.get("/api/library/resources", headers=admin)
         assert listed.status_code == 200 and len(listed.json()) > 0
         seed = next(r for r in listed.json() if r["source"] == "seed")
-        assert c.patch(f"/api/admin/resources/{seed['resource_id']}", json={"cost": "$1"}, headers=admin).status_code == 400
+        assert c.patch(f"/api/library/resources/{seed['resource_id']}", json={"cost": "$1"}, headers=admin).status_code == 400
 
         tableau = env["conn"].execute("SELECT skill_id::text FROM skills_library WHERE skill_name='Tableau'").fetchone()[0]
         body = {"skill_id": tableau, "resource_title": "Tableau Dashboards 101", "resource_type": "course",
                 "provider": "Tableau", "url": "https://www.tableau.com/learn", "duration_hours": 6}
-        new = c.post("/api/admin/resources", headers=admin, json=body)
+        new = c.post("/api/library/resources", headers=admin, json=body)
         assert new.status_code == 201 and new.json()["source"] == "admin" and new.json()["skill_name"] == "Tableau"
-        assert c.post("/api/admin/resources", headers=admin, json=body).status_code == 400   # same title, same skill
+        assert c.post("/api/library/resources", headers=admin, json=body).status_code == 400   # same title, same skill
         rid = new.json()["resource_id"]
-        upd = c.patch(f"/api/admin/resources/{rid}", headers=admin, json={"difficulty": "intermediate", "cost": "$20"})
+        upd = c.patch(f"/api/library/resources/{rid}", headers=admin, json={"difficulty": "intermediate", "cost": "$20"})
         assert upd.status_code == 200 and upd.json()["difficulty"] == "intermediate" and upd.json()["cost"] == "$20"
-        assert c.patch(f"/api/admin/resources/{rid}", headers=admin, json={"resource_type": None}).status_code == 400
+        assert c.patch(f"/api/library/resources/{rid}", headers=admin, json={"resource_type": None}).status_code == 400
 
         # Deactivating any resource (seed ones too) stops it being recommended
-        off = c.patch(f"/api/admin/resources/{seed['resource_id']}", json={"is_active": False}, headers=admin)
+        off = c.patch(f"/api/library/resources/{seed['resource_id']}", json={"is_active": False}, headers=admin)
         assert off.status_code == 200 and off.json()["is_active"] is False
-        assert c.patch(f"/api/admin/resources/{seed['resource_id']}", json={"is_active": True}, headers=admin).status_code == 200
+        assert c.patch(f"/api/library/resources/{seed['resource_id']}", json={"is_active": True}, headers=admin).status_code == 200
         actions = {r[0] for r in env["conn"].execute("SELECT DISTINCT action FROM audit_log").fetchall()}
         assert {"admin.resource_create", "admin.resource_update"} <= actions
 
@@ -907,10 +916,10 @@ class TestRolesByCourse:
                             "('BUSINESS_ANALYST', 'MARKETING_EXEC', 'FINANCIAL_ANALYST', 'HR_EXEC')").fetchall()
         assert len(rows) == 4 and {s for _, s in rows} == {"seed"}
         rid = rows[0][0]
-        assert c.put(f"/api/admin/roles/{rid}/skills", headers=admin, json=[]).status_code == 400
-        assert c.patch(f"/api/admin/roles/{rid}", headers=admin, json={"description": "x"}).status_code == 400
-        assert c.patch(f"/api/admin/roles/{rid}", headers=admin, json={"is_active": False}).status_code == 200
-        assert c.patch(f"/api/admin/roles/{rid}", headers=admin, json={"is_active": True}).status_code == 200
+        assert c.put(f"/api/library/roles/{rid}/skills", headers=admin, json=[]).status_code == 400
+        assert c.patch(f"/api/library/roles/{rid}", headers=admin, json={"description": "x"}).status_code == 400
+        assert c.patch(f"/api/library/roles/{rid}", headers=admin, json={"is_active": False}).status_code == 200
+        assert c.patch(f"/api/library/roles/{rid}", headers=admin, json={"is_active": True}).status_code == 200
 
     def test_business_recommendations(self, env):
         """Business gaps get Business learning resources (seed_business_skills.sql)"""
@@ -951,16 +960,16 @@ class TestRolesByCourse:
     def test_admin_role_courses(self, env, admin):
         c = env["client"]
         body = {"role_name": "Retail Manager", "courses": ["BUSINESS"]}
-        new = c.post("/api/admin/roles", headers=admin, json=body)
+        new = c.post("/api/library/roles", headers=admin, json=body)
         assert new.status_code == 201 and new.json()["courses"] == ["BUSINESS"]
         rid = new.json()["role_id"]
         assert "Retail Manager" in {r["role_name"] for r in c.get("/api/jobs/roles?course=BUSINESS").json()}
-        upd = c.patch(f"/api/admin/roles/{rid}", headers=admin, json={"courses": ["ICT", "BUSINESS", "ICT"]})
+        upd = c.patch(f"/api/library/roles/{rid}", headers=admin, json={"courses": ["ICT", "BUSINESS", "ICT"]})
         assert upd.status_code == 200 and upd.json()["courses"] == ["BUSINESS", "ICT"]
-        assert c.patch(f"/api/admin/roles/{rid}", headers=admin, json={"courses": []}).status_code == 422
-        assert c.patch(f"/api/admin/roles/{rid}", headers=admin, json={"courses": ["LAW"]}).status_code == 422
+        assert c.patch(f"/api/library/roles/{rid}", headers=admin, json={"courses": []}).status_code == 422
+        assert c.patch(f"/api/library/roles/{rid}", headers=admin, json={"courses": ["LAW"]}).status_code == 422
         # Without courses a new role is for Computer Science students
-        cs = c.post("/api/admin/roles", headers=admin, json={"role_name": "Game Developer"})
+        cs = c.post("/api/library/roles", headers=admin, json={"role_name": "Game Developer"})
         assert cs.json()["courses"] == ["CS"]
 
 
@@ -1188,18 +1197,18 @@ class TestSkillsAndProgrammes:
         biz = course_student(env, "gina@student.newinti.edu.my", "Gina", "BUSINESS")
         cs = course_student(env, "hari@student.newinti.edu.my", "Hari", "CS")
         names = lambda h: {s["skill_name"] for s in c.get("/api/students/skills-library", headers=h).json()}
-        new = c.post("/api/admin/skills", headers=admin, json={"skill_name": "Retail Operations", "category": "Technical",
+        new = c.post("/api/library/skills", headers=admin, json={"skill_name": "Retail Operations", "category": "Technical",
                                                                "courses": ["BUSINESS"]})
         assert new.status_code == 201 and new.json()["courses"] == ["BUSINESS"]
         assert "Retail Operations" in names(biz) and "Retail Operations" not in names(cs)
-        upd = c.patch(f"/api/admin/skills/{new.json()['skill_id']}", headers=admin, json={"courses": ["ICT", "CS"]})
+        upd = c.patch(f"/api/library/skills/{new.json()['skill_id']}", headers=admin, json={"courses": ["ICT", "CS"]})
         assert upd.status_code == 200 and upd.json()["courses"] == ["CS", "ICT"]
         assert "Retail Operations" in names(cs) and "Retail Operations" not in names(biz)
-        assert c.patch(f"/api/admin/skills/{new.json()['skill_id']}", headers=admin, json={"courses": []}).status_code == 422
-        listed = {s["skill_name"]: s for s in c.get("/api/admin/skills", headers=admin).json()}
+        assert c.patch(f"/api/library/skills/{new.json()['skill_id']}", headers=admin, json={"courses": []}).status_code == 422
+        listed = {s["skill_name"]: s for s in c.get("/api/library/skills", headers=admin).json()}
         assert listed["Docker"]["courses"] == ["CS", "ICT"] and listed["Payroll"]["courses"] == ["BUSINESS"]
         # Without courses an admin skill is for every course
-        every = c.post("/api/admin/skills", headers=admin, json={"skill_name": "Public Speaking Club", "category": "Soft"})
+        every = c.post("/api/library/skills", headers=admin, json={"skill_name": "Public Speaking Club", "category": "Soft"})
         assert every.json()["courses"] == ["BUSINESS", "CS", "ICT"]
 
     def test_programmes_and_admin_change(self, env, admin, advisor):
@@ -1364,6 +1373,21 @@ class TestAdvisorFeatures:
         da = c.get(f"/api/advisor/cohort/skill-gaps?role_id={env['da']}", headers=advisor)
         assert da.status_code == 200 and len(da.json()) > 0
         assert c.get("/api/advisor/cohort/skill-gaps?role_id=nope", headers=advisor).status_code == 400
+        # Skill gaps by programme and by category (soft skills), and the category summary
+        programme = env["conn"].execute("SELECT sp.programme FROM student_profiles sp JOIN users u USING (user_id) "
+                                        "WHERE u.email = 'alice@student.newinti.edu.my'").fetchone()[0]
+        mine = c.get("/api/advisor/cohort/skill-gaps", headers=advisor, params={"programme": programme}).json()
+        assert len(mine) > 0
+        assert c.get("/api/advisor/cohort/skill-gaps", headers=advisor, params={"programme": "No Such Major"}).json() == []
+        soft = c.get("/api/advisor/cohort/skill-gaps?category=Soft", headers=advisor).json()
+        assert soft and {g["category"] for g in soft} == {"Soft"}
+        assert c.get("/api/advisor/cohort/skill-gaps?category=Nope", headers=advisor).status_code == 400
+        cats = c.get("/api/advisor/cohort/skill-categories", headers=advisor).json()
+        assert [x["category"] for x in cats] == ["Technical", "AI_Digital", "Analytical", "Soft"]
+        assert all(x["strong_count"] + x["developing_count"] + x["gap_count"] == x["total"] for x in cats)
+        empty = c.get("/api/advisor/cohort/skill-categories", headers=advisor, params={"programme": "No Such Major"}).json()
+        assert all(x["total"] == 0 and x["gap_percentage"] is None for x in empty)
+        assert c.get("/api/advisor/reports/skill-gap-summary", headers=advisor).status_code == 200
         # Student list columns used for sorting and filtering
         row = next(s for s in c.get("/api/advisor/students", headers=advisor).json() if s["full_name"] == "Alice")
         assert {"activities_completed", "note_count", "cgpa", "year_of_study", "profile_complete"} <= set(row)
@@ -1666,3 +1690,52 @@ def test_assessment_service_matches_endpoint(env, alice):
     via_api = run(env, alice, role_id=env["da"]).json()
     assert direct["readiness_score"] == via_api["readiness_score"]
     assert [m["match_status"] for m in direct["match_results"]] == [m["match_status"] for m in via_api["match_results"]]
+
+
+class TestLibraryForAdvisors:
+    """Advisors manage the skills, roles and resources of their own courses (routers/library.py)"""
+
+    def test_scope_of_a_head_of_programme(self, env, admin):
+        c, conn = env["client"], env["conn"]
+        hop = staff_account(env, "lib.hop.cs@advisor.newinti.edu.my", "Library HOP", "hop", ["CS"])
+        shared = conn.execute("SELECT skill_id FROM skills_library WHERE skill_name = 'Communication'").fetchone()[0]
+        biz_only = conn.execute("SELECT skill_id FROM skills_library WHERE courses = '{BUSINESS}' LIMIT 1").fetchone()[0]
+
+        rows = {s["skill_id"]: s for s in c.get("/api/library/skills", headers=hop).json()}
+        assert rows[str(shared)]["can_edit"] is False                     # used by every course
+        assert c.patch(f"/api/library/skills/{shared}", headers=hop, json={"is_active": False}).status_code == 403
+        assert c.get("/api/library/skills", headers=admin).json()[0]["can_edit"] is True
+
+        # Skills: only for CS
+        assert c.post("/api/library/skills", headers=hop,
+                      json={"skill_name": "Lib Skill Mixed", "category": "Technical", "courses": ["CS", "BUSINESS"]}).status_code == 403
+        r = c.post("/api/library/skills", headers=hop,
+                   json={"skill_name": "Lib Skill CS", "category": "Technical", "courses": ["CS"]})
+        assert r.status_code == 201
+        sid = r.json()["skill_id"]
+        assert c.patch(f"/api/library/skills/{sid}", headers=hop, json={"description": "Edited"}).status_code == 200
+        assert c.patch(f"/api/library/skills/{sid}", headers=hop, json={"courses": ["CS", "ICT"]}).status_code == 403
+
+        # Roles: CS only; a Business role is read-only for this advisor
+        r = c.post("/api/library/roles", headers=hop, json={"role_name": "Lib Role CS", "courses": ["CS"]})
+        assert r.status_code == 201
+        rid = r.json()["role_id"]
+        assert c.put(f"/api/library/roles/{rid}/skills", headers=hop,
+                     json=[{"skill_id": sid, "importance": "required"}]).status_code == 200
+        biz_role = conn.execute("SELECT role_id FROM job_roles WHERE courses = '{BUSINESS}' LIMIT 1").fetchone()[0]
+        assert c.patch(f"/api/library/roles/{biz_role}", headers=hop, json={"is_active": False}).status_code == 403
+        assert c.get(f"/api/library/roles/{biz_role}/skills", headers=hop).json()["role"]["can_edit"] is False
+
+        # Resources: added for a skill CS students see; editable by whoever added it
+        body = {"skill_id": str(shared), "resource_title": "Lib Talk Club", "url": "https://example.com/talk"}
+        r = c.post("/api/library/resources", headers=hop, json=body)
+        assert r.status_code == 201
+        res_id = r.json()["resource_id"]
+        assert c.patch(f"/api/library/resources/{res_id}", headers=hop, json={"is_active": False}).status_code == 200
+        seed_res = conn.execute("SELECT resource_id FROM recommendations_library WHERE skill_id = %s AND source = 'seed' "
+                                "LIMIT 1", (shared,)).fetchone()[0]
+        assert c.patch(f"/api/library/resources/{seed_res}", headers=hop, json={"is_active": False}).status_code == 403
+        assert c.post("/api/library/resources", headers=hop,
+                      json={**body, "skill_id": str(biz_only), "resource_title": "Lib Biz"}).status_code == 403
+        listed = {x["resource_id"]: x for x in c.get("/api/library/resources", headers=hop).json()}
+        assert listed[res_id]["can_edit"] is True and listed[str(seed_res)]["can_edit"] is False

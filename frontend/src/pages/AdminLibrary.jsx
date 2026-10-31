@@ -1,13 +1,15 @@
-// SEAGAS — Admin: Skills & Role Library
-// Lists every skill and job role template. Admins can add skills and roles, edit
-// the ones they added, and switch any of them on or off. The 138 skills and 6
-// roles from data/skills/skills_library.csv and the seed files are maintained
-// there (start_backend.bat re-applies the seeds), so they are only switched on/off here.
+// SEAGAS — Skills & Role Library (admin and advisor portals)
+// Lists every skill and job role template. Staff can add skills and roles, edit the
+// ones added on the website, and switch them on or off. Admins manage every entry;
+// advisors only the entries whose courses are all theirs (can_edit from routers/library.py).
+// The skills and roles from data/skills/skills_library.csv and the seed files are
+// maintained there (start_backend.bat re-applies the seeds), so they are only switched on/off here.
 import { useState, useEffect } from 'react'
-import { adminAPI } from '../api/admin'
+import { authAPI } from '../api/client'
+import { libraryAPI } from '../api/library'
 import { label as labelText } from '../utils/labels'
 import { C, card, th, td, input, label, btn, smallBtn, heading, errorText } from './admin/adminStyles'
-import { Modal, Alert, StatusPill, SourcePill } from './admin/AdminUi'
+import { Modal, Alert, StatusPill, SourcePill, SharedNote } from './admin/AdminUi'
 import { COURSES, coursesText } from '../utils/courses'
 
 const CATEGORIES = [
@@ -21,13 +23,13 @@ const LEVELS = ['entry', 'junior', 'mid', 'senior']
 const IMPORTANCE = ['required', 'preferred', 'bonus']
 const select = { ...input, width: 'auto' }
 
-// Course checkboxes (at least one), kept in the COURSES order
-function CoursesField({ value, onChange, legend }) {
+// Course checkboxes (at least one), kept in the COURSES order; only the courses the user manages
+function CoursesField({ value, onChange, legend, allowed }) {
   return (
     <fieldset style={{ border: 'none', padding: 0, margin: '0 0 12px' }}>
       <legend style={label}>{legend}</legend>
       <div style={{ display: 'flex', gap: '6px 16px', flexWrap: 'wrap' }}>
-        {COURSES.map(c => (
+        {COURSES.filter(c => allowed.includes(c.id)).map(c => (
           <label key={c.id} style={{ fontSize: '13px', color: C.body, display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}>
             <input type="checkbox" checked={value.includes(c.id)}
               onChange={e => onChange(e.target.checked
@@ -42,13 +44,13 @@ function CoursesField({ value, onChange, legend }) {
 }
 
 // ── Add / edit a skill ───────────────────────────────────────
-function SkillModal({ skill, onClose, onSaved }) {
+function SkillModal({ skill, allowed, onClose, onSaved }) {
   const editing = !!skill
   const [form, setForm] = useState({
     skill_name: skill?.skill_name || '', category: skill?.category || 'Technical',
     subcategory: skill?.subcategory || '', aliases: (skill?.aliases || []).join(', '),
     description: skill?.description || '',
-    courses: skill?.courses || COURSES.map(c => c.id),
+    courses: skill?.courses || allowed,
   })
   const [error, setError]   = useState('')
   const [saving, setSaving] = useState(false)
@@ -68,8 +70,8 @@ function SkillModal({ skill, onClose, onSaved }) {
     setError('')
     try {
       const res = editing
-        ? await adminAPI.updateSkill(skill.skill_id, body)
-        : await adminAPI.createSkill({ ...body, skill_name: form.skill_name.trim() })
+        ? await libraryAPI.updateSkill(skill.skill_id, body)
+        : await libraryAPI.createSkill({ ...body, skill_name: form.skill_name.trim() })
       onSaved(res.data, editing)
     } catch (err) {
       setError(errorText(err, 'Could not save the skill.'))
@@ -106,7 +108,7 @@ function SkillModal({ skill, onClose, onSaved }) {
             Other names for the same skill. The NLP uses them to find this skill in job descriptions.
           </div>
         </div>
-        <CoursesField legend="Courses (students of these courses see this skill)" value={form.courses}
+        <CoursesField legend="Courses (students of these courses see this skill)" value={form.courses} allowed={allowed}
           onChange={courses => setForm(f => ({ ...f, courses }))} />
         <div style={{ marginBottom: '18px' }}>
           <label style={label} htmlFor="sk-desc">Description</label>
@@ -122,12 +124,12 @@ function SkillModal({ skill, onClose, onSaved }) {
 }
 
 // ── Add / edit a role's details ──────────────────────────────
-function RoleModal({ role, onClose, onSaved }) {
+function RoleModal({ role, allowed, onClose, onSaved }) {
   const editing = !!role
   const [form, setForm] = useState({
     role_name: role?.role_name || '', industry_level: role?.industry_level || 'junior',
     description: role?.description || '',
-    courses: role?.courses || ['CS'],
+    courses: role?.courses || allowed.slice(0, 1),
   })
   const [error, setError]   = useState('')
   const [saving, setSaving] = useState(false)
@@ -142,7 +144,7 @@ function RoleModal({ role, onClose, onSaved }) {
     setSaving(true)
     setError('')
     try {
-      const res = editing ? await adminAPI.updateRole(role.role_id, body) : await adminAPI.createRole(body)
+      const res = editing ? await libraryAPI.updateRole(role.role_id, body) : await libraryAPI.createRole(body)
       onSaved(res.data, editing)
     } catch (err) {
       setError(errorText(err, 'Could not save the role.'))
@@ -164,7 +166,7 @@ function RoleModal({ role, onClose, onSaved }) {
             {LEVELS.map(l => <option key={l} value={l}>{labelText(l)}</option>)}
           </select>
         </div>
-        <CoursesField legend="Courses (students of these courses can choose this role)" value={form.courses}
+        <CoursesField legend="Courses (students of these courses can choose this role)" value={form.courses} allowed={allowed}
           onChange={courses => setForm(f => ({ ...f, courses }))} />
         <div style={{ marginBottom: '18px' }}>
           <label style={label} htmlFor="ro-desc">Description</label>
@@ -186,14 +188,14 @@ function RoleModal({ role, onClose, onSaved }) {
 
 // ── A role's required skills ─────────────────────────────────
 function RoleSkillsModal({ role, allSkills, onClose, onSaved }) {
-  const editable = role.source === 'admin'
+  const editable = role.source === 'admin' && role.can_edit
   const [rows, setRows]     = useState(null)
   const [pick, setPick]     = useState('')
   const [error, setError]   = useState('')
   const [saving, setSaving] = useState(false)
 
   useEffect(() => {
-    adminAPI.roleSkills(role.role_id)
+    libraryAPI.roleSkills(role.role_id)
       .then(r => setRows(r.data.skills.map(s => ({ skill_id: s.skill_id, skill_name: s.skill_name, importance: s.importance }))))
       .catch(err => { setError(errorText(err, 'Could not load the skills.')); setRows([]) })
   }, [role.role_id])
@@ -212,7 +214,7 @@ function RoleSkillsModal({ role, allSkills, onClose, onSaved }) {
     setSaving(true)
     setError('')
     try {
-      await adminAPI.setRoleSkills(role.role_id, rows.map(r => ({ skill_id: r.skill_id, importance: r.importance })))
+      await libraryAPI.setRoleSkills(role.role_id, rows.map(r => ({ skill_id: r.skill_id, importance: r.importance })))
       onSaved()
     } catch (err) {
       setError(errorText(err, 'Could not save the skills.'))
@@ -225,7 +227,9 @@ function RoleSkillsModal({ role, allSkills, onClose, onSaved }) {
       {error && <Alert>{error}</Alert>}
       {!editable && (
         <div style={{ fontSize: '12px', color: C.muted, background: '#f5f6fa', padding: '10px 12px', borderRadius: '8px', marginBottom: '14px' }}>
-          This role comes from the seed files (database/seed_job_role_skills.sql), so its skills are changed there, not here.
+          {role.source !== 'admin'
+            ? 'This role comes from the seed files (database/seed_job_role_skills.sql), so its skills are changed there, not here.'
+            : 'This role is also offered to courses you do not manage, so only an admin can change its skills.'}
         </div>
       )}
       {rows === null ? (
@@ -272,6 +276,8 @@ function RoleSkillsModal({ role, allSkills, onClose, onSaved }) {
 
 // ── Page ─────────────────────────────────────────────────────
 export default function AdminLibrary() {
+  const [myCourses, setMyCourses] = useState([])     // courses the user manages (every course for admins)
+  const [isAdmin, setIsAdmin]     = useState(false)
   const [skills, setSkills]       = useState([])
   const [roles, setRoles]         = useState([])
   const [search, setSearch]       = useState('')
@@ -286,12 +292,15 @@ export default function AdminLibrary() {
   const [roleSkills, setRoleSkills] = useState(null)   // role whose skills are open
   const [busy, setBusy]           = useState(null)
 
-  const load = () => Promise.all([adminAPI.skills(), adminAPI.roles()])
+  const load = () => Promise.all([libraryAPI.skills(), libraryAPI.roles()])
     .then(([s, r]) => { setSkills(s.data); setRoles(r.data); setError('') })
     .catch(err => setError(errorText(err, 'Could not load the library.')))
     .finally(() => setLoading(false))
 
-  useEffect(() => { load() }, [])
+  useEffect(() => {
+    authAPI.me().then(r => { setMyCourses(r.data.advisor_courses || []); setIsAdmin(r.data.role === 'admin') }).catch(() => {})
+    load()
+  }, [])
 
   const toggle = async (kind, item) => {
     const id = kind === 'skill' ? item.skill_id : item.role_id
@@ -299,8 +308,8 @@ export default function AdminLibrary() {
     setBusy(id)
     setNotice('')
     try {
-      await (kind === 'skill' ? adminAPI.updateSkill(id, { is_active: !item.is_active })
-                              : adminAPI.updateRole(id, { is_active: !item.is_active }))
+      await (kind === 'skill' ? libraryAPI.updateSkill(id, { is_active: !item.is_active })
+                              : libraryAPI.updateRole(id, { is_active: !item.is_active }))
       setNotice(`${name} is now ${item.is_active ? 'inactive: students no longer see it' : 'active'}.`)
       await load()
     } catch (err) {
@@ -331,8 +340,9 @@ export default function AdminLibrary() {
         <div style={{ fontSize: '26px', fontWeight: '700', color: C.ink }}>Skills &amp; Role Library</div>
         <div style={{ fontSize: '13px', color: C.body, marginTop: '4px', maxWidth: '760px' }}>
           {activeSkills} active skills and {roles.filter(r => r.is_active).length} active job roles.
-          Entries marked <SourcePill source="admin" /> were added here and can be edited.
+          Entries marked <SourcePill source="admin" /> were added on the website and can be edited.
           Seed entries come from data/skills/skills_library.csv and the seed files: edit those there; here they can only be switched on or off.
+          {!isAdmin && <> You can change the entries of your courses ({coursesText(myCourses)}); entries shared with other courses are changed by an admin.</>}
         </div>
       </div>
 
@@ -379,12 +389,14 @@ export default function AdminLibrary() {
                   <td style={td}><StatusPill active={r.is_active} /></td>
                   <td style={{ ...td, textAlign: 'right', whiteSpace: 'nowrap' }}>
                     <button style={{ ...smallBtn(), marginRight: '6px' }} onClick={() => { setNotice(''); setRoleSkills(r) }}>Skills</button>
-                    {r.source === 'admin' && (
+                    {r.source === 'admin' && r.can_edit && (
                       <button style={{ ...smallBtn(), marginRight: '6px' }} onClick={() => { setNotice(''); setRoleModal(r) }}>Edit</button>
                     )}
-                    <button style={smallBtn(r.is_active ? 'danger' : 'secondary')} disabled={busy === r.role_id} onClick={() => toggle('role', r)}>
-                      {r.is_active ? 'Deactivate' : 'Activate'}
-                    </button>
+                    {r.can_edit ? (
+                      <button style={smallBtn(r.is_active ? 'danger' : 'secondary')} disabled={busy === r.role_id} onClick={() => toggle('role', r)}>
+                        {r.is_active ? 'Deactivate' : 'Activate'}
+                      </button>
+                    ) : <SharedNote />}
                   </td>
                 </tr>
               ))}
@@ -428,12 +440,14 @@ export default function AdminLibrary() {
                   <td style={td}><SourcePill source={s.source} /></td>
                   <td style={td}><StatusPill active={s.is_active} /></td>
                   <td style={{ ...td, textAlign: 'right', whiteSpace: 'nowrap' }}>
-                    {s.source === 'admin' && (
+                    {s.source === 'admin' && s.can_edit && (
                       <button style={{ ...smallBtn(), marginRight: '6px' }} onClick={() => { setNotice(''); setSkillModal(s) }}>Edit</button>
                     )}
-                    <button style={smallBtn(s.is_active ? 'danger' : 'secondary')} disabled={busy === s.skill_id} onClick={() => toggle('skill', s)}>
-                      {s.is_active ? 'Deactivate' : 'Activate'}
-                    </button>
+                    {s.can_edit ? (
+                      <button style={smallBtn(s.is_active ? 'danger' : 'secondary')} disabled={busy === s.skill_id} onClick={() => toggle('skill', s)}>
+                        {s.is_active ? 'Deactivate' : 'Activate'}
+                      </button>
+                    ) : <SharedNote />}
                   </td>
                 </tr>
               ))}
@@ -443,11 +457,11 @@ export default function AdminLibrary() {
       </div>
 
       {skillModal && (
-        <SkillModal skill={skillModal === 'new' ? null : skillModal} onClose={() => setSkillModal(null)}
+        <SkillModal skill={skillModal === 'new' ? null : skillModal} allowed={myCourses} onClose={() => setSkillModal(null)}
           onSaved={(s, edited) => { setSkillModal(null); setNotice(`${s.skill_name} ${edited ? 'saved' : 'added'}.`); load() }} />
       )}
       {roleModal && (
-        <RoleModal role={roleModal === 'new' ? null : roleModal} onClose={() => setRoleModal(null)}
+        <RoleModal role={roleModal === 'new' ? null : roleModal} allowed={myCourses} onClose={() => setRoleModal(null)}
           onSaved={(r, edited) => {
             setRoleModal(null)
             setNotice(edited ? `${r.role_name} saved.` : `${r.role_name} added. Use Skills to choose its required skills.`)

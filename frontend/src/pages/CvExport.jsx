@@ -5,15 +5,9 @@ import { useNavigate } from 'react-router-dom'
 import { authAPI, studentAPI, progressAPI, experienceAPI } from '../api/client'
 import { experienceTypeLabel, period } from '../utils/experience'
 import { courseLabel } from '../utils/courses'
+import { SKILL_CATEGORIES, levelDots } from '../utils/skillCategories'
 
-const CATEGORIES = [
-  { id: 'Technical',  title: 'Technical skills' },
-  { id: 'AI_Digital', title: 'AI & digital skills' },
-  { id: 'Analytical', title: 'Analytical skills' },
-  { id: 'Soft',       title: 'Soft skills' },
-]
 const LEVEL = { beginner: 'Beginner', intermediate: 'Intermediate', advanced: 'Advanced' }
-const LEVEL_DOTS = { beginner: 1, intermediate: 2, advanced: 3 }
 const fmtDate = (d) => d ? new Date(d).toLocaleDateString('en-GB', { month: 'short', year: 'numeric' }) : ''
 const cap = (s) => s ? s[0].toUpperCase() + s.slice(1) : ''
 
@@ -97,20 +91,18 @@ export default function CvExport() {
         {/* Skills by category */}
         <div className="cv-section">
           <div style={h2}>Skills</div>
-          {skills.length === 0 ? <div style={small}>No skills added yet.</div> : CATEGORIES.map(cat => {
+          {skills.length === 0 ? <div style={small}>No skills added yet.</div> : SKILL_CATEGORIES.map(cat => {
             const list = skills.filter(s => s.category === cat.id)
             if (!list.length) return null
             return (
               <div key={cat.id} style={{ marginBottom: '8px' }}>
-                <div style={{ fontSize: '12px', fontWeight: '700', color: '#4a5168', marginBottom: '4px' }}>{cat.title}</div>
+                <div style={{ fontSize: '12px', fontWeight: '700', color: cat.color, marginBottom: '4px' }}>{cat.title}</div>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
                   {list.map(s => (
                     <span key={s.skill_id} title={LEVEL[s.proficiency_level]}
-                      style={{ fontSize: '12px', padding: '3px 9px', borderRadius: '999px', border: '1px solid #dbe3fb', background: '#f5f8ff' }}>
+                      style={{ fontSize: '12px', padding: '3px 9px', borderRadius: '999px', border: `1px solid ${cat.border}`, background: cat.bg }}>
                       {s.skill_name}{' '}
-                      <span style={{ color: '#2d5be3', letterSpacing: '1px' }}>
-                        {'●'.repeat(LEVEL_DOTS[s.proficiency_level] || 2)}{'○'.repeat(3 - (LEVEL_DOTS[s.proficiency_level] || 2))}
-                      </span>
+                      <span style={{ color: cat.color, letterSpacing: '1px' }}>{levelDots(s.proficiency_level)}</span>
                     </span>
                   ))}
                 </div>

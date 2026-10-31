@@ -60,7 +60,8 @@ Group10_ProjectA/
 ```
 
 Key documents: `docs/NLP_INTERFACE.md` (backend ↔ NLP contract), `docs/NLP_CLASSIFICATION_RULES.md`
-(how Strong / Developing / Gap is decided), `database/README.md` (tables).
+(how Strong / Developing / Gap is decided), `docs/JOB_READINESS_SCORE.md` (the readiness formula,
+why it was chosen, sensitivity analysis), `database/README.md` (tables).
 
 ---
 
@@ -173,12 +174,26 @@ stay in `backend/.env`, never in git. Stored emails can be resent from Student I
 (a temporary password is not resent once the person has chosen their own).
 
 **Advisor dashboard.** Tabs: Overview (readiness distribution, student status, top skill gaps,
-target roles, learning activity), Skill Gaps (filter by assessed job role), Students (search, filters,
-sortable columns) and Learning Progress (most completed resources, activity per student); every table
-exports as CSV. A student's page adds the CV download, a printable report and **advisor notes**:
+target roles, learning activity), Skill Gaps (filter by programme and assessed job role; a card per
+skill category, Soft skills included, shows how strong the cohort is and filters the list to that
+category), Students (search, filters, sortable columns) and Learning Progress (most completed
+resources, activity per student); every table exports as CSV. A student's page adds the CV download, a printable report and **advisor notes**:
 general notes and reviews of the latest AI result (agree / disagree with a reason), seen by staff of
 the course only, never by the student. The pages remind advisors that scores are decision support.
 Students below 40% readiness are shown as "Needs Support".
+
+**Skills library for advisors.** Advisors also have **Skills & Roles** and **Learning Resources**
+(`/api/library`, `routers/library.py`). They add skills and roles for their own courses and change
+the entries whose courses are all theirs; they add resources for any skill their students see and
+change the ones they added. Entries shared with other courses (for example the soft skills) stay
+with admins, so one course cannot switch them off for another. Admins manage everything.
+
+**Scores.** A dimension the job does not ask for shows "Not required"; one with nothing recorded
+yet (no projects, certifications or work experience, or no skill of that category listed) shows
+"No data yet" instead of 0%. Skills on My Profile are grouped by category with one colour per
+category (also on Export CV and the advisor's student page). Progress Tracking has **Run again**,
+which assesses the current profile against the latest role or job description again, and reminds
+the student when activities were completed since the last assessment.
 
 **CV.** On My Profile → Skills a student can upload a CV (PDF or Word .docx, max 5 MB). The NLP
 module finds the skills it mentions that are in the skills library (others are not picked up);
