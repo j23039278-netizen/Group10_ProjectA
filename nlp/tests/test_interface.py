@@ -101,8 +101,8 @@ def test_public_names_exported():
 
 
 # ── Skill catalogue ───────────────────────────────────────────
-def test_default_catalogue_has_166_skills(catalogue):
-    assert len(catalogue) == 166      # 138 IT (v1 + v2) + 28 Business (v3)
+def test_default_catalogue_has_172_skills(catalogue):
+    assert len(catalogue) == 172      # 138 IT (v1 + v2) + 28 Business (v3) + 6 from the role retune (v4)
     assert all(e["skill_id"] is None for e in catalogue)
 
 

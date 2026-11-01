@@ -277,10 +277,15 @@ def sample_jds():
     return jds
 
 
+# Postings outside the 10 roles, kept in samples/ to test the ingest filter;
+# they may legitimately contain no catalogue skill.
+NON_TARGET_SAMPLES = {"kaggle/3"}  # armed security officer
+
+
 @pytest.mark.parametrize("ref, text", sample_jds(), ids=[ref for ref, _ in sample_jds()])
 def test_sample_jds_smoke(ref, text):
     found = extract(text)
-    assert found, f"{ref}: no skills found"
+    assert found or ref in NON_TARGET_SAMPLES, f"{ref}: no skills found"
     assert len({s["skill_name"] for s in found}) == len(found)
     for s in found:
         assert text[s["start_char"]:s["end_char"]] == s["raw_skill_text"]

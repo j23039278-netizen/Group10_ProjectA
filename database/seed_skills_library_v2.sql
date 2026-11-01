@@ -7,7 +7,7 @@
 --     psql -U postgres -d seagas_db -f database/seed_skills_library_v2.sql
 --
 -- Total skills : 172  (AI_Digital 21, Analytical 20, Soft 17, Technical 114)
--- Generated at : 2026-10-31 01:20
+-- Generated at : 2026-11-01 15:11
 --
 -- Run AFTER schema.sql. Idempotent: ON CONFLICT (skill_name) DO UPDATE, so
 -- alias / category / subcategory / description fixes to the 32 v1 skills
@@ -51,7 +51,7 @@ INSERT INTO skills_library (skill_name, category, subcategory, aliases, descript
 ('Research Skills', 'Analytical', 'Analytical', ARRAY['Literature review', 'Academic research']::TEXT[], 'Ability to investigate, evaluate, and synthesise information.', 'v1'),
 ('Communication', 'Soft', 'Soft', ARRAY['Verbal communication', 'Written communication', 'Communication skills']::TEXT[], 'Conveying information clearly to technical and non-technical audiences.', 'v1'),
 ('Teamwork', 'Soft', 'Soft', ARRAY['Collaboration', 'Team player', 'Cooperative work']::TEXT[], 'Working effectively with others toward shared goals.', 'v1'),
-('Time Management', 'Soft', 'Soft', ARRAY['Prioritisation', 'Meeting deadlines', 'Multitasking', 'Multi-tasking', 'Managing multiple priorities']::TEXT[], 'Managing tasks and deadlines efficiently.', 'v1'),
+('Time Management', 'Soft', 'Soft', ARRAY['Prioritisation', 'Meeting deadlines', 'Tight deadlines', 'Multitasking', 'Multi-tasking', 'Managing multiple priorities']::TEXT[], 'Managing tasks and deadlines efficiently.', 'v1'),
 ('Leadership', 'Soft', 'Soft', ARRAY['Team leadership', 'Project leadership']::TEXT[], 'Guiding and motivating a team toward objectives.', 'v1'),
 ('C#', 'Technical', 'Programming Language', ARRAY['CSharp', 'C Sharp', '.NET C#']::TEXT[], 'Microsoft language for enterprise and game development.', 'v2'),
 ('Go', 'Technical', 'Programming Language', ARRAY['Golang', 'Go language']::TEXT[], 'Fast compiled language for cloud and backend systems.', 'v2'),

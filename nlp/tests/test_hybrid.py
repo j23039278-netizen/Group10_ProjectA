@@ -45,24 +45,25 @@ def semantic_hits(monkeypatch):
 
 # ── Merge rules (no model) ────────────────────────────────────
 def test_semantic_adds_only_new_skills_outside_keyword_spans(semantic_hits):
-    text = "Python and SQL required. You will build interactive dashboards for managers."
+    # "charts" is not a keyword alias ("dashboards" is, since library v4)
+    text = "Python and SQL required. You will build interactive charts for managers."
     semantic_hits += [
         hit(text, "Python", "Python", 0.90),                                 # keyword found it
         hit(text, "SQL required", "Data Analysis", 0.70),                    # overlaps "SQL"
-        hit(text, "interactive dashboards", "Data Visualisation", 0.75),     # new skill
+        hit(text, "interactive charts", "Data Visualisation", 0.75),         # new skill
     ]
     found = hybrid(text)
     assert [(s["skill_name"], s["method"]) for s in found] == [
         ("Python", "keyword"), ("SQL", "keyword"), ("Data Visualisation", "semantic")]
     viz = found[-1]
-    assert viz["raw_skill_text"] == "interactive dashboards"
+    assert viz["raw_skill_text"] == "interactive charts"
     assert viz["confidence_score"] == 0.75
 
 
 def test_semantic_skill_keeps_first_span_and_best_score(semantic_hits):
-    text = "Build dashboards. Present charts to the team. Build dashboards weekly."
-    semantic_hits += [hit(text, "Build dashboards", "Data Visualisation", 0.65),
-                      hit(text, "Build dashboards", "Data Visualisation", 0.80, nth=1)]
+    text = "Build charts. Present charts to the team. Build charts weekly."
+    semantic_hits += [hit(text, "Build charts", "Data Visualisation", 0.65),
+                      hit(text, "Build charts", "Data Visualisation", 0.80, nth=1)]
     [viz] = hybrid(text)
     assert (viz["start_char"], viz["confidence_score"]) == (0, 0.80)
 
