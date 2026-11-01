@@ -29,7 +29,7 @@ router = APIRouter()
 # clear message instead of a database error (500).
 class ProfileCreate(BaseModel):
     programme: Optional[str] = Field(None, max_length=255)   # ignored: set by the university (intake / admin)
-    university: Optional[str] = Field(None, max_length=255)
+    university: Optional[str] = Field(None, max_length=255)  # ignored: the same for everyone (database trigger)
     gpa: Optional[float] = Field(None, ge=0, le=4)    # latest semester
     cgpa: Optional[float] = Field(None, ge=0, le=4)   # cumulative
     expected_graduation: Optional[str] = Field(None, max_length=20)
@@ -218,7 +218,6 @@ def update_profile(
     db.execute(
         text("""
             UPDATE student_profiles SET
-                university = :uni,
                 gpa = :gpa,
                 cgpa = :cgpa,
                 expected_graduation = :grad,
@@ -231,7 +230,6 @@ def update_profile(
         """),
         {
             "uid": str(current_user.user_id),
-            "uni": req.university,
             "gpa": req.gpa,
             "cgpa": req.cgpa,
             "grad": req.expected_graduation,

@@ -29,7 +29,7 @@ export default function CareerPaths() {
     try {
       const p = (await studentAPI.getProfile().catch(() => ({ data: {} }))).data
       await studentAPI.updateProfile({
-        university: p.university || null, gpa: p.gpa ?? null, cgpa: p.cgpa ?? null,
+        gpa: p.gpa ?? null, cgpa: p.cgpa ?? null,
         expected_graduation: p.expected_graduation || null, year_of_study: p.year_of_study ?? null,
         career_interests: p.career_interests || [], target_role: role.role_name,
       })

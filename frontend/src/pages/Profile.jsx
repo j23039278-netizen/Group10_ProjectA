@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react'
 import { studentAPI, fileAPI, authAPI, jobsAPI } from '../api/client'
 import { label } from '../utils/labels'
-import { courseLabel } from '../utils/courses'
+import { courseLabel, UNIVERSITY } from '../utils/courses'
 import { SKILL_CATEGORIES, levelDots } from '../utils/skillCategories'
 import EvidenceFiles, { PendingFiles } from '../components/EvidenceFiles'
 import { MAX_FILES } from '../components/evidenceRules'
@@ -40,7 +40,7 @@ export default function Profile() {
 
   // Profile form state
   const [form, setForm] = useState({
-    programme: '', university: '', gpa: '', cgpa: '', expected_graduation: '',
+    programme: '', gpa: '', cgpa: '', expected_graduation: '',
     year_of_study: '', target_role: '', career_interests: []
   })
 
@@ -91,7 +91,6 @@ export default function Profile() {
         setProfile(profRes.data)
         setForm({
           programme:           profRes.data.programme || '',
-          university:          profRes.data.university || '',
           gpa:                 profRes.data.gpa ?? '',
           cgpa:                profRes.data.cgpa ?? '',
           expected_graduation: profRes.data.expected_graduation || '',
@@ -309,7 +308,7 @@ export default function Profile() {
               ['Student ID',   account.student_number, true],
               ['Course',       courseLabel(account.course)],
               ['School Email', account.email && <>{account.email.split('@')[0]}@<wbr />{account.email.split('@')[1]}</>],
-              ['University',   profile?.university],
+              ['University',   UNIVERSITY],
               ['Programme',    profile?.programme],
               ['Target Role',  profile?.target_role],
               ['GPA / CGPA',   profile && (profile.gpa != null || profile.cgpa != null)
@@ -325,7 +324,7 @@ export default function Profile() {
             ))}
           </div>
           <div style={{ fontSize: '12px', color: '#8b92a8', marginTop: '12px' }}>
-            Name, student ID, course, programme and school email are set by the university; contact your advisor if one is wrong.
+            Name, student ID, course, university, programme and school email are set by the university; contact your advisor if one is wrong.
             Edit the rest in the Info tab.
           </div>
         </>
@@ -358,7 +357,9 @@ export default function Profile() {
               </div>
             </div>
             <div><label style={{ fontSize: '12px', fontWeight: '600', color: '#4a5168', display: 'block', marginBottom: '5px' }}>University</label>
-              {inp(form.university, v => setForm({...form, university: v}), 'e.g. Swinburne University')}
+              <div style={{ padding: '9px 12px', border: '1.5px solid #e4e6ef', borderRadius: '8px', fontSize: '13px', background: '#eef0f5', color: '#1a1f2e' }}>
+                {UNIVERSITY}
+              </div>
             </div>
             <div><label style={{ fontSize: '12px', fontWeight: '600', color: '#4a5168', display: 'block', marginBottom: '5px' }}>GPA (last semester)</label>
               {inp(form.gpa, v => setForm({...form, gpa: v}), 'e.g. 3.25', 'number')}

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { authAPI, studentAPI, progressAPI, experienceAPI } from '../api/client'
 import { experienceTypeLabel, period } from '../utils/experience'
-import { courseLabel } from '../utils/courses'
+import { courseLabel, UNIVERSITY } from '../utils/courses'
 import { SKILL_CATEGORIES, levelDots } from '../utils/skillCategories'
 
 const LEVEL = { beginner: 'Beginner', intermediate: 'Intermediate', advanced: 'Advanced' }
@@ -82,7 +82,7 @@ export default function CvExport() {
           {me.email}
           {me.student_number && <> · Student ID {me.student_number}</>}
           <br />
-          {[profile.programme || courseLabel(me.course), profile.university,
+          {[profile.programme || courseLabel(me.course), UNIVERSITY,
             profile.year_of_study && `Year ${profile.year_of_study}`,
             profile.expected_graduation && `Expected graduation ${profile.expected_graduation}`,
             results.length && results.join(' · ')].filter(Boolean).join(' · ')}

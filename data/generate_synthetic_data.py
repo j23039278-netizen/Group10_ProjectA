@@ -72,7 +72,7 @@ DEFAULT_N = 5000
 DEFAULT_SEED = 42
 DEMO_PASSWORD = "Seagas@2026"          # same password for every synthetic account
 EMAIL_DOMAIN = "synthetic.example.com"
-UNIVERSITY = "Swinburne University of Technology (INTI International College Subang)"
+UNIVERSITY = "INTI International College Subang"
 CURRENT_YEAR = 2026
 
 HERE = os.path.dirname(os.path.abspath(__file__))

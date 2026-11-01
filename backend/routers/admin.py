@@ -174,9 +174,10 @@ def list_users(
     offset = max(0, offset)
 
     where, params = ["TRUE"], {}
-    if search:
-        where.append("(full_name ILIKE :q OR email ILIKE :q OR student_number LIKE :q OR staff_number LIKE :q)")
-        params["q"] = f"%{search.strip()}%"
+    # Word by word, so extra spaces and the order of the words do not matter
+    for i, word in enumerate((search or "").split()):
+        where.append(f"(full_name ILIKE :q{i} OR email ILIKE :q{i} OR student_number LIKE :q{i} OR staff_number LIKE :q{i})")
+        params[f"q{i}"] = f"%{word}%"
     if role:
         where.append("role = :role")
         params["role"] = role
@@ -258,7 +259,7 @@ def create_user(req: UserCreate, request: Request,
             RETURNING {USER_COLUMNS}
         """),
         {"email": email, "pw": hash_password(password),
-         "role": req.role, "name": req.full_name.strip(),
+         "role": req.role, "name": " ".join(req.full_name.split()),
          "position": position, "courses": courses, "number": number}
     ).fetchone()
     audit.record(db, "admin.user_create", user=current_user, request=request,
@@ -296,7 +297,7 @@ def update_user(
         if not req.full_name.strip():
             raise HTTPException(status_code=400, detail="Full name cannot be empty.")
         sets.append("full_name = :name")
-        params["name"] = req.full_name.strip()
+        params["name"] = " ".join(req.full_name.split())
     if req.email is not None:
         email = req.email.strip().lower()
         target = db.execute(text("SELECT role FROM users WHERE user_id = :uid"), {"uid": str(user_id)}).fetchone()

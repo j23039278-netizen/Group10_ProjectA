@@ -151,7 +151,7 @@ def clean_row(cells, cols, course_programmes):
     """(values, None) or (None, error message) for one data row.
     course_programmes: programmes.by_course(db)"""
     cell = lambda k: (cells[cols[k]] if k in cols and cols[k] < len(cells) else "").strip()
-    name, email, phone = cell("full_name"), cell("personal_email").lower(), cell("phone")
+    name, email, phone = " ".join(cell("full_name").split()), cell("personal_email").lower(), cell("phone")
     if phone.endswith(".0") and phone[:-2].isdigit():   # Excel stores numbers as floats
         phone = phone[:-2]
     if not name:

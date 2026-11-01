@@ -4,6 +4,7 @@ Handles student resource tracking (FR-11)
 Start, complete, and track recommended learning activities.
 A student must attach evidence (a file or a link, evidence.py) to an activity
 before it can be marked complete; advisors see that evidence on the student page.
+Completing an activity adds its skill to the student's skills (add_completed_skill).
 Author: Soh Way Miin (Carl) -- Backend Developer
 """
  
@@ -17,6 +18,7 @@ from uuid import UUID
 import evidence
 from database import get_db
 from routers.auth import get_current_user
+from routers.students import refresh_profile_complete
  
 router = APIRouter()
  
@@ -24,9 +26,49 @@ router = APIRouter()
 # ── Pydantic Schemas ──────────────────────────────────────────
 class ProgressUpdate(BaseModel):
     status: str                        # 'in_progress' | 'completed'
-    skill_added: Optional[bool] = False
  
  
+# ── Helper: add the skill of a completed activity ────────────
+LEVEL_ORDER = ["beginner", "intermediate", "advanced"]
+# The kind of evidence each resource type gives (nlp/matcher.py: coursework alone does
+# not make a beginner skill Strong; the other kinds do)
+EVIDENCE_OF_TYPE = {"course": "coursework", "workshop": "coursework", "certification": "certification",
+                    "project": "project", "competition": "project", "internship": "internship"}
+
+
+def add_completed_skill(db, profile_id, resource):
+    """Add the activity's skill at the resource's difficulty, with its kind of evidence.
+    A skill already listed keeps its level unless this one is higher, and gains the evidence.
+    Returns the sentence shown to the student."""
+    level = resource.difficulty if resource.difficulty in LEVEL_ORDER else "beginner"
+    kind = EVIDENCE_OF_TYPE.get(resource.resource_type, "coursework")
+    name = resource.skill_name
+    row = db.execute(
+        text("SELECT proficiency_level, evidence_type FROM student_skills WHERE profile_id = :pid AND skill_id = :sid"),
+        {"pid": profile_id, "sid": str(resource.skill_id)}
+    ).fetchone()
+    if row is None:
+        db.execute(
+            text("""
+                INSERT INTO student_skills (profile_id, skill_id, proficiency_level, evidence_type)
+                VALUES (:pid, :sid, :level, CAST(:kinds AS VARCHAR(20)[]))
+            """),
+            {"pid": profile_id, "sid": str(resource.skill_id), "level": level, "kinds": [kind]}
+        )
+        return f"{name} was added to your skills ({level})."
+    higher = LEVEL_ORDER.index(level) > LEVEL_ORDER.index(row.proficiency_level)
+    kinds = list(row.evidence_type or [])
+    db.execute(
+        text("""
+            UPDATE student_skills SET proficiency_level = :level, evidence_type = CAST(:kinds AS VARCHAR(20)[])
+            WHERE profile_id = :pid AND skill_id = :sid
+        """),
+        {"pid": profile_id, "sid": str(resource.skill_id), "level": level if higher else row.proficiency_level,
+         "kinds": kinds if kind in kinds else kinds + [kind]}
+    )
+    return f"{name} was raised to {level} in your skills." if higher else f"{name} was already in your skills; this activity now counts as evidence."
+
+
 # ── Helper: get student profile_id ───────────────────────────
 def get_profile(current_user, db):
     profile = db.execute(
@@ -105,9 +147,8 @@ def complete_resource(
     db: Session = Depends(get_db)
 ):
     """
-    Mark a resource as completed and optionally record that
-    the student has added the skill to their profile.
-    Returns prompt for the frontend to ask about skill/cert update.
+    Mark a resource as completed (evidence is required) and add its skill to the
+    student's skills. "notice" says what happened to the skill.
     """
     profile_id = get_profile(current_user, db)
  
@@ -115,7 +156,7 @@ def complete_resource(
     resource = db.execute(
         text("""
             SELECT rl.resource_id, rl.skill_id, rl.resource_title,
-                   rl.resource_type, sl.skill_name
+                   rl.resource_type, rl.difficulty, sl.skill_name
             FROM recommendations_library rl
             LEFT JOIN skills_library sl ON sl.skill_id = rl.skill_id
             WHERE rl.resource_id = :rid
@@ -148,77 +189,26 @@ def complete_resource(
             UPDATE student_resource_progress
             SET status       = 'completed',
                 completed_at = NOW(),
-                skill_added  = :skill_added,
+                skill_added  = TRUE,
                 updated_at   = NOW()
             WHERE progress_id = :prog
         """),
-        {"prog": str(activity.progress_id), "skill_added": req.skill_added}
+        {"prog": str(activity.progress_id)}
     )
+    notice = add_completed_skill(db, profile_id, resource)
+    refresh_profile_complete(db, current_user.user_id)
     db.commit()
- 
-    # Build prompt for frontend dialog
-    resource_type = resource.resource_type or "activity"
-    skill_name    = resource.skill_name or "this skill"
- 
-    if resource_type == "certification":
-        prompt_type = "certification"
-        prompt_msg  = f"Would you like to add the '{skill_name}' certification to your profile?"
-    elif resource_type == "project":
-        prompt_type = "project"
-        prompt_msg  = f"Would you like to add this project and '{skill_name}' to your profile?"
-    else:
-        prompt_type = "skill"
-        prompt_msg  = f"Would you like to add '{skill_name}' to your skill profile?"
  
     return {
         "message": "Resource marked as completed",
         "resource_id": resource_id,
         "resource_title": resource.resource_title,
         "status": "completed",
-        "prompt": {
-            "type": prompt_type,
-            "message": prompt_msg,
-            "skill_name": skill_name,
-            "skill_id": str(resource.skill_id) if resource.skill_id else None
-        }
+        "notice": notice,
     }
  
  
 # ══════════════════════════════════════════════════════════════
-# PATCH /api/progress/{resource_id}/skill-added
-# Called after student confirms they added skill to profile
-# ══════════════════════════════════════════════════════════════
-@router.patch("/{resource_id}/skill-added")
-def mark_skill_added(
-    resource_id: str,
-    current_user=Depends(get_current_user),
-    db: Session = Depends(get_db)
-):
-    """
-    Update skill_added = TRUE after student confirms
-    they have added the skill/cert to their profile.
-    """
-    profile_id = get_profile(current_user, db)
- 
-    db.execute(
-        text("""
-            UPDATE student_resource_progress
-            SET skill_added = TRUE,
-                updated_at  = NOW()
-            WHERE profile_id  = :pid
-            AND   resource_id = :rid
-        """),
-        {"pid": profile_id, "rid": resource_id}
-    )
-    db.commit()
- 
-    return {
-        "message": "Skill added status updated",
-        "resource_id": resource_id,
-        "skill_added": True
-    }
- 
- 
 # ══════════════════════════════════════════════════════════════
 # DELETE /api/progress/{resource_id}
 # Student gives up an activity they started

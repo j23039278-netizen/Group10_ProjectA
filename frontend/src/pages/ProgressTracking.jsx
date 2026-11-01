@@ -91,15 +91,7 @@ export default function ProgressTracking() {
   const completed = async (p, res) => {
     setCompleting(null)
     await load()
-    setNotice(`Well done! "${p.resource_title}" is completed.`)
-    // Same follow-up as the Recommendations page: offer to update the profile
-    const prompt = res.data.prompt
-    if (prompt && window.confirm(`${prompt.message}\n\nOK opens My Profile.`)) {
-      try {
-        await progressAPI.markSkillAdded(p.resource_id)
-      } catch { /* the activity is completed either way */ }
-      navigate('/profile')
-    }
+    setNotice(`"${p.resource_title}" is completed. ${res.data.notice}`)
   }
 
   const giveUp = async (p) => {
@@ -209,8 +201,7 @@ export default function ProgressTracking() {
                       background: '#eef3ff', border: '1px solid #cddbfb', borderRadius: '10px', padding: '12px 16px', marginBottom: '16px' }}>
           <div style={{ fontSize: '13px', color: C.body }}>
             You completed <b>{doneSince.length}</b> {doneSince.length === 1 ? 'activity' : 'activities'} since your last <b>{last.role_name}</b> assessment
-            ({fmtDate(last.created_at)}). Add any new skills on{' '}
-            <a href="/profile" onClick={e => { e.preventDefault(); navigate('/profile') }} style={{ color: C.blue }}>My Profile</a>, then run it again to see your progress.
+            ({fmtDate(last.created_at)}). Their skills are now on your profile. Run it again to see your progress.
           </div>
           {runAgainBtn(true)}
         </div>

@@ -1132,6 +1132,25 @@ UPDATE email_outbox SET sent_at = created_at WHERE status = 'sent' AND sent_at I
 -- (routers/library.py). NULL for seed resources and older ones.
 ALTER TABLE recommendations_library ADD COLUMN IF NOT EXISTS created_by UUID REFERENCES users(user_id) ON DELETE SET NULL;
 
+-- ── One university for every student (1 November) ───────────
+-- SEAGAS is used by one institution, so students no longer type it. The trigger also
+-- covers the seed files of the synthetic students.
+CREATE OR REPLACE FUNCTION set_student_university() RETURNS TRIGGER AS $$
+BEGIN
+    NEW.university := 'INTI International College Subang';
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+DROP TRIGGER IF EXISTS trg_student_university ON student_profiles;
+CREATE TRIGGER trg_student_university BEFORE INSERT OR UPDATE ON student_profiles
+    FOR EACH ROW EXECUTE FUNCTION set_student_university();
+UPDATE student_profiles SET university = 'INTI International College Subang'
+WHERE university IS DISTINCT FROM 'INTI International College Subang';
+
+-- ── Names with single spaces (1 November) ────────────────────
+UPDATE users SET full_name = regexp_replace(btrim(full_name), '\s+', ' ', 'g')
+WHERE full_name <> regexp_replace(btrim(full_name), '\s+', ' ', 'g');
+
 -- ============================================================
 -- END OF SCHEMA
 -- ============================================================

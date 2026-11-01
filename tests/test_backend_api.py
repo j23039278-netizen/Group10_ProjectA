@@ -1699,7 +1699,10 @@ class TestNewStudent:
         info = {"programme": "Made Up", "university": "INTI", "year_of_study": 1, "target_role": "Data Analyst"}
         assert c.post("/api/students/profile", headers=h, json=info).status_code in (200, 201)
         p = c.get("/api/students/profile", headers=h).json()
-        assert p["university"] == "INTI" and p["programme"] is None      # set by the university, not the student
+        assert p["university"] == "INTI International College Subang"    # the same for everyone, whatever is sent
+        assert p["programme"] is None                                    # set by the university, not the student
+        assert env["conn"].execute("SELECT count(*) FROM student_profiles "
+                                   "WHERE university <> 'INTI International College Subang'").fetchone()[0] == 0
 
 
 # ── Batch assessments (data/run_assessments.py uses this) ────
@@ -1765,3 +1768,51 @@ class TestLibraryForAdvisors:
                       json={**body, "skill_id": str(biz_only), "resource_title": "Lib Biz"}).status_code == 403
         listed = {x["resource_id"]: x for x in c.get("/api/library/resources", headers=hop).json()}
         assert listed[res_id]["can_edit"] is True and listed[str(seed_res)]["can_edit"] is False
+
+
+class TestCompleteAddsSkill:
+    def test_completing_adds_or_raises_the_skill(self, env):
+        c, conn = env["client"], env["conn"]
+        h = course_student(env, "complete.skill@student.newinti.edu.my", "Complete Skill", "CS")
+        c.post("/api/students/skills", headers=h, json={"skill_id": conn.execute(
+            "SELECT skill_id::text FROM skills_library WHERE skill_name = 'Teamwork'").fetchone()[0], "proficiency_level": "advanced"})
+        aid = run(env, h, role_id=env["da"]).json()["assessment_id"]
+        res = lambda where: conn.execute(f"SELECT r.resource_id::text, r.skill_id::text, s.skill_name FROM recommendations_library r "
+                                         f"JOIN skills_library s USING (skill_id) WHERE {where} LIMIT 1").fetchone()
+        def finish(rid):
+            assert c.post(f"/api/progress/{rid}/start?assessment_id={aid}", headers=h).status_code == 201
+            assert c.post(f"/api/progress/{rid}/links", headers=h, json={"url": "https://example.com/proof"}).status_code in (200, 201)
+            return c.post(f"/api/progress/{rid}/complete", headers=h, json={"status": "completed"})
+        mine = lambda sid: next((s for s in c.get("/api/students/skills", headers=h).json() if s["skill_id"] == sid), None)
+
+        # Evidence is still required, and nothing is added without it
+        rid, sid, name = res("r.resource_type = 'course' AND r.difficulty = 'intermediate' AND s.skill_name <> 'Teamwork'")
+        assert c.post(f"/api/progress/{rid}/start?assessment_id={aid}", headers=h).status_code == 201
+        assert c.post(f"/api/progress/{rid}/complete", headers=h, json={"status": "completed"}).status_code == 400
+        assert mine(sid) is None
+        assert c.post(f"/api/progress/{rid}/links", headers=h, json={"url": "https://example.com/proof"}).status_code in (200, 201)
+        done = c.post(f"/api/progress/{rid}/complete", headers=h, json={"status": "completed"})
+        assert done.status_code == 200 and name in done.json()["notice"]
+        added = mine(sid)
+        assert added["proficiency_level"] == "intermediate" and added["evidence_type"] == ["coursework"]
+
+        # A skill already listed never goes down, and gains the evidence
+        rid, sid, name = res("r.difficulty = 'beginner' AND r.resource_type = 'project' AND s.skill_name = 'Teamwork'") or \
+            res("r.difficulty = 'beginner' AND s.skill_name = 'Teamwork'")
+        assert finish(rid).status_code == 200
+        kept = mine(sid)
+        assert kept["proficiency_level"] == "advanced" and kept["evidence_type"]
+
+
+class TestSearchByName:
+    def test_spaces_and_word_order_do_not_matter(self, env, admin):
+        c, conn = env["client"], env["conn"]
+        found = lambda q: [u["full_name"] for u in c.get("/api/admin/users", headers=admin, params={"search": q}).json()["users"]]
+        assert "Alice" in found("alice") and "Alice" in found("  ALICE ")
+        conn.execute("UPDATE users SET full_name = 'Lim  Wei   Jie' WHERE email = 'alice@student.newinti.edu.my'")
+        try:
+            for q in ("lim wei jie", "jie lim", "Lim  Wei"):
+                assert "Lim  Wei   Jie" in found(q), q
+            assert found("lim nobody") == []
+        finally:
+            conn.execute("UPDATE users SET full_name = 'Alice' WHERE email = 'alice@student.newinti.edu.my'")

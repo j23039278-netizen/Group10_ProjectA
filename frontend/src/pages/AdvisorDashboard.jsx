@@ -167,13 +167,14 @@ export default function AdvisorDashboard() {
   const inCourse = useMemo(() => students.filter(s => !course || s.course === course), [students, course])
   const programmes = [...new Set(inCourse.map(s => s.programme).filter(Boolean))].sort()
   const targets    = [...new Set(inCourse.map(s => s.target_role).filter(Boolean))].sort()
-  const q = search.trim().toLowerCase()
+  // Word by word, so extra spaces and the order of the words do not matter
+  const words = search.toLowerCase().split(/\s+/).filter(Boolean)
   const filtered = inCourse.filter(s =>
     (!status || statusOf(num(s.latest_score)) === status) &&
     (!programme || s.programme === programme) &&
     (!target || s.target_role === target) &&
     (!profileF || (profileF === 'complete') === !!s.profile_complete) &&
-    (!q || [s.full_name, s.email, s.student_number, s.programme, s.target_role].some(v => (v || '').toLowerCase().includes(q)))
+    words.every(w => [s.full_name, s.email, s.student_number, s.programme, s.target_role].some(v => (v || '').toLowerCase().includes(w)))
   )
   const sorted = [...filtered].sort((a, b) => {
     const dir = sort.dir === 'asc' ? 1 : -1

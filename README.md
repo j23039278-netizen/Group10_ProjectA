@@ -193,7 +193,9 @@ yet (no projects, certifications or work experience, or no skill of that categor
 "No data yet" instead of 0%. Skills on My Profile are grouped by category with one colour per
 category (also on Export CV and the advisor's student page). Progress Tracking has **Run again**,
 which assesses the current profile against the latest role or job description again, and reminds
-the student when activities were completed since the last assessment.
+the student when activities were completed since the last assessment. Completing an activity (evidence
+is required) adds its skill to the student's skills: at the resource's difficulty, with its kind of
+evidence; a skill already listed keeps its level unless the new one is higher.
 
 **CV.** On My Profile → Skills a student can upload a CV (PDF or Word .docx, max 5 MB). The NLP
 module finds the skills it mentions that are in the skills library (others are not picked up);

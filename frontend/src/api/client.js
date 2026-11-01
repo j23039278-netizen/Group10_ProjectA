@@ -150,13 +150,9 @@ export const progressAPI = {
   uploadEvidence: (resourceId, file) => uploadFile(`/progress/${resourceId}/files`, file),
   linkEvidence:   (resourceId, url, title) => API.post(`/progress/${resourceId}/links`, { url, title }),
 
-  // Mark a resource as completed (needs at least one piece of evidence)
+  // Mark a resource as completed (needs evidence); this also adds its skill to the student's skills
   complete: (resourceId) =>
-    API.post(`/progress/${resourceId}/complete`, { status: 'completed', skill_added: false }),
- 
-  // Confirm skill was added to profile after completing
-  markSkillAdded: (resourceId) =>
-    API.patch(`/progress/${resourceId}/skill-added`),
+    API.post(`/progress/${resourceId}/complete`, { status: 'completed' }),
  
   // Give up an unfinished activity (it shows as not started again)
   drop: (resourceId) =>

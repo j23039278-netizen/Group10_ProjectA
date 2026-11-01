@@ -1,3 +1,6 @@
+// The one university of every student (trigger on student_profiles in database/schema.sql)
+export const UNIVERSITY = 'INTI International College Subang'
+
 // SEAGAS — The three courses a student can belong to (users.course in the database)
 // Computing courses first (same office), then Business
 export const COURSES = [

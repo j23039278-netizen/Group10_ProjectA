@@ -1,7 +1,7 @@
 // SEAGAS — Recommendations Page with Development Tracking (FR-11)
 // Author: Tee Ren Hang (Frontend) + Soh Way Miin Carl (Backend integration)
 import { useState, useEffect, useCallback } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import { assessAPI, progressAPI } from '../api/client'
 import { label } from '../utils/labels'
 import CompleteActivity from '../components/CompleteActivity'
@@ -28,7 +28,6 @@ const CATEGORY_IDS = CATEGORY_ORDER.map(c => c.id)
 
 export default function Recommendations() {
   const location = useLocation()
-  const navigate = useNavigate()
 
   const [recs,        setRecs]        = useState([])
   const [history,     setHistory]     = useState([])
@@ -38,8 +37,8 @@ export default function Recommendations() {
   const [progressMap, setProgressMap] = useState({})
   // actionLoading: { [resource_id]: true } while API call in flight
   const [actionLoading, setActionLoading] = useState({})
-  // dialog: { show, resourceId, resourceTitle, prompt }
-  const [dialog,      setDialog]      = useState(null)
+  // What completing an activity did to the student's skills
+  const [notice,      setNotice]      = useState('')
   // Cost tab being shown: 'free' (default) | 'free_to_learn' | 'paid'
   const [tier,        setTier]        = useState('free')
   // Activity whose "Complete" dialog is open (evidence is required to complete)
@@ -96,32 +95,8 @@ export default function Recommendations() {
   const handleCompleted = async (resource, res) => {
     setCompleting(null)
     await reloadProgress()
-    // Show dialog with prompt from backend
-    setDialog({
-      show: true,
-      resourceId: resource.resource_id,
-      resourceTitle: resource.resource_title,
-      prompt: res.data.prompt,
-    })
+    setNotice(`"${resource.resource_title}" is completed. ${res.data.notice} Run the assessment again to see your new score.`)
   }
-
-  // ── Handle "Yes, update profile" in dialog ───────────────────
-  const handleUpdateProfile = async () => {
-    if (dialog?.resourceId) {
-      try {
-        await progressAPI.markSkillAdded(dialog.resourceId)
-        setProgressMap(p => ({
-          ...p,
-          [dialog.resourceId]: { ...p[dialog.resourceId], skill_added: true }
-        }))
-      } catch {}
-    }
-    setDialog(null)
-    navigate('/profile')
-  }
-
-  // ── Handle "Maybe Later" in dialog ───────────────────────────
-  const handleMaybeLater = () => setDialog(null)
 
   // ── UI helpers ────────────────────────────────────────────────
   const typeIcon = {
@@ -314,80 +289,7 @@ export default function Recommendations() {
           onClose={() => setCompleting(null)} />
       )}
 
-      {/* ── Completion Dialog ── */}
-      {dialog?.show && (
-        <div style={{
-          position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.45)',
-          zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center',
-        }}>
-          <div style={{
-            background: '#fff', borderRadius: '16px', padding: '32px',
-            maxWidth: '420px', width: '90%', boxShadow: '0 20px 60px rgba(0,0,0,0.2)',
-          }}>
-            {/* Header */}
-            <div style={{ fontSize: '32px', textAlign: 'center', marginBottom: '12px' }}>🎉</div>
-            <div style={{ fontSize: '17px', fontWeight: '700', color: '#1a1f2e', textAlign: 'center', marginBottom: '8px' }}>
-              Great job completing
-            </div>
-            <div style={{
-              fontSize: '13px', fontWeight: '600', color: '#2d5be3',
-              textAlign: 'center', marginBottom: '16px',
-              padding: '6px 12px', background: '#eef2fd', borderRadius: '8px',
-            }}>
-              {dialog.resourceTitle}
-            </div>
-
-            {/* Prompt message */}
-            <div style={{
-              fontSize: '13px', color: '#4a5168', textAlign: 'center',
-              marginBottom: '24px', lineHeight: '1.6',
-            }}>
-              {dialog.prompt?.message || 'Would you like to update your profile?'}
-            </div>
-
-            {/* What to add hint */}
-            <div style={{
-              background: '#f5f6fa', borderRadius: '10px', padding: '12px 16px',
-              marginBottom: '20px', fontSize: '12px', color: '#4a5168',
-            }}>
-              <div style={{ fontWeight: '600', marginBottom: '6px', color: '#1a1f2e' }}>
-                💡 You can add to your profile:
-              </div>
-              {dialog.prompt?.type === 'certification' && (
-                <div>🏆 Add <strong>{dialog.prompt.skill_name}</strong> certification under Certifications</div>
-              )}
-              {dialog.prompt?.type === 'project' && (
-                <div>🛠️ Add this as a project + add <strong>{dialog.prompt.skill_name}</strong> to your Skills</div>
-              )}
-              {dialog.prompt?.type === 'skill' && (
-                <div>✨ Add <strong>{dialog.prompt.skill_name}</strong> to your Skills list</div>
-              )}
-            </div>
-
-            {/* Buttons */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              <button
-                onClick={handleUpdateProfile}
-                style={{
-                  padding: '12px', background: '#2d5be3', color: '#fff',
-                  border: 'none', borderRadius: '10px', fontSize: '13px',
-                  fontWeight: '600', cursor: 'pointer', width: '100%',
-                }}>
-                ✏️ Yes, update my profile
-              </button>
-              <button
-                onClick={handleMaybeLater}
-                style={{
-                  padding: '12px', background: '#f5f6fa', color: '#4a5168',
-                  border: '1.5px solid #e4e6ef', borderRadius: '10px',
-                  fontSize: '13px', fontWeight: '600', cursor: 'pointer', width: '100%',
-                }}>
-                Maybe Later
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {notice && <div role="status" style={{ background: '#dcfce7', color: '#16a34a', padding: '10px 12px', borderRadius: '8px', fontSize: '13px', marginBottom: '14px' }}>{notice}</div>}
 
       {/* ── Page Header ── */}
       <div style={{ marginBottom: '24px' }}>
