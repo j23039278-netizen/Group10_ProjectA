@@ -13,6 +13,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { assessAPI, progressAPI } from '../api/client'
 import CompleteActivity from '../components/CompleteActivity'
 import EvidenceFiles from '../components/EvidenceFiles'
+import { readinessColor } from '../utils/readiness'
 
 const C = { ink: '#1a1f2e', body: '#4a5168', muted: '#8b92a8', line: '#e4e6ef',
             blue: '#2d5be3', green: '#16a34a', amber: '#d97706', red: '#dc2626' }
@@ -21,7 +22,6 @@ const heading = { fontSize: '13px', fontWeight: '700', color: C.ink, marginBotto
 const muted   = { color: C.muted, fontSize: '13px' }
 const JD_ROLE = 'Pasted job description'
 
-const scoreColor = (s) => s == null ? C.muted : s >= 70 ? C.green : s >= 50 ? C.amber : C.red
 const fmtDate = (d) => d ? new Date(d).toLocaleDateString('en-GB') : '—'
 const actionBtn = (bg, color, border = bg) => ({
   padding: '5px 11px', fontSize: '12px', fontWeight: '600', borderRadius: '7px', cursor: 'pointer',
@@ -220,7 +220,7 @@ export default function ProgressTracking() {
       {/* Stat cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', marginBottom: '16px' }}>
         {[
-          { label: 'Current Readiness', value: current == null ? '—' : `${current}%`, color: scoreColor(current),
+          { label: 'Current Readiness', value: current == null ? '—' : `${current}%`, color: readinessColor(current),
             note: role || 'No assessment yet' },
           { label: 'Change Since First', value: change == null ? '—' : `${change > 0 ? '+' : ''}${change}%`,
             color: change == null ? C.muted : change > 0 ? C.green : change < 0 ? C.red : C.body,

@@ -12,6 +12,7 @@ import ProgressTracking from '../pages/ProgressTracking'
 import CvExport from '../pages/CvExport'
 import CareerPaths from '../pages/CareerPaths'
 import { settingsAPI } from '../api/client'
+import { applyBands } from '../utils/readiness'
 import { applyLimits } from '../components/evidenceRules'
 
 const NAV = [
@@ -26,7 +27,7 @@ const NAV = [
 
 export default function StudentPortal({ user, onLogout }) {
   // Upload limits follow System Settings (evidence files, CV)
-  useEffect(() => { settingsAPI.get().then(r => applyLimits(r.data)).catch(() => {}) }, [])
+  useEffect(() => { settingsAPI.get().then(r => { applyLimits(r.data); applyBands(r.data) }).catch(() => {}) }, [])
   return (
     <PortalLayout user={user} navTitle="Menu" navItems={NAV} onLogout={onLogout}>
       <Routes>

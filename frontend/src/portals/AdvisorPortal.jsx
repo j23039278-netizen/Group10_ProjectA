@@ -1,6 +1,9 @@
 // SEAGAS — Advisor portal: every page a signed-in advisor can open.
 // Loaded on its own (see App.jsx), so it is only downloaded for advisor accounts.
+import { useEffect } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
+import { settingsAPI } from '../api/client'
+import { applyBands } from '../utils/readiness'
 import PortalLayout from './PortalLayout'
 import AdvisorDashboard from '../pages/AdvisorDashboard'
 import AdvisorStudentDetail from '../pages/AdvisorStudentDetail'
@@ -17,6 +20,8 @@ const NAV = [
 ]
 
 export default function AdvisorPortal({ user, onLogout }) {
+  useEffect(() => { settingsAPI.get().then(r => applyBands(r.data)).catch(() => {}) }, [])
+
   return (
     <PortalLayout user={user} navTitle="Overview" navItems={NAV} onLogout={onLogout}>
       <Routes>

@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { assessAPI, studentAPI } from '../api/client'
 import ResultsReminder from '../components/ResultsReminder'
 import DimensionBar from '../components/DimensionBar'
+import { readinessColor } from '../utils/readiness'
 import { DIMENSIONS } from '../utils/dimensions'
 
 export default function Dashboard({ onLogout }) {
@@ -42,7 +43,7 @@ export default function Dashboard({ onLogout }) {
   )
 
   const score = latest?.readiness_score || 0
-  const scoreColor = score >= 70 ? '#16a34a' : score >= 50 ? '#d97706' : '#dc2626'
+  const scoreColor = readinessColor(score)
 
   return (
     <div style={{ padding: '28px 32px' }}>
@@ -154,7 +155,7 @@ export default function Dashboard({ onLogout }) {
                   </div>
                   <div style={{
                     fontSize: '16px', fontWeight: '700',
-                    color: h.readiness_score >= 70 ? '#16a34a' : h.readiness_score >= 50 ? '#d97706' : '#dc2626'
+                    color: readinessColor(h.readiness_score)
                   }}>
                     {h.readiness_score}%
                   </div>

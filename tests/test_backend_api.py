@@ -86,6 +86,10 @@ def env():
     # the app reads these when it is imported
     os.environ["DATABASE_URL"] = db_url(DB_NAME).replace("postgresql://", "postgresql+psycopg://")
     os.environ["SECRET_KEY"] = "test-" + os.urandom(16).hex()
+    # Tests never use the real mail server of backend/.env (load_dotenv keeps values set
+    # here, even empty ones); the email tests set their own host and a fake SMTP class.
+    for key in ("SMTP_HOST", "SMTP_PORT", "SMTP_SECURITY", "SMTP_USER", "SMTP_PASSWORD", "SMTP_FROM"):
+        os.environ[key] = ""
     sys.path.insert(0, str(ROOT / "backend"))
     from fastapi.testclient import TestClient
     import main

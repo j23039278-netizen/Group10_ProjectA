@@ -1,10 +1,9 @@
 // SEAGAS — One dimension of an assessment as a labelled bar. "Not required" and
 // "No data yet" (utils/dimensions.js) get a grey dashed bar and a short note instead of 0%.
 import { dimensionState } from '../utils/dimensions'
+import { readinessColor } from '../utils/readiness'
 
-const defaultColor = (v) => (v >= 70 ? '#16a34a' : v >= 40 ? '#2d5be3' : '#dc2626')
-
-export default function DimensionBar({ dim, value, skills, colorOf = defaultColor, height = 7 }) {
+export default function DimensionBar({ dim, value, skills, height = 7 }) {
   const d = dimensionState(dim, value, skills)
   const scored = d.state === 'score'
   return (
@@ -15,7 +14,7 @@ export default function DimensionBar({ dim, value, skills, colorOf = defaultColo
       </div>
       {scored ? (
         <div style={{ height: `${height}px`, background: '#e4e6ef', borderRadius: '99px', overflow: 'hidden' }}>
-          <div style={{ height: '100%', borderRadius: '99px', width: `${Math.min(d.value, 100)}%`, background: colorOf(d.value), transition: 'width .6s ease' }} />
+          <div style={{ height: '100%', borderRadius: '99px', width: `${Math.min(d.value, 100)}%`, background: readinessColor(d.value), transition: 'width .6s ease' }} />
         </div>
       ) : (
         <div style={{ height: `${height}px`, borderRadius: '99px', border: '1px dashed #c3c8d6', boxSizing: 'border-box' }} />

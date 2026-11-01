@@ -79,10 +79,10 @@ and compares them with the current scheme:
 
 | Scheme | Mean | Spearman ρ vs current | Students changing band (70 / 40) |
 |---|---:|---:|---:|
-| **current 3/2/1, developing 0.5** | 48.3 | 1.000 | 0 (0.0%) |
-| equal 1/1/1, developing 0.5 | 42.9 | 0.987 | 953 (19.1%) |
-| steeper 4/2/1, developing 0.5 | 50.4 | 0.998 | 325 (6.5%) |
-| 3/2/1, developing 0.25 | 44.8 | 0.994 | 479 (9.6%) |
+| **current 3/2/1, developing 0.5** | 48.4 | 1.000 | 0 (0.0%) |
+| equal 1/1/1, developing 0.5 | 42.9 | 0.987 | 952 (19.0%) |
+| steeper 4/2/1, developing 0.5 | 50.4 | 0.998 | 326 (6.5%) |
+| 3/2/1, developing 0.25 | 44.8 | 0.994 | 477 (9.5%) |
 | 3/2/1, developing 0.75 | 51.9 | 0.993 | 491 (9.8%) |
 | required skills only | 61.6 | 0.949 | 1,959 (39.2%) |
 
@@ -90,9 +90,8 @@ The order of the students hardly changes with any reasonable weighting (ρ ≥ 0
 comparisons between students and over time do not depend on the exact weights. What the
 weights do change is the level of the score, and therefore which band a student near a
 boundary falls into. Ignoring preferred and bonus skills would move 39% of students
-between bands, so we keep them. Measured on the local database on 1 November 2026, with
-the assessments made before the matching-rule update of 30 October; run the script again
-after `start_backend.bat` has re-assessed the students.
+between bands, so we keep them. Measured on the local database on 1 November 2026, after
+`start_backend.bat` re-assessed the students with the matching rules of 30 October.
 
 ### 2.5 Readiness bands 70 / 40
 

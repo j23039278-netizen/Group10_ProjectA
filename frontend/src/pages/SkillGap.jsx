@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import { assessAPI, studentAPI } from '../api/client'
 import DimensionBar from '../components/DimensionBar'
+import { readinessColor } from '../utils/readiness'
 import { DIMENSIONS } from '../utils/dimensions'
 import { label } from '../utils/labels'
 
@@ -40,7 +41,6 @@ export default function SkillGap() {
   const developing = matches.filter(m => m.match_status === 'developing')
   const gaps       = matches.filter(m => m.match_status === 'gap')
 
-  const scoreColor = (s) => s >= 70 ? '#16a34a' : s >= 50 ? '#d97706' : '#dc2626'
 
   if (loading) return <div style={{ padding: '40px', color: '#8b92a8' }}>Loading...</div>
 
@@ -83,7 +83,7 @@ export default function SkillGap() {
             borderRadius: '12px', padding: '18px 24px',
             display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '16px'
           }}>
-            <div style={{ fontSize: '42px', fontWeight: '800', color: scoreColor(assessment.readiness_score) }}>
+            <div style={{ fontSize: '42px', fontWeight: '800', color: readinessColor(assessment.readiness_score) }}>
               {assessment.readiness_score}%
             </div>
             <div style={{ flex: 1 }}>

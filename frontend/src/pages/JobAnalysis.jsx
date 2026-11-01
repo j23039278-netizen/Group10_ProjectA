@@ -1,6 +1,7 @@
 // SEAGAS — Job Analysis Page
 import { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
+import { readinessColor } from '../utils/readiness'
 import { jobsAPI, assessAPI, authAPI } from '../api/client'
 
 // Matching methods of the NLP module (docs/NLP_INTERFACE.md). Keyword is Level 1,
@@ -63,7 +64,6 @@ export default function JobAnalysis() {
     }
   }
 
-  const scoreColor = (s) => s >= 70 ? '#16a34a' : s >= 50 ? '#d97706' : '#dc2626'
   const statusColor = { strong: '#16a34a', developing: '#d97706', gap: '#dc2626' }
   const statusBg    = { strong: '#dcfce7', developing: '#fef3c7', gap: '#fee2e2' }
 
@@ -219,7 +219,7 @@ export default function JobAnalysis() {
                 borderRadius: '12px', padding: '18px',
                 display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '20px'
               }}>
-                <div style={{ fontSize: '40px', fontWeight: '800', color: scoreColor(result.readiness_score) }}>
+                <div style={{ fontSize: '40px', fontWeight: '800', color: readinessColor(result.readiness_score) }}>
                   {result.readiness_score}%
                 </div>
                 <div>
