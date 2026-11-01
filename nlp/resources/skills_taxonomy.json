@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-31 01:20",
+  "generated_at": "2026-11-01 15:11",
   "source": "data/skills/skills_library.csv",
   "skill_count": 172,
   "skills": [
@@ -400,6 +400,7 @@
       "aliases": [
         "Prioritisation",
         "Meeting deadlines",
+        "Tight deadlines",
         "Multitasking",
         "Multi-tasking",
         "Managing multiple priorities"

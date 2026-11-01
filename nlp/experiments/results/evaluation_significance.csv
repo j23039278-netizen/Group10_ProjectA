@@ -1,0 +1,4 @@
+other,macro_f1_diff,p,micro_f1_diff,micro_f1_diff_lo,micro_f1_diff_hi,better,worse,tie,p_holm
+keyword,0.0091,0.2926,0.012,-0.003,0.028,18,14,10,0.2926
+tfidf,0.2743,0.0001,0.301,0.277,0.324,41,0,1,0.0003
+semantic,0.1726,0.0001,0.176,0.146,0.205,39,2,1,0.0003
