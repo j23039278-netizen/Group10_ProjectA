@@ -2,6 +2,7 @@
 -- SEAGAS -- Recommendations Library (Final -- All Skills)
 -- Merged from v1 + v2 + v3, duplicates removed
 -- Author: Tan Jun Xiong (Aaron) -- Recommendation Engine
+-- Section 4 (the skills added in library v4, 2026-11-01): Ng Yong Hin
 -- Run: psql -U postgres -d seagas_db -f database/seed_recommendations_library_final.sql
 -- Safe to run multiple times (ON CONFLICT DO NOTHING)
 -- ============================================================
@@ -513,13 +514,52 @@ JOIN (VALUES
 ('VPN',                  'Set Up a Personal VPN Server',                      'project',       'Self-directed',               'https://www.wireguard.com/quickstart/',                                    4,   'Free',           'intermediate',  'Set up a personal VPN server using WireGuard on a cloud VM.'),
 
 ('Windows Server',       'Windows Server Administration Fundamentals',        'certification', 'Microsoft',                   'https://learn.microsoft.com/en-us/certifications/mta-windows-server-administration-fundamentals/', 20, '$127 USD', 'beginner', 'Microsoft Windows Server administration fundamentals certification.'),
-('Windows Server',       'Windows Server -- Free Microsoft Learn Path',        'course',        'Microsoft Learn',             'https://learn.microsoft.com/en-us/training/paths/windows-server-fundamentals-getting-started/', 8, 'Free', 'beginner', 'Free Microsoft learning path for Windows Server fundamentals.')
+('Windows Server',       'Windows Server -- Free Microsoft Learn Path',        'course',        'Microsoft Learn',             'https://learn.microsoft.com/en-us/training/paths/windows-server-fundamentals-getting-started/', 8, 'Free', 'beginner', 'Free Microsoft learning path for Windows Server fundamentals.'),
+
+-- ══════════════════════════════════════════════════════════════
+-- SECTION 4 -- SKILLS ADDED IN LIBRARY v4 (2026-11-01)
+-- The six skills the role re-tune added (docs/report_drafts/role_template_retune.md).
+-- Links checked on 1 November 2026. Resources already used for a related skill
+-- (Time Management, CI/CD, Recruitment, User Acceptance Testing) are not repeated.
+-- ══════════════════════════════════════════════════════════════
+
+('DevOps',               'Introduction to DevOps',                            'course',        'Coursera / IBM',              'https://www.coursera.org/learn/intro-to-devops',                          9,   'Free to audit',  'beginner',      'Why organisations adopt DevOps and how teams work with it: the business case, continuous integration, infrastructure as code and measuring results.'),
+('DevOps',               'Build a Beginner DevOps Project',                   'project',       'roadmap.sh',                  'https://roadmap.sh/devops/projects',                                       10,  'Free',           'intermediate',  'Pick a project from the list (for example a log archive tool, a Dockerized service or automated database backups), build it end to end and document the steps in a README.'),
+
+('Employee Onboarding',  'HRM - Ultimate Employee Onboarding with the 4Cs',   'course',        'Alison',                      'https://alison.com/course/hrm-the-ultimate-employee-onboarding-guide-with-4c-s', 3, 'Free',       'beginner',      'Free course on the 4Cs of onboarding (compliance, clarification, connection and culture), with the contents of an onboarding kit and a welcome mail.'),
+('Employee Onboarding',  'Prepare a New-Hire Onboarding Checklist for Malaysia', 'project',    'Self-directed / KWSP',        'https://www.kwsp.gov.my/en/employer/responsibilities/register-employee',   4,   'Free',           'beginner',      'Draft the first week of a new intern: offer letter and contract, EPF registration within 7 days of hiring (KWSP), SOCSO and EIS registration (PERKESO), orientation and a buddy.'),
+
+('Graphic Design',       'Fundamentals of Graphic Design',                    'course',        'Coursera / CalArts',          'https://www.coursera.org/learn/fundamentals-of-graphic-design',           15,  'Free to audit',  'beginner',      'Imagemaking, typography, shape and colour, and composition: the basics behind any poster, post or brochure.'),
+('Graphic Design',       'Graphic Design Essentials',                         'course',        'Canva Design School',         'https://www.canva.com/design-school/courses/graphic-design-essentials/',  2,   'Free',           'beginner',      'Ten short lessons on colour, fonts, images and branding in Canva; then practise by designing a social media post and a poster for a club event.'),
+
+('Microsoft Office',     'Word: Foundations',                                 'course',        'GCFGlobal LearnFree',         'https://www.learnfree.org/series/word-foundations',                        4,   'Free',           'beginner',      'Free step-by-step lessons on creating, formatting and sharing documents in Microsoft Word.'),
+('Microsoft Office',     'PowerPoint: Foundations',                           'course',        'GCFGlobal LearnFree',         'https://www.learnfree.org/series/powerpoint-foundations',                  4,   'Free',           'beginner',      'Free lessons on building clear slide decks in PowerPoint: layouts, themes, images and presenting.'),
+('Microsoft Office',     'Microsoft Office Specialist (MOS) Associate',       'certification', 'Certiport / Microsoft',       'https://certiport.pearsonvue.com/Certifications/Microsoft/MOS/Overview',   20,  'Paid (set by test centre)', 'intermediate', 'Exams in Word, Excel, PowerPoint and Outlook taken at an authorised test centre; shows employers a tested level of Office skills.'),
+
+('Organisational Skills', 'Organization Masterclass',                         'course',        'Alison',                      'https://alison.com/course/organization-masterclass',                      5,   'Free',           'intermediate',  'Free course on organising your tasks, files, schedule and workspace so that work is tracked and nothing is missed.'),
+('Organisational Skills', 'Run a Team Project on a Kanban Board',             'project',       'Self-directed / Trello',      'https://trello.com/guide',                                                 4,   'Free',           'beginner',      'Plan an assignment or club event on a Trello board: break it into cards, give each an owner and a due date, and keep the board up to date until the work is done.'),
+
+('Software Testing',     'Software Testing and Automation Specialization',    'course',        'Coursera / University of Minnesota', 'https://www.coursera.org/specializations/software-testing-automation', 90, 'Free to audit', 'beginner',      'Four courses, from test plans and black-box and white-box testing to automated analysis of code.'),
+('Software Testing',     'ISTQB Certified Tester Foundation Level (CTFL) in Malaysia', 'certification', 'Malaysian Software Testing Board (MSTB)', 'https://mstb.org/',                                 30,  'Paid (exam fee)', 'intermediate', 'The entry-level software testing certificate; MSTB runs ISTQB exams in Malaysia as its member board.'),
+('Software Testing',     'Write Unit and Regression Tests with pytest',       'project',       'Self-directed',               'https://docs.pytest.org/en/stable/getting-started.html',                   6,   'Free',           'intermediate',  'Add automated unit tests to one of your own projects, run them after every change and keep a regression test for each bug you fix.')
 
 ) AS r(skill_name, resource_title, resource_type, provider, url, duration_hours, cost, difficulty, description)
 ON sl.skill_name = r.skill_name
 WHERE sl.is_active = TRUE
 
 ON CONFLICT DO NOTHING;
+
+-- Every skill added in library v4 has at least one learning resource
+DO $$
+DECLARE missing TEXT;
+BEGIN
+    SELECT string_agg(sl.skill_name, ', ') INTO missing FROM skills_library sl
+    WHERE sl.source = 'v4' AND sl.is_active
+      AND NOT EXISTS (SELECT 1 FROM recommendations_library r WHERE r.skill_id = sl.skill_id);
+    IF missing IS NOT NULL THEN
+        RAISE EXCEPTION 'v4 skills without a learning resource: %', missing;
+    END IF;
+END $$;
 
 -- ── VERIFY ───────────────────────────────────────────────────
 SELECT COUNT(*) AS total_resources FROM recommendations_library;
