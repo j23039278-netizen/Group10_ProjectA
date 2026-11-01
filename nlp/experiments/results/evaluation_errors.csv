@@ -1,0 +1,263 @@
+jd_ref,skill_name,error,found_by,confidence,jd_text,importance,is_new,context
+JD-CE-0001,Critical Thinking,FP,semantic,0.77,analytical,,False,"...Bash, scripting or infrastructure monitoring tools is a plus * Good [analytical] and problem-solving skills * Willingness to learn, take initiative a..."
+JD-CE-0001,Cybersecurity,FN,,,,preferred,False,Learn and follow IT security practices
+JD-CE-0001,NEW: Virtualisation,FN,,,,bonus,True,virtual machines or networking technologies is an advantage
+JD-CE-0002,UI/UX Design,FP,keyword,1.0,user experience,,False,"...software and network issues, ensuring prompt resolution and positive [user experience] . * Diagnosing and resolving IT incidents in line with organizational..."
+JD-CE-0002,NEW: IT Asset Management,FN,,,,required,True,"IT asset management, inventory tracking"
+JD-CE-0002,NEW: IT Support,FN,,,,required,True,"Provide first-level technical support for hardware, software and network issues"
+JD-CE-0002,NEW: Microsoft Copilot,FN,,,,required,True,Microsoft Copilot
+JD-CE-0002,NEW: Power Automate,FN,,,,required,True,Microsoft Power Automate
+JD-CE-0002,NEW: Robotic Process Automation,FN,,,,bonus,True,UiPath (RPA)
+JD-CE-0002,NEW: UiPath,FN,,,,bonus,True,UiPath (RPA)
+JD-CE-0002,Research Skills,FN,,,,required,False,"Research, evaluate and introduce emerging technologies"
+JD-CE-0002,Self-Motivation,FN,,,,required,False,"Self-motivated, able to work independently"
+JD-CE-0002,Teamwork,FN,,,,required,False,Enjoy collaborating with individuals from diverse backgrounds and disciplines
+JD-CE-0004,Agile / Scrum,FP,keyword,1.0,agile,,False,...ent in written and spoken English. * The ability to multitask and be [agile] ...
+JD-CE-0004,NEW: High-Performance Computing,FN,,,,required,True,high-performance computing (HPC) infrastructure
+JD-CE-0004,Networking,FN,,,,required,False,high-speed networks
+JD-CE-0004,Time Management,FN,,,,required,False,The ability to multitask?
+JD-CE-0005,Cybersecurity,FP,keyword,1.0,Cybersecurity,,False,...relevant discipline * Interested to pursue internship opportunity in [Cybersecurity] or System Administraion field * For local students only * A minimum...
+JD-CE-0006,Critical Thinking,FP,semantic,0.77,analytical,,False,"...king, virtual machines and cloud services. * Strong troubleshooting, [analytical] and problem-solving skills. * Proficient in Excel and Google Sheets...."
+JD-CE-0006,NEW: Alibaba Cloud,FN,,,,required,True,Alibaba Cloud
+JD-CE-0006,NEW: Google Sheets,FN,,,,required,True,Proficient in Excel and Google Sheets.
+JD-CE-0006,NEW: IT Support,FN,,,,required,True,Provide L1 technical support and basic troubleshooting
+JD-CE-0006,NEW: Tencent Cloud,FN,,,,required,True,Tencent Cloud
+JD-CE-0006,Stakeholder Communication,FN,,,,required,False,"Coordinate with Technical, Sales and Procurement teams"
+JD-CE-0006,Time Management,FN,,,,required,False,Able to manage multiple tasks in a fast-paced environment.
+JD-CE-0007,Research Skills,FN,,,,required,False,ability to research and quickly utilize new technologies
+JD-CE-0008,Requirements Analysis,FP,semantic,0.642,Technical requirements,,False,"...* Experience with configuration management and automation systems [Technical requirements] * Server Systems - Linux * Virtualization - KVM, Xen, or similar..."
+JD-CE-0008,SQL,FP,keyword,1.0,SQL,,False,"...FS) * Experience with Windows Server 2012, 2016, 2019, and Microsoft [SQL] * Experience in Cisco IOS/NX-OS or Juniper Junos Who are we looki..."
+JD-CE-0008,Teamwork,FP,semantic,0.62,collaborate effectively,,False,...ommunication skills (English) * Able to work autonomously as well as [collaborate effectively] with various stakeholders * Comfortable working in a fast paced envi...
+JD-CE-0008,NEW: Block Storage,FN,,,,bonus,True,"Block Storage (iSCSI, SAN, NFS)"
+JD-CE-0008,NEW: Cloud Migration,FN,,,,required,True,Experience with on-premise to cloud migration
+JD-CE-0008,NEW: Incident Management,FN,,,,required,True,Experience with monitoring systems and incident management
+JD-CE-0008,NEW: Microsoft SQL Server,FN,,,,bonus,True,Microsoft SQL
+JD-CE-0008,NEW: OpenStack,FN,,,,bonus,True,"Cloudstack, Openstack, Proxmox VE"
+JD-CE-0008,NEW: Virtualisation,FN,,,,required,True,Solid experience with Linux and virtualization
+JD-CE-0008,Networking,FN,,,,required,False,Assessing and resolving server and network-related issues
+JD-CY-0001,Critical Thinking,FP,semantic,0.765,analytical,,False,"...d to networking and security. * CGPA above 3.0 is preferred. * Good [analytical] and communication skill. * Confident, articulative and fluent in Eng..."
+JD-CY-0001,NEW: IT Support,FN,,,,required,True,providing technical support for the assigned cybersecurity products
+JD-CY-0001,Self-Motivation,FN,,,,required,False,Quick learner and always look for ways to improve own self.
+JD-CY-0001,Teamwork,FN,,,,required,False,Work closely with technical support team
+JD-CY-0003,Critical Thinking,FP,semantic,0.77,analytical,,False,"...tools such as Kali Linux, Burp Suite or Nmap is an advantage * Good [analytical] and problem-solving skills, with a willingness to learn Perks and..."
+JD-CY-0003,NEW: Web Application Security,FN,,,,required,True,Support basic security testing of web applications
+JD-CY-0003,Research Skills,FN,,,,required,False,"Conduct research on vulnerabilities, exploits and cybersecurity tools"
+JD-CY-0003,Self-Motivation,FN,,,,required,False,with a willingness to learn
+JD-CY-0004,Adaptability,FN,,,,required,False,"Coachable, curious, and resilient"
+JD-CY-0004,Cloud Computing,FN,,,,required,False,"Windows, Linux, macOS, and cloud environments"
+JD-CY-0004,Communication,FN,,,,required,False,communicate professionally with teammates and clients
+JD-CY-0004,Documentation,FN,,,,required,False,Document findings clearly and accurately
+JD-CY-0004,Malware Analysis,FN,,,,required,False,malware artifacts
+JD-CY-0004,NEW: Chain of Custody,FN,,,,required,True,chain-of-custody requirements
+JD-CY-0004,NEW: EDR,FN,,,,preferred,True,"Hands-on exposure to EDR, SIEM, or forensic tooling"
+JD-CY-0004,NEW: Windows,FN,,,,required,True,"Working comfort with at least one of Windows, Linux, or macOS"
+JD-CY-0004,NEW: Working Under Pressure,FN,,,,required,True,Calm under pressure
+JD-CY-0004,NEW: macOS,FN,,,,required,True,"Working comfort with at least one of Windows, Linux, or macOS"
+JD-CY-0004,Self-Motivation,FN,,,,required,False,Take ownership of your own development
+JD-CY-0005,Critical Thinking,FP,semantic,0.77,analytical,,False,"...firewalls, antivirus software, and vulnerability scanners. * Strong [analytical] and problem-solving skills. * Good communication skills for document..."
+JD-CY-0005,Log Analysis,FN,,,,required,False,Monitor security alerts and logs
+JD-CY-0005,NEW: Antivirus,FN,,,,required,True,antivirus
+JD-CY-0005,NEW: Intrusion Detection/Prevention,FN,,,,required,True,intrusion detection/prevention systems
+JD-CY-0005,NEW: Operating Systems,FN,,,,required,True,"Basic understanding of network protocols, operating systems"
+JD-CY-0005,Networking,FN,,,,required,False,Basic understanding of network protocols
+JD-CY-0005,Security Frameworks,FN,,,,required,False,"relevant regulations and standards (e.g., GDPR, HIPAA, PCI-DSS)"
+JD-CY-0005,Security Operations (SOC),FN,,,,required,False,Monitor security alerts and logs from various security tools
+JD-CY-0008,Network Security,FP,semantic,0.604,Security and Network related concept,,False,...ent. * Priority will be given to those who has good understanding in [Security and Network related concept] . * Able to work independently and fast learner. * Available for dur...
+JD-CY-0008,Security Frameworks,FP,semantic,0.603,new security-related project,,False,...n our journey! Responsibilities * Testing and implementation of [new security-related project] . (SIEM / endpoint related) * Help out with daily monitoring of secur...
+JD-CY-0008,Teamwork,FP,keyword,1.0,team work,,False,...th other departments. If you will like to experience how the security [team work] and consistently update your knowledge on all those new emerging thre...
+JD-CY-0008,Cybersecurity,FN,,,,preferred,False,good understanding in Security and Network related concept
+JD-CY-0008,NEW: Security Awareness Training,FN,,,,required,True,Enhance email phishing exercise for internal staffs.
+JD-CY-0008,Networking,FN,,,,preferred,False,good understanding in Security and Network related concept
+JD-CY-0008,Security Operations (SOC),FN,,,,required,False,Help out with daily monitoring of security solutions in the environment.
+JD-CY-0008,Self-Motivation,FN,,,,required,False,Able to work independently and fast learner.
+JD-CY-0009,Communication,FN,,,,required,False,communicate effectively
+JD-CY-0009,NEW: Software Development,FN,,,,required,True,Proficiency in Software Development
+JD-CY-0009,Networking,FN,,,,required,False,Support network administration
+JD-CY-0009,Self-Motivation,FN,,,,required,False,Ability to work both independently
+JD-CY-0010,Log Analysis,FP,semantic,0.615,"track alerts, logs, and security incidents",,False,"...Assist in Security Event Monitoring – Work alongside SOC Analysts to [track alerts, logs, and security incidents] . * Support Incident Investigations – Learn to analyze security threa..."
+JD-CY-0010,SIEM,FP,semantic,0.665,Assist in Security Event Monitoring,,False,"...tion for a successful career in cybersecurity. What You’ll Do * [Assist in Security Event Monitoring] – Work alongside SOC Analysts to track alerts, logs, and security inc..."
+JD-CY-0010,Documentation,FN,,,,required,False,document findings
+JD-CY-0010,Incident Response,FN,,,,required,False,Support Incident Investigations
+JD-CY-0010,Research Skills,FN,,,,required,False,Participate in Cybersecurity Research & Training
+JD-CY-0010,Self-Motivation,FN,,,,required,False,Eager to learn & grow
+JD-DA-0003,Teamwork,FP,keyword,1.0,Collaboration,,False,"...ards to monitor key operational and financial metrics. * Stakeholder [Collaboration] — partner with cross-functional teams (Operations, Product & Tech, Fi..."
+JD-DA-0003,ETL,FN,,,,required,False,"extract, validate, and transform multi-source business data"
+JD-DA-0003,NEW: BigQuery,FN,,,,required,True,Google BigQuery
+JD-DA-0003,NEW: Root Cause Analysis,FN,,,,required,True,diagnose root causes
+JD-DA-0003,Stakeholder Communication,FN,,,,required,False,"* Stakeholder Collaboration — partner with cross-functional teams (Operations, Product & Tech, Finance) to establish clear metric definitions and maintain data integrity"
+JD-DA-0004,Business Process Improvement,FP,semantic,0.646,improve business processes,,False,...a. * Assist in developing and implementing data-driven strategies to [improve business processes] . * Participate in team meetings and contribute to discussions on dat...
+JD-DA-0004,Critical Thinking,FP,semantic,0.77,analytical,,False,"...tistics, Mathematics, Computer Science, or a related field. * Strong [analytical] and problem-solving skills with a keen attention to detail. * Excell..."
+JD-DA-0004,Decision Making,FP,semantic,0.635,data-driven strategies,,False,...acy and reliability of data. * Assist in developing and implementing [data-driven strategies] to improve business processes. * Participate in team meetings and co...
+JD-DA-0004,Process Mapping,FP,semantic,0.647,business processes,,False,...sist in developing and implementing data-driven strategies to improve [business processes] . * Participate in team meetings and contribute to discussions on dat...
+JD-DA-0004,Data Cleaning,FN,,,,required,False,"collecting, cleaning, and organising data"
+JD-DA-0004,Self-Motivation,FN,,,,required,False,Eagerness to learn
+JD-DA-0005,Project Management,FP,semantic,0.684,project and software team,,False,...enquirer for external and internal stakeholders. * Work closely with [project and software team] to improve end-to-end process. * Any other task assigned by manageme...
+JD-DA-0005,Data Analysis,FN,,,,required,False,conduct analysis of the output data
+JD-DA-0005,Documentation,FN,,,,required,False,Capability to produce detailed and factually accurate and easily comprehensible reports.
+JD-DA-0005,Requirements Analysis,FN,,,,required,False,understand the entire data extraction requirement
+JD-DA-0005,Self-Motivation,FN,,,,required,False,ability to work independently
+JD-DA-0005,Teamwork,FN,,,,required,False,Work closely with project and software team
+JD-DA-0006,Critical Thinking,FP,semantic,0.87,Analytical,,False,...accuracy. * Excellent organizational and time management skills. * [Analytical] and problem-solving mindset. * Ability to work independently and col...
+JD-DA-0006,Data Structures & Algorithms,FP,keyword,1.0,data structures,,False,...and report issues to relevant stakeholders. * Assist in maintaining [data structures] and documentation. Reporting & Analysis Support * Generate sche...
+JD-DA-0006,Data Visualisation,FP,keyword,1.0,dashboards,,False,...ng & Analysis Support * Generate scheduled operational reports and [dashboards] . * Prepare and compile data for management review and decision-makin...
+JD-DA-0006,Decision Making,FP,keyword,1.0,decision-making,,False,"...n plays an important role in ensuring efficient workflows, supporting [decision-making] , and identifying opportunities for continuous operational improvement..."
+JD-DA-0006,Statistical Analysis,FP,keyword,1.0,Statistics,,False,"...ee in Information Systems, Business Administration, Computer Science, [Statistics] , or related field. * Fresh graduates are encouraged to apply. Tec..."
+JD-DA-0006,Data Analysis,FN,,,,required,False,Assist with basic trend analysis
+JD-DA-0006,Data Cleaning,FN,,,,required,False,cleansing activities
+JD-DA-0006,NEW: Data Entry,FN,,,,required,True,"Enter, update, and maintain data"
+JD-DA-0006,NEW: Data Governance,FN,,,,required,True,Ensure compliance with company data management policies
+JD-DA-0006,NEW: Database Administration,FN,,,,required,True,Maintain and organize company databases
+JD-DA-0006,NEW: ERP,FN,,,,preferred,True,"Experience with ERP, CRM, or business information systems is preferred."
+JD-DA-0006,NEW: Power Query,FN,,,,preferred,True,Power Query preferred
+JD-DA-0006,Self-Motivation,FN,,,,required,False,Ability to work independently
+JD-DA-0007,Decision Making,FP,keyword,1.0,decision making,,False,"...e As a growing SME, we're looking to strengthen our operations and [decision making] with the power of data. We are hiring both Data Analyst (Internship)..."
+JD-DA-0007,Statistical Analysis,FP,keyword,1.0,Statistics,,False,"...Technology (IT), or a related field, with coursework in Data Science, [Statistics] , and Decision Science. * Proficient in Microsoft office familiarity..."
+JD-DA-0007,Self-Motivation,FN,,,,required,False,ready to learn
+JD-DA-0010,ETL,FN,,,,required,False,"data extraction, cleansing, and transformation"
+JD-DA-0010,NEW: DAX,FN,,,,required,True,DAX calculations
+JD-DA-0010,NEW: Power Query,FN,,,,bonus,True,Power Query is a plus
+JD-DA-0010,REST API,FN,,,,required,False,API integrations
+JD-DA-0010,Self-Motivation,FN,,,,required,False,Willing to learn
+JD-DA-0010,Teamwork,FN,,,,required,False,able to work in a team
+JD-DA-0011,Data Structures & Algorithms,FP,keyword,1.0,data structures,,False,"...s * Develop a strong understanding of ERP manufacturing processes, [data structures] and business logic. * Support analysis and improvement of manufactur..."
+JD-DA-0011,Decision Making,FP,keyword,1.0,decision-making,,False,"...system or data issues affecting production visibility and operational [decision-making] . * Participate in ERP enhancement, system integration, automation an..."
+JD-DA-0011,Software Testing,FP,keyword,0.8,testing,,False,"...on and digitalization projects. * Support user requirement analysis, [testing] , implementation and continuous improvement of manufacturing-related s..."
+JD-DA-0011,Statistical Analysis,FP,keyword,1.0,Statistics,,False,...arch * Business Analytics / Data Analytics * Information Systems * [Statistics] / Mathematics * Computer Science Added Advantage: * Experience...
+JD-DA-0011,Time Management,FP,keyword,1.0,prioritization,,False,"...oduction bottlenecks, machine loading, resource constraints and order [prioritization] . * Provide data-driven recommendations to improve production flow, s..."
+JD-DA-0011,NEW: ERP,FN,,,,required,True,analyze data from ERP and other manufacturing systems
+JD-DA-0011,NEW: Production Planning,FN,,,,bonus,True,"Knowledge of production planning, scheduling, inventory, WIP or capacity planning."
+JD-DA-0011,NEW: Root Cause Analysis,FN,,,,required,True,root-cause analysis
+JD-DA-0011,NEW: Scenario Analysis,FN,,,,required,True,Assist in scenario analysis and simulation
+JD-DA-0011,Teamwork,FN,,,,required,False,"Work closely with Production, PPC, Warehouse, Quality, Sales, Supply Chain"
+JD-DS-0001,Leadership,FP,keyword,1.0,leadership,,False,"...rong written English, since findings get communicated to the team and [leadership] , not just left in a notebook What Success Looks Like * Within t..."
+JD-DS-0001,Statistical Analysis,FP,keyword,1.0,Statistics,,False,"...ing or recently completed a degree in Data Science, Computer Science, [Statistics] , Engineering, or a related quantitative field * Comfortable with amb..."
+JD-DS-0001,Adaptability,FN,,,,required,False,Comfortable with ambiguity
+JD-DS-0001,Communication,FN,,,,required,False,Able to explain your reasoning and your results to people who are not technical
+JD-DS-0001,Model Evaluation,FN,,,,required,False,how to evaluate a model honestly
+JD-DS-0001,Self-Motivation,FN,,,,required,False,Self-directed enough to move with minimal hand-holding
+JD-DS-0002,Business Analysis,FP,semantic,0.616,business needs,,False,"...be considered for full-time opportunities upon graduation, subject to [business needs] and available headcount. Perks and benefits: Miscellaneous allowan..."
+JD-DS-0002,Data Cleaning,FP,semantic,0.607,Data manipulation tasks,,False,...ure to: * Python coding * Cloud infrastructure * SQL querying * [Data manipulation tasks] Career Growth: Interns who demonstrate strong performance and pote...
+JD-DS-0002,AI Literacy,FN,,,,required,False,Assist the team to develop and deploy AI use cases
+JD-DS-0002,NEW: Data Labelling,FN,,,,required,True,Helping build labelled datasets for model evaluation.
+JD-DS-0002,NEW: Robotic Process Automation,FN,,,,required,True,building RPA pipelines
+JD-DS-0004,Business Analysis,FP,semantic,0.637,evaluate business scenarios,,False,"...ponsibilities * What-if Simulation * Develop simulation models to [evaluate business scenarios] . * Assess impact of pricing, display, and stock changes. * Allocati..."
+JD-DS-0004,Stakeholder Communication,FP,semantic,0.668,stakeholders,,False,"...ills with the ability to present data insights and recommendations to [stakeholders] . * Knowledge of forecasting, predictive modelling, or machine learni..."
+JD-DS-0004,Data Cleaning,FN,,,,required,False,"Collects, cleans, and analyzes data"
+JD-DS-0004,NEW: Forecasting,FN,,,,bonus,True,"Knowledge of forecasting, predictive modelling, or machine learning is an added advantage."
+JD-DS-0004,NEW: Optimisation Modelling,FN,,,,required,True,Design optimization models for inventory allocation
+JD-DS-0004,NEW: Simulation Modelling,FN,,,,required,True,Develop simulation models to evaluate business scenarios.
+JD-DS-0004,Presentation Skills,FN,,,,required,False,present data insights and recommendations to stakeholders
+JD-DS-0005,Recruitment,FP,keyword,1.0,Recruitment,,False,"...en and verbal communication skills, with high attention to detail. [Recruitment] process * Online Technical Test * Take-Home Assessment * Intervi..."
+JD-DS-0005,Data Analysis,FN,,,,required,False,Perform analyses to understand how our users interact with our products
+JD-DS-0005,NEW: MATLAB,FN,,,,required,True,"Proficient in either R, Python, Matlab"
+JD-DS-0005,NEW: Predictive Analytics,FN,,,,required,True,predictive analytics
+JD-DS-0005,Problem Solving,FN,,,,required,False,ability to problem-solve independently
+JD-DS-0005,Self-Motivation,FN,,,,required,False,Fast learner
+JD-DS-0007,Critical Thinking,FP,semantic,0.721,analytical,,False,...(typically above 3.5/ 2nd Upper) is preferred. Skills * Strong [analytical] and technical problem-solving abilities. * Proficient in digital too...
+JD-DS-0007,NEW: Software Development,FN,,,,bonus,True,Familiarity with software development processes
+JD-DS-0007,Stakeholder Communication,FN,,,,required,False,interact with technical and non-technical stakeholders
+JD-DS-0007,Time Management,FN,,,,required,False,the ability to prioritize tasks in a fast-paced environment
+JD-DS-0009,Critical Thinking,FP,semantic,0.77,analytical,,False,"...Python, SQL, relational databases and programming concepts. * Strong [analytical] and problem-solving skills, with good communication, teamwork and a p..."
+JD-DS-0009,Data Cleaning,FN,,,,required,False,"Perform data validation, reconciliation and troubleshooting."
+JD-DS-0009,REST API,FN,,,,required,False,"Assist with integrating data from databases, APIs"
+JD-DS-0010,AI Literacy,FP,keyword,1.0,Artificial Intelligence,,False,...er tasks assigned by supervisor Minimum Qualification * Degree ( [Artificial Intelligence] / Computer Science/Data Science) disciplines are preferred * Undergra...
+JD-DS-0010,Statistical Analysis,FN,,,,required,False,strengthen the statistical back up
+JD-SD-0003,Critical Thinking,FN,,,,required,False,Good logical thinking
+JD-SD-0003,NEW: ASP.NET,FN,,,,required,True,ASP.net & C#
+JD-SD-0003,NEW: SDLC,FN,,,,required,True,Involve in whole Software Development Life Cycle (SDLC)
+JD-SD-0003,Problem Solving,FN,,,,required,False,enthusiastic problem-solver
+JD-SD-0005,Data Visualisation,FP,keyword,1.0,Dashboard,,False,"...stry 4.0 Development (Machine Automation, AGV, Mobility, Data Mining, [Dashboard] and etc). Requirements * Bachelor's Degree in Computer Science/..."
+JD-SD-0005,Adaptability,FN,,,,required,False,"Required skill(s): Communication, Adaptive, Teamwork."
+JD-SD-0005,NEW: ERP,FN,,,,preferred,True,To learn & involve in Enterprise Management Software (ERP)
+JD-SD-0005,NEW: SDLC,FN,,,,required,True,Software Development Life Cycle (SDLC)
+JD-SD-0007,Business Analysis,FP,keyword,1.0,business requirements,,False,"...engineers own the quality of the result. What You'll Do * Turn [business requirements] and UI/UX flows into clean, secure, production-ready features * Writ..."
+JD-SD-0007,Project Management,FP,semantic,0.65,established project structure,,False,"...nd give AI tools the right technical and business context, within our [established project structure] and conventions * Review AI-generated code for logic, security, perf..."
+JD-SD-0007,Documentation,FN,,,,required,False,Write clear specs
+JD-SD-0007,Generative AI,FN,,,,required,False,"Practical, hands-on experience using AI coding tools"
+JD-SD-0007,NEW: Code Review,FN,,,,required,True,"Review AI-generated code for logic, security, performance and maintainability"
+JD-SD-0007,NEW: Full-Stack Development,FN,,,,required,True,"Solid fundamentals in frontend, backend, APIs, databases and web architecture"
+JD-SD-0007,Prompt Engineering,FN,,,,required,False,give AI tools the right technical and business context
+JD-SD-0007,REST API,FN,,,,required,False,"Solid fundamentals in frontend, backend, APIs"
+JD-SD-0007,Requirements Analysis,FN,,,,required,False,"Turn business requirements and UI/UX flows into clean, secure, production-ready features"
+JD-SD-0007,Self-Motivation,FN,,,,required,False,Able to work independently and take ownership
+JD-SD-0008,Google Analytics,FP,semantic,0.618,provide analytics,,False,"...h manufacturing equipment in semiconductor factories to collect data, [provide analytics] , and enable intelligent monitoring and control. * Occasional travel..."
+JD-SD-0008,Project Management,FP,semantic,0.611,project implementation,,False,...local and overseas customer sites to provide product support and for [project implementation] . Requirements * Candidate must possess a good Bachelor's Degree...
+JD-SD-0008,SQL,FP,keyword,1.0,SQL,,False,"...owing technologies/ programming languages: C#, .NET, Web Services, MS [SQL] Server, VB, Python, Web Programming, Dashboards, SECS/GEM, Machine Le..."
+JD-SD-0008,Generative AI,FN,,,,preferred,False,"Familiar with the use of A.I. tools for software design, development, debugging"
+JD-SD-0008,NEW: .NET,FN,,,,required,True,"C#, .NET"
+JD-SD-0008,NEW: Microsoft SQL Server,FN,,,,required,True,MS SQL Server
+JD-SD-0008,NEW: SECS/GEM,FN,,,,required,True,SECS/GEM
+JD-SD-0008,NEW: VB,FN,,,,required,True,"MS SQL Server, VB"
+JD-SD-0008,NEW: Web Development,FN,,,,required,True,Web Programming
+JD-SD-0008,NEW: Web Services,FN,,,,required,True,Web Services
+JD-SD-0009,DevOps,FP,keyword,1.0,DevOps,,False,"...l-documented code * Collaborate with cross-functional teams (PM, QA, [DevOps] ) in an Agile environment * Debug and troubleshoot application issues..."
+JD-SD-0009,Project Management,FP,keyword,0.8,PM,,False,"...and well-documented code * Collaborate with cross-functional teams ( [PM] , QA, DevOps) in an Agile environment * Debug and troubleshoot applic..."
+JD-SD-0009,Software Testing,FP,keyword,0.8,QA,,False,"...well-documented code * Collaborate with cross-functional teams (PM, [QA] , DevOps) in an Agile environment * Debug and troubleshoot applicatio..."
+JD-SD-0009,Documentation,FN,,,,required,False,well-documented code
+JD-SD-0009,NEW: Backend Development,FN,,,,required,True,Java-based backend services and APIs
+JD-SD-0009,NEW: Debugging,FN,,,,required,True,Debug and troubleshoot application issues
+JD-SD-0009,NEW: SDLC,FN,,,,required,True,Participate in the full software development lifecycle
+JD-SD-0009,REST API,FN,,,,required,False,Java-based backend services and APIs
+JD-SD-0009,Self-Motivation,FN,,,,required,False,willingness to learn
+JD-SD-0009,Teamwork,FN,,,,required,False,"Collaborate with cross-functional teams (PM, QA, DevOps)"
+JD-SD-0011,Critical Thinking,FP,semantic,0.77,analytical,,False,"...ing/Financial Services domain experience is highly preferred. * Good [analytical] , problem-solving, and communication skills. * Ability to work effect..."
+JD-SD-0011,NEW: Test Automation,FN,,,,bonus,True,Knowledge or exposure to Automation Testing will be an advantage.
+JD-SD-0011,NEW: Test Case Design,FN,,,,required,True,"test case preparation, test execution, and defect reporting"
+JD-SD-0011,Teamwork,FN,,,,required,False,Ability to work effectively within a team
+JD-SD-0011,Time Management,FN,,,,required,False,meet project timelines
+JD-SD-0012,Business Analysis,FP,keyword,1.0,business requirements,,False,...implementation of new features and improvements based on product and [business requirements] . * Coordinate with external developers or vendors when required for...
+JD-SD-0012,Critical Thinking,FP,semantic,0.77,analytical,,False,"...firmware, robotics, and new technologies. * Good problem-solving and [analytical] skills. * Detail-oriented and careful when handling development, tes..."
+JD-SD-0012,UI/UX Design,FP,keyword,1.0,user experience,,False,...nd learn new AI technologies that may improve product performance and [user experience] . Firmware & Product Development * Assist with firmware developm...
+JD-SD-0012,Data Cleaning,FN,,,,required,False,"Support data collection, cleaning, organization, labelling"
+JD-SD-0012,Model Evaluation,FN,,,,required,False,Assist in testing and evaluating AI models
+JD-SD-0012,NEW: C,FN,,,,preferred,True,C / C++
+JD-SD-0012,NEW: Data Labelling,FN,,,,required,True,"labelling, and preparation for AI development"
+JD-SD-0012,NEW: Embedded Systems,FN,,,,preferred,True,"Basic knowledge of embedded systems, microcontrollers, or firmware development."
+JD-SD-0012,NEW: Firmware Development,FN,,,,required,True,"Assist with firmware development, testing, debugging, and maintenance for embedded systems."
+JD-SD-0012,NEW: Mobile App Development,FN,,,,required,True,"Maintain, troubleshoot, and improve existing mobile applications"
+JD-SD-0012,NEW: Web Development,FN,,,,required,True,"Maintain, troubleshoot, and improve existing mobile applications and web platforms."
+JD-SD-0012,Stakeholder Communication,FN,,,,required,False,Coordinate with external developers or vendors
+JD-SD-0012,Teamwork,FN,,,,required,False,ability to work effectively within a multidisciplinary team
+JD-WD-0001,Critical Thinking,FP,semantic,0.77,analytical,,False,...cosystem and UI styling with Tailwind CSS. * Self-Driven with strong [analytical] and problem-solving skills * Strong learning aptitude * Internship...
+JD-WD-0001,NEW: Debugging,FN,,,,required,True,Perform testing and debugging
+JD-WD-0001,NEW: Tailwind CSS,FN,,,,required,True,UI styling with Tailwind CSS
+JD-WD-0001,Software Testing,FN,,,,required,False,Perform testing and debugging
+JD-WD-0002,Cloud Computing,FN,,,,bonus,False,"Nice to have: Docker, Linux or cloud hosting"
+JD-WD-0002,NEW: IT Support,FN,,,,required,True,Help with day-to-day IT support
+JD-WD-0002,NEW: Laravel,FN,,,,required,True,PHP / Laravel
+JD-WD-0002,NEW: Web Development,FN,,,,required,True,Build and improve in-house web systems
+JD-WD-0002,Software Testing,FN,,,,required,False,"Test, fix bugs"
+JD-WD-0004,Data Visualisation,FP,keyword,1.0,dashboard,,False,...Guard Ops App Development * Build and improve features on the web [dashboard] (Next.js) and mobile attendance app (Flutter) * Work with the Supaba...
+JD-WD-0004,Generative AI,FN,,,,required,False,Use AI coding tools to speed up development
+JD-WD-0004,NEW: Dart,FN,,,,bonus,True,Experience with Flutter/Dart
+JD-WD-0004,NEW: Flutter,FN,,,,required,True,mobile attendance app (Flutter)
+JD-WD-0004,NEW: Google Workspace,FN,,,,required,True,Comfortable using Google Workspace
+JD-WD-0004,NEW: IT Support,FN,,,,required,True,Provide first-level troubleshooting for staff software and tools
+JD-WD-0004,NEW: Next.js,FN,,,,required,True,web dashboard (Next.js)
+JD-WD-0004,NEW: Supabase,FN,,,,required,True,Work with the Supabase backend
+JD-WD-0004,REST API,FN,,,,required,False,Work with APIs and webhooks
+JD-WD-0004,Software Testing,FN,,,,required,False,"Fix bugs, test new features"
+JD-WD-0008,Data Modelling,FP,semantic,0.621,database design,,False,"...* Manage data flow between front-end and backend systems, including [database design] and queries. * Write maintainable, reusable, and well-tested code...."
+JD-WD-0008,Communication,FN,,,,required,False,"You're proactive, communicative"
+JD-WD-0008,NEW: .NET,FN,,,,required,True,"Node.js, .NET Core"
+JD-WD-0008,NEW: Database Design,FN,,,,required,True,including database design and queries
+JD-WD-0008,NEW: Full-Stack Development,FN,,,,required,True,"Design, develop, and maintain full-stack web applications"
+JD-WD-0008,NEW: Web Accessibility,FN,,,,bonus,True,"Experience with performance optimization, security best practices, or accessibility."
+JD-WD-0008,SQL,FN,,,,required,False,including database design and queries
+JD-WD-0009,Email Marketing,FP,keyword,1.0,email campaigns,,False,...he role Develop and maintain web applications. Build HTML EDMs for [email campaigns] . Create campaign microsites and landing pages. Support maintenance of...
+JD-WD-0009,NEW: Browser Testing,FN,,,,preferred,True,Familiarity with web performance and browser testing
+JD-WD-0009,NEW: CMS,FN,,,,required,True,minor CMS work
+JD-WD-0009,NEW: HTML Email (EDM),FN,,,,required,True,Develop HTML-based email templates (EDMs)
+JD-WD-0009,NEW: Responsive Web Design,FN,,,,required,True,Experience building EDMs and responsive web pages
+JD-WD-0009,NEW: Web Accessibility,FN,,,,required,True,Basic understanding of web standards and accessibility
+JD-WD-0009,Teamwork,FN,,,,required,False,"Collaborate with marketing, design, and development teams"
+JD-WD-0010,Project Management,FP,semantic,0.665,Project Manager,,False,"...er. * Deploy, implement & maintain the system. * Meet customer with [Project Manager] . * Others will be based on the role of the internship. Requiremen..."
+JD-WD-0010,NEW: System Deployment,FN,,,,required,True,"Deploy, implement & maintain the system."
+JD-WD-0011,Communication,FP,keyword,1.0,communication,,False,"...lcome to apply. * Able to communicate in Mandarin for effective team [communication] with Mandarin-speaking clients. * Must Have: PHP, HTML, CSS, JavaScr..."
+JD-WD-0011,Project Management,FP,semantic,0.649,Manage multiple projects,,False,...components are consistent and of high quality across all projects. * [Manage multiple projects] simultaneously and deliver projects within deadlines. Requirements...
+JD-WD-0011,NEW: Backend Development,FN,,,,required,True,Expand and enhance existing backend services
+JD-WD-0011,NEW: Bootstrap,FN,,,,preferred,True,"Familiarity with Sourcetree, Bootstrap, and CodeIgniter Framework."
+JD-WD-0011,NEW: CodeIgniter,FN,,,,preferred,True,"Familiarity with Sourcetree, Bootstrap, and CodeIgniter Framework."
+JD-WD-0011,NEW: Sourcetree,FN,,,,preferred,True,"Familiarity with Sourcetree, Bootstrap, and CodeIgniter Framework."
+JD-WD-0011,NEW: Web Development,FN,,,,required,True,Build and maintain high-quality web applications
+JD-WD-0011,Time Management,FN,,,,required,False,Manage multiple projects simultaneously and deliver projects within deadlines.
