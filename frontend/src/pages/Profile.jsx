@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import { studentAPI, fileAPI, authAPI, jobsAPI } from '../api/client'
 import { label } from '../utils/labels'
 import { courseLabel } from '../utils/courses'
+import { SKILL_CATEGORIES, levelDots } from '../utils/skillCategories'
 import EvidenceFiles, { PendingFiles } from '../components/EvidenceFiles'
 import { MAX_FILES } from '../components/evidenceRules'
 import ResultsReminder from '../components/ResultsReminder'
@@ -430,25 +431,43 @@ export default function Profile() {
           {card(
             <>
               {cardTitle(`My Skills (${skills.length})`)}
-              {skills.length === 0
-                ? <div style={{ color: '#8b92a8', fontSize: '13px' }}>No skills added yet.</div>
-                : skills.map((s, i) => (
-                  <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: i < skills.length-1 ? '1px solid #e4e6ef' : 'none' }}>
-                    <div>
-                      <span style={{ fontSize: '13px', fontWeight: '500', color: '#1a1f2e' }}>{s.skill_name}</span>
-                      <span style={{ fontSize: '11px', color: '#8b92a8', marginLeft: '8px' }}>{label(s.category)}</span>
+              {/* Grouped by category, one colour per category; the level is shown with dots */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '12px' }}>
+                {SKILL_CATEGORIES.map(cat => {
+                  const list = skills.filter(s => s.category === cat.id).sort((a, b) => a.skill_name.localeCompare(b.skill_name))
+                  return (
+                    <div key={cat.id} style={{ border: `1px solid ${cat.border}`, borderTop: `3px solid ${cat.color}`, borderRadius: '10px', overflow: 'hidden' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '9px 12px', background: cat.bg }}>
+                        <span style={{ fontSize: '12px', fontWeight: '700', color: cat.color }}>{cat.title}</span>
+                        <span style={{ fontSize: '11px', fontWeight: '700', color: cat.color }}>{list.length}</span>
+                      </div>
+                      <div style={{ padding: '4px 12px 8px' }}>
+                        {list.length === 0 ? (
+                          <div style={{ fontSize: '12px', color: '#8b92a8', padding: '8px 0' }}>
+                            None yet. Add one above, or upload your CV.
+                          </div>
+                        ) : list.map((s, i) => (
+                          <div key={s.skill_id || s.student_skill_id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '8px',
+                                                                           padding: '7px 0', borderTop: i ? '1px solid #f0f1f5' : 'none' }}>
+                            <span style={{ fontSize: '13px', fontWeight: '500', color: '#1a1f2e', minWidth: 0, overflowWrap: 'anywhere' }}>{s.skill_name}</span>
+                            <span style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
+                              <span title={label(s.proficiency_level)} style={{ fontSize: '11px', color: '#4a5168', whiteSpace: 'nowrap' }}>
+                                <span style={{ color: cat.color, letterSpacing: '1px' }}>{levelDots(s.proficiency_level)}</span> {label(s.proficiency_level)}
+                              </span>
+                              <button onClick={() => removeSkill(s.skill_id || s.student_skill_id)} aria-label={`Remove ${s.skill_name}`} title="Remove"
+                                style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#8b92a8', fontSize: '13px', padding: '0 2px' }}>✕</button>
+                            </span>
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                      <span style={{
-                        padding: '3px 9px', borderRadius: '20px', fontSize: '11px', fontWeight: '600',
-                        background: s.proficiency_level === 'advanced' ? '#dcfce7' : s.proficiency_level === 'intermediate' ? '#fef3c7' : '#fee2e2',
-                        color: s.proficiency_level === 'advanced' ? '#16a34a' : s.proficiency_level === 'intermediate' ? '#d97706' : '#dc2626',
-                      }}>{label(s.proficiency_level)}</span>
-                      <button onClick={() => removeSkill(s.skill_id || s.student_skill_id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#dc2626', fontSize: '14px' }}>✕</button>
-                    </div>
-                  </div>
-                ))
-              }
+                  )
+                })}
+              </div>
+              <div style={{ fontSize: '11px', color: '#8b92a8', marginTop: '10px' }}>
+                ●○○ Beginner · ●●○ Intermediate · ●●● Advanced. A beginner skill counts as Strong in an assessment when a project,
+                internship or certification in your profile shows it.
+              </div>
             </>
           )}
         </>

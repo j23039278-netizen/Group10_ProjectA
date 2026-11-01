@@ -37,6 +37,14 @@ const STATUS = {
   needs_support: { label: 'Needs Support', bg: '#fee2e2', color: C.red },
   none:          { label: 'No Assessment', bg: C.bg,      color: C.muted },
 }
+// Skill categories (skills_library.category); Soft is the soft-skill view the lecturer asked for
+const CATEGORIES = [
+  { id: 'Technical',  label: 'Technical' },
+  { id: 'AI_Digital', label: 'AI & Digital' },
+  { id: 'Analytical', label: 'Analytical' },
+  { id: 'Soft',       label: 'Soft skills' },
+]
+const categoryLabel = (id) => CATEGORIES.find(c => c.id === id)?.label || id
 const num = (v) => (v == null ? null : parseFloat(v))
 let BANDS = { on_track: 70, needs_support: 40 }
 const statusOf = (score) => score == null ? 'none' : score >= BANDS.on_track ? 'on_track' : score >= BANDS.needs_support ? 'developing' : 'needs_support'
@@ -87,7 +95,10 @@ export default function AdvisorDashboard() {
   const [gaps, setGaps]         = useState([])          // course-wide, for the overview chart
   const [roles, setRoles]       = useState([])          // job roles with skills, for the skill-gap filter
   const [roleId, setRoleId]     = useState('')
-  const [roleGaps, setRoleGaps] = useState(null)        // skill gaps of one assessed role
+  const [gapProgramme, setGapProgramme] = useState('')  // skill gaps of one programme (major)
+  const [gapCategory, setGapCategory]   = useState('')  // skill gaps of one skill category
+  const [roleGaps, setRoleGaps] = useState(null)        // skill gaps with the filters above
+  const [categories, setCategories] = useState(null)    // Strong / Developing / Gap per category
   const [progress, setProgress] = useState(null)
   const [loading, setLoading]   = useState(true)
   const [error, setError]       = useState('')
@@ -121,12 +132,22 @@ export default function AdvisorDashboard() {
     return () => { current = false }
   }, [course])
 
+  const gapFilter = roleId || gapProgramme || gapCategory
   useEffect(() => {
-    if (!roleId) { setRoleGaps(null); return }
+    if (!gapFilter) { setRoleGaps(null); return }
     let current = true
-    advisorAPI.skillGaps(course, roleId).then(r => current && setRoleGaps(r.data)).catch(() => {})
+    setRoleGaps(null)
+    advisorAPI.skillGaps(course, roleId, gapProgramme, gapCategory).then(r => current && setRoleGaps(r.data)).catch(() => {})
     return () => { current = false }
-  }, [course, roleId])
+  }, [course, roleId, gapProgramme, gapCategory, gapFilter])
+
+  useEffect(() => {
+    if (tab !== 'skill gaps') return
+    let current = true
+    setCategories(null)
+    advisorAPI.skillCategories(course, roleId, gapProgramme).then(r => current && setCategories(r.data)).catch(() => {})
+    return () => { current = false }
+  }, [tab, course, roleId, gapProgramme])
 
   useEffect(() => {
     if (tab !== 'progress') return
@@ -181,8 +202,9 @@ export default function AdvisorDashboard() {
 
   if (loading) return <div style={{ padding: '40px', color: C.muted }}>Loading...</div>
 
-  const shownGaps = roleId ? (roleGaps || []) : gaps
+  const shownGaps = gapFilter ? (roleGaps || []) : gaps
   const roleName  = roles.find(r => r.role_id === roleId)?.role_name
+  const gapTitle  = [roleName, gapProgramme, gapCategory && categoryLabel(gapCategory)].filter(Boolean).join(' · ')
   const total     = overview?.total_students || 0
   const sc        = overview?.status_counts || {}
 
@@ -208,7 +230,7 @@ export default function AdvisorDashboard() {
             const n = c.id ? students.filter(s => s.course === c.id).length : students.length
             return (
               <button key={c.id || 'all'} role="tab" aria-selected={active}
-                onClick={() => { setCourse(c.id); setRoleId(''); setProgramme(''); setTarget(''); setShownRows(PAGE_SIZE) }}
+                onClick={() => { setCourse(c.id); setRoleId(''); setGapProgramme(''); setProgramme(''); setTarget(''); setShownRows(PAGE_SIZE) }}
                 style={{ padding: '6px 14px', borderRadius: '20px', fontSize: '12px', fontWeight: '600', cursor: 'pointer',
                          background: active ? C.blue : '#fff', color: active ? '#fff' : C.body, border: `1.5px solid ${active ? C.blue : C.line}` }}>
                 {c.label} ({n})
@@ -336,14 +358,18 @@ export default function AdvisorDashboard() {
       {tab === 'skill gaps' && (
         <div style={card}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px', flexWrap: 'wrap', marginBottom: '6px' }}>
-            <div style={heading}>Skill Gap Report — {cohortName}{roleName ? ` · ${roleName}` : ''}</div>
+            <div style={heading}>Skill Gap Report — {cohortName}{gapTitle ? ` · ${gapTitle}` : ''}</div>
             <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+              <select aria-label="Programme" value={gapProgramme} onChange={e => setGapProgramme(e.target.value)} style={{ ...input, maxWidth: '280px' }}>
+                <option value="">All programmes</option>
+                {programmes.map(p => <option key={p} value={p}>{p}</option>)}
+              </select>
               <select aria-label="Assessed job role" value={roleId} onChange={e => setRoleId(e.target.value)} style={input}>
                 <option value="">All assessed roles</option>
                 {courseRoles.map(r => <option key={r.role_id} value={r.role_id}>{r.role_name}</option>)}
               </select>
               <button style={btn(false)} disabled={!shownGaps.length}
-                onClick={() => downloadCsv(csvName(`skill_gaps${roleName ? `_${roleName.replace(/\s+/g, '_')}` : ''}`), [
+                onClick={() => downloadCsv(csvName(`skill_gaps${gapTitle ? `_${gapTitle.replace(/[^A-Za-z0-9]+/g, '_')}` : ''}`), [
                   { label: 'Skill', value: g => g.skill_name }, { label: 'Category', value: g => g.category },
                   { label: 'Gap %', value: g => g.gap_percentage }, { label: 'Gap', value: g => g.gap_count },
                   { label: 'Developing', value: g => g.developing_count }, { label: 'Strong', value: g => g.strong_count },
@@ -354,9 +380,44 @@ export default function AdvisorDashboard() {
             </div>
           </div>
           <div style={{ fontSize: '12px', color: C.muted, marginBottom: '14px' }}>
-            The 20 skills most often missing in each student&apos;s latest assessment{roleName ? ` against ${roleName}` : ''}.
+            The 20 skills{gapCategory ? ` (${categoryLabel(gapCategory)} only)` : ''} most often missing in each
+            student&apos;s latest assessment{roleName ? ` against ${roleName}` : ''}{gapProgramme ? `, ${gapProgramme} students only` : ''}.
+            Click a category to see only its skills.
           </div>
-          {roleId && roleGaps == null ? <Empty>Loading…</Empty> : shownGaps.length === 0 ? <Empty>No assessment data for this selection yet.</Empty> : (
+
+          {/* Skill categories: how strong the cohort is in each; a card shows only that category */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))', gap: '10px', marginBottom: '16px' }}>
+            {(categories || CATEGORIES.map(c => ({ category: c.id, total: null }))).map(cat => {
+              const selected = gapCategory === cat.category
+              const soft = cat.category === 'Soft'
+              const parts = [['strong', C.green], ['developing', C.amber], ['gap', C.red]]
+              return (
+                <button key={cat.category} onClick={() => setGapCategory(selected ? '' : cat.category)} aria-pressed={selected}
+                  title={selected ? 'Show every category' : `Show only ${categoryLabel(cat.category)}`}
+                  style={{ textAlign: 'left', cursor: 'pointer', borderRadius: '10px', padding: '12px 14px',
+                           background: selected ? '#eef3ff' : soft ? '#fbf8ff' : '#fff',
+                           border: `1.5px solid ${selected ? C.blue : soft ? '#ddd6fe' : C.line}` }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: '6px' }}>
+                    <span style={{ fontSize: '12px', fontWeight: '700', color: C.ink }}>{categoryLabel(cat.category)}</span>
+                    <span style={{ fontSize: '12px', fontWeight: '700', color: cat.gap_percentage == null ? C.muted : C.red }}>
+                      {cat.total == null ? '…' : cat.gap_percentage == null ? 'No data' : `${cat.gap_percentage}% gap`}
+                    </span>
+                  </div>
+                  <div style={{ display: 'flex', height: '8px', borderRadius: '99px', overflow: 'hidden', background: C.line, margin: '8px 0 6px' }}>
+                    {cat.total > 0 && parts.map(([k, col]) => (
+                      <div key={k} style={{ width: `${pct(cat[`${k}_count`], cat.total)}%`, background: col }} />
+                    ))}
+                  </div>
+                  <div style={{ fontSize: '11px', color: C.muted }}>
+                    {!cat.total ? 'Not asked for in these assessments'
+                      : `${pct(cat.strong_count, cat.total)}% strong · ${pct(cat.developing_count, cat.total)}% developing · ${cat.assessments} assessments`}
+                  </div>
+                </button>
+              )
+            })}
+          </div>
+
+          {gapFilter && roleGaps == null ? <Empty>Loading…</Empty> : shownGaps.length === 0 ? <Empty>No assessment data for this selection yet.</Empty> : (
             <div style={{ overflowX: 'auto' }}>
               <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '720px' }}>
                 <thead><tr>{['Skill', 'Category', 'Gap %', 'Gap', 'Developing', 'Strong', 'Assessments'].map(h => <th key={h} style={th}>{h}</th>)}</tr></thead>

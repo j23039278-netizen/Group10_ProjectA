@@ -1,7 +1,10 @@
 // SEAGAS — Skill Gap Analysis Page
 import { useState, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
-import { assessAPI } from '../api/client'
+import { assessAPI, studentAPI } from '../api/client'
+import DimensionBar from '../components/DimensionBar'
+import { readinessColor } from '../utils/readiness'
+import { DIMENSIONS } from '../utils/dimensions'
 import { label } from '../utils/labels'
 
 export default function SkillGap() {
@@ -11,8 +14,10 @@ export default function SkillGap() {
   const [history,    setHistory]    = useState([])
   const [selId,      setSelId]      = useState(location.state?.assessmentId || '')
   const [loading,    setLoading]    = useState(true)
+  const [skills,     setSkills]     = useState(null)   // to tell "no skills of a category" from 0%
 
   useEffect(() => {
+    studentAPI.getSkills().then(r => setSkills(r.data)).catch(() => {})
     assessAPI.history().then(r => {
       setHistory(r.data)
       const id = location.state?.assessmentId || (r.data[0]?.assessment_id || '')
@@ -36,7 +41,6 @@ export default function SkillGap() {
   const developing = matches.filter(m => m.match_status === 'developing')
   const gaps       = matches.filter(m => m.match_status === 'gap')
 
-  const scoreColor = (s) => s >= 70 ? '#16a34a' : s >= 50 ? '#d97706' : '#dc2626'
 
   if (loading) return <div style={{ padding: '40px', color: '#8b92a8' }}>Loading...</div>
 
@@ -79,7 +83,7 @@ export default function SkillGap() {
             borderRadius: '12px', padding: '18px 24px',
             display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '16px'
           }}>
-            <div style={{ fontSize: '42px', fontWeight: '800', color: scoreColor(assessment.readiness_score) }}>
+            <div style={{ fontSize: '42px', fontWeight: '800', color: readinessColor(assessment.readiness_score) }}>
               {assessment.readiness_score}%
             </div>
             <div style={{ flex: 1 }}>
@@ -107,29 +111,12 @@ export default function SkillGap() {
             <div style={{ fontSize: '13px', fontWeight: '700', color: '#1a1f2e', marginBottom: '16px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
               7-Dimension Employability Assessment
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
-              {[
-                { label: 'Technical Skills',    val: assessment.score_technical },
-                { label: 'AI / Digital Skills', val: assessment.score_ai_digital },
-                { label: 'Analytical Skills',   val: assessment.score_analytical },
-                { label: 'Communication',       val: assessment.score_communication },
-                { label: 'Project Experience',  val: assessment.score_project_exp },
-                { label: 'Certification',       val: assessment.score_certification },
-                { label: 'Industry Experience', val: assessment.score_industry_exp },
-              ].map((d, i) => (
-                <div key={i}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', marginBottom: '4px' }}>
-                    <span style={{ fontWeight: '500', color: '#1a1f2e' }}>{d.label}</span>
-                    <span style={{ fontWeight: '700', color: '#4a5168' }}>{d.val ?? 0}%</span>
-                  </div>
-                  <div style={{ height: '7px', background: '#e4e6ef', borderRadius: '99px', overflow: 'hidden' }}>
-                    <div style={{
-                      height: '100%', borderRadius: '99px', width: `${d.val ?? 0}%`,
-                      background: (d.val ?? 0) >= 70 ? '#16a34a' : (d.val ?? 0) >= 40 ? '#2d5be3' : '#dc2626',
-                    }} />
-                  </div>
-                </div>
-              ))}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', columnGap: '14px' }}>
+              {DIMENSIONS.map(dim => <DimensionBar key={dim.key} dim={dim} value={assessment[dim.key]} skills={skills} />)}
+            </div>
+            <div style={{ fontSize: '11px', color: '#8b92a8', marginTop: '2px' }}>
+              The readiness score comes from the four skill dimensions. &quot;No data yet&quot; means nothing is recorded in your
+              profile for it; add it on My Profile and run the assessment again.
             </div>
           </div>
 

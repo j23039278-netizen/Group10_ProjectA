@@ -1126,6 +1126,12 @@ ALTER TABLE email_outbox ADD COLUMN IF NOT EXISTS last_attempt_at TIMESTAMP;
 ALTER TABLE email_outbox ADD COLUMN IF NOT EXISTS sent_at TIMESTAMP;
 UPDATE email_outbox SET sent_at = created_at WHERE status = 'sent' AND sent_at IS NULL;
 
+
+-- ── Library managed by advisors too (1 November) ─────────────
+-- Who added a learning resource: advisors can change the resources they added
+-- (routers/library.py). NULL for seed resources and older ones.
+ALTER TABLE recommendations_library ADD COLUMN IF NOT EXISTS created_by UUID REFERENCES users(user_id) ON DELETE SET NULL;
+
 -- ============================================================
 -- END OF SCHEMA
 -- ============================================================

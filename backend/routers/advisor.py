@@ -55,7 +55,7 @@ def course_param(course, current_user):
 
 
 # Each student's latest assessment, limited to the courses in :courses and, when
-# :role_id is set, to assessments against that job role
+# set, to assessments against the job role :role_id and students of the programme :programme
 LATEST_ASSESSMENTS = f"""
     SELECT DISTINCT ON (a.profile_id) a.assessment_id, a.profile_id, a.readiness_score, a.role_id
     FROM assessments a
@@ -64,8 +64,10 @@ LATEST_ASSESSMENTS = f"""
     WHERE u.role = 'student' AND u.is_active
       AND {COURSE_FILTER}
       AND (CAST(:role_id AS uuid) IS NULL OR a.role_id = CAST(:role_id AS uuid))
+      AND (CAST(:programme AS VARCHAR) IS NULL OR sp.programme = CAST(:programme AS VARCHAR))
     ORDER BY a.profile_id, a.created_at DESC
 """
+SKILL_CATEGORIES = ("Technical", "AI_Digital", "Analytical", "Soft")
 
 
 
@@ -87,7 +89,7 @@ def get_cohort_overview(
 ):
     """Cohort-level summary for the advisor dashboard (one course, or all of the advisor's)"""
     require_advisor(current_user)
-    params = {"courses": course_param(course, current_user), "role_id": None}
+    params = {"courses": course_param(course, current_user), "role_id": None, "programme": None}
     # Readiness bands (System Settings): On Track >= on_track, Needs Support < needs_support
     on_track, needs_support = settings.get(db, "readiness_on_track"), settings.get(db, "readiness_needs_support")
     params.update(on_track=on_track, needs_support=needs_support)
@@ -170,15 +172,31 @@ def get_cohort_overview(
 
 
 # ── Skill Gap Report ──────────────────────────────────────────
+def category_param(category):
+    if not category:
+        return None
+    if category not in SKILL_CATEGORIES:
+        raise HTTPException(status_code=400, detail=f"category must be one of {', '.join(SKILL_CATEGORIES)}")
+    return category
+
+
+def gap_params(course, role_id, programme, current_user):
+    return {"courses": course_param(course, current_user), "role_id": role_param(role_id),
+            "programme": (programme or "").strip() or None}
+
+
 @router.get("/cohort/skill-gaps")
 def get_cohort_skill_gaps(
     course: Optional[str] = None,
     role_id: Optional[str] = None,
+    programme: Optional[str] = None,
+    category: Optional[str] = None,
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
     """Top skill gaps across the latest assessments of one course (or all of the advisor's),
-    optionally only assessments against one job role"""
+    optionally only assessments against one job role, students of one programme (major)
+    and skills of one category (Soft: the soft-skill view)"""
     require_advisor(current_user)
 
     gaps = db.execute(
@@ -193,14 +211,50 @@ def get_cohort_skill_gaps(
             FROM skill_match_results smr
             JOIN ({LATEST_ASSESSMENTS}) latest ON latest.assessment_id = smr.assessment_id
             JOIN skills_library sl ON sl.skill_id = smr.skill_id
+            WHERE CAST(:category AS VARCHAR) IS NULL OR sl.category = CAST(:category AS VARCHAR)
             GROUP BY sl.skill_id, sl.skill_name, sl.category
             ORDER BY gap_percentage DESC, gap_count DESC
             LIMIT 20
         """),
-        {"courses": course_param(course, current_user), "role_id": role_param(role_id)}
+        {**gap_params(course, role_id, programme, current_user), "category": category_param(category)}
     ).fetchall()
 
     return [dict(g._mapping) for g in gaps]
+
+
+@router.get("/cohort/skill-categories")
+def get_cohort_skill_categories(
+    course: Optional[str] = None,
+    role_id: Optional[str] = None,
+    programme: Optional[str] = None,
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """Strong / Developing / Gap share of every skill category (Technical, AI & Digital,
+    Analytical, Soft) across the same latest assessments as /cohort/skill-gaps"""
+    require_advisor(current_user)
+    rows = db.execute(
+        text(f"""
+            SELECT sl.category,
+                   COUNT(*) FILTER (WHERE smr.match_status = 'gap')        AS gap_count,
+                   COUNT(*) FILTER (WHERE smr.match_status = 'developing') AS developing_count,
+                   COUNT(*) FILTER (WHERE smr.match_status = 'strong')     AS strong_count,
+                   COUNT(*)                                                 AS total,
+                   COUNT(DISTINCT smr.assessment_id)                        AS assessments,
+                   ROUND(COUNT(*) FILTER (WHERE smr.match_status = 'gap') * 100.0
+                         / NULLIF(COUNT(*), 0), 1)                          AS gap_percentage
+            FROM skill_match_results smr
+            JOIN ({LATEST_ASSESSMENTS}) latest ON latest.assessment_id = smr.assessment_id
+            JOIN skills_library sl ON sl.skill_id = smr.skill_id
+            GROUP BY sl.category
+        """),
+        gap_params(course, role_id, programme, current_user)
+    ).fetchall()
+    found = {r.category: dict(r._mapping) for r in rows}
+    # Every category, in a fixed order; one no assessment asked for has total 0
+    return [found.get(c, {"category": c, "gap_count": 0, "developing_count": 0, "strong_count": 0,
+                          "total": 0, "assessments": 0, "gap_percentage": None})
+            for c in SKILL_CATEGORIES]
 
 
 # ── Student List ──────────────────────────────────────────────
@@ -617,7 +671,7 @@ def get_skill_gap_report(
     require_advisor(current_user)
 
     if not role_id:
-        return get_cohort_skill_gaps(None, None, current_user, db)
+        return get_cohort_skill_gaps(current_user=current_user, db=db)
     gaps = db.execute(
         text(f"""
             SELECT sl.skill_name, sl.category,

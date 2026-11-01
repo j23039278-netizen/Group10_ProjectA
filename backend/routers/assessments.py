@@ -101,7 +101,7 @@ def get_assessment_history(
     history = db.execute(
         text("""
             SELECT a.assessment_id, a.readiness_score, a.matching_method,
-                   a.created_at, jr.role_name,
+                   a.created_at, jr.role_name, a.role_id, a.jd_id,
                    a.score_technical, a.score_ai_digital, a.score_analytical,
                    a.score_communication, a.score_industry_exp,
                    a.score_project_exp, a.score_certification

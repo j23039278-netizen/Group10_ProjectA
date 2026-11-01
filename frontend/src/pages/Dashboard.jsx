@@ -3,12 +3,16 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { assessAPI, studentAPI } from '../api/client'
 import ResultsReminder from '../components/ResultsReminder'
+import DimensionBar from '../components/DimensionBar'
+import { readinessColor } from '../utils/readiness'
+import { DIMENSIONS } from '../utils/dimensions'
 
 export default function Dashboard({ onLogout }) {
   const navigate = useNavigate()
   const [profile,    setProfile]    = useState(null)
   const [history,    setHistory]    = useState([])
   const [latest,     setLatest]     = useState(null)
+  const [skills,     setSkills]     = useState(null)   // to tell "no skills of a category" from 0%
   const [loading,    setLoading]    = useState(true)
 
   useEffect(() => {
@@ -16,6 +20,7 @@ export default function Dashboard({ onLogout }) {
   }, [])
 
   const loadData = async () => {
+    studentAPI.getSkills().then(r => setSkills(r.data)).catch(() => {})
     try {
       const [profileRes, historyRes] = await Promise.all([
         studentAPI.getProfile(),
@@ -38,7 +43,7 @@ export default function Dashboard({ onLogout }) {
   )
 
   const score = latest?.readiness_score || 0
-  const scoreColor = score >= 70 ? '#16a34a' : score >= 50 ? '#d97706' : '#dc2626'
+  const scoreColor = readinessColor(score)
 
   return (
     <div style={{ padding: '28px 32px' }}>
@@ -87,30 +92,7 @@ export default function Dashboard({ onLogout }) {
             Employability Profile
           </div>
           {latest ? (
-            [
-              { label: 'Technical Skills',    val: latest.score_technical },
-              { label: 'AI / Digital Skills', val: latest.score_ai_digital },
-              { label: 'Analytical Skills',   val: latest.score_analytical },
-              { label: 'Communication',       val: latest.score_communication },
-              { label: 'Project Experience',  val: latest.score_project_exp },
-              { label: 'Certification',       val: latest.score_certification },
-              { label: 'Industry Experience', val: latest.score_industry_exp },
-            ].map((item, i) => (
-              <div key={i} style={{ marginBottom: '12px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', marginBottom: '4px' }}>
-                  <span style={{ fontWeight: '500', color: '#1a1f2e' }}>{item.label}</span>
-                  <span style={{ fontWeight: '600', color: '#4a5168' }}>{item.val ?? 0}%</span>
-                </div>
-                <div style={{ height: '7px', background: '#e4e6ef', borderRadius: '99px', overflow: 'hidden' }}>
-                  <div style={{
-                    height: '100%', borderRadius: '99px',
-                    width: `${item.val ?? 0}%`,
-                    background: (item.val ?? 0) >= 70 ? '#16a34a' : (item.val ?? 0) >= 40 ? '#2d5be3' : '#dc2626',
-                    transition: 'width .6s ease'
-                  }} />
-                </div>
-              </div>
-            ))
+            DIMENSIONS.map(dim => <DimensionBar key={dim.key} dim={dim} value={latest[dim.key]} skills={skills} />)
           ) : (
             <div style={{ textAlign: 'center', padding: '40px 0', color: '#8b92a8' }}>
               <div style={{ fontSize: '32px', marginBottom: '8px' }}>📊</div>
@@ -173,7 +155,7 @@ export default function Dashboard({ onLogout }) {
                   </div>
                   <div style={{
                     fontSize: '16px', fontWeight: '700',
-                    color: h.readiness_score >= 70 ? '#16a34a' : h.readiness_score >= 50 ? '#d97706' : '#dc2626'
+                    color: readinessColor(h.readiness_score)
                   }}>
                     {h.readiness_score}%
                   </div>

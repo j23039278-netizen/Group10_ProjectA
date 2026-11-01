@@ -9,7 +9,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
  
-from routers import auth, students, jobs, assessments, advisor, admin, intake
+from routers import auth, students, jobs, assessments, advisor, admin, intake, library
 from routers.progress import router as progress_router
 from routers.cv import router as cv_router
 from routers.experiences import router as experiences_router
@@ -52,6 +52,7 @@ app.include_router(advisor.router,     prefix="/api/advisor",     tags=["Advisor
 app.include_router(progress_router,    prefix="/api/progress",    tags=["Progress"])
 app.include_router(admin_settings_router, prefix="/api/admin/settings", tags=["Admin"])
 app.include_router(admin.router,       prefix="/api/admin",       tags=["Admin"])
+app.include_router(library.router,     prefix="/api/library",     tags=["Library"])
 app.include_router(settings_router,    prefix="/api/settings",    tags=["Settings"])
 app.include_router(intake.router,      prefix="/api/intake",      tags=["Student intake"])
  

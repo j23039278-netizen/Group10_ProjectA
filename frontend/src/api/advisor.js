@@ -9,7 +9,12 @@ const params = (obj) => ({ params: Object.fromEntries(Object.entries(obj).filter
 export const advisorAPI = {
   // course: 'CS' | 'BUSINESS' | 'ICT', or empty for all of the advisor's courses
   overview:  (course)         => API.get('/advisor/cohort/overview',   params({ course })),
-  skillGaps: (course, roleId) => API.get('/advisor/cohort/skill-gaps', params({ course, role_id: roleId })),
+  // Optional filters: assessed job role, programme (major), skill category ('Soft' = soft skills)
+  skillGaps: (course, roleId, programme, category) =>
+    API.get('/advisor/cohort/skill-gaps', params({ course, role_id: roleId, programme, category })),
+  // Strong / Developing / Gap share per skill category, same filters (no category)
+  skillCategories: (course, roleId, programme) =>
+    API.get('/advisor/cohort/skill-categories', params({ course, role_id: roleId, programme })),
   progress:  (course)         => API.get('/advisor/cohort/progress',   params({ course })),
   students:  ()               => API.get('/advisor/students'),
   getStudent:(id)             => API.get(`/advisor/students/${id}`),
