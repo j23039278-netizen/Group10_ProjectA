@@ -31,7 +31,7 @@ This folder holds real job descriptions for the 10 target roles (6 IT and 4 Busi
 ```powershell
 python data/jd_dataset/ingest_jds.py --profile   # describe each Kaggle CSV; writes nothing
 python data/jd_dataset/ingest_jds.py          # data/raw -> jd_dataset.csv (options: --cap, --employer-cap, --seed)
-python data/jd_dataset/analyse_jd_skills.py   # -> jd_skill_frequency.csv, unmatched_terms.csv, role_skill_diff.csv
+python data/jd_dataset/analyse_jd_skills.py   # -> jd_skill_frequency.csv, jd_skill_evidence.csv, unmatched_terms.csv, role_skill_diff.csv (--method baseline: no NLP model)
 python data/jd_dataset/make_gold_sample.py    # -> gold/gold_sample.csv (60), gold_labels.csv (empty), gold_labels_draft.csv
 python data/jd_dataset/load_jds.py            # -> job_descriptions (source='scraped'); add --dry-run to test
 ```
@@ -61,7 +61,7 @@ Role codes: `DATA_ANALYST` (DA), `DATA_SCIENTIST` (DS), `SOFTWARE_DEV` (SD), `CY
 
 ### Frequency analysis (`analyse_jd_skills.py`)
 
-This is a keyword baseline. It matches skill names and aliases with word boundaries, ignores case, keeps the longest match when matches overlap, and **never uses ambiguous aliases**. For each role it suggests an importance: `required` if at least 50% of the role's JDs mention the skill, `preferred` for 20–50%, and `bonus` for 10–20%. `role_skill_diff.csv` compares these suggestions with `seed_job_role_skills.sql`. The script **never changes the seed**. Yong Hin decides what to update. Frequent terms that the library does not cover go to `unmatched_terms.csv`. The script uses spaCy noun chunks if spaCy and `en_core_web_sm` are installed, and plain n-grams otherwise.
+Skills are found with `--method`. The default is `hybrid`: `nlp.extract_skills(method="hybrid")`, the method the website uses for JDs, which needs `nlp/requirements.txt`. `keyword` and `semantic` are the other NLP methods. `baseline` is the keyword matcher in `jd_common.py` and needs only the standard library. It matches skill names and aliases with word boundaries, ignores case, keeps the longest match when matches overlap, and **never uses ambiguous aliases**. `jd_skill_evidence.csv` has one row per JD and skill: the method, the matched text, and the text around it, with the match marked `<<like this>>`. `semantic_jd_count` in `jd_skill_frequency.csv` counts the JDs where only semantic matching found the skill. For each role it suggests an importance: `required` if at least 50% of the role's JDs mention the skill, `preferred` for 20–50%, and `bonus` for 10–20%. `role_skill_diff.csv` compares these suggestions with `seed_job_role_skills.sql`. The script **never changes the seed**. Yong Hin decides what to update. Frequent terms that the library does not cover go to `unmatched_terms.csv`. The script uses spaCy noun chunks if spaCy and `en_core_web_sm` are installed, and plain n-grams otherwise.
 
 ### Loading into the DB (`load_jds.py`)
 
