@@ -1277,10 +1277,13 @@ CV_TEXT = ("Jamie Tan - Computer Science student. Skills: Python, SQL and Docker
 
 def cv_docx(text):
     import zipfile
+    # A fixed entry time, so the same text always gives the same bytes: writestr() with a
+    # plain name stamps the current time, and the CV download test compares the bytes
+    stamp = (2026, 1, 1, 0, 0, 0)
     buf = io.BytesIO()
     with zipfile.ZipFile(buf, "w") as z:
-        z.writestr("[Content_Types].xml", "<Types/>")
-        z.writestr("word/document.xml",
+        z.writestr(zipfile.ZipInfo("[Content_Types].xml", stamp), "<Types/>")
+        z.writestr(zipfile.ZipInfo("word/document.xml", stamp),
                    '<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>'
                    + "".join(f"<w:p><w:r><w:t>{line}</w:t></w:r></w:p>" for line in text.split(". "))
                    + "</w:body></w:document>")
