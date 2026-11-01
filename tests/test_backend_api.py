@@ -894,8 +894,12 @@ class TestRolesByCourse:
         assert it | {"Software Developer", "Data Scientist"} <= names("CS")
         assert names("ICT") == it
         assert names("BUSINESS") == biz
-        # Business role templates (seed_job_role_skills.sql v3): 9 required + 8 preferred + 6 bonus
-        assert all(r["skill_count"] == 23 for r in c.get("/api/jobs/roles?course=BUSINESS").json())
+        # Business role templates: as many skills as seed_job_role_skills.sql lists for each role
+        seed = (ROOT / "database/seed_job_role_skills.sql").read_text(encoding="utf-8")
+        listed = lambda code: len(re.findall(rf"^\s*\('{code}',", seed, re.M))
+        roles = c.get("/api/jobs/roles?course=BUSINESS").json()
+        assert {r["role_code"]: r["skill_count"] for r in roles} == {r["role_code"]: listed(r["role_code"]) for r in roles}
+        assert all(r["skill_count"] >= 20 for r in roles)
 
     def test_business_student_assessed_against_business_role(self, env):
         c, conn = env["client"], env["conn"]
@@ -910,7 +914,8 @@ class TestRolesByCourse:
         r = run(env, farah, role_id=hr)
         assert r.status_code == 201, r.text
         status = {m["skill_name"]: m["match_status"] for m in r.json()["match_results"]}
-        assert len(status) == 23
+        listed = re.findall(r"^\s*\('HR_EXEC',", (ROOT / "database/seed_job_role_skills.sql").read_text(encoding="utf-8"), re.M)
+        assert len(status) == len(listed)
         assert (status["Recruitment"], status["Payroll"], status["Employment Law"]) == ("strong", "developing", "gap")
 
     def test_business_roles_are_seed_managed(self, env, admin):

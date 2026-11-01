@@ -1,10 +1,20 @@
 """
-Skill frequency analysis over jd_dataset.csv (keyword baseline).
+Skill frequency analysis over jd_dataset.csv.
+
+Skills are found with --method:
+  hybrid    (default) nlp.extract_skills(method="hybrid"), what the website uses
+            for JDs; needs nlp/requirements.txt
+  keyword / semantic  the other nlp.extract_skills() methods
+  baseline  the keyword matcher in jd_common.py (standard library only)
 
 Outputs (in --out-dir, default data/jd_dataset/):
   jd_skill_frequency.csv  share of each role's JDs that mention each skill,
                           with a suggested importance
-                          (>= 50% required, 20-50% preferred, 10-20% bonus)
+                          (>= 50% required, 20-50% preferred, 10-20% bonus);
+                          semantic_jd_count = JDs where only semantic matching
+                          found the skill (hybrid / semantic)
+  jd_skill_evidence.csv   one row per JD x skill: the matched text and the
+                          sentence around it, so each count can be checked
   unmatched_terms.csv     frequent terms / phrases NOT covered by the skills
                           library -> candidates for new skills
                           (spaCy noun chunks if spaCy is installed, otherwise n-grams)
@@ -15,15 +25,20 @@ It never edits the seed files — Yong Hin decides what to change.
 
 Usage (from repo root):
     python data/jd_dataset/analyse_jd_skills.py
+    python data/jd_dataset/analyse_jd_skills.py --method baseline
     python data/jd_dataset/analyse_jd_skills.py --dataset data/jd_dataset/samples/jd_dataset_sample.csv --out-dir data/jd_dataset/samples
 """
 
 import argparse
 import re
+import sys
 from collections import Counter, defaultdict
 from pathlib import Path
 
-from jd_common import DATASET_PATH, JD_DIR, SkillMatcher, load_role_skills, load_skills, read_dataset, write_csv
+from jd_common import (DATASET_PATH, JD_DIR, REPO_ROOT, SkillMatcher, load_role_skills, load_skills,
+                       read_dataset, write_csv)
+
+METHODS = ["hybrid", "keyword", "semantic", "baseline"]
 
 STOPWORDS = set("""
 a about above across after again against all also am an and any are as at be because been before being
@@ -57,10 +72,38 @@ def suggest(pct):
     return ""
 
 
+def skill_finder(method):
+    """Return find(text) -> [(start, end, matched_text, skill_name, method)]."""
+    if method == "baseline":
+        matcher = SkillMatcher()
+        return lambda text: [(s, e, t, sk, "baseline") for s, e, t, sk in matcher.find(text)]
+    sys.path.insert(0, str(REPO_ROOT))
+    from nlp import extract_skills
+    return lambda text: [(h["start_char"], h["end_char"], h["raw_skill_text"], h["skill_name"], h["method"])
+                         for h in extract_skills(text, method=method)]
+
+
+def context(text, start, end, width=90):
+    """The matched span, marked <<like this>>, with up to `width` characters either side, on one line.
+
+    Not [brackets]: the anonymised JDs already contain [COMPANY], [email] and [url].
+    """
+    s, e = max(0, start - width), min(len(text), end + width)
+    snippet = text[s:start] + "<<" + text[start:end] + ">>" + text[end:e]
+    return ("..." if s else "") + " ".join(snippet.split()) + ("..." if e < len(text) else "")
+
+
 def matched_mask(text, hits):
-    """Blank out matched skill spans so they don't show up as unmatched terms."""
+    """Blank out matched skill spans so they don't show up as unmatched terms.
+
+    nlp.extract_skills() returns one span per skill, so later mentions of the
+    same matched text are blanked out too.
+    """
     chars = list(text)
-    for s, e, _, _ in hits:
+    spans = [(s, e) for s, e, *_ in hits]
+    for matched in {h[2] for h in hits}:
+        spans += [m.span() for m in re.finditer(r"(?<!\w)" + re.escape(matched) + r"(?!\w)", text, re.I)]
+    for s, e in spans:
         for i in range(s, e):
             chars[i] = " "
     return "".join(chars)
@@ -102,6 +145,8 @@ def main():
     ap = argparse.ArgumentParser(description="JD skill frequency analysis")
     ap.add_argument("--dataset", default=str(DATASET_PATH))
     ap.add_argument("--out-dir", default=str(JD_DIR))
+    ap.add_argument("--method", default="hybrid", choices=METHODS,
+                    help="skill extraction (default hybrid; baseline = jd_common keyword matcher)")
     ap.add_argument("--min-docs", type=int, default=2,
                     help="minimum number of JDs an unmatched term must appear in (default 2)")
     ap.add_argument("--top", type=int, default=300, help="max unmatched terms to write")
@@ -112,18 +157,30 @@ def main():
     if not jds:
         raise SystemExit(f"No JDs in {args.dataset}")
     skills = {s["skill_name"]: s for s in load_skills()}
-    matcher = SkillMatcher(list(skills.values()))
+    find = skill_finder(args.method)
     nlp = load_spacy()
+    print("Skills via:", args.method)
     print("Unmatched terms via:", "spaCy noun chunks" if nlp else "n-grams (spaCy not installed)")
 
     n_by_role = Counter(j["role_code"] for j in jds)
     skill_docs = defaultdict(Counter)       # role -> skill -> n JDs
+    semantic_docs = defaultdict(Counter)    # role -> skill -> n JDs found only by semantic matching
+    evidence_rows = []
     term_docs = Counter()
     term_roles = defaultdict(Counter)
     for j in jds:
-        hits = matcher.find(j["raw_text"])
-        for sk in {h[3] for h in hits}:
+        hits = find(j["raw_text"])
+        seen = set()
+        for s, e, matched, sk, method in hits:
+            if sk in seen:
+                continue
+            seen.add(sk)
             skill_docs[j["role_code"]][sk] += 1
+            if method == "semantic":
+                semantic_docs[j["role_code"]][sk] += 1
+            evidence_rows.append({"role_code": j["role_code"], "skill_name": sk, "jd_ref": j["jd_ref"],
+                                  "method": method, "matched_text": matched,
+                                  "context": context(j["raw_text"], s, e)})
         for t in candidate_terms(matched_mask(j["raw_text"], hits), nlp):
             term_docs[t] += 1
             term_roles[t][j["role_code"]] += 1
@@ -137,13 +194,17 @@ def main():
             pct = round(c / n * 100, 1)
             freq_rows.append({
                 "role_code": role, "skill_name": sk, "category": skills[sk]["category"],
-                "subcategory": skills[sk]["subcategory"], "jd_count": c, "role_jd_total": n,
+                "subcategory": skills[sk]["subcategory"], "jd_count": c,
+                "semantic_jd_count": semantic_docs[role][sk], "role_jd_total": n,
                 "pct_of_jds": pct, "suggested_importance": suggest(pct),
                 "current_importance": current.get(role, {}).get(sk, ""),
             })
-    write_csv(out_dir / "jd_skill_frequency.csv", freq_rows, list(freq_rows[0].keys()) if freq_rows else
-              ["role_code", "skill_name", "category", "subcategory", "jd_count", "role_jd_total",
-               "pct_of_jds", "suggested_importance", "current_importance"])
+    write_csv(out_dir / "jd_skill_frequency.csv", freq_rows,
+              ["role_code", "skill_name", "category", "subcategory", "jd_count", "semantic_jd_count",
+               "role_jd_total", "pct_of_jds", "suggested_importance", "current_importance"])
+    evidence_rows.sort(key=lambda r: (r["role_code"], r["skill_name"], r["jd_ref"]))
+    write_csv(out_dir / "jd_skill_evidence.csv", evidence_rows,
+              ["role_code", "skill_name", "jd_ref", "method", "matched_text", "context"])
 
     # 2. unmatched terms
     unmatched = [
@@ -173,6 +234,7 @@ def main():
 
     print(f"Analysed {len(jds)} JDs ({dict(n_by_role)})")
     print(f"  jd_skill_frequency.csv  {len(freq_rows)} rows")
+    print(f"  jd_skill_evidence.csv   {len(evidence_rows)} rows")
     print(f"  unmatched_terms.csv     {len(unmatched)} rows")
     print(f"  role_skill_diff.csv     {len(diff)} rows")
     if min(n_by_role.values()) < 30:

@@ -17,8 +17,8 @@ SCHEMA_PATH = REPO_ROOT / "database" / "schema.sql"
 
 VALID_CATEGORIES = {"Technical", "AI_Digital", "Analytical", "Soft"}
 # Library version a skill was added in: v1 (schema.sql), v2 (IT, Sprint 2),
-# v3 (Business roles, Sprint 3).
-VALID_SOURCES = {"v1", "v2", "v3"}
+# v3 (Business roles, Sprint 3), v4 (JD-based role retune, Sprint 3).
+VALID_SOURCES = {"v1", "v2", "v3", "v4"}
 MIN_SKILLS, MAX_SKILLS = 120, 200
 MAX_NAME_LEN = 100  # skills_library.skill_name VARCHAR(100)
 

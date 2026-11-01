@@ -165,7 +165,7 @@ BUSINESS_ROLE_ORDER = ["Business Analyst", "Marketing Executive", "Financial Ana
 # Version of the generated data. start_backend.bat replaces the synthetic students
 # in a local database when this differs from the version it loaded last, so change
 # it whenever the output changes.
-SYNTHETIC_DATA_VERSION = "2026-10-28-business"
+SYNTHETIC_DATA_VERSION = "2026-10-31-role-retune"
 
 # Rough share of IT students aiming at each IT role (sums to 1.0)
 ROLE_WEIGHTS = {

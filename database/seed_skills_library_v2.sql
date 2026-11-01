@@ -6,8 +6,8 @@
 --     python -m pytest tests/test_skills_library.py -q
 --     psql -U postgres -d seagas_db -f database/seed_skills_library_v2.sql
 --
--- Total skills : 166  (AI_Digital 21, Analytical 20, Soft 16, Technical 109)
--- Generated at : 2026-10-29 13:17
+-- Total skills : 172  (AI_Digital 21, Analytical 20, Soft 17, Technical 114)
+-- Generated at : 2026-10-31 01:20
 --
 -- Run AFTER schema.sql. Idempotent: ON CONFLICT (skill_name) DO UPDATE, so
 -- alias / category / subcategory / description fixes to the 32 v1 skills
@@ -22,7 +22,7 @@ BEGIN;
 
 INSERT INTO skills_library (skill_name, category, subcategory, aliases, description, source) VALUES
 ('Python', 'Technical', 'Programming Language', ARRAY['Python 3', 'Python programming']::TEXT[], 'General-purpose programming language widely used in data science and backend development.', 'v1'),
-('SQL', 'Technical', 'Programming Language', ARRAY['Structured Query Language', 'SQL queries', 'T-SQL', 'PL/SQL']::TEXT[], 'Database query language for relational databases.', 'v1'),
+('SQL', 'Technical', 'Programming Language', ARRAY['Structured Query Language', 'SQL queries', 'T-SQL', 'PL/SQL', 'Relational databases']::TEXT[], 'Database query language for relational databases.', 'v1'),
 ('JavaScript', 'Technical', 'Programming Language', ARRAY['JS', 'ES6', 'ECMAScript']::TEXT[], 'Core web programming language for frontend and backend (Node.js) development.', 'v1'),
 ('React', 'Technical', 'Web Framework', ARRAY['React.js', 'ReactJS']::TEXT[], 'JavaScript library for building user interfaces.', 'v1'),
 ('Java', 'Technical', 'Programming Language', ARRAY['Java SE', 'Java EE']::TEXT[], 'Object-oriented programming language used in enterprise applications.', 'v1'),
@@ -40,7 +40,7 @@ INSERT INTO skills_library (skill_name, category, subcategory, aliases, descript
 ('Machine Learning', 'AI_Digital', 'ML/AI', ARRAY['ML', 'Supervised learning', 'Unsupervised learning']::TEXT[], 'Building models that learn patterns from data.', 'v1'),
 ('Deep Learning', 'AI_Digital', 'ML/AI', ARRAY['Neural networks', 'CNN', 'RNN']::TEXT[], 'Subset of machine learning using multi-layer neural networks.', 'v1'),
 ('Natural Language Processing', 'AI_Digital', 'ML/AI', ARRAY['NLP', 'Text processing', 'Text mining']::TEXT[], 'AI techniques for processing and understanding human language.', 'v1'),
-('Data Visualisation', 'AI_Digital', 'Data & BI', ARRAY['Data viz', 'Dashboard creation', 'Creating interactive dashboards', 'Charts and graphs']::TEXT[], 'Representing data visually through charts, graphs, and dashboards.', 'v1'),
+('Data Visualisation', 'AI_Digital', 'Data & BI', ARRAY['Data viz', 'Dashboard creation', 'Creating interactive dashboards', 'Charts and graphs', 'Dashboards', 'Dashboard development', 'Dashboard reporting']::TEXT[], 'Representing data visually through charts, graphs, and dashboards.', 'v1'),
 ('Cloud Computing', 'AI_Digital', 'Cloud', ARRAY['Cloud platforms', 'Cloud infrastructure', 'Cloud services']::TEXT[], 'Delivering computing services over the internet.', 'v1'),
 ('AWS', 'AI_Digital', 'Cloud', ARRAY['Amazon Web Services', 'AWS Cloud', 'Amazon Cloud']::TEXT[], 'Amazon cloud computing platform.', 'v1'),
 ('Azure', 'AI_Digital', 'Cloud', ARRAY['Microsoft Azure', 'Azure Cloud']::TEXT[], 'Microsoft cloud computing platform.', 'v1'),
@@ -51,7 +51,7 @@ INSERT INTO skills_library (skill_name, category, subcategory, aliases, descript
 ('Research Skills', 'Analytical', 'Analytical', ARRAY['Literature review', 'Academic research']::TEXT[], 'Ability to investigate, evaluate, and synthesise information.', 'v1'),
 ('Communication', 'Soft', 'Soft', ARRAY['Verbal communication', 'Written communication', 'Communication skills']::TEXT[], 'Conveying information clearly to technical and non-technical audiences.', 'v1'),
 ('Teamwork', 'Soft', 'Soft', ARRAY['Collaboration', 'Team player', 'Cooperative work']::TEXT[], 'Working effectively with others toward shared goals.', 'v1'),
-('Time Management', 'Soft', 'Soft', ARRAY['Prioritisation', 'Meeting deadlines']::TEXT[], 'Managing tasks and deadlines efficiently.', 'v1'),
+('Time Management', 'Soft', 'Soft', ARRAY['Prioritisation', 'Meeting deadlines', 'Multitasking', 'Multi-tasking', 'Managing multiple priorities']::TEXT[], 'Managing tasks and deadlines efficiently.', 'v1'),
 ('Leadership', 'Soft', 'Soft', ARRAY['Team leadership', 'Project leadership']::TEXT[], 'Guiding and motivating a team toward objectives.', 'v1'),
 ('C#', 'Technical', 'Programming Language', ARRAY['CSharp', 'C Sharp', '.NET C#']::TEXT[], 'Microsoft language for enterprise and game development.', 'v2'),
 ('Go', 'Technical', 'Programming Language', ARRAY['Golang', 'Go language']::TEXT[], 'Fast compiled language for cloud and backend systems.', 'v2'),
@@ -186,7 +186,13 @@ INSERT INTO skills_library (skill_name, category, subcategory, aliases, descript
 ('CRM Software', 'Technical', 'Business Software', ARRAY['CRM', 'Salesforce', 'HubSpot', 'Zoho CRM', 'Customer relationship management']::TEXT[], 'Using customer relationship management systems to track customers and sales.', 'v3'),
 ('Accounting Software', 'Technical', 'Business Software', ARRAY['Xero', 'QuickBooks', 'AutoCount', 'MYOB', 'SAP FICO', 'Accounting system']::TEXT[], 'Using accounting systems to record transactions and produce reports.', 'v3'),
 ('Negotiation', 'Soft', 'Soft', ARRAY['Negotiation skills', 'Negotiating', 'Vendor negotiation']::TEXT[], 'Reaching agreements that work for both sides.', 'v3'),
-('Creativity', 'Soft', 'Soft', ARRAY['Creative thinking', 'Innovative thinking', 'Ideation']::TEXT[], 'Coming up with original ideas and new ways to solve problems.', 'v3')
+('Creativity', 'Soft', 'Soft', ARRAY['Creative thinking', 'Innovative thinking', 'Ideation']::TEXT[], 'Coming up with original ideas and new ways to solve problems.', 'v3'),
+('Microsoft Office', 'Technical', 'Business Software', ARRAY['MS Office', 'Microsoft Office Suite', 'Microsoft 365', 'Office 365', 'PowerPoint', 'Microsoft PowerPoint', 'Microsoft Word', 'MS Word', 'Microsoft Outlook']::TEXT[], 'Using Word, PowerPoint, Outlook and the other Office applications for everyday documents, slides and email.', 'v4'),
+('Organisational Skills', 'Soft', 'Soft', ARRAY['Organizational skills', 'Organisation skills', 'Organization skills', 'Highly organised', 'Highly organized', 'Well organised', 'Well organized']::TEXT[], 'Keeping work, files and schedules in order so that tasks are tracked and nothing is missed.', 'v4'),
+('Software Testing', 'Technical', 'Software Engineering', ARRAY['Manual testing', 'Test cases', 'Test plans', 'QA testing', 'Quality assurance testing', 'Functional testing', 'Regression testing', 'Integration testing']::TEXT[], 'Planning and running tests that check software works as intended, from test cases to regression testing.', 'v4'),
+('DevOps', 'Technical', 'DevOps', ARRAY['DevOps practices', 'Development and Operations', 'DevOps culture']::TEXT[], 'Practices that bring development and operations together to build, release and run software quickly and reliably.', 'v4'),
+('Employee Onboarding', 'Technical', 'Human Resources', ARRAY['Onboarding', 'New hire onboarding', 'Offboarding', 'New hire orientation']::TEXT[], 'Preparing and running the first weeks of new employees, and the exit steps when they leave.', 'v4'),
+('Graphic Design', 'Technical', 'Design', ARRAY['Adobe Creative Suite', 'Adobe Photoshop', 'Photoshop', 'Adobe Illustrator', 'Illustrator', 'InDesign', 'Canva']::TEXT[], 'Creating visual content such as social media posts, banners and brochures with design tools.', 'v4')
 ON CONFLICT (skill_name) DO UPDATE SET
     category    = EXCLUDED.category,
     subcategory = EXCLUDED.subcategory,

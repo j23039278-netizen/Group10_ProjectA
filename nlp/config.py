@@ -27,7 +27,9 @@ SKILL_TEXT_MODE = "name_aliases"
 # 0.508 to 0.487 (below RELATED), which turns Developing into Gap for 16 synthetic students.
 # 2026-10-30: evidence derived from projects and certifications (nlp/evidence.py) is
 # merged into evidence_type before matching, and reasons name the project / certification.
-MATCH_RULES_VERSION = "2026-10-30"
+# 2026-10-31: role templates re-tuned against the JD dataset (database/seed_job_role_skills.sql)
+# and six v4 library skills plus new aliases, which change extraction and matching.
+MATCH_RULES_VERSION = "2026-10-31"
 
 # nlp/evidence.py: count a project / certification as evidence only when it has at
 # least one evidence file or link (student_evidence_files). Off: listing it is enough.

@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-10-29 13:17",
+  "generated_at": "2026-10-31 01:20",
   "source": "data/skills/skills_library.csv",
-  "skill_count": 166,
+  "skill_count": 172,
   "skills": [
     {
       "skill_name": "Python",
@@ -23,7 +23,8 @@
         "Structured Query Language",
         "SQL queries",
         "T-SQL",
-        "PL/SQL"
+        "PL/SQL",
+        "Relational databases"
       ],
       "ambiguous_aliases": [],
       "description": "Database query language for relational databases.",
@@ -255,7 +256,10 @@
         "Data viz",
         "Dashboard creation",
         "Creating interactive dashboards",
-        "Charts and graphs"
+        "Charts and graphs",
+        "Dashboards",
+        "Dashboard development",
+        "Dashboard reporting"
       ],
       "ambiguous_aliases": [],
       "description": "Representing data visually through charts, graphs, and dashboards.",
@@ -395,7 +399,10 @@
       "subcategory": "Soft",
       "aliases": [
         "Prioritisation",
-        "Meeting deadlines"
+        "Meeting deadlines",
+        "Multitasking",
+        "Multi-tasking",
+        "Managing multiple priorities"
       ],
       "ambiguous_aliases": [
         "Organisation"
@@ -2206,6 +2213,111 @@
       "ambiguous_aliases": [],
       "description": "Coming up with original ideas and new ways to solve problems.",
       "source": "v3"
+    },
+    {
+      "skill_name": "Microsoft Office",
+      "category": "Technical",
+      "subcategory": "Business Software",
+      "aliases": [
+        "MS Office",
+        "Microsoft Office Suite",
+        "Microsoft 365",
+        "Office 365",
+        "PowerPoint",
+        "Microsoft PowerPoint",
+        "Microsoft Word",
+        "MS Word",
+        "Microsoft Outlook"
+      ],
+      "ambiguous_aliases": [
+        "Word",
+        "Office",
+        "Outlook"
+      ],
+      "description": "Using Word, PowerPoint, Outlook and the other Office applications for everyday documents, slides and email.",
+      "source": "v4"
+    },
+    {
+      "skill_name": "Organisational Skills",
+      "category": "Soft",
+      "subcategory": "Soft",
+      "aliases": [
+        "Organizational skills",
+        "Organisation skills",
+        "Organization skills",
+        "Highly organised",
+        "Highly organized",
+        "Well organised",
+        "Well organized"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Keeping work, files and schedules in order so that tasks are tracked and nothing is missed.",
+      "source": "v4"
+    },
+    {
+      "skill_name": "Software Testing",
+      "category": "Technical",
+      "subcategory": "Software Engineering",
+      "aliases": [
+        "Manual testing",
+        "Test cases",
+        "Test plans",
+        "QA testing",
+        "Quality assurance testing",
+        "Functional testing",
+        "Regression testing",
+        "Integration testing"
+      ],
+      "ambiguous_aliases": [
+        "QA",
+        "Testing"
+      ],
+      "description": "Planning and running tests that check software works as intended, from test cases to regression testing.",
+      "source": "v4"
+    },
+    {
+      "skill_name": "DevOps",
+      "category": "Technical",
+      "subcategory": "DevOps",
+      "aliases": [
+        "DevOps practices",
+        "Development and Operations",
+        "DevOps culture"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Practices that bring development and operations together to build, release and run software quickly and reliably.",
+      "source": "v4"
+    },
+    {
+      "skill_name": "Employee Onboarding",
+      "category": "Technical",
+      "subcategory": "Human Resources",
+      "aliases": [
+        "Onboarding",
+        "New hire onboarding",
+        "Offboarding",
+        "New hire orientation"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Preparing and running the first weeks of new employees, and the exit steps when they leave.",
+      "source": "v4"
+    },
+    {
+      "skill_name": "Graphic Design",
+      "category": "Technical",
+      "subcategory": "Design",
+      "aliases": [
+        "Adobe Creative Suite",
+        "Adobe Photoshop",
+        "Photoshop",
+        "Adobe Illustrator",
+        "Illustrator",
+        "InDesign",
+        "Canva"
+      ],
+      "ambiguous_aliases": [],
+      "description": "Creating visual content such as social media posts, banners and brochures with design tools.",
+      "source": "v4"
     }
   ]
 }
