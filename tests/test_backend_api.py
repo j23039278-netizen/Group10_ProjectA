@@ -952,6 +952,20 @@ class TestRolesByCourse:
                             "(SELECT 1 FROM recommendations_library r WHERE r.skill_id = sl.skill_id AND r.is_active)"
                             ).fetchone()[0] == 0
 
+    def test_every_seed_skill_has_a_learning_resource(self, env):
+        """Every library skill from the seed files (v1-v4) has at least one learning resource,
+        so a gap in any role-template skill can be recommended something"""
+        missing = env["conn"].execute(
+            "SELECT string_agg(skill_name, ', ' ORDER BY skill_name) FROM skills_library sl "
+            "WHERE source <> 'admin' AND NOT EXISTS "
+            "(SELECT 1 FROM recommendations_library r WHERE r.skill_id = sl.skill_id)").fetchone()[0]
+        assert missing is None, f"skills without a learning resource: {missing}"
+        # The six v4 skills get recommendations through the normal seed
+        v4 = env["conn"].execute("SELECT count(DISTINCT sl.skill_id) FROM skills_library sl JOIN "
+                                 "recommendations_library r ON r.skill_id = sl.skill_id "
+                                 "WHERE sl.source = 'v4'").fetchone()[0]
+        assert v4 == 6
+
     def test_target_role_must_suit_the_course(self, env):
         c = env["client"]
         carol = course_student(env, "carol@student.newinti.edu.my", "Carol", "BUSINESS")

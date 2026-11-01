@@ -380,4 +380,4 @@ Approved as recommended: every change in section 4, P1 yes, P2 yes, P3 accept, n
 - `data/jd_dataset/*.csv`: re-run against the retuned seed. `role_skill_diff.csv` falls from 294 to 213 rows. It uses the plain 50 / 20 / 10% cut-offs, without the hysteresis and policies above, so it is not expected to reach zero.
 - `tests/test_backend_api.py`: two tests read the Business template sizes from the seed file instead of the fixed 23.
 
-New skills and Business-role soft skills fall under the existing course-visibility rule in `seed_business_skills.sql`, so that file needs no change. The six v4 skills have no learning resource yet.
+New skills and Business-role soft skills fall under the existing course-visibility rule in `seed_business_skills.sql`, so that file needs no change. The six v4 skills had no learning resource at first. Section 4 of `database/seed_recommendations_library_final.sql` (2026-11-01) adds 13: two or three per skill, links checked, none repeated from a related skill. A guard stops the seed if a v4 skill has none, and `test_every_seed_skill_has_a_learning_resource` checks every seed skill.
