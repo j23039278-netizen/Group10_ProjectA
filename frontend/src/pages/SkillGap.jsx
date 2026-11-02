@@ -1,7 +1,9 @@
 // SEAGAS — Skill Gap Analysis Page
 import { useState, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
-import { assessAPI, studentAPI } from '../api/client'
+import { assessAPI, studentAPI, experienceAPI } from '../api/client'
+import { assessmentLabel } from '../utils/assessments'
+import AssessmentDetails from '../components/AssessmentDetails'
 import DimensionBar from '../components/DimensionBar'
 import { readinessColor } from '../utils/readiness'
 import { DIMENSIONS } from '../utils/dimensions'
@@ -15,9 +17,12 @@ export default function SkillGap() {
   const [selId,      setSelId]      = useState(location.state?.assessmentId || '')
   const [loading,    setLoading]    = useState(true)
   const [skills,     setSkills]     = useState(null)   // to tell "no skills of a category" from 0%
+  const [records,    setRecords]    = useState(null)   // projects, certifications, work experience
 
   useEffect(() => {
     studentAPI.getSkills().then(r => setSkills(r.data)).catch(() => {})
+    Promise.all([studentAPI.getProjects(), studentAPI.getCerts(), experienceAPI.list()])
+      .then(([p, c, x]) => setRecords({ projects: p.data, certifications: c.data, experiences: x.data })).catch(() => {})
     assessAPI.history().then(r => {
       setHistory(r.data)
       const id = location.state?.assessmentId || (r.data[0]?.assessment_id || '')
@@ -61,10 +66,11 @@ export default function SkillGap() {
             style={{ flex: 1, padding: '8px 12px', border: '1.5px solid #e4e6ef', borderRadius: '8px', fontSize: '13px', background: '#f5f6fa' }}>
             {history.map(h => (
               <option key={h.assessment_id} value={h.assessment_id}>
-                {h.role_name || 'Custom JD'} — {h.readiness_score}% — {new Date(h.created_at).toLocaleDateString()}
+                {assessmentLabel(h)}
               </option>
             ))}
           </select>
+          <AssessmentDetails assessment={history.find(h => h.assessment_id === selId)} />
         </div>
       )}
 
@@ -112,11 +118,11 @@ export default function SkillGap() {
               7-Dimension Employability Assessment
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', columnGap: '14px' }}>
-              {DIMENSIONS.map(dim => <DimensionBar key={dim.key} dim={dim} value={assessment[dim.key]} skills={skills} />)}
+              {DIMENSIONS.map(dim => <DimensionBar key={dim.key} dim={dim} value={assessment[dim.key]} skills={skills} records={records} />)}
             </div>
             <div style={{ fontSize: '11px', color: '#8b92a8', marginTop: '2px' }}>
-              The readiness score comes from the four skill dimensions. &quot;No data yet&quot; means nothing is recorded in your
-              profile for it; add it on My Profile and run the assessment again.
+              The readiness score comes from the four skill dimensions. &quot;No data yet&quot; means you list no skill of that
+              category; add one on My Profile and run the assessment again.
             </div>
           </div>
 

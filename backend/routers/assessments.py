@@ -102,11 +102,17 @@ def get_assessment_history(
         text("""
             SELECT a.assessment_id, a.readiness_score, a.matching_method,
                    a.created_at, jr.role_name, a.role_id, a.jd_id,
+                   jd.title AS jd_title, jd.company AS jd_company, jd.raw_text AS jd_text,
+                   (SELECT COUNT(*) FROM skill_match_results s WHERE s.assessment_id = a.assessment_id) AS skill_count,
+                   (SELECT COUNT(*) FROM skill_match_results s WHERE s.assessment_id = a.assessment_id AND s.match_status = 'strong') AS strong_count,
+                   (SELECT COUNT(*) FROM skill_match_results s WHERE s.assessment_id = a.assessment_id AND s.match_status = 'developing') AS developing_count,
+                   (SELECT COUNT(*) FROM skill_match_results s WHERE s.assessment_id = a.assessment_id AND s.match_status = 'gap') AS gap_count,
                    a.score_technical, a.score_ai_digital, a.score_analytical,
                    a.score_communication, a.score_industry_exp,
                    a.score_project_exp, a.score_certification
             FROM assessments a
             LEFT JOIN job_roles jr ON jr.role_id = a.role_id
+            LEFT JOIN job_descriptions jd ON jd.jd_id = a.jd_id
             WHERE a.profile_id = :pid
             ORDER BY a.created_at DESC
         """),

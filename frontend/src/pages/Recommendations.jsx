@@ -2,6 +2,8 @@
 // Author: Tee Ren Hang (Frontend) + Soh Way Miin Carl (Backend integration)
 import { useState, useEffect, useCallback } from 'react'
 import { useLocation } from 'react-router-dom'
+import { assessmentLabel } from '../utils/assessments'
+import AssessmentDetails from '../components/AssessmentDetails'
 import { assessAPI, progressAPI } from '../api/client'
 import { label } from '../utils/labels'
 import CompleteActivity from '../components/CompleteActivity'
@@ -304,22 +306,24 @@ export default function Recommendations() {
         <div style={{
           background: '#fff', border: '1px solid #e4e6ef', borderRadius: '12px',
           padding: '16px 24px', marginBottom: '16px',
-          display: 'flex', alignItems: 'center', gap: '12px',
         }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <label style={{ fontSize: '13px', fontWeight: '600', color: '#4a5168' }}>Assessment:</label>
           <select
             value={selId}
             onChange={e => { setSelId(e.target.value); loadRecs(e.target.value) }}
             style={{
-              flex: 1, padding: '8px 12px', border: '1.5px solid #e4e6ef',
+              flex: 1, minWidth: 0, padding: '8px 12px', border: '1.5px solid #e4e6ef',
               borderRadius: '8px', fontSize: '13px', background: '#f5f6fa',
             }}>
             {history.map(h => (
               <option key={h.assessment_id} value={h.assessment_id}>
-                {h.role_name || 'Custom JD'} — {h.readiness_score}% — {new Date(h.created_at).toLocaleDateString()}
+                {assessmentLabel(h)}
               </option>
             ))}
           </select>
+          </div>
+          <AssessmentDetails assessment={history.find(h => h.assessment_id === selId)} />
         </div>
       )}
 

@@ -291,6 +291,7 @@ class TestAssessment:
         assert {"score_technical", "score_project_exp", "score_certification"} <= set(h)
         # "Run again" on the Progress page reuses the role (or JD) and method of the latest assessment
         assert h["role_id"] == str(env["da"]) and h["jd_id"] is None
+        assert h["skill_count"] == h["strong_count"] + h["developing_count"] + h["gap_count"] > 0
         again = run(env, alice, role_id=h["role_id"], matching_method=h["matching_method"])
         assert again.status_code == 201
         assert env["client"].get("/api/assessments/my/history", headers=alice).json()[0]["assessment_id"] == again.json()["assessment_id"]
@@ -1810,6 +1811,7 @@ class TestLibraryForAdvisors:
 
         rows = {s["skill_id"]: s for s in c.get("/api/library/skills", headers=hop).json()}
         assert rows[str(shared)]["can_edit"] is False                     # used by every course
+        assert str(biz_only) not in rows                                  # another course's skills are hidden
         assert c.patch(f"/api/library/skills/{shared}", headers=hop, json={"is_active": False}).status_code == 403
         assert c.get("/api/library/skills", headers=admin).json()[0]["can_edit"] is True
 
@@ -1831,7 +1833,9 @@ class TestLibraryForAdvisors:
                      json=[{"skill_id": sid, "importance": "required"}]).status_code == 200
         biz_role = conn.execute("SELECT role_id FROM job_roles WHERE courses = '{BUSINESS}' LIMIT 1").fetchone()[0]
         assert c.patch(f"/api/library/roles/{biz_role}", headers=hop, json={"is_active": False}).status_code == 403
-        assert c.get(f"/api/library/roles/{biz_role}/skills", headers=hop).json()["role"]["can_edit"] is False
+        assert c.get(f"/api/library/roles/{biz_role}/skills", headers=hop).status_code == 404   # and its roles
+        assert c.get(f"/api/library/roles/{biz_role}/skills", headers=admin).status_code == 200
+        assert str(biz_role) not in {r["role_id"] for r in c.get("/api/library/roles", headers=hop).json()}
 
         # Resources: added for a skill CS students see; editable by whoever added it
         body = {"skill_id": str(shared), "resource_title": "Lib Talk Club", "url": "https://example.com/talk"}
@@ -1846,6 +1850,9 @@ class TestLibraryForAdvisors:
                       json={**body, "skill_id": str(biz_only), "resource_title": "Lib Biz"}).status_code == 403
         listed = {x["resource_id"]: x for x in c.get("/api/library/resources", headers=hop).json()}
         assert listed[res_id]["can_edit"] is True and listed[str(seed_res)]["can_edit"] is False
+        assert all(set(x["skill_courses"]) & {"CS"} for x in listed.values())   # and its resources
+        everything = c.get("/api/library/resources", headers=admin).json()
+        assert any("CS" not in x["skill_courses"] for x in everything)
 
 
 class TestCompleteAddsSkill:

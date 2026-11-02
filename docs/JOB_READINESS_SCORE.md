@@ -106,8 +106,10 @@ boundaries depend on the institution, admins can change both values in
 
 ## 3. The seven dimensions
 
-Each assessment also stores seven dimension scores, shown as bars on the Dashboard,
-the Skill Gap page and the advisor's student page.
+Each assessment also stores seven dimension scores. The Dashboard, the Skill Gap page and the
+advisor's student page show the four skill dimensions as bars. The three experience dimensions
+are stored but not shown as a percentage: those pages list up to three of the student's records
+instead, because "75% project experience" says less than the projects themselves.
 
 | Dimension | Column | How it is worked out | In the readiness score? |
 |---|---|---|---|
@@ -135,7 +137,7 @@ rather than a lack of skill. Since 1 November the pages show three cases differe
 | Shown as | When | Meaning |
 |---|---|---|
 | **Not required** | The skill dimension is NULL | The job asks for no skill of this category, so there is nothing to score |
-| **No data yet** | An experience dimension is 0, or a skill dimension is 0 and the student lists no skill of that category | Nothing is recorded in the profile yet; the student is told what to add |
+| **No data yet** | A skill dimension is 0 and the student lists no skill of that category | Nothing is recorded in the profile yet; the student is told what to add |
 | **0%** | A skill dimension is 0 while the student does list skills of that category | A real result: none of the listed skills is close to what the job asks for |
 
 The readiness score itself has no "no data" case: a profile with no skills cannot be

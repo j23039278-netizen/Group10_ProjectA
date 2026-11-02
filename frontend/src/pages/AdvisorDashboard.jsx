@@ -106,6 +106,7 @@ export default function AdvisorDashboard() {
   // Student list filters and sorting
   const [search, setSearch]       = useState('')
   const [status, setStatus]       = useState('')
+  const [band, setBand]           = useState(null)   // lower limit of a readiness bar that was clicked
   const [programme, setProgramme] = useState('')
   const [target, setTarget]       = useState('')
   const [profileF, setProfileF]   = useState('')
@@ -171,6 +172,7 @@ export default function AdvisorDashboard() {
   const words = search.toLowerCase().split(/\s+/).filter(Boolean)
   const filtered = inCourse.filter(s =>
     (!status || statusOf(num(s.latest_score)) === status) &&
+    (band == null || (s.latest_score != null && num(s.latest_score) >= band && (band === 90 || num(s.latest_score) < band + 10))) &&
     (!programme || s.programme === programme) &&
     (!target || s.target_role === target) &&
     (!profileF || (profileF === 'complete') === !!s.profile_complete) &&
@@ -186,8 +188,8 @@ export default function AdvisorDashboard() {
     if (y == null) return -1
     return (typeof x === 'string' ? x.localeCompare(y) : x - y) * dir
   })
-  const anyFilter = search || status || programme || target || profileF
-  const clearFilters = () => { setSearch(''); setStatus(''); setProgramme(''); setTarget(''); setProfileF(''); setShownRows(PAGE_SIZE) }
+  const anyFilter = search || status || band != null || programme || target || profileF
+  const clearFilters = () => { setSearch(''); setStatus(''); setBand(null); setProgramme(''); setTarget(''); setProfileF(''); setShownRows(PAGE_SIZE) }
   const openStudent = (id) => navigate(`/students/${id}`, { state: { course, tab } })
 
   const exportStudents = () => downloadCsv(csvName('advisor_students'), [
@@ -231,7 +233,7 @@ export default function AdvisorDashboard() {
             const n = c.id ? students.filter(s => s.course === c.id).length : students.length
             return (
               <button key={c.id || 'all'} role="tab" aria-selected={active}
-                onClick={() => { setCourse(c.id); setRoleId(''); setGapProgramme(''); setProgramme(''); setTarget(''); setShownRows(PAGE_SIZE) }}
+                onClick={() => { setCourse(c.id); setRoleId(''); setGapProgramme(''); setProgramme(''); setTarget(''); setBand(null); setShownRows(PAGE_SIZE) }}
                 style={{ padding: '6px 14px', borderRadius: '20px', fontSize: '12px', fontWeight: '600', cursor: 'pointer',
                          background: active ? C.blue : '#fff', color: active ? '#fff' : C.body, border: `1.5px solid ${active ? C.blue : C.line}` }}>
                 {c.label} ({n})
@@ -269,7 +271,7 @@ export default function AdvisorDashboard() {
             {/* Readiness distribution */}
             <div style={card}>
               <div style={{ ...heading, marginBottom: '4px' }}>Readiness Distribution</div>
-              <div style={{ fontSize: '12px', color: C.muted, marginBottom: '12px' }}>Students by their latest readiness score</div>
+              <div style={{ fontSize: '12px', color: C.muted, marginBottom: '12px' }}>Students by their latest readiness score. Click a bar to see those students.</div>
               {overview.students_assessed === 0 ? <Empty>No assessment data yet.</Empty> : (
                 <ResponsiveContainer width="100%" height={240}>
                   <BarChart data={overview.distribution} margin={{ top: 5, right: 10, left: -10, bottom: 5 }}>
@@ -277,7 +279,8 @@ export default function AdvisorDashboard() {
                     <XAxis dataKey="band" tick={{ fontSize: 10 }} interval={0} />
                     <YAxis tick={{ fontSize: 11 }} allowDecimals={false} />
                     <Tooltip formatter={(v) => [v, 'Students']} labelFormatter={(l) => `Readiness ${l}%`} />
-                    <Bar dataKey="students" radius={[4, 4, 0, 0]}>
+                    <Bar dataKey="students" radius={[4, 4, 0, 0]} cursor="pointer"
+                      onClick={d => { setBand(d.payload?.from ?? d.from); setStatus(''); setTab('students'); setShownRows(PAGE_SIZE) }}>
                       {overview.distribution.map(d => <Cell key={d.band} fill={scoreColor(d.from)} />)}
                     </Bar>
                   </BarChart>
@@ -292,7 +295,7 @@ export default function AdvisorDashboard() {
                 On Track ≥ {BANDS.on_track}% · Developing {BANDS.needs_support}–{BANDS.on_track - 1}% · Needs Support &lt; {BANDS.needs_support}%
               </div>
               {[['on_track', sc.on_track], ['developing', sc.developing], ['needs_support', sc.needs_support], ['none', sc.not_assessed]].map(([k, n]) => (
-                <button key={k} onClick={() => { setStatus(k); setTab('students'); setShownRows(PAGE_SIZE) }}
+                <button key={k} onClick={() => { setStatus(k); setBand(null); setTab('students'); setShownRows(PAGE_SIZE) }}
                   title="Show these students" style={{ display: 'block', width: '100%', textAlign: 'left', border: 'none', background: 'none', padding: '0 0 14px', cursor: 'pointer' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', color: C.body, marginBottom: '5px' }}>
                     <span style={{ fontWeight: '600', color: STATUS[k].color }}>{STATUS[k].label}</span>
@@ -481,6 +484,11 @@ export default function AdvisorDashboard() {
               <option value="complete">Profile complete</option>
               <option value="incomplete">Profile incomplete</option>
             </select>
+            {band != null && (
+              <button style={{ ...btn(false), color: C.blue }} onClick={() => setBand(null)} title="Remove this filter">
+                Readiness {band}–{band === 90 ? 100 : band + 9}% ✕
+              </button>
+            )}
             {anyFilter && <button style={{ ...btn(false), color: C.blue }} onClick={clearFilters}>Clear filters</button>}
           </div>
           <div style={{ fontSize: '12px', color: C.muted, marginBottom: '10px' }}>Click a column title to sort, and a student to open their full record.</div>

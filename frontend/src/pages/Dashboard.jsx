@@ -1,7 +1,8 @@
 // SEAGAS — Student Dashboard
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { assessAPI, studentAPI } from '../api/client'
+import { assessAPI, studentAPI, experienceAPI } from '../api/client'
+import { assessmentName, assessmentDate } from '../utils/assessments'
 import ResultsReminder from '../components/ResultsReminder'
 import DimensionBar from '../components/DimensionBar'
 import { readinessColor } from '../utils/readiness'
@@ -13,6 +14,7 @@ export default function Dashboard({ onLogout }) {
   const [history,    setHistory]    = useState([])
   const [latest,     setLatest]     = useState(null)
   const [skills,     setSkills]     = useState(null)   // to tell "no skills of a category" from 0%
+  const [records,    setRecords]    = useState(null)   // projects, certifications, work experience
   const [loading,    setLoading]    = useState(true)
 
   useEffect(() => {
@@ -21,6 +23,8 @@ export default function Dashboard({ onLogout }) {
 
   const loadData = async () => {
     studentAPI.getSkills().then(r => setSkills(r.data)).catch(() => {})
+    Promise.all([studentAPI.getProjects(), studentAPI.getCerts(), experienceAPI.list()])
+      .then(([p, c, x]) => setRecords({ projects: p.data, certifications: c.data, experiences: x.data })).catch(() => {})
     try {
       const [profileRes, historyRes] = await Promise.all([
         studentAPI.getProfile(),
@@ -92,7 +96,7 @@ export default function Dashboard({ onLogout }) {
             Employability Profile
           </div>
           {latest ? (
-            DIMENSIONS.map(dim => <DimensionBar key={dim.key} dim={dim} value={latest[dim.key]} skills={skills} />)
+            DIMENSIONS.map(dim => <DimensionBar key={dim.key} dim={dim} value={latest[dim.key]} skills={skills} records={records} />)
           ) : (
             <div style={{ textAlign: 'center', padding: '40px 0', color: '#8b92a8' }}>
               <div style={{ fontSize: '32px', marginBottom: '8px' }}>📊</div>
@@ -147,10 +151,10 @@ export default function Dashboard({ onLogout }) {
                 }}>
                   <div>
                     <div style={{ fontSize: '13px', fontWeight: '500', color: '#1a1f2e' }}>
-                      {h.role_name || 'Custom JD'}
+                      {assessmentName(h)}
                     </div>
                     <div style={{ fontSize: '11px', color: '#8b92a8' }}>
-                      {new Date(h.created_at).toLocaleDateString()}
+                      {assessmentDate(h)}
                     </div>
                   </div>
                   <div style={{

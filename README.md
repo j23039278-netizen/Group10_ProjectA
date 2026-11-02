@@ -184,13 +184,13 @@ Students below 40% readiness are shown as "Needs Support".
 
 **Skills library for advisors.** Advisors also have **Skills & Roles** and **Learning Resources**
 (`/api/library`, `routers/library.py`). They add skills and roles for their own courses and change
-the entries whose courses are all theirs; they add resources for any skill their students see and
+the entries whose courses are all theirs; entries of other courses only are hidden from them; they add resources for any skill their students see and
 change the ones they added. Entries shared with other courses (for example the soft skills) stay
 with admins, so one course cannot switch them off for another. Admins manage everything.
 
-**Scores.** A dimension the job does not ask for shows "Not required"; one with nothing recorded
-yet (no projects, certifications or work experience, or no skill of that category listed) shows
-"No data yet" instead of 0%. Skills on My Profile are grouped by category with one colour per
+**Scores.** A skill dimension the job does not ask for shows "Not required"; one with no skill of
+that category listed shows "No data yet" instead of 0%. Project Experience, Certification and
+Industry Experience show no percentage: they list up to three of the student's records. Skills on My Profile are grouped by category with one colour per
 category (also on Export CV and the advisor's student page). Progress Tracking has **Run again**,
 which assesses the current profile against the latest role or job description again, and reminds
 the student when activities were completed since the last assessment. Completing an activity (evidence

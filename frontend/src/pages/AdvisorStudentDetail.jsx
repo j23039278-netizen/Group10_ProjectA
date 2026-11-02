@@ -345,7 +345,7 @@ export default function AdvisorStudentDetail() {
                 {assessment.role_name || 'Pasted job description'} · {label(assessment.matching_method)} matching · {fmtDate(assessment.created_at)}
               </div>
               {DIMENSIONS.map(dim => (
-                <DimensionBar key={dim.key} dim={dim} value={assessment[dim.key]} skills={skills} height={6} />
+                <DimensionBar key={dim.key} dim={dim} value={assessment[dim.key]} skills={skills} records={{ projects, certifications, experiences }} height={6} />
               ))}
               <div style={{ marginTop: '12px', paddingTop: '10px', borderTop: '1px solid #f0f1f5', fontSize: '12px', color: C.body }}>
                 {latestReview

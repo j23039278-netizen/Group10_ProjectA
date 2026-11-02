@@ -14,13 +14,13 @@ import { assessAPI, progressAPI } from '../api/client'
 import CompleteActivity from '../components/CompleteActivity'
 import EvidenceFiles from '../components/EvidenceFiles'
 import { readinessColor } from '../utils/readiness'
+import { assessmentName } from '../utils/assessments'
 
 const C = { ink: '#1a1f2e', body: '#4a5168', muted: '#8b92a8', line: '#e4e6ef',
             blue: '#2d5be3', green: '#16a34a', amber: '#d97706', red: '#dc2626' }
 const card    = { background: '#fff', border: `1px solid ${C.line}`, borderRadius: '12px', padding: '20px 24px', marginBottom: '16px' }
 const heading = { fontSize: '13px', fontWeight: '700', color: C.ink, marginBottom: '14px', textTransform: 'uppercase', letterSpacing: '0.5px' }
 const muted   = { color: C.muted, fontSize: '13px' }
-const JD_ROLE = 'Pasted job description'
 
 const fmtDate = (d) => d ? new Date(d).toLocaleDateString('en-GB') : '—'
 const actionBtn = (bg, color, border = bg) => ({
@@ -73,7 +73,7 @@ export default function ProgressTracking() {
   const load = () => Promise.all([assessAPI.history(), progressAPI.getMy()])
     .then(([h, p]) => {
       // history comes newest first; the chart reads oldest first
-      const rows = [...h.data].reverse().map(a => ({ ...a, role_name: a.role_name || JD_ROLE }))
+      const rows = [...h.data].reverse().map(a => ({ ...a, role_name: assessmentName(a) }))
       setHistory(rows)
       setProgress(p.data.progress)
       setRole(r => r || (rows.length ? rows[rows.length - 1].role_name : ''))

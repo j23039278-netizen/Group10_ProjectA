@@ -3,7 +3,8 @@ SEAGAS — Library Router: skills library, job role templates and learning resou
 (recommendations library). Admins manage every entry; advisors manage the entries
 of their own courses (the lecturer's feedback of 22 October moved this to advisors).
 
-- Everyone on staff sees every entry, active or not.
+- Admins see every entry, active or not; advisors the entries used by at least one of their
+  courses (entries of other courses only are hidden).
 - Adding: an advisor's skills and roles must be for their courses only; a resource
   can be added for any skill their students see.
 - Changing (edit, activate / deactivate): an advisor can change a skill or role whose
@@ -62,6 +63,11 @@ def library_scope(current_user):
 def within(scope, courses):
     """All of these courses are managed by the user"""
     return scope is None or set(courses or []) <= set(scope)
+
+
+def visible(scope, courses):
+    """At least one of these courses is managed by the user"""
+    return scope is None or bool(set(courses or []) & set(scope))
 
 
 def check_within(scope, courses, detail=NOT_YOURS):
@@ -170,7 +176,7 @@ def list_skills(current_user=Depends(get_current_user), db: Session = Depends(ge
         GROUP BY sl.skill_id
         ORDER BY sl.category, sl.skill_name
     """)).fetchall()
-    return [{**s._mapping, "can_edit": within(scope, s.courses)} for s in skills]
+    return [{**s._mapping, "can_edit": within(scope, s.courses)} for s in skills if visible(scope, s.courses)]
 
 
 @router.post("/skills", status_code=201)
@@ -260,13 +266,15 @@ def list_roles(current_user=Depends(get_current_user), db: Session = Depends(get
         GROUP BY jr.role_id
         ORDER BY jr.role_name
     """)).fetchall()
-    return [{**r._mapping, "can_edit": within(scope, r.courses)} for r in roles]
+    return [{**r._mapping, "can_edit": within(scope, r.courses)} for r in roles if visible(scope, r.courses)]
 
 
 @router.get("/roles/{role_id}/skills")
 def get_role_skills(role_id: UUID, current_user=Depends(get_current_user), db: Session = Depends(get_db)):
     scope = library_scope(current_user)
     role = get_role_row(db, role_id)
+    if not visible(scope, role.courses):
+        raise HTTPException(status_code=404, detail="Job role not found")
     role = {**role._mapping, "can_edit": within(scope, role.courses)}
     skills = db.execute(text("""
         SELECT sl.skill_id, sl.skill_name, sl.category, jrs.importance
@@ -432,7 +440,8 @@ def list_resources(current_user=Depends(get_current_user), db: Session = Depends
         GROUP BY rl.resource_id, sl.skill_id
         ORDER BY sl.skill_name, rl.resource_title
     """)).fetchall()
-    return [{**r._mapping, "can_edit": can_change_resource(scope, current_user, r)} for r in rows]
+    return [{**r._mapping, "can_edit": can_change_resource(scope, current_user, r)}
+            for r in rows if visible(scope, r.skill_courses) or str(r.created_by) == str(current_user.user_id)]
 
 
 @router.post("/resources", status_code=201)

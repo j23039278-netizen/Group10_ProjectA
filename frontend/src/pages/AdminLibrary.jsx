@@ -342,7 +342,7 @@ export default function AdminLibrary() {
           {activeSkills} active skills and {roles.filter(r => r.is_active).length} active job roles.
           Entries marked <SourcePill source="admin" /> were added on the website and can be edited.
           Seed entries come from data/skills/skills_library.csv and the seed files: edit those there; here they can only be switched on or off.
-          {!isAdmin && <> You can change the entries of your courses ({coursesText(myCourses)}); entries shared with other courses are changed by an admin.</>}
+          {!isAdmin && <> You see the entries of your courses ({coursesText(myCourses)}) and can change them; entries shared with other courses are changed by an admin.</>}
         </div>
       </div>
 
@@ -351,7 +351,7 @@ export default function AdminLibrary() {
 
       {/* Course: show only the roles and skills of one course */}
       <div role="tablist" aria-label="Course" style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '16px' }}>
-        {[{ id: '', label: 'All courses' }, ...COURSES].map(c => {
+        {[{ id: '', label: isAdmin ? 'All courses' : 'All my courses' }, ...COURSES.filter(c => myCourses.includes(c.id))].map(c => {
           const active = course === c.id
           const has = (item) => !c.id || (item.courses || []).includes(c.id)
           return (

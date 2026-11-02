@@ -191,7 +191,7 @@ export default function AdminResources() {
 
       {/* Course: resources for the skills of one course */}
       <div role="tablist" aria-label="Course" style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '16px' }}>
-        {[{ id: '', label: 'All courses' }, ...COURSES].map(c => {
+        {[{ id: '', label: isAdmin ? 'All courses' : 'All my courses' }, ...COURSES.filter(c => myCourses.includes(c.id))].map(c => {
           const selected = course === c.id
           return (
             <button key={c.id || 'all'} role="tab" aria-selected={selected} onClick={() => setCourse(c.id)}
