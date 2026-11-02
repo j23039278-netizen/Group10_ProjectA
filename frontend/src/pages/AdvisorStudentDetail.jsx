@@ -9,6 +9,7 @@ import { label } from '../utils/labels'
 import EvidenceFiles from '../components/EvidenceFiles'
 import DecisionNotice from '../components/DecisionNotice'
 import DimensionBar from '../components/DimensionBar'
+import HowScored from '../components/HowScored'
 import { readinessColor } from '../utils/readiness'
 import { DIMENSIONS } from '../utils/dimensions'
 import { SKILL_CATEGORIES, levelDots } from '../utils/skillCategories'
@@ -345,8 +346,9 @@ export default function AdvisorStudentDetail() {
                 {assessment.role_name || 'Pasted job description'} · {label(assessment.matching_method)} matching · {fmtDate(assessment.created_at)}
               </div>
               {DIMENSIONS.map(dim => (
-                <DimensionBar key={dim.key} dim={dim} value={assessment[dim.key]} skills={skills} records={{ projects, certifications, experiences }} height={6} />
+                <DimensionBar key={dim.key} dim={dim} value={assessment[dim.key]} skills={skills} records={{ projects, certifications, experiences }} matches={skill_gaps} height={6} />
               ))}
+              <HowScored />
               <div style={{ marginTop: '12px', paddingTop: '10px', borderTop: '1px solid #f0f1f5', fontSize: '12px', color: C.body }}>
                 {latestReview
                   ? <>Your review: <Pill bg={VERDICT[latestReview.ai_verdict].bg} color={VERDICT[latestReview.ai_verdict].color}>{VERDICT[latestReview.ai_verdict].label}</Pill></>

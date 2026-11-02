@@ -5,6 +5,7 @@ import { assessAPI, studentAPI, experienceAPI } from '../api/client'
 import { assessmentName, assessmentDate } from '../utils/assessments'
 import ResultsReminder from '../components/ResultsReminder'
 import DimensionBar from '../components/DimensionBar'
+import HowScored from '../components/HowScored'
 import { readinessColor } from '../utils/readiness'
 import { DIMENSIONS } from '../utils/dimensions'
 
@@ -15,6 +16,7 @@ export default function Dashboard({ onLogout }) {
   const [latest,     setLatest]     = useState(null)
   const [skills,     setSkills]     = useState(null)   // to tell "no skills of a category" from 0%
   const [records,    setRecords]    = useState(null)   // projects, certifications, work experience
+  const [matches,    setMatches]    = useState(null)   // skill results of the latest assessment
   const [loading,    setLoading]    = useState(true)
 
   useEffect(() => {
@@ -32,7 +34,10 @@ export default function Dashboard({ onLogout }) {
       ])
       setProfile(profileRes.data)
       setHistory(historyRes.data)
-      if (historyRes.data.length > 0) setLatest(historyRes.data[0])
+      if (historyRes.data.length > 0) {
+        setLatest(historyRes.data[0])
+        assessAPI.get(historyRes.data[0].assessment_id).then(r => setMatches(r.data.match_results)).catch(() => {})
+      }
     } catch (err) {
       // Profile might not exist yet
     } finally {
@@ -96,7 +101,10 @@ export default function Dashboard({ onLogout }) {
             Employability Profile
           </div>
           {latest ? (
-            DIMENSIONS.map(dim => <DimensionBar key={dim.key} dim={dim} value={latest[dim.key]} skills={skills} records={records} />)
+            <>
+              {DIMENSIONS.map(dim => <DimensionBar key={dim.key} dim={dim} value={latest[dim.key]} skills={skills} records={records} matches={matches} />)}
+              <HowScored />
+            </>
           ) : (
             <div style={{ textAlign: 'center', padding: '40px 0', color: '#8b92a8' }}>
               <div style={{ fontSize: '32px', marginBottom: '8px' }}>📊</div>

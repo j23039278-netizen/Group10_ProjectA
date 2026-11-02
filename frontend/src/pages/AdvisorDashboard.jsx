@@ -309,26 +309,6 @@ export default function AdvisorDashboard() {
             </div>
           </div>
 
-          {/* Top skill gaps */}
-          <div style={card}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px', gap: '10px', flexWrap: 'wrap' }}>
-              <div style={heading}>Top Skill Gaps</div>
-              <button style={{ ...btn(false), padding: '6px 12px', fontSize: '12px' }} onClick={() => setTab('skill gaps')}>See all skill gaps →</button>
-            </div>
-            {gaps.length === 0 ? <Empty>No assessment data yet.</Empty> : (
-              <ResponsiveContainer width="100%" height={280}>
-                <BarChart data={gaps.slice(0, 10).map(g => ({ name: g.skill_name.length > 16 ? `${g.skill_name.slice(0, 16)}…` : g.skill_name, full: g.skill_name, gap: num(g.gap_percentage) || 0 }))}
-                  margin={{ top: 5, right: 20, left: 0, bottom: 60 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
-                  <XAxis dataKey="name" tick={{ fontSize: 11 }} angle={-35} textAnchor="end" interval={0} />
-                  <YAxis tick={{ fontSize: 11 }} domain={[0, 100]} tickFormatter={v => `${v}%`} />
-                  <Tooltip formatter={(v) => [`${v}%`, 'Students with this gap']} labelFormatter={(_l, p) => p?.[0]?.payload.full} />
-                  <Bar dataKey="gap" fill={C.red} radius={[4, 4, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
-            )}
-          </div>
-
           {/* Target roles */}
           <div style={card}>
             <div style={{ ...heading, marginBottom: '12px' }}>Target Roles</div>

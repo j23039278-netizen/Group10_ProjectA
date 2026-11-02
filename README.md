@@ -173,7 +173,7 @@ themselves (`SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURITY`, `SMTP_USER`, `SMTP_PASSWO
 stay in `backend/.env`, never in git. Advisors resend student emails from New Students → Email outbox; admins resend staff emails from Student Intake → Email outbox
 (a temporary password is not resent once the person has chosen their own).
 
-**Advisor dashboard.** Tabs: Overview (readiness distribution, student status, top skill gaps,
+**Advisor dashboard.** Tabs: Overview (readiness distribution, student status,
 target roles, learning activity), Skill Gaps (filter by programme and assessed job role; a card per
 skill category, Soft skills included, shows how strong the cohort is and filters the list to that
 category), Students (search, filters, sortable columns) and Learning Progress (most completed
@@ -190,7 +190,9 @@ with admins, so one course cannot switch them off for another. Admins manage eve
 
 **Scores.** A skill dimension the job does not ask for shows "Not required"; one with no skill of
 that category listed shows "No data yet" instead of 0%. Project Experience, Certification and
-Industry Experience show no percentage: they list up to three of the student's records. Skills on My Profile are grouped by category with one colour per
+Industry Experience show no percentage: they list up to three of the student's records. Under each
+skill bar a line gives the skill counts behind it ("4 of 9 skills matched: 3 strong, 1 developing, 5 gaps"),
+and "How is this calculated?" explains the formula. Skills on My Profile are grouped by category with one colour per
 category (also on Export CV and the advisor's student page). Progress Tracking has **Run again**,
 which assesses the current profile against the latest role or job description again, and reminds
 the student when activities were completed since the last assessment. Completing an activity (evidence

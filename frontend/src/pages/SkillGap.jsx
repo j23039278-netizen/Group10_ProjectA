@@ -4,6 +4,7 @@ import { useLocation } from 'react-router-dom'
 import { assessAPI, studentAPI, experienceAPI } from '../api/client'
 import { assessmentLabel } from '../utils/assessments'
 import AssessmentDetails from '../components/AssessmentDetails'
+import HowScored from '../components/HowScored'
 import DimensionBar from '../components/DimensionBar'
 import { readinessColor } from '../utils/readiness'
 import { DIMENSIONS } from '../utils/dimensions'
@@ -118,12 +119,13 @@ export default function SkillGap() {
               7-Dimension Employability Assessment
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', columnGap: '14px' }}>
-              {DIMENSIONS.map(dim => <DimensionBar key={dim.key} dim={dim} value={assessment[dim.key]} skills={skills} records={records} />)}
+              {DIMENSIONS.map(dim => <DimensionBar key={dim.key} dim={dim} value={assessment[dim.key]} skills={skills} records={records} matches={matches} />)}
             </div>
             <div style={{ fontSize: '11px', color: '#8b92a8', marginTop: '2px' }}>
               The readiness score comes from the four skill dimensions. &quot;No data yet&quot; means you list no skill of that
               category; add one on My Profile and run the assessment again.
             </div>
+            <HowScored />
           </div>
 
           {/* Skill Categories */}

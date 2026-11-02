@@ -116,7 +116,7 @@ instead, because "75% project experience" says less than the projects themselves
 | Technical Skills | `score_technical` | The formula above over the job's Technical skills only | Yes (its skills) |
 | AI / Digital Skills | `score_ai_digital` | The same, AI_Digital skills | Yes (its skills) |
 | Analytical Skills | `score_analytical` | The same, Analytical skills | Yes (its skills) |
-| Communication | `score_communication` | The same, Soft skills | Yes (its skills) |
+| Soft Skills | `score_communication` | The same, Soft skills | Yes (its skills) |
 | Project Experience | `score_project_exp` | 25 per project, at most 100 | No |
 | Certification | `score_certification` | 33 per certification, at most 100 | No |
 | Industry Experience | `score_industry_exp` | 50 per internship project or work experience (not volunteering), at most 100 | No |

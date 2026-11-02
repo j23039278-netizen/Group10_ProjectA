@@ -11,24 +11,36 @@ export const DIMENSIONS = [
   { key: 'score_technical',     label: 'Technical Skills',    category: 'Technical',  noun: 'technical' },
   { key: 'score_ai_digital',    label: 'AI / Digital Skills', category: 'AI_Digital', noun: 'AI or digital' },
   { key: 'score_analytical',    label: 'Analytical Skills',   category: 'Analytical', noun: 'analytical' },
-  { key: 'score_communication', label: 'Communication',       category: 'Soft',       noun: 'soft' },
+  { key: 'score_communication', label: 'Soft Skills',         category: 'Soft',       noun: 'soft' },
   { key: 'score_project_exp',   label: 'Project Experience',  records: 'projects',  empty: 'No projects added yet' },
   { key: 'score_certification', label: 'Certification',       records: 'certs',     empty: 'No certifications added yet' },
   { key: 'score_industry_exp',  label: 'Industry Experience', records: 'industry',  empty: 'No internships or work experience added yet' },
 ]
 
-// One line per record behind an experience dimension.
+// One { title, detail } per record behind an experience dimension.
 // records: { projects, certifications, experiences } of the student
 export function dimensionRecords(dim, records) {
   const { projects = [], certifications = [], experiences = [] } = records || {}
-  const project = (p) => [p.project_title, p.year_completed].filter(Boolean).join(', ')
+  const project = (p) => ({ title: p.project_title, detail: p.year_completed })
   if (dim.records === 'projects') return projects.map(project)
-  if (dim.records === 'certs') return certifications.map(c => [c.cert_name, c.issuer].filter(Boolean).join(', '))
+  if (dim.records === 'certs') return certifications.map(c => ({ title: c.cert_name, detail: c.issuer === c.cert_name ? null : c.issuer }))
   // Same as the score: internship projects and work experience other than volunteering
   return [
-    ...experiences.filter(x => x.experience_type !== 'volunteer').map(x => `${x.job_title}, ${x.company}`),
+    ...experiences.filter(x => x.experience_type !== 'volunteer').map(x => ({ title: x.job_title, detail: x.company })),
     ...projects.filter(p => p.project_type === 'internship').map(project),
   ]
+}
+
+// "4 of 9 skills matched: 3 strong, 1 developing, 5 gaps" for a skill dimension.
+// matches: the assessment's skill results ({ category, match_status }); null when it has none
+export function dimensionSummary(dim, matches) {
+  const rows = (matches || []).filter(m => m.category === dim.category)
+  if (!rows.length) return null
+  const count = (status) => rows.filter(m => m.match_status === status).length
+  const [strong, developing, gaps] = [count('strong'), count('developing'), count('gap')]
+  const parts = [strong && `${strong} strong`, developing && `${developing} developing`,
+                 gaps && `${gaps} gap${gaps === 1 ? '' : 's'}`].filter(Boolean)
+  return `${strong + developing} of ${rows.length} skill${rows.length === 1 ? '' : 's'} matched: ${parts.join(', ')}`
 }
 
 // skills: the student's current skills (with category), to tell "no skill of this
