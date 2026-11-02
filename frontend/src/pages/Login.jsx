@@ -3,7 +3,7 @@
 // database, and App.jsx opens that role's portal: students, advisors and admins
 // never choose a role themselves.
 // Students also enter their student ID. There is no sign-up: student accounts
-// are created by an admin from the advisor's new-student list, and the student
+// are created by an advisor from their new-student list, and the student
 // receives a temporary password by email.
 import { useState } from 'react'
 import { authAPI } from '../api/client'

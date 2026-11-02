@@ -22,7 +22,7 @@ const GROUPS = [
 
 const ACTION_LABEL = {
   'auth.login': 'Signed in', 'auth.login_failed': 'Failed sign-in', 'auth.register': 'Registered', 'auth.password_change': 'Changed password',
-  'intake.upload': 'Uploaded new students', 'intake.accounts_create': 'Created student accounts', 'intake.reject': 'Rejected new student',
+  'intake.upload': 'Uploaded new students', 'intake.email_resend': 'Resent an email', 'intake.accounts_create': 'Created student accounts', 'intake.reject': 'Rejected new student',
   'assessment.run': 'Ran assessment', 'jd.analyse': 'Analysed JD',
   'advisor.view_student': 'Viewed student', 'advisor.view_file': 'Opened evidence file',
   'advisor.view_cv': 'Downloaded student CV', 'advisor.note_create': 'Added advisor note',

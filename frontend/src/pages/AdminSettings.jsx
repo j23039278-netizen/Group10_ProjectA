@@ -145,7 +145,7 @@ export default function AdminSettings() {
           <div style={{ fontSize: '13px', color: C.body, marginBottom: '12px' }}>
             <span style={{ color: C.green, fontWeight: '700' }}>● Mail server set up.</span> {mail.host}:{mail.port} · {mail.security.toUpperCase()} ·
             from <b>{mail.from_address}</b>{mail.login ? ' · signs in with a user name' : ''}.
-            New account emails are sent automatically; older ones can be resent from Student Intake → Email outbox.
+            New account emails are sent automatically; older ones can be resent from the Email outbox: student emails by advisors (New Students), staff emails by admins (Student Intake).
           </div>
         ) : (
           <div style={{ fontSize: '13px', color: C.body, marginBottom: '12px' }}>

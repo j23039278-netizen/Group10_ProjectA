@@ -2,7 +2,7 @@
 // Admins create advisor/admin accounts, rename, activate or deactivate accounts and reset passwords.
 // Each advisor has a position (Dean / Head of Programme), which sets the courses they see, and a
 // 5-digit staff ID that starts with the position's prefix (backend/advisor_scope.py).
-// Students are not created here: their accounts come from the new-student lists (Student Intake).
+// Students are not created here: advisors create their accounts from the new-student lists.
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { authAPI, studentAPI } from '../api/client'
 import { adminAPI } from '../api/admin'
@@ -417,7 +417,7 @@ export default function AdminUsers() {
         <div>
           <div style={{ fontSize: '26px', fontWeight: '700', color: C.ink }}>User Management</div>
           <div style={{ fontSize: '13px', color: C.body, marginTop: '4px' }}>
-            Create advisor and admin accounts. Student accounts are created on the Student Intake page.
+            Create advisor and admin accounts. Advisors create student accounts on their New Students page.
           </div>
         </div>
         <button style={btn('primary')} onClick={() => { setNotice(''); setAdding(true) }}>+ Add user</button>

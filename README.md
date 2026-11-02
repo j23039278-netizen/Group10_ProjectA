@@ -138,7 +138,7 @@ semantic and hybrid requests fall back to keyword matching and the student sees 
 ### Accounts and roles
 | Role | How the account is created | Email must end with |
 |------|----------------------------|---------------------|
-| Student | An advisor uploads the new-student list (**New Students**: Full Name, Phone Number, Personal Email, Course, Programme); an admin assigns the student ID and school email and creates the account (**Student Intake**) | `@student.newinti.edu.my` |
+| Student | An advisor uploads the new-student list (**New Students**: Full Name, Student ID, School Email, Phone Number, Personal Email, Course, Programme), checks it and creates the accounts, which sends the login emails. A student ID or school email used twice (in the file or already in the system) refuses the whole file until it is corrected. Admins can only view this (**Student Intake**) | `@student.newinti.edu.my` |
 | Advisor | An admin creates it in **User Management** and sets the position (Dean or Head of Programme), which decides the courses the advisor sees, and a 5-digit staff ID | `@advisor.newinti.edu.my` |
 | Admin | The first one in the backend window (`backend/create_admin.py`); more in User Management | `@admin.newinti.edu.my` |
 
@@ -170,7 +170,7 @@ suggests a free resource for the main missing skills.
 readiness bands for the advisor dashboard (On Track / Needs Support limits) and upload limits.
 The same page shows whether a mail server is set up and can send a test email; the SMTP settings
 themselves (`SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURITY`, `SMTP_USER`, `SMTP_PASSWORD`, `SMTP_FROM`)
-stay in `backend/.env`, never in git. Stored emails can be resent from Student Intake → Email outbox
+stay in `backend/.env`, never in git. Advisors resend student emails from New Students → Email outbox; admins resend staff emails from Student Intake → Email outbox
 (a temporary password is not resent once the person has chosen their own).
 
 **Advisor dashboard.** Tabs: Overview (readiness distribution, student status, top skill gaps,
@@ -224,8 +224,8 @@ User Management if needed.
 
 New students receive their student ID, school email and a temporary password at their personal
 email, and must choose their own password at first sign-in (admin password resets work the same
-way). Without a mail server the emails are only stored, and admins read them under
-**Student Intake → Email outbox**. To send real emails, add `SMTP_HOST`, `SMTP_PORT`,
+way). Without a mail server the emails are only stored, and advisors read them under
+**New Students → Email outbox** (admins under **Student Intake → Email outbox**). To send real emails, add `SMTP_HOST`, `SMTP_PORT`,
 `SMTP_USER`, `SMTP_PASSWORD` and `SMTP_FROM` to `backend/.env` (never commit them).
 
 Test student: `student0001@synthetic.example.com`, student ID `900000001`, password `Seagas@2026`

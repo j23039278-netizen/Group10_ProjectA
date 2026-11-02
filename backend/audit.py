@@ -17,7 +17,7 @@ log = logging.getLogger("uvicorn.error")
 
 ACTIONS = (
     "auth.login", "auth.login_failed", "auth.register", "auth.password_change",
-    "intake.upload", "intake.accounts_create", "intake.reject",
+    "intake.upload", "intake.accounts_create", "intake.reject", "intake.email_resend",
     "assessment.run", "jd.analyse",
     "advisor.view_student", "advisor.view_file", "advisor.view_cv",
     "advisor.note_create", "advisor.note_update", "advisor.note_delete",

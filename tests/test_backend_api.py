@@ -738,59 +738,83 @@ def upload(env, headers, name, content, mime="text/csv"):
 
 
 class TestIntake:
-    CSV = ("Full Name,Phone Number,Personal Email,Course,Programme\n"
-           "Mei Ling Tan,+60 12-345 6789,meiling.tan@example.com,Business,Bachelor of Business (Marketing)\n"
-           "Arjun Nair,0123456780,arjun.nair@example.com,ict,bachelor of information and communications technology (web and mobile development)\n"
-           "No Email,0123,not-an-email,CS,Bachelor of Computer Science (Software Engineering)\n"
-           "Mei Ling Again,012,MEILING.TAN@example.com,Business,Bachelor of Business (Marketing)\n"
-           "Siti Aminah,,siti.aminah@example.com,Computer Science,Bachelor of Computer Science (Software Engineering)\n"
-           "No Course,,no.course@example.com,Medicine,Bachelor of Computer Science (Software Engineering)\n"
-           "Wrong Programme,,wrong.prog@example.com,Business,Bachelor of Computer Science (Software Engineering)\n").encode()
+    D = "@student.newinti.edu.my"
+    CSV = ("Full Name,Student ID,School Email,Phone Number,Personal Email,Course,Programme\n"
+           f"Mei Ling Tan,105000001,105000001{D},+60 12-345 6789,meiling.tan@example.com,Computer Science,Bachelor of Computer Science (Software Engineering)\n"
+           f"Arjun Nair,105000002,105000002{D},0123456780,arjun.nair@example.com,ict,bachelor of information and communications technology (web and mobile development)\n"
+           f"No Email,105000009,105000009{D},0123,not-an-email,CS,Bachelor of Computer Science (Software Engineering)\n"
+           f"Mei Ling Again,105000010,105000010{D},012,MEILING.TAN@example.com,CS,Bachelor of Computer Science (Software Engineering)\n"
+           f"Siti Aminah,105000003,SITI.A{D},,siti.aminah@example.com,Computer Science,Bachelor of Computer Science (Software Engineering)\n"
+           f"No Course,105000012,105000012{D},,no.course@example.com,Medicine,Bachelor of Computer Science (Software Engineering)\n"
+           f"Wrong Programme,105000013,105000013{D},,wrong.prog@example.com,CS,Bachelor of Business (Marketing)\n"
+           f"Short ID,12345,12345{D},,short.id@example.com,CS,Bachelor of Computer Science (Software Engineering)\n"
+           f"Wrong Domain,105000014,mei@gmail.com,,wrong.domain@example.com,CS,Bachelor of Computer Science (Software Engineering)\n"
+           f"Not My Course,105000016,105000016{D},,not.mine@example.com,Business,Bachelor of Business (Marketing)\n").encode()
 
     def test_full_intake_flow(self, env, advisor, admin, alice):
         c, conn = env["client"], env["conn"]
 
-        # 1. The list is uploaded (it mixes courses, so by an admin); bad rows are skipped and explained
+        # 1. The advisor uploads the list with the IDs and school emails; bad rows are skipped and explained
         assert upload(env, alice, "new.csv", self.CSV).status_code == 403          # students cannot
-        r = upload(env, admin, "new.csv", self.CSV)
+        assert upload(env, admin, "new.csv", self.CSV).status_code == 403          # admins only look
+        r = upload(env, advisor, "new.csv", self.CSV)
         assert r.status_code == 201, r.text
         assert r.json()["students"] == 3
-        assert [s["line"] for s in r.json()["skipped"]] == [4, 5, 7, 8]            # bad email, duplicate, course, programme
-        assert "course" in r.json()["skipped"][2]["error"]
-        assert "Business programmes" in r.json()["skipped"][3]["error"]
+        skipped = r.json()["skipped"]
+        assert [s["line"] for s in skipped] == [4, 5, 7, 8, 9, 10, 11]
+        assert "course" in skipped[2]["error"] and "Computer Science programmes" in skipped[3]["error"]
+        assert "9 digits" in skipped[4]["error"] and "must end with" in skipped[5]["error"]
         bid = r.json()["batch_id"]
-        assert any(b["batch_id"] == bid and b["pending"] == 3 for b in c.get("/api/intake/batches", headers=admin).json())
 
-        # 2. The admin lets the system suggest IDs and emails, edits one, rejects one
-        assert c.post(f"/api/intake/batches/{bid}/assign", headers=advisor).status_code == 403
-        rows = c.post(f"/api/intake/batches/{bid}/assign", headers=admin).json()["rows"]
-        assert all(len(r["student_number"]) == 9 and r["school_email"] == f"{r['student_number']}@student.newinti.edu.my"
-                   for r in rows)
+        # Admins see the lists and students but cannot change anything
+        assert any(b["batch_id"] == bid and b["pending"] == 3 for b in c.get("/api/intake/batches", headers=admin).json())
+        rows = c.get(f"/api/intake/batches/{bid}", headers=admin).json()["rows"]
         mei, arjun, siti = rows
-        assert [r["course"] for r in rows] == ["BUSINESS", "ICT", "CS"]
+        assert c.post(f"/api/intake/batches/{bid}/assign", headers=advisor).status_code == 404   # the system no longer makes IDs
+        assert c.post(f"/api/intake/batches/{bid}/create-accounts", headers=admin, json={}).status_code == 403
+        assert c.post(f"/api/intake/rows/{siti['row_id']}/reject", headers=admin, json={}).status_code == 403
+        assert c.patch(f"/api/intake/rows/{mei['row_id']}", headers=admin, json={"course": "CS"}).status_code == 403
+        # Nor can another advisor touch this list
+        other = staff_account(env, "hop.intake@advisor.newinti.edu.my", "HOP Intake", "hop", ["CS"])
+        assert c.get(f"/api/intake/batches/{bid}", headers=other).status_code == 404
+        assert c.post(f"/api/intake/batches/{bid}/create-accounts", headers=other, json={}).status_code == 404
+        assert c.post(f"/api/intake/rows/{siti['row_id']}/reject", headers=other, json={}).status_code == 404
+        assert c.patch(f"/api/intake/rows/{mei['row_id']}", headers=other, json={"course": "CS"}).status_code == 404
+
+        # 2. The advisor checks the list, corrects one, rejects one
+        assert [(r["student_number"], r["school_email"]) for r in rows][0] == ("105000001", f"105000001{self.D}")
+        assert siti["school_email"] == f"siti.a{self.D}"                           # stored in lower case
+        assert [r["course"] for r in rows] == ["CS", "ICT", "CS"]
         alice_id = student_number(env, "alice@student.newinti.edu.my")
-        patch = lambda row, n, e: c.patch(f"/api/intake/rows/{row['row_id']}", headers=admin,
+        patch = lambda row, n, e: c.patch(f"/api/intake/rows/{row['row_id']}", headers=advisor,
                                           json={"student_number": n, "school_email": e})
         assert patch(mei, "12345", "x@student.newinti.edu.my").status_code == 422           # not 9 digits
         assert patch(mei, "105000001", "mei@gmail.com").status_code == 400                  # wrong domain
         assert patch(mei, alice_id, "mei@student.newinti.edu.my").status_code == 400        # taken
-        assert patch(mei, "105000001", "105000001@student.newinti.edu.my").status_code == 200
-        assert c.post(f"/api/intake/rows/{siti['row_id']}/reject", headers=admin, json={"note": "duplicate"}).status_code == 200
-        assert c.post(f"/api/intake/rows/{siti['row_id']}/reject", headers=admin, json={}).status_code == 404
+        assert patch(mei, "105000002", f"mei{self.D}").status_code == 400                   # another waiting student's
+        assert patch(arjun, "105000022", f"105000022{self.D}").status_code == 200
+        assert c.patch(f"/api/intake/rows/{mei['row_id']}", headers=advisor, json={"course": "BUSINESS"}).status_code == 403
+        assert c.post(f"/api/intake/rows/{siti['row_id']}/reject", headers=advisor, json={"note": "duplicate"}).status_code == 200
+        assert c.post(f"/api/intake/rows/{siti['row_id']}/reject", headers=advisor, json={}).status_code == 404
 
-        # 3. Accounts are created; each student's personal email gets the details
-        done = c.post(f"/api/intake/batches/{bid}/create-accounts", headers=admin, json={}).json()
+        # 3. The advisor creates the accounts; each student's personal email gets the details
+        done = c.post(f"/api/intake/batches/{bid}/create-accounts", headers=advisor, json={}).json()
         assert len(done["created"]) == 2 and not done["failed"]
         courses = dict(env["conn"].execute("SELECT full_name, course FROM users WHERE full_name IN "
                                            "('Mei Ling Tan', 'Arjun Nair')").fetchall())
-        assert courses == {"Mei Ling Tan": "BUSINESS", "Arjun Nair": "ICT"}
+        assert courses == {"Mei Ling Tan": "CS", "Arjun Nair": "ICT"}
         assert {d["email_status"] for d in done["created"]} == {"not_sent"}               # no mail server in tests
-        mail = next(e for e in c.get("/api/intake/outbox", headers=admin).json()["emails"]
-                    if e["to_address"] == "meiling.tan@example.com")
+        # The advisor and admins can read the email; another course's advisor cannot
+        for who in (advisor, admin):
+            mail = next(e for e in c.get("/api/intake/outbox", headers=who).json()["emails"]
+                        if e["to_address"] == "meiling.tan@example.com")
         assert "105000001" in mail["body"] and "105000001@student.newinti.edu.my" in mail["body"]
-        assert "Course:              Business" in mail["body"]
+        assert "Course:              Computer Science" in mail["body"]
         temp = re.search(r"Temporary password:\s+(\S+)", mail["body"]).group(1)
-        assert c.get("/api/intake/outbox", headers=advisor).status_code == 403
+        assert c.get("/api/intake/outbox", headers=alice).status_code == 403
+        business = staff_account(env, "hop.biz.outbox@advisor.newinti.edu.my", "HOP Biz", "hop", ["BUSINESS"])
+        assert all(e["to_address"] != "meiling.tan@example.com"
+                   for e in c.get("/api/intake/outbox", headers=business).json()["emails"])
 
         # 4. First sign-in: email + student ID + temporary password, then a new password is required
         r = login(env, "105000001@student.newinti.edu.my", temp, student_id="105000001")
@@ -805,13 +829,14 @@ class TestIntake:
         assert change(temp).status_code == 400                                           # same as temporary
         assert change("MyOwnPass9!").status_code == 200
         profile = c.get("/api/students/profile", headers=h)                               # allowed now
-        assert profile.status_code == 200 and profile.json()["programme"] == "Bachelor of Business (Marketing)"
+        assert profile.status_code == 200 and profile.json()["programme"] == "Bachelor of Computer Science (Software Engineering)"
         assert login(env, "105000001@student.newinti.edu.my", temp, student_id="105000001").status_code == 401
         assert login(env, "105000001@student.newinti.edu.my", "MyOwnPass9!", student_id="105000001").status_code == 200
 
         # The same person cannot be put on a new list again
         again = upload(env, advisor, "again.csv",
-                       b"Full Name,Personal Email,Course,Programme\nMei Ling,meiling.tan@example.com,CS,Bachelor of Computer Science (Software Engineering)\n")
+                       b"Full Name,Student ID,School Email,Personal Email,Course,Programme\n"
+                       b"Mei Ling,105000030,105000030@student.newinti.edu.my,meiling.tan@example.com,CS,Bachelor of Computer Science (Software Engineering)\n")
         assert again.status_code == 400
 
         # 5. An admin reset makes the password temporary again
@@ -823,11 +848,45 @@ class TestIntake:
         actions = {a[0] for a in conn.execute("SELECT DISTINCT action FROM audit_log").fetchall()}
         assert {"intake.upload", "intake.reject", "intake.accounts_create", "auth.password_change"} <= actions
 
+    def test_duplicate_student_id_refuses_the_whole_file(self, env, advisor, alice):
+        c = env["client"]
+        row = lambda name, n, school=None: (f"{name},{n},{school or n}{self.D},{name.replace(' ', '.')}@example.com,CS,"
+                                            "Bachelor of Computer Science (Software Engineering)\n")
+        head = "Full Name,Student ID,School Email,Personal Email,Course,Programme\n"
+        lists = lambda: len(c.get("/api/intake/batches", headers=advisor).json())
+        before = lists()
+
+        # The same ID or school email twice in the file: nothing is saved, the rows are named
+        r = upload(env, advisor, "dup.csv", (head + row("Dup One", "105000070") + row("Dup Two", "105000070")
+                                             + row("Dup Three", "105000071", "105000070")
+                                             + "Bad Row,123,x,y,CS,z\n").encode())
+        assert r.status_code == 400
+        detail = r.json()["detail"]
+        assert "Correct them" in detail["message"]
+        assert [d["line"] for d in detail["duplicates"]] == [3, 4]
+        assert "105000070" in detail["duplicates"][0]["error"] and "row 2" in detail["duplicates"][0]["error"]
+        assert [s["line"] for s in detail["skipped"]] == [5]
+        assert lists() == before
+        assert c.get("/api/intake/outbox", headers=advisor).status_code == 200
+
+        # An ID of an existing account or of a student waiting on an earlier list is refused too
+        taken = student_number(env, "alice@student.newinti.edu.my")
+        r = upload(env, advisor, "taken.csv", (head + row("Taken One", taken, "105000072")).encode())
+        assert r.status_code == 400 and "existing account" in r.json()["detail"]["duplicates"][0]["error"]
+        assert upload(env, advisor, "first.csv", (head + row("First One", "105000073")).encode()).status_code == 201
+        r = upload(env, advisor, "second.csv", (head + row("Second One", "105000073", "105000074")).encode())
+        assert r.status_code == 400 and "earlier list" in r.json()["detail"]["duplicates"][0]["error"]
+
+        # Once corrected, the file goes in
+        r = upload(env, advisor, "fixed.csv", (head + row("Fixed One", "105000075") + row("Fixed Two", "105000076")).encode())
+        assert r.status_code == 201 and r.json()["students"] == 2
+
     def test_xlsx_upload_and_bad_files(self, env, advisor):
         from openpyxl import Workbook
         wb = Workbook()
-        wb.active.append(["Name", "Mobile", "Email", "Course", "Major"])
-        wb.active.append(["Lim Wei", 60123456789, "lim.wei@example.com", "  Information and Communications Technology ",
+        wb.active.append(["Name", "Student ID", "School Email", "Mobile", "Email", "Course", "Major"])
+        wb.active.append(["Lim Wei", 105000040.0, "105000040@student.newinti.edu.my", 60123456789, "lim.wei@example.com",
+                          "  Information and Communications Technology ",
                           "Bachelor of Information and Communications Technology (Web and Mobile Development)"])
         buf = io.BytesIO()
         wb.save(buf)
@@ -836,13 +895,17 @@ class TestIntake:
         assert r.status_code == 201 and r.json()["students"] == 1, r.text
         rows = env["client"].get(f"/api/intake/batches/{r.json()['batch_id']}", headers=advisor).json()["rows"]
         assert rows[0]["phone"] == "60123456789"                                  # Excel number for the phone
+        assert rows[0]["student_number"] == "105000040"                           # and for the student ID
+        assert rows[0]["personal_email"] == "lim.wei@example.com"                 # a plain "Email" is the personal one
         assert rows[0]["course"] == "ICT" and rows[0]["programme"] == "Bachelor of Information and Communications Technology (Web and Mobile Development)"
         assert upload(env, advisor, "x.xlsx", b"not a zip").status_code == 400
         assert upload(env, advisor, "x.txt", b"a,b").status_code == 400
         assert upload(env, advisor, "x.csv", b"Phone,Address\n1,2\n").status_code == 400  # no name / email column
-        no_course = upload(env, advisor, "x.csv", b"Full Name,Personal Email\nA B,a.b@example.com\n")
+        no_id = upload(env, advisor, "x.csv", f"Full Name,Personal Email,Course,Programme\nA B,a.b@example.com,CS,Bachelor of Computer Science (Software Engineering)\n".encode())
+        assert no_id.status_code == 400 and "Student ID" in no_id.json()["detail"]
+        no_course = upload(env, advisor, "x.csv", b"Full Name,Student ID,School Email,Personal Email\nA B,1,a,a.b@example.com\n")
         assert no_course.status_code == 400 and "Course" in no_course.json()["detail"]
-        no_prog = upload(env, advisor, "x.csv", b"Full Name,Personal Email,Course\nA B,a.b@example.com,CS\n")
+        no_prog = upload(env, advisor, "x.csv", b"Full Name,Student ID,School Email,Personal Email,Course\nA B,1,a,a.b@example.com,CS\n")
         assert no_prog.status_code == 400 and "Programme" in no_prog.json()["detail"]
 
 
@@ -1055,22 +1118,21 @@ class TestIntakeTemplate:
         from openpyxl import load_workbook
         c = env["client"]
         assert c.get("/api/intake/template", headers=alice).status_code == 403
-        assert c.get("/api/intake/template", headers=admin).status_code == 200
+        assert c.get("/api/intake/template", headers=admin).status_code == 403
         r = c.get("/api/intake/template", headers=advisor)
         assert r.status_code == 200 and r.headers["content-type"].startswith("application/vnd.openxmlformats")
         ws = load_workbook(io.BytesIO(r.content)).active
-        assert [cell.value for cell in ws[1]] == ["Full Name", "Phone Number", "Personal Email", "Course", "Programme"]
+        assert [cell.value for cell in ws[1]] == ["Full Name", "Student ID", "School Email", "Phone Number", "Personal Email", "Course", "Programme"]
+        assert ws["B2"].number_format == "@" and ws.column_dimensions["B"].number_format == "@"   # text, so Excel keeps the ID
         dv, prog_dv = ws.data_validations.dataValidation
         # Programme: the list of the course chosen in the same row (named ranges on a hidden sheet)
-        assert prog_dv.formula1 == 'INDIRECT(SUBSTITUTE($D2," ","_"))' and "E2:E1001" in str(prog_dv.sqref)
+        assert prog_dv.formula1 == 'INDIRECT(SUBSTITUTE($F2," ","_"))' and "G2:G1001" in str(prog_dv.sqref)
         book = load_workbook(io.BytesIO(r.content))
         assert set(book.defined_names) == {"Computer_Science", "Information_and_Communications_Technology"}
         assert book["Lists"].sheet_state == "hidden"
         assert dv.type == "list" and dv.formula1 == '"Computer Science,Information and Communications Technology"'        # Dean of Computing
-        assert "D2:D1001" in str(dv.sqref)
-        assert [row[3].value for row in ws.iter_rows(min_row=2)] == ["Computer Science", "Information and Communications Technology"]
-        every = load_workbook(io.BytesIO(c.get("/api/intake/template", headers=admin).content)).active
-        assert every.data_validations.dataValidation[0].formula1 == '"Computer Science,Information and Communications Technology,Business"'
+        assert "F2:F1001" in str(dv.sqref)
+        assert [row[5].value for row in ws.iter_rows(min_row=2)] == ["Computer Science", "Information and Communications Technology"]
         # The filled-in template uploads as it is
         assert upload(env, advisor, "template.xlsx", r.content,
                       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet").json()["students"] == 2
@@ -1192,9 +1254,9 @@ class TestAdvisorScope:
         assert c.get("/api/advisor/cohort/overview", headers=hop_cs).json()["courses"] == ["CS"]
 
         # New-student lists: rows of other courses are skipped with the reason
-        csv = (b"Full Name,Personal Email,Course,Programme\n"
-               b"Cs New,cs.new@example.com,Computer Science,Bachelor of Computer Science (Software Engineering)\n"
-               b"Ict New,ict.new@example.com,ICT,Bachelor of Information and Communications Technology (Web and Mobile Development)\n")
+        csv = (b"Full Name,Student ID,School Email,Personal Email,Course,Programme\n"
+               b"Cs New,105000050,105000050@student.newinti.edu.my,cs.new@example.com,Computer Science,Bachelor of Computer Science (Software Engineering)\n"
+               b"Ict New,105000051,105000051@student.newinti.edu.my,ict.new@example.com,ICT,Bachelor of Information and Communications Technology (Web and Mobile Development)\n")
         r = upload(env, hop_cs, "mine.csv", csv)
         assert r.status_code == 201 and r.json()["students"] == 1
         assert r.json()["skipped"][0]["line"] == 3 and "Computer Science" in r.json()["skipped"][0]["error"]
@@ -1248,26 +1310,28 @@ class TestSkillsAndProgrammes:
         adv = conn.execute("SELECT user_id::text FROM users WHERE email = 'adv@advisor.newinti.edu.my'").fetchone()[0]
         assert patch({"programme": "Bachelor of Business (Marketing)"}, adv).status_code == 400     # only students
 
-    def test_intake_programme_edit_and_account(self, env, admin):
+    def test_intake_programme_edit_and_account(self, env, advisor, admin):
         c, conn = env["client"], env["conn"]
-        csv = f"Full Name,Personal Email,Course,Programme\nIvy Lee,ivy.lee@example.com,ICT,Bachelor of Information and Communications Technology (Web and Mobile Development)\n".encode()
-        bid = upload(env, admin, "ivy.csv", csv).json()["batch_id"]
-        row = c.get(f"/api/intake/batches/{bid}", headers=admin).json()["rows"][0]
-        edit = lambda body: c.patch(f"/api/intake/rows/{row['row_id']}", headers=admin, json=body)
-        assert edit({"programme": "Bachelor of Business (Marketing)"}).status_code == 400            # not an ICT programme
-        assert edit({"course": "BUSINESS"}).json()["programme"] is None    # old programme no longer fits
-        failed = c.post(f"/api/intake/batches/{bid}/create-accounts", headers=admin, json={}).json()["failed"]
+        csv = (b"Full Name,Student ID,School Email,Personal Email,Course,Programme\n"
+               b"Ivy Lee,105000060,105000060@student.newinti.edu.my,ivy.lee@example.com,ICT,Bachelor of Information and Communications Technology (Web and Mobile Development)\n")
+        bid = upload(env, advisor, "ivy.csv", csv).json()["batch_id"]
+        row = c.get(f"/api/intake/batches/{bid}", headers=advisor).json()["rows"][0]
+        edit = lambda body: c.patch(f"/api/intake/rows/{row['row_id']}", headers=advisor, json=body)
+        assert edit({"programme": "Bachelor of Computer Science (Software Engineering)"}).status_code == 400            # not an ICT programme
+        assert edit({"course": "CS"}).json()["programme"] is None    # old programme no longer fits
+        failed = c.post(f"/api/intake/batches/{bid}/create-accounts", headers=advisor, json={}).json()["failed"]
         assert "programme" in failed[0]["error"]
-        assert edit({"programme": "Bachelor of Business (Marketing)"}).json()["programme"] == "Bachelor of Business (Marketing)"
-        done = c.post(f"/api/intake/batches/{bid}/create-accounts", headers=admin, json={}).json()
+        assert edit({"programme": "Bachelor of Computer Science (Software Engineering)"}).json()["programme"] == "Bachelor of Computer Science (Software Engineering)"
+        done = c.post(f"/api/intake/batches/{bid}/create-accounts", headers=advisor, json={}).json()
         assert len(done["created"]) == 1
         number = done["created"][0]["student_number"]
+        assert number == "105000060"
         prog = conn.execute("SELECT sp.programme FROM student_profiles sp JOIN users u USING (user_id) "
                             "WHERE u.student_number = %s", (number,)).fetchone()[0]
-        assert prog == "Bachelor of Business (Marketing)"
+        assert prog == "Bachelor of Computer Science (Software Engineering)"
         mail = next(e for e in c.get("/api/intake/outbox", headers=admin).json()["emails"]
                     if e["to_address"] == "ivy.lee@example.com")
-        assert "Programme:           Bachelor of Business (Marketing)" in mail["body"]
+        assert "Programme:           Bachelor of Computer Science (Software Engineering)" in mail["body"]
 
 
 # ── CV upload: skills found in the CV ────────────────────────
@@ -1636,7 +1700,7 @@ class FakeSMTP:
 
 
 class TestEmail:
-    def test_test_email_and_resend(self, env, admin, monkeypatch):
+    def test_test_email_and_resend(self, env, admin, advisor, monkeypatch):
         import notifications
         c, conn = env["client"], env["conn"]
         assert c.post("/api/admin/settings/test-email", headers=admin, json={"to": "ops@example.com"}).status_code == 400
@@ -1648,7 +1712,7 @@ class TestEmail:
         eid = conn.execute("INSERT INTO email_outbox (to_address, subject, body, status, related_user_id) VALUES "
                            "('rae.personal@example.com', 'Your SEAGAS student account', 'Temporary password:  Abc#1234x', "
                            "'not_sent', %s) RETURNING email_id::text", (uid,)).fetchone()[0]
-        assert c.post(f"/api/intake/outbox/{eid}/resend", headers=admin).status_code == 400   # no mail server
+        assert c.post(f"/api/intake/outbox/{eid}/resend", headers=advisor).status_code == 400   # no mail server
 
         monkeypatch.setenv("SMTP_HOST", "smtp.example.com")
         monkeypatch.setenv("SMTP_FROM", "seagas@example.com")
@@ -1660,22 +1724,36 @@ class TestEmail:
         r = c.post("/api/admin/settings/test-email", headers=admin, json={"to": "ops@example.com"})
         assert r.json() == {"status": "sent", "error": None} and FakeSMTP.sent[-1]["To"] == "ops@example.com"
 
-        r = c.post(f"/api/intake/outbox/{eid}/resend", headers=admin)
+        # Student emails are the advisor's: an admin sees them but cannot send them, nor can another course's advisor
+        assert c.post(f"/api/intake/outbox/{eid}/resend", headers=admin).status_code == 403
+        business = staff_account(env, "hop.biz.resend@advisor.newinti.edu.my", "HOP Biz", "hop", ["BUSINESS"])
+        assert c.post(f"/api/intake/outbox/{eid}/resend", headers=business).status_code == 403
+        seen = next(e for e in c.get("/api/intake/outbox", headers=admin).json()["emails"] if e["email_id"] == eid)
+        assert seen["can_resend"] is False
+        r = c.post(f"/api/intake/outbox/{eid}/resend", headers=advisor)
         assert r.json()["status"] == "sent" and FakeSMTP.sent[-1]["To"] == "rae.personal@example.com"
-        row = next(e for e in c.get("/api/intake/outbox", headers=admin).json()["emails"] if e["email_id"] == eid)
+        row = next(e for e in c.get("/api/intake/outbox", headers=advisor).json()["emails"] if e["email_id"] == eid)
+        assert row["can_resend"] is True
         assert row["status"] == "sent" and row["attempts"] == 2 and row["sent_at"] and row["password_still_temporary"] is True
         FakeSMTP.fail = True
         try:
-            r = c.post(f"/api/intake/outbox/{eid}/resend", headers=admin)
+            r = c.post(f"/api/intake/outbox/{eid}/resend", headers=advisor)
             assert r.json()["status"] == "failed" and "connection refused" in r.json()["error"]
         finally:
             FakeSMTP.fail = False
         # After the person chose their own password the old temporary one must not be sent again
         conn.execute("UPDATE users SET must_change_password = FALSE WHERE user_id = %s", (uid,))
-        r = c.post(f"/api/intake/outbox/{eid}/resend", headers=admin)
-        assert r.status_code == 400 and "Reset their password" in r.json()["detail"]
+        r = c.post(f"/api/intake/outbox/{eid}/resend", headers=advisor)
+        assert r.status_code == 400 and "reset their password" in r.json()["detail"]
+        # Admins still resend the account emails of staff they created
+        staff = conn.execute("SELECT user_id::text FROM users WHERE email = 'adv@advisor.newinti.edu.my'").fetchone()[0]
+        staff_mail = conn.execute("INSERT INTO email_outbox (to_address, subject, body, status, related_user_id) VALUES "
+                                  "('adv.personal@example.com', 'Your SEAGAS advisor account', 'Welcome', 'not_sent', %s) "
+                                  "RETURNING email_id::text", (staff,)).fetchone()[0]
+        assert c.post(f"/api/intake/outbox/{staff_mail}/resend", headers=admin).json()["status"] == "sent"
+        assert c.post(f"/api/intake/outbox/{staff_mail}/resend", headers=advisor).status_code == 403
         assert c.post(f"/api/intake/outbox/{eid}/resend", headers=course_student(env, "sam@student.newinti.edu.my", "Sam", "CS")).status_code == 403
-        assert conn.execute("SELECT count(*) FROM audit_log WHERE action = 'admin.email_resend'").fetchone()[0] >= 2
+        assert conn.execute("SELECT count(*) FROM audit_log WHERE action = 'intake.email_resend'").fetchone()[0] >= 2
 
 
 class TestNewStudent:

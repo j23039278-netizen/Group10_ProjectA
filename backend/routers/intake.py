@@ -1,17 +1,19 @@
 """
 SEAGAS — New student intake (how student accounts are created)
 
-1. An advisor uploads a list of new students (Excel .xlsx or .csv) with their
-   full name, phone number, personal email, course (Computer Science, Business
-   or Information and Communications Technology) and programme (one of the course's
-   programmes).                                             POST /batches
-2. An admin opens the list, lets the system suggest a student number and a
-   school email for each student (both editable), then creates the accounts.
-   Each student gets a temporary password.  POST /batches/{id}/assign,
-   PATCH /rows/{id}, POST /batches/{id}/create-accounts, POST /rows/{id}/reject
+Advisors do all of it; admins can only look (lists, students and emails).
+
+1. An advisor uploads a list of new students (Excel .xlsx or .csv) with their full
+   name, student ID and school email (given by the university), phone number,
+   personal email, course (Computer Science, Business or Information and
+   Communications Technology) and programme (one of the course's programmes).
+                                                                POST /batches
+2. The advisor checks the list, can correct or reject a student, then creates the
+   accounts. Each student gets a temporary password.
+   PATCH /rows/{id}, POST /rows/{id}/reject, POST /batches/{id}/create-accounts
 3. The student's personal email receives the student ID, school email and
    temporary password (notifications.py; stored in the outbox when no mail
-   server is configured).                                       GET /outbox
+   server is configured). The advisor can resend them.          GET /outbox
 4. The student signs in with school email + student ID + temporary password and
    must choose a new password first (routers/auth.py).
 
@@ -35,7 +37,7 @@ from sqlalchemy.orm import Session
 import audit
 import notifications
 import programmes
-from advisor_scope import COURSE_NAMES, courses_of
+from advisor_scope import COURSE_NAMES, check_course, courses_of
 from database import get_db
 from routers.auth import ROLE_EMAIL_DOMAINS, get_current_user, hash_password, password_error
 
@@ -49,14 +51,17 @@ EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 PHONE_RE = re.compile(r"^\+?[0-9 ()\-]{7,25}$")
 
 # Header words that identify each column (case-insensitive, first match wins)
+# The school email comes before the personal one, which also accepts a plain "Email"
 COLUMN_WORDS = {
     "full_name":      ("full name", "name", "student name"),
+    "student_number": ("student id", "student number", "student no", "matric"),
+    "school_email":   ("school email", "student email", "university email"),
     "phone":          ("phone", "mobile", "contact", "tel"),
     "personal_email": ("personal email", "email", "e-mail"),
     "course":         ("course", "faculty"),
     "programme":      ("programme", "program", "major"),
 }
-REQUIRED_COLUMNS = "Full Name, Phone Number, Personal Email, Course, Programme"
+REQUIRED_COLUMNS = "Full Name, Student ID, School Email, Phone Number, Personal Email, Course, Programme"
 
 # What the Course column may say (case-insensitive) -> stored code
 COURSES = {
@@ -82,9 +87,10 @@ def require_staff(user):
         raise HTTPException(status_code=403, detail="Access denied. Advisor or Admin role required.")
 
 
-def require_admin(user):
-    if user.role != "admin":
-        raise HTTPException(status_code=403, detail="Access denied. Admin role required.")
+def require_advisor(user):
+    """Changing anything is the advisor's job; admins only look"""
+    if user.role != "advisor":
+        raise HTTPException(status_code=403, detail="Access denied. Advisors handle new students; admins can only view them.")
 
 
 def parse_id(value, what="Not found"):
@@ -139,7 +145,8 @@ def find_columns(header):
             if hit is not None:
                 cols[key] = hit
                 break
-    missing = [k for k in ("full_name", "personal_email", "course", "programme") if k not in cols]
+    missing = [k for k in ("full_name", "student_number", "school_email", "personal_email", "course", "programme")
+               if k not in cols]
     if missing:
         raise HTTPException(
             status_code=400,
@@ -152,12 +159,19 @@ def clean_row(cells, cols, course_programmes):
     course_programmes: programmes.by_course(db)"""
     cell = lambda k: (cells[cols[k]] if k in cols and cols[k] < len(cells) else "").strip()
     name, email, phone = " ".join(cell("full_name").split()), cell("personal_email").lower(), cell("phone")
+    number, school_email = cell("student_number"), cell("school_email").lower()
     if phone.endswith(".0") and phone[:-2].isdigit():   # Excel stores numbers as floats
         phone = phone[:-2]
+    if number.endswith(".0") and number[:-2].isdigit():
+        number = number[:-2]
     if not name:
         return None, "full name is empty"
     if len(name) > 255:
         return None, "full name is too long"
+    if not STUDENT_NUMBER_RE.match(number):
+        return None, "student ID must be exactly 9 digits"
+    if not EMAIL_RE.match(school_email) or not school_email.endswith("@" + STUDENT_DOMAIN) or len(school_email) > 255:
+        return None, f"school email must end with @{STUDENT_DOMAIN}"
     if not EMAIL_RE.match(email) or len(email) > 255:
         return None, "personal email is not valid"
     if phone and not PHONE_RE.match(phone):
@@ -168,26 +182,27 @@ def clean_row(cells, cols, course_programmes):
     programme = course_programmes.get(course, {}).get(" ".join(cell("programme").lower().split()))
     if not programme:
         return None, f"programme must be one of the {COURSE_NAMES[course]} programmes"
-    return {"full_name": name, "personal_email": email, "phone": phone or None, "course": course,
-            "programme": programme}, None
+    return {"full_name": name, "student_number": number, "school_email": school_email, "personal_email": email,
+            "phone": phone or None, "course": course, "programme": programme}, None
 
 
 # ── Advisor: Excel template (Course and Programme are drop-down lists) ──
 TEMPLATE_ROWS = [
-    ("Example Student", "+60 12-345 6789", "example.student@gmail.com", "Computer Science",
-     "Bachelor of Computer Science (Software Engineering)"),
-    ("Another Student", "+60 13-222 3333", "another.student@gmail.com", "Business",
-     "Bachelor of Business (Marketing)"),
-    ("Third Student",   "+60 14-444 5555", "third.student@gmail.com",   "Information and Communications Technology",
+    ("Example Student", "199000001", "199000001@student.newinti.edu.my", "+60 12-345 6789", "example.student@gmail.com",
+     "Computer Science", "Bachelor of Computer Science (Software Engineering)"),
+    ("Another Student", "199000002", "199000002@student.newinti.edu.my", "+60 13-222 3333", "another.student@gmail.com",
+     "Business", "Bachelor of Business (Marketing)"),
+    ("Third Student", "199000003", "199000003@student.newinti.edu.my", "+60 14-444 5555", "third.student@gmail.com",
+     "Information and Communications Technology",
      "Bachelor of Information and Communications Technology (Web and Mobile Development)"),
 ]
 
 
 @router.get("/template")
 def download_template(current_user=Depends(get_current_user), db: Session = Depends(get_db)):
-    """An .xlsx with the five columns. Course only accepts the courses this advisor may add;
+    """An .xlsx with the seven columns. Course only accepts the courses this advisor may add;
     Programme only the programmes of the course chosen in the same row."""
-    require_staff(current_user)
+    require_advisor(current_user)
     from openpyxl import Workbook
     from openpyxl.styles import Font
     from openpyxl.workbook.defined_name import DefinedName
@@ -198,14 +213,18 @@ def download_template(current_user=Depends(get_current_user), db: Session = Depe
     wb = Workbook()
     ws = wb.active
     ws.title = "New students"
-    ws.append(["Full Name", "Phone Number", "Personal Email", "Course", "Programme"])
+    ws.append(["Full Name", "Student ID", "School Email", "Phone Number", "Personal Email", "Course", "Programme"])
     for cell in ws[1]:
         cell.font = Font(bold=True)
     for row in TEMPLATE_ROWS:
-        if row[3] in names:
+        if row[5] in names:
             ws.append(row)
-    for col, width in zip("ABCDE", (28, 20, 34, 20, 70)):
+    for col, width in zip("ABCDEFG", (28, 14, 36, 20, 34, 20, 70)):
         ws.column_dimensions[col].width = width
+    # Text, so Excel keeps the ID as typed: new rows (the column) and the example rows
+    ws.column_dimensions["B"].number_format = "@"
+    for cell in ws["B"][1:]:
+        cell.number_format = "@"
 
     # A hidden sheet with each course's programmes; one named range per course
     # (Computer_Science, Business, Information_and_Communications_Technology) so the
@@ -225,13 +244,13 @@ def download_template(current_user=Depends(get_current_user), db: Session = Depe
     course_dv = DataValidation(type="list", formula1=f'"{",".join(names)}"', allow_blank=False,
                                showErrorMessage=True, errorTitle="Course",
                                error=f"Choose {' or '.join(names)} from the list.")
-    programme_dv = DataValidation(type="list", formula1='INDIRECT(SUBSTITUTE($D2," ","_"))', allow_blank=False,
+    programme_dv = DataValidation(type="list", formula1='INDIRECT(SUBSTITUTE($F2," ","_"))', allow_blank=False,
                                   showErrorMessage=True, errorTitle="Programme",
                                   error="Choose the course first, then one of its programmes from the list.")
     ws.add_data_validation(course_dv)
     ws.add_data_validation(programme_dv)
-    course_dv.add("D2:D1001")      # one row per student, up to the 1,000-student limit
-    programme_dv.add("E2:E1001")
+    course_dv.add("F2:F1001")      # one row per student, up to the 1,000-student limit
+    programme_dv.add("G2:G1001")
     ws.freeze_panes = "A2"
 
     out = io.BytesIO()
@@ -251,9 +270,9 @@ def upload_batch(
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    """Upload new students (Full Name, Phone Number, Personal Email, Course, Programme). Bad rows are
-    skipped and listed."""
-    require_staff(current_user)
+    """Upload new students (see REQUIRED_COLUMNS). Bad rows are skipped and listed. A student ID or
+    school email used twice refuses the whole file: nothing is saved until the advisor corrects it."""
+    require_advisor(current_user)
     data = file.file.read(MAX_FILE_BYTES + 1)
     if len(data) > MAX_FILE_BYTES:
         raise HTTPException(status_code=413, detail="The file is larger than 2 MB.")
@@ -267,7 +286,17 @@ def upload_batch(
     # Personal emails already on another list (pending or with an account)
     taken = {r[0] for r in db.execute(
         text("SELECT lower(personal_email) FROM student_intake_rows WHERE status <> 'rejected'")).fetchall()}
-    rows, skipped, seen = [], [], set()
+    # Student IDs and school emails already used: value -> where
+    used_ids, used_emails = {}, {}
+    for number, email, where in db.execute(text("""
+        SELECT student_number, lower(email), 'an existing account' FROM users
+        UNION ALL
+        SELECT student_number, lower(school_email), 'a student waiting on an earlier list'
+        FROM student_intake_rows WHERE status = 'pending'
+    """)).fetchall():
+        used_ids[number] = where
+        used_emails[email] = where
+    rows, skipped, duplicates, seen = [], [], [], set()
     course_programmes = programmes.by_course(db)
     for line, cells in enumerate(table[1:], start=2):
         values, error = clean_row(cells, cols, course_programmes)
@@ -280,8 +309,21 @@ def upload_batch(
         if error:
             skipped.append({"line": line, "error": error})
             continue
+        number, school = values["student_number"], values["school_email"]
+        if number in used_ids:
+            duplicates.append({"line": line, "error": f"student ID {number} is already used by {used_ids[number]}"})
+            continue
+        if school in used_emails:
+            duplicates.append({"line": line, "error": f"school email {school} is already used by {used_emails[school]}"})
+            continue
         seen.add(values["personal_email"])
+        used_ids[number] = used_emails[school] = f"row {line} of this file"
         rows.append({**values, "line": line})
+    if duplicates:
+        raise HTTPException(status_code=400, detail={
+            "message": "This file was not saved: some student IDs or school emails are used twice. "
+                       "Correct them and upload the file again.",
+            "duplicates": duplicates, "skipped": skipped})
     if not rows:
         raise HTTPException(status_code=400, detail={"message": "No valid student rows.", "skipped": skipped})
 
@@ -292,8 +334,9 @@ def upload_batch(
     ).scalar()
     db.execute(
         text("""
-            INSERT INTO student_intake_rows (batch_id, line_number, full_name, phone, personal_email, course, programme)
-            VALUES (:b, :line, :full_name, :phone, :personal_email, :course, :programme)
+            INSERT INTO student_intake_rows (batch_id, line_number, full_name, student_number, school_email,
+                                             phone, personal_email, course, programme)
+            VALUES (:b, :line, :full_name, :student_number, :school_email, :phone, :personal_email, :course, :programme)
         """),
         [{"b": str(batch_id), **r} for r in rows]
     )
@@ -335,11 +378,7 @@ def get_batch_rows(batch_id: str, current_user=Depends(get_current_user), db: Se
     return {"batch": dict(batch._mapping), "rows": [dict(r._mapping) for r in rows]}
 
 
-# ── Admin: assign numbers and create accounts ─────────────────
-def school_email_for(student_number):
-    return f"{student_number}@{STUDENT_DOMAIN}"
-
-
+# ── Advisor: check the list and create accounts ───────────────
 def check_assignment(db, row_id, student_number, school_email):
     """Raise 400 if the number or email is malformed or already used"""
     if not STUDENT_NUMBER_RE.match(student_number or ""):
@@ -359,24 +398,17 @@ def check_assignment(db, row_id, student_number, school_email):
         raise HTTPException(status_code=400, detail="Another new student on a list already has this student ID or email.")
 
 
-@router.post("/batches/{batch_id}/assign")
-def assign_numbers(batch_id: str, current_user=Depends(get_current_user), db: Session = Depends(get_db)):
-    """Suggest a student ID and school email for every pending student that has none"""
-    require_admin(current_user)
-    batch = get_batch(db, batch_id, current_user)
-    rows = db.execute(text("""
-        SELECT row_id FROM student_intake_rows
-        WHERE batch_id = :b AND status = 'pending' AND student_number IS NULL
-        ORDER BY line_number
-    """), {"b": str(batch.batch_id)}).fetchall()
-    for r in rows:
-        # next_student_number() skips numbers that accounts already use; the
-        # sequence never hands out the same number twice
-        n = db.execute(text("SELECT next_student_number('')")).scalar()
-        db.execute(text("UPDATE student_intake_rows SET student_number = :n, school_email = :e WHERE row_id = :r"),
-                   {"n": n, "e": school_email_for(n), "r": str(r.row_id)})
-    db.commit()
-    return get_batch_rows(batch_id, current_user, db)
+def own_row_id(db, row_id, user):
+    """The id of a student on a list this advisor uploaded, else 404"""
+    rid = parse_id(row_id, "Student not found")
+    owner = db.execute(text("""
+        SELECT b.uploaded_by FROM student_intake_rows r
+        JOIN student_intake_batches b ON b.batch_id = r.batch_id
+        WHERE r.row_id = :r
+    """), {"r": rid}).fetchone()
+    if not owner or str(owner.uploaded_by) != str(user.user_id):
+        raise HTTPException(status_code=404, detail="Student not found")
+    return rid
 
 
 class RowUpdate(BaseModel):
@@ -389,13 +421,11 @@ class RowUpdate(BaseModel):
 
 @router.patch("/rows/{row_id}")
 def update_row(row_id: str, req: RowUpdate, current_user=Depends(get_current_user), db: Session = Depends(get_db)):
-    """Change the suggested student ID / school email, the course or the programme of a pending student"""
-    require_admin(current_user)
-    rid = parse_id(row_id, "Student not found")
+    """Correct the student ID / school email, the course or the programme of a pending student"""
+    require_advisor(current_user)
+    rid = own_row_id(db, row_id, current_user)
     row = db.execute(text("SELECT status, course, programme FROM student_intake_rows WHERE row_id = :r"),
                      {"r": rid}).fetchone()
-    if not row:
-        raise HTTPException(status_code=404, detail="Student not found")
     if row.status != "pending":
         raise HTTPException(status_code=400, detail="Only students still waiting for an account can be changed.")
     if req.student_number is None and req.school_email is None and req.course is None and req.programme is None:
@@ -409,6 +439,7 @@ def update_row(row_id: str, req: RowUpdate, current_user=Depends(get_current_use
                    {"n": number, "e": email, "r": rid})
     if req.course is not None or req.programme is not None:
         course = req.course or row.course
+        check_course(current_user, course)
         programme = row.programme
         if req.programme is not None:
             programme = programmes.check_programme(db, req.programme, course)
@@ -448,10 +479,10 @@ def create_accounts(
 ):
     """Create student accounts and email each student their login details.
 
-    A student without an assigned ID gets a suggested one. A student whose ID or
-    email is already taken is skipped and reported; the others still go ahead.
+    A student whose ID or email is missing or already taken is skipped and reported;
+    the others still go ahead.
     """
-    require_admin(current_user)
+    require_advisor(current_user)
     batch = get_batch(db, batch_id, current_user)
     params = {"b": str(batch.batch_id)}
     only = ""
@@ -476,9 +507,10 @@ def create_accounts(
                            "error": "no programme: choose the student's programme first"})
             continue
         number, email = r.student_number, r.school_email
-        if not number:
-            number = db.execute(text("SELECT next_student_number('')")).scalar()
-            email = school_email_for(number)
+        if not number or not email:   # lists uploaded before the Student ID column existed
+            failed.append({"row_id": str(r.row_id), "full_name": r.full_name,
+                           "error": "no student ID or school email: enter them first"})
+            continue
         try:
             check_assignment(db, r.row_id, number, email)
         except HTTPException as e:
@@ -495,10 +527,10 @@ def create_accounts(
         db.execute(text("""
             UPDATE student_intake_rows
             SET status = 'created', user_id = :u, student_number = :n, school_email = :e,
-                processed_by = :admin, processed_at = CURRENT_TIMESTAMP
+                processed_by = :by, processed_at = CURRENT_TIMESTAMP
             WHERE row_id = :r
         """), {"u": str(user_id), "n": number, "e": email,
-               "admin": str(current_user.user_id), "r": str(r.row_id)})
+               "by": str(current_user.user_id), "r": str(r.row_id)})
         subject, body = notifications.welcome_email(r.full_name, number, email, password, COURSE_NAMES[r.course],
                                                     r.programme)
         mail = notifications.send_email(db, r.personal_email, subject, body, related_user_id=user_id)
@@ -521,14 +553,14 @@ class RowReject(BaseModel):
 def reject_row(row_id: str, req: RowReject, request: Request,
                current_user=Depends(get_current_user), db: Session = Depends(get_db)):
     """Do not create an account for this student (duplicate, wrong person ...)"""
-    require_admin(current_user)
-    rid = parse_id(row_id, "Student not found")
+    require_advisor(current_user)
+    rid = own_row_id(db, row_id, current_user)
     done = db.execute(text("""
         UPDATE student_intake_rows
-        SET status = 'rejected', note = :note, processed_by = :admin, processed_at = CURRENT_TIMESTAMP
+        SET status = 'rejected', note = :note, processed_by = :by, processed_at = CURRENT_TIMESTAMP
         WHERE row_id = :r AND status = 'pending'
         RETURNING batch_id
-    """), {"note": req.note.strip() or None, "admin": str(current_user.user_id), "r": rid}).fetchone()
+    """), {"note": req.note.strip() or None, "by": str(current_user.user_id), "r": rid}).fetchone()
     if not done:
         raise HTTPException(status_code=404, detail="No pending student found.")
     audit.record(db, "intake.reject", user=current_user, request=request,
@@ -537,40 +569,56 @@ def reject_row(row_id: str, req: RowReject, request: Request,
     return {"message": "Rejected"}
 
 
+# ── Emails ────────────────────────────────────────────────────
+def can_resend(user, related_role, related_course):
+    """Advisors: the emails of students of their courses. Admins do not touch those, only
+    the account emails of the staff they create themselves (User Management)."""
+    if user.role == "admin":
+        return related_role != "student"
+    return user.role == "advisor" and related_role == "student" and related_course in courses_of(user)
+
+
 @router.get("/outbox")
 def list_outbox(limit: int = 50, current_user=Depends(get_current_user), db: Session = Depends(get_db)):
-    """Notification emails, newest first. Without a mail server they are only stored here."""
-    require_admin(current_user)
+    """Notification emails, newest first. Without a mail server they are only stored here.
+    Admins see every email; advisors those of students of their courses."""
+    require_staff(current_user)
     rows = db.execute(text("""
         SELECT o.email_id, o.to_address, o.subject, o.body, o.status, o.error, o.created_at,
                o.attempts, o.last_attempt_at, o.sent_at, o.related_user_id,
-               u.full_name AS related_user_name, COALESCE(u.must_change_password, FALSE) AS password_still_temporary
+               u.full_name AS related_user_name, u.role AS related_role, u.course AS related_course,
+               COALESCE(u.must_change_password, FALSE) AS password_still_temporary
         FROM email_outbox o LEFT JOIN users u ON u.user_id = o.related_user_id
+        WHERE :admin OR (u.role = 'student' AND u.course = ANY(CAST(:courses AS VARCHAR[])))
         ORDER BY o.created_at DESC LIMIT :n
-    """), {"n": max(1, min(limit, 200))}).fetchall()
-    return {"mail_server": notifications.smtp_configured(), "emails": [dict(r._mapping) for r in rows]}
+    """), {"n": max(1, min(limit, 200)), "admin": current_user.role == "admin",
+           "courses": courses_of(current_user)}).fetchall()
+    emails = [{**r._mapping, "can_resend": can_resend(current_user, r.related_role, r.related_course)} for r in rows]
+    return {"mail_server": notifications.smtp_configured(), "emails": emails}
 
 
 @router.post("/outbox/{email_id}/resend")
 def resend_email(email_id: str, request: Request, current_user=Depends(get_current_user), db: Session = Depends(get_db)):
     """Send a stored email again. An account email with a temporary password is only
     resent while that password is still the one in use."""
-    require_admin(current_user)
+    require_staff(current_user)
     eid = parse_id(email_id, "Email not found")
     row = db.execute(text("""
-        SELECT o.email_id, o.body, o.related_user_id, u.must_change_password
+        SELECT o.email_id, o.body, o.related_user_id, u.must_change_password, u.role AS related_role, u.course AS related_course
         FROM email_outbox o LEFT JOIN users u ON u.user_id = o.related_user_id WHERE o.email_id = :e
     """), {"e": eid}).fetchone()
     if not row:
         raise HTTPException(status_code=404, detail="Email not found")
+    if not can_resend(current_user, row.related_role, row.related_course):
+        raise HTTPException(status_code=403, detail="Student emails are sent by the student's advisor.")
     if not notifications.smtp_configured():
         raise HTTPException(status_code=400, detail="No mail server is set up (SMTP settings in backend/.env), so nothing can be sent yet.")
     if "Temporary password" in row.body and row.related_user_id and not row.must_change_password:
         raise HTTPException(status_code=400, detail=(
             "This person has already chosen their own password, so this temporary password no longer works. "
-            "Reset their password in User Management instead."))
+            "Ask an admin to reset their password in User Management."))
     status, error = notifications.resend(db, row.email_id)
-    audit.record(db, "admin.email_resend", user=current_user, request=request, target_type="email",
+    audit.record(db, "intake.email_resend", user=current_user, request=request, target_type="email",
                  target_id=row.email_id, details={"status": status})
     db.commit()
     return {"status": status, "error": error}
