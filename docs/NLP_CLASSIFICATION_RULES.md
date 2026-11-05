@@ -192,17 +192,19 @@ Developing (section 7, limit 2; proposal B not adopted).
 
 ## 6. Readiness score (S2-11-01)
 
-The score is computed in `backend/assessment_service.py` (Carl). It is unchanged; the
-matcher only supplies `match_status` for each required skill.
+The score is computed in `backend/readiness.py`, called from
+`backend/assessment_service.py`; the full write-up is in `docs/JOB_READINESS_SCORE.md`. The
+matcher only supplies `match_status` for each skill. The formula changed on 5 November 2026;
+the classification rules did not.
 
-- Weight by importance: required 3, preferred 2, bonus 1.
 - Credit by status: strong 1.0, developing 0.5, gap 0.
-- Readiness = 100 × Σ (weight × credit) / Σ weight, rounded to 2 decimals.
+- Coverage C of an importance tier: the mean credit of that tier's skills.
+- Readiness = 100 × (0.70 C_required + 0.25 C_preferred + 0.05 C_bonus) / (sum of the
+  weights of the tiers the job has), rounded to 2 decimals.
 
-*Example* (the `match_skills` example in `docs/NLP_INTERFACE.md`): SQL required, strong
-(3 × 1); Python required, developing (3 × 0.5); Power BI required, gap (0); Azure
-preferred, developing (2 × 0.5); Docker bonus, gap (0). That is 5.5 of 12 points, a
-readiness of **45.83**.
+*Example* (the `match_skills` example in `docs/NLP_INTERFACE.md`): SQL required, strong;
+Python required, developing; Power BI required, gap; Azure preferred, developing; Docker
+bonus, gap. C_required = 0.5, C_preferred = 0.5, C_bonus = 0, a readiness of **47.5**.
 
 *Representative synthetic students* (S2-11-02, `test_matcher.py`): for each role and
 archetype, the student whose readiness is the median of that group. In all four roles
@@ -210,18 +212,19 @@ and with both methods, strong > average > weak:
 
 | Role | Method | strong | average | weak | means (strong / average / weak) |
 |---|---|---:|---:|---:|---|
-| Data Analyst | keyword | 72.0 | 48.0 | 23.0 | 70.6 / 48.3 / 24.0 |
-| Data Analyst | hybrid | 72.0 | 51.0 | 26.0 | 72.2 / 50.4 / 26.4 |
-| Cybersecurity Analyst | keyword | 69.0 | 44.8 | 19.0 | 68.7 / 44.6 / 20.1 |
-| Cybersecurity Analyst | hybrid | 73.3 | 50.9 | 25.0 | 73.5 / 50.8 / 25.5 |
-| Business Analyst | keyword | 73.5 | 49.0 | 21.4 | 72.2 / 49.5 / 22.3 |
-| Business Analyst | hybrid | 76.5 | 55.1 | 25.5 | 75.9 / 54.4 / 26.5 |
-| HR Executive | keyword | 72.5 | 51.0 | 24.5 | 72.1 / 50.1 / 24.8 |
-| HR Executive | hybrid | 73.5 | 51.0 | 26.5 | 73.4 / 51.8 / 26.4 |
+| Data Analyst | keyword | 77.1 | 55.4 | 28.3 | 76.5 / 55.0 / 28.5 |
+| Data Analyst | hybrid | 79.8 | 58.5 | 31.2 | 78.5 / 58.0 / 31.7 |
+| Cybersecurity Analyst | keyword | 75.7 | 51.0 | 22.9 | 74.8 / 51.0 / 24.3 |
+| Cybersecurity Analyst | hybrid | 79.2 | 57.8 | 29.1 | 78.7 / 57.2 / 30.2 |
+| Business Analyst | keyword | 77.0 | 54.1 | 24.3 | 75.5 / 53.3 / 25.4 |
+| Business Analyst | hybrid | 82.5 | 60.3 | 30.2 | 81.1 / 59.6 / 30.7 |
+| HR Executive | keyword | 76.2 | 53.6 | 24.6 | 75.0 / 53.4 / 25.9 |
+| HR Executive | hybrid | 78.7 | 56.1 | 27.8 | 77.4 / 55.8 / 27.9 |
 
-Figures are with rules A and C and the synthetic data version `2026-10-28-business`
-(Business students generated for the Business roles; only IT students count for the IT
-roles). Until then the representative student was the one with the median core-skill
+Figures are with the tiered formula, the retuned templates and the synthetic data version
+`2026-10-31-role-retune`, for the target roles the students were generated with
+(`data/output/students_meta.csv`; the student's stored `evidence_type` only).
+Until then the representative student was the one with the median core-skill
 coverage. That pick proved fragile: many students share the median coverage, and for HR
 Executive the first of them was a year-1 student whose skills were all beginner with
 coursework only (rule C), who scored below the weak representative.

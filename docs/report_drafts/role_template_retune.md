@@ -360,7 +360,7 @@ Any library change (N, A or G) changes extraction and matching, so it is part of
 6. Step 3 writes `nlp/experiments/results/role_retune_effect.md` with two comparisons, each per role (mean readiness, and share of Strong / Developing / Gap skill rows and of students):
    - **Template effect:** the *current* synthetic cohort assessed against the old templates and the new ones. This isolates the retune.
    - **Dashboard view:** the old cohort with old templates vs the *regenerated* cohort with new templates. This is what advisors will see after Carl reloads.
-   Both use hybrid matching and the backend weights (required 3, preferred 2, bonus 1; Strong 1, Developing 0.5, Gap 0), offline like `nlp/experiments/evidence_effect.py`.
+   Both use hybrid matching and the backend weights (required 3, preferred 2, bonus 1; Strong 1, Developing 0.5, Gap 0), offline like `nlp/experiments/evidence_effect.py`. Note: these readiness numbers predate the tiered formula of 5 November 2026 (`docs/JOB_READINESS_SCORE.md`).
 
 ## 7. Files changed so far (step 1)
 

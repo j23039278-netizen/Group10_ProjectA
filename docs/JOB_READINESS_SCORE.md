@@ -1,28 +1,35 @@
 # Job Readiness Score: formula and justification
 
-**Owner:** Soh Way Miin (Carl), with Ng Yong Hin for the match statuses · **Code:**
-`backend/assessment_service.py` · **Statuses:** `nlp/matcher.py`, rules in
-[`NLP_CLASSIFICATION_RULES.md`](NLP_CLASSIFICATION_RULES.md) · **Sensitivity script:**
-`data/jrs_sensitivity.py` · **Status (1 November 2026):** implemented; written up after
-the lecturer meeting of 22 October asked us to research and justify the formula.
+**Owner:** Soh Way Miin (Carl), with Ng Yong Hin for the match statuses and the tiered
+formula · **Code:** `backend/readiness.py`, `backend/assessment_service.py` · **Statuses:**
+`nlp/matcher.py`, rules in [`NLP_CLASSIFICATION_RULES.md`](NLP_CLASSIFICATION_RULES.md) ·
+**Sensitivity script:** `data/jrs_sensitivity.py` · **Status (5 November 2026):** tiered
+formula implemented; written up after the lecturer meeting of 22 October asked us to
+research and justify the formula.
 
 The Job Readiness Score answers one question: *of the skills this job asks for, how
 much does the student's profile show, counting the important ones more?* It is a
 decision-support indicator for students and advisors, not a hiring prediction. Every
-point in it can be traced to one required skill and the reason stored for it.
+point in it can be traced to the job's skills and the reason stored for each.
 
 ## 1. Formula
 
 For one assessment (a student against a role template or an analysed job description),
-each required skill *i* gets an importance weight *wᵢ* and a status credit *cᵢ*:
+every skill the job asks for belongs to one importance tier and has one status credit:
 
-| Importance (from the role template or JD) | Weight *w* | | Status (from the matcher) | Credit *c* |
+| Importance tier (from the role template or JD) | Tier weight | | Status (from the matcher) | Credit |
 |---|---:|---|---|---:|
-| required | 3 | | Strong | 1.0 |
-| preferred | 2 | | Developing | 0.5 |
-| bonus | 1 | | Gap | 0 |
+| required | 0.70 | | Strong | 1.0 |
+| preferred | 0.25 | | Developing | 0.5 |
+| bonus | 0.05 | | Gap | 0 |
 
-**Readiness = 100 × Σ (wᵢ × cᵢ) / Σ wᵢ**, rounded to 2 decimals (0 to 100).
+The coverage *C* of a tier is the mean credit of that tier's skills. Then:
+
+**Readiness = 100 × (0.70 C_required + 0.25 C_preferred + 0.05 C_bonus) / (sum of the
+weights of the tiers this job has)**, rounded to 2 decimals (0 to 100).
+
+A tier the job does not have drops out of both the top and the bottom. A job with no
+skills scores 0. A missing importance counts as required.
 
 The statuses come from the decision table in `NLP_CLASSIFICATION_RULES.md`: Strong is
 the same skill at intermediate / advanced level, or at beginner level with a project,
@@ -31,16 +38,31 @@ evidence, or a different but similar / related skill; Gap is nothing close enoug
 
 **Worked example** (the `match_skills` example in `NLP_INTERFACE.md`):
 
-| Required skill | Importance | Status | Points |
-|---|---|---|---|
-| SQL | required (3) | Strong (1.0) | 3.0 |
-| Python | required (3) | Developing (0.5) | 1.5 |
-| Power BI | required (3) | Gap (0) | 0 |
-| Azure | preferred (2) | Developing (0.5) | 1.0 |
-| Docker | bonus (1) | Gap (0) | 0 |
-| **Total** | **12** | | **5.5** |
+| Skill | Importance | Status | Credit |
+|---|---|---|---:|
+| SQL | required | Strong | 1.0 |
+| Python | required | Developing | 0.5 |
+| Power BI | required | Gap | 0 |
+| Azure | preferred | Developing | 0.5 |
+| Docker | bonus | Gap | 0 |
 
-Readiness = 100 × 5.5 / 12 = **45.83**.
+C_required = 1.5 / 3 = 0.5, C_preferred = 0.5 and C_bonus = 0, and all three tiers are
+present, so readiness = 100 × (0.70 × 0.5 + 0.25 × 0.5 + 0.05 × 0) / 1.00 = **47.5**. With
+only the three required rows, as when a pasted job description has no other tier,
+readiness = 100 × (0.70 × 0.5) / 0.70 = **50.0**.
+
+**What this means, and what it does not.**
+
+- If every required skill is Strong, the score is at least 70 whenever the job has
+  required skills and other tiers, and 100 when it has only required skills. With every
+  other skill a Gap the score is exactly 70 when all three tiers are present, 73.68 with
+  required and preferred only, and 93.33 with required and bonus only.
+- It does **not** follow that On Track (≥ 70) means all required skills are met, because
+  preferred and bonus also score. With every preferred and bonus skill Strong, a job with
+  all three tiers reaches 70 at a required coverage of 0.57. In the synthetic cohort of
+  section 2.4, 862 of the 1,319 On Track students do not have all their required skills
+  Strong, and 530 of those have a required skill at Gap. Read the required rows on the
+  Skill Gap page, not the band alone.
 
 ## 2. Why this formula
 
@@ -54,14 +76,20 @@ status and the reason, and the advisor sees the same rows. A model that learns a
 from data would need labelled hiring outcomes, which a proof of concept with synthetic
 students does not have.
 
-### 2.2 Importance weights 3 / 2 / 1
+### 2.2 Tier weights 70 / 25 / 5
 
 Job descriptions separate must-have from nice-to-have requirements, and the role
-templates and JD analysis keep that as required / preferred / bonus. The 3 / 2 / 1
-weights keep required skills dominant without making the others irrelevant: a missing
-required skill costs as much as 1.5 preferred or 3 bonus skills. In our role templates
-required skills are 38% of the rows, preferred 34% and bonus 28%, so with these weights
-required skills carry about half of the score.
+templates and JD analysis keep that as required / preferred / bonus. Each tier is scored
+on its own coverage, so the share of the score that a tier carries is fixed by its weight
+and not by how many skills the template lists: required skills carry 70% of the score
+whether a role has 6 of them or 10, next to 8 or 17 preferred skills. Preferred and bonus
+still count, so that going beyond the minimum shows in the score, but they cannot
+outweigh the required skills.
+
+The weights do not make every skill worth the same across roles. One required skill is
+worth 70 / 10 = 7 points in a role with 10 required skills and 70 / 6 = 11.67 in a role
+with 6, and one bonus skill is worth 5 / 13 = 0.38 points in a role with 13. The values
+70 / 25 / 5 are a design choice (section 5). Section 2.4 compares them with other splits.
 
 ### 2.3 Developing = half credit
 
@@ -74,35 +102,71 @@ categories, not measurements, so we did not try to be more precise than that.
 ### 2.4 Sensitivity: the choice of weights does not change who is ahead
 
 `data/jrs_sensitivity.py` re-scores the latest role-template assessment of every
-student (5,001 assessments, 121,246 required-skill rows) with other weights and credits
-and compares them with the current scheme:
+student (5,000 assessments, 153,275 skill rows) with other weights and credits and
+compares them with the current scheme:
 
 | Scheme | Mean | Spearman ρ vs current | Students changing band (70 / 40) |
 |---|---:|---:|---:|
-| **current 3/2/1, developing 0.5** | 48.4 | 1.000 | 0 (0.0%) |
-| equal 1/1/1, developing 0.5 | 42.9 | 0.987 | 952 (19.0%) |
-| steeper 4/2/1, developing 0.5 | 50.4 | 0.998 | 326 (6.5%) |
-| 3/2/1, developing 0.25 | 44.8 | 0.994 | 477 (9.5%) |
-| 3/2/1, developing 0.75 | 51.9 | 0.993 | 491 (9.8%) |
-| required skills only | 61.6 | 0.949 | 1,959 (39.2%) |
+| **current tiers 70/25/5, developing 0.5** | 53.5 | 1.000 | 0 (0.0%) |
+| old points 3/2/1, developing 0.5 | 44.5 | 0.964 | 1,448 (29.0%) |
+| tiers 75/20/5, developing 0.5 | 54.9 | 0.999 | 229 (4.6%) |
+| tiers 60/30/10, developing 0.5 | 50.3 | 0.997 | 482 (9.6%) |
+| tiers 50/35/15, developing 0.5 | 47.1 | 0.988 | 1,046 (20.9%) |
+| tiers 70/25/5, developing 0.25 | 49.6 | 0.994 | 497 (9.9%) |
+| tiers 70/25/5, developing 0.75 | 57.4 | 0.992 | 580 (11.6%) |
+| required skills only | 62.4 | 0.982 | 1,197 (23.9%) |
 
-The order of the students hardly changes with any reasonable weighting (ρ ≥ 0.987), so
-comparisons between students and over time do not depend on the exact weights. What the
-weights do change is the level of the score, and therefore which band a student near a
-boundary falls into. Ignoring preferred and bonus skills would move 39% of students
-between bands, so we keep them. Measured on the local database on 1 November 2026, after
-`start_backend.bat` re-assessed the students with the matching rules of 30 October.
+The order of the students hardly changes among the tier schemes (ρ ≥ 0.988), so
+comparisons between students do not depend much on the exact split. What the weights do
+change is the level of the score, and therefore which band a student near a boundary
+falls into: from 4.6% of students for 75/20/5 to 20.9% for 50/35/15. Ignoring preferred
+and bonus skills would move 24% of students between bands, so we keep them. This shows
+that the score is stable, not that the weights are right. Measured on the local database
+on 5 November 2026, after `python data/run_assessments.py --auto` re-assessed the
+synthetic students. The statuses are those of the rules of 31 October: only 3 of the
+153,275 rows differ from the assessments before that run, all for one student whose
+latest assessment had been a keyword run.
 
 ### 2.5 Readiness bands 70 / 40
 
 The advisor dashboard groups students as On Track (≥ 70), Developing (40 to 69) and
-Needs Support (< 40). The defaults follow the representative synthetic students in
-`NLP_CLASSIFICATION_RULES.md` section 6: across roles and methods the strong students
-average about 69 to 76, the average ones 45 to 54 and the weak ones 20 to 27. So 70 is
-where strong students begin and 40 lies between average and weak. With the current
-scheme the 5,001 latest assessments split 862 / 2,377 / 1,762. Because the right
-boundaries depend on the institution, admins can change both values in
-**Admin → System Settings**.
+Needs Support (< 40). These values did not change with the formula. On the representative
+synthetic students in `NLP_CLASSIFICATION_RULES.md` section 6, across roles and methods,
+the strong students average about 75 to 81, the average ones 51 to 60 and the weak ones
+24 to 32. So 70 lies just below the strong students and 40 lies between average and weak.
+With the current scheme the 5,000 latest assessments split 1,319 / 2,300 / 1,381 (26.4% /
+46.0% / 27.6%); with the old points on the same statuses they split 488 / 2,520 / 1,992.
+
+By archetype (`data/output/students_meta.csv`), 76.8% of strong students are On Track,
+below the proposal's target of at least 80%, and 78.9% of weak students are Needs Support,
+above its target of at least 75%. The weights were not tuned to reach the first target.
+Part of the shortfall comes from the data: `database/migrate_existing_db.sql` moves 620 ICT
+students to a role offered to their course (Software Developer to Web Developer, Data
+Scientist to Data Analyst), while their skills were generated for the old role. Among
+strong students, 85.6% of the 1,068 who kept their role are On Track and 12.9% of the 147
+who were moved. Because the right boundaries depend on the institution, admins can change
+both values in **Admin → System Settings**.
+
+### 2.6 Why the formula changed (November 2026)
+
+Until 5 November 2026 readiness was 100 × Σ (weight × credit) / Σ weight over all of a
+role's skills, with weights required 3, preferred 2, bonus 1. All tiers shared one
+denominator, so the score fell as a template got longer. After the role retune of 31
+October, required skills were 27% of the template rows and 41% of the weight. A student
+with every required skill Strong and everything else Gap scored only 29 to 55 depending
+on the role. The same students moved to the new templates lost 6.7 points on average and
+15.7 for Web Developer without any change in their skills
+(`nlp/experiments/results/role_retune_effect.md`).
+
+On the same statuses the new formula raises the mean from 44.5 to 53.5. The score rises
+for most students, but 309 score lower (by at most 8.99 points): those who cover
+preferred and bonus skills better than required ones. Of the 1,448 students who change
+band, 832 move from Developing to On Track, 613 from Needs Support to Developing, 2 from
+Developing to Needs Support and 1 from On Track to Developing.
+
+Assessments stored before this date keep the score they were given, so a student's
+history can show a step that comes from the formula and not from their skills. Committed
+results of earlier experiments under `nlp/experiments/results/` use the old formula.
 
 ## 3. The seven dimensions
 
@@ -111,9 +175,20 @@ advisor's student page show the four skill dimensions as bars. The three experie
 are stored but not shown as a percentage: those pages list up to three of the student's records
 instead, because "75% project experience" says less than the projects themselves.
 
+The four skill dimensions **stay on points of 3 / 2 / 1**: 100 × Σ (weight × credit) / Σ
+weight over the job's skills of that category, with required 3, preferred 2, bonus 1 and
+the credits of section 1. This is a known inconsistency with the overall score, which uses
+tiers: the same skill counts differently in a bar and in the overall score, and the overall
+score is not an average of the bars. On the 5,000 latest assessments the overall score
+averages 53.5 while the bars average 47.3 (Technical), 45.7 (AI / Digital), 41.3
+(Analytical) and 35.7 (Soft), and for 1,272 students it is above all four bars. We accept
+this for now because a bar covers one category, where a tier may hold a single skill or
+none, so tier weights would let one skill move a bar by up to 70 points. The Skill Gap page
+and "How is this calculated?" tell students that the two count differently.
+
 | Dimension | Column | How it is worked out | In the readiness score? |
 |---|---|---|---|
-| Technical Skills | `score_technical` | The formula above over the job's Technical skills only | Yes (its skills) |
+| Technical Skills | `score_technical` | Points of 3 / 2 / 1 over the job's Technical skills only | Yes (its skills) |
 | AI / Digital Skills | `score_ai_digital` | The same, AI_Digital skills | Yes (its skills) |
 | Analytical Skills | `score_analytical` | The same, Analytical skills | Yes (its skills) |
 | Soft Skills | `score_communication` | The same, Soft skills | Yes (its skills) |
@@ -164,13 +239,18 @@ part of the research work still to do (see section 5).
 
 ## 5. Limitations and what is still to be validated
 
-- **The weights are a design choice, not learned.** Section 2.4 shows the ranking is
-  stable, but the absolute level has not been checked against employers' judgement.
-  There is no industry partner yet to do this.
+- **The weights 70 / 25 / 5 are a design choice, not learned.** Section 2.4 shows the
+  ranking is stable, but the absolute level has not been checked against employers'
+  judgement. The check of the weights with advisors (AHP) is still to do, and there is no
+  industry validation: there is no industry partner yet to do this.
+- **On Track does not mean all required skills are met** (section 1).
 - **Skill levels are self-reported.** Evidence from projects and certifications helps,
   but a student can still overstate a level.
-- **Every required skill of one importance counts the same.** SQL and Git both count 3
-  when required, even if an employer cares more about one of them.
+- **Every skill of one tier counts the same.** SQL and Git count the same when both are
+  required, even if an employer cares more about one of them. A skill's worth also
+  depends on how many skills share its tier (section 2.2).
+- **Scores before and after 5 November 2026 are not comparable** (section 2.6).
+- **The dimensions and the overall score count differently** (section 3).
 - **Synthetic data.** The figures in sections 2.4 and 2.5 come from synthetic students;
   the planned evaluation with 25 UAD students and the SUS test will be the first check
   with real users.
@@ -181,10 +261,11 @@ part of the research work still to do (see section 5).
 
 | What | Where |
 |---|---|
-| Weights, credits, formula, dimensions | `backend/assessment_service.py` (`IMPORTANCE_WEIGHTS`, `STATUS_CREDIT`, `weighted`, `category_score`) |
+| Tier weights, credits, formula | `backend/readiness.py` (`TIER_WEIGHTS`, `STATUS_CREDIT`, `tier_coverage`, `tiered_readiness`) |
+| Dimensions (points of 3 / 2 / 1) | `backend/assessment_service.py` (`IMPORTANCE_WEIGHTS`, `weighted`, `category_score`) |
 | Strong / Developing / Gap | `nlp/matcher.py`, `docs/NLP_CLASSIFICATION_RULES.md` |
 | Evidence from projects and certifications | `nlp/evidence.py` |
 | Readiness bands | `backend/settings.py` (`readiness_on_track`, `readiness_needs_support`), Admin → System Settings |
 | "Not required" / "No data yet" | `frontend/src/utils/dimensions.js`, `frontend/src/components/DimensionBar.jsx` |
 | Sensitivity analysis | `data/jrs_sensitivity.py` |
-| Tests | `tests/test_backend_api.py` (`TestAssessment`), `nlp/tests/test_matcher.py` |
+| Tests | `tests/test_readiness.py`, `tests/test_backend_api.py` (`TestAssessment`), `nlp/tests/test_matcher.py` |

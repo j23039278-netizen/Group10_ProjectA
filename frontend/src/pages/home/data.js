@@ -113,7 +113,7 @@ export const AUDIENCES = [
   {
     id: 'students', icon: 'student', title: 'Students',
     text: 'Understand your career readiness and skill gaps.',
-    points: ['Job Readiness Score across 7 dimensions', 'Strong / Developing / Gap breakdown', 'Courses, certifications and projects to close gaps'],
+    points: ['Job Readiness Score and 7 dimension scores', 'Strong / Developing / Gap breakdown', 'Courses, certifications and projects to close gaps'],
   },
   {
     id: 'advisors', icon: 'advisor', title: 'Advisors',

@@ -43,9 +43,9 @@ def run_assessment(
 ):
     """
     Run skill matching and generate the readiness score (assessment_service.py).
-    Scoring weights: required=3, preferred=2, bonus=1; strong = full points,
-    developing = half, gap = 0. Strong / Developing / Gap comes from the NLP
-    matcher (Ng Yong Hin, nlp/); rules in docs/NLP_CLASSIFICATION_RULES.md.
+    Readiness is tiered coverage, required 70 / preferred 25 / bonus 5 (readiness.py);
+    strong = full credit, developing = half, gap = 0. Strong / Developing / Gap comes
+    from the NLP matcher (Ng Yong Hin, nlp/); rules in docs/NLP_CLASSIFICATION_RULES.md.
     """
     profile = db.execute(
         text("SELECT * FROM student_profiles WHERE user_id = :uid"),
