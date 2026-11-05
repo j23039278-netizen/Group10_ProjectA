@@ -18,6 +18,13 @@ interests come from that role, drawn with their own random generator. The CS and
 students are exactly the same as before (same UUIDs, skills and projects).
 `students_meta.csv` has a `course` column.
 
+**ICT roles (data version `2026-11-05-ict-roles`):** ICT does not offer Software Developer
+or Data Scientist. An ICT student who draws one of them now aims at Web Developer or Data
+Analyst from the start, and their skills, projects, certifications, programme and interests
+come from that role, drawn with their own random generator. These 620 students are the only
+ones that changed. The target-role update in `migrate_existing_db.sql` no longer moves
+anyone in freshly loaded data.
+
 > **Team note:** `backend/start_backend.bat` replaces the synthetic students by itself
 > when `data/output/DATA_VERSION` differs from the version your database loaded
 > (`backend/.synthetic_data_version`, not in git), and then re-assesses them. When
@@ -87,8 +94,8 @@ Use `--n 500` for a quick demo set.
 - **Archetype:** strong 25%, average 50% and weak 25%. The archetype controls
   how likely the student is to have the role's core and secondary skills, plus
   their GPA, number of projects and certifications, and chance of an internship.
-  With seed 42, the mean core-skill coverage is 89.8% for strong, 71.6% for
-  average and 39.7% for weak students (see `summary_stats.txt`). This gives the
+  With seed 42, the mean core-skill coverage is 89.7% for strong, 71.1% for
+  average and 39.4% for weak students (see `summary_stats.txt`). This gives the
   Advisor Dashboard a realistic spread of readiness scores.
 - **Projects and certifications:** each role has 5–6 project templates that use
   v2 skills (for example a Mini SOC home lab or an Infrastructure-as-Code lab),

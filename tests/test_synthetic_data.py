@@ -11,10 +11,11 @@ import pytest
 pytest.importorskip("faker")
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "data"))
 from generate_synthetic_data import (  # noqa: E402
-    BLOCKED_NAMES, BUSINESS_ROLE_ORDER, ROLE_WEIGHTS, ROLES, generate, name_key,
+    BLOCKED_NAMES, BUSINESS_ROLE_ORDER, ICT_ROLE_FOR_CS_ONLY, ROLE_WEIGHTS, ROLES, generate, name_key,
 )
 
-OUTPUT = Path(__file__).resolve().parent.parent / "data" / "output"
+REPO = Path(__file__).resolve().parent.parent
+OUTPUT = REPO / "data" / "output"
 
 
 @pytest.fixture(scope="module")
@@ -51,6 +52,28 @@ def test_courses_and_roles_follow_the_database_rules(dataset):
             assert p["programme"].startswith("Bachelor of Business")
         else:
             assert p["target_role"] in ROLE_WEIGHTS
+
+
+def test_ict_students_only_aim_at_roles_ict_offers(dataset):
+    """Same rule as job_roles.courses in migrate_existing_db.sql, so its update moves nobody"""
+    sql = (REPO / "database" / "migrate_existing_db.sql").read_text(encoding="utf-8")
+    cs_only = re.search(r"courses = ARRAY\['CS'\]::VARCHAR\(10\)\[\]\s+WHERE [^;]*role_code IN \(([^)]*)\)", sql)
+    assert set(re.findall(r"'(\w+)'", cs_only.group(1))) == {"SOFTWARE_DEV", "DATA_SCIENTIST"}
+    assert set(ICT_ROLE_FOR_CS_ONLY) == {"Software Developer", "Data Scientist"}
+
+    _, profiles, _, _, _, meta = dataset
+    ict = [p["target_role"] for p, m in zip(profiles, meta) if m["course"] == "ICT"]
+    assert set(ict) == set(ROLE_WEIGHTS) - set(ICT_ROLE_FOR_CS_ONLY)
+
+
+def test_ict_students_hold_skills_of_their_stored_role(dataset):
+    """Coverage by archetype is counted against the stored role, as for CS students"""
+    _, _, _, _, _, meta = dataset
+    def mean(course, arch):
+        v = [m["core_coverage_pct"] for m in meta if m["course"] == course and m["archetype"] == arch]
+        return sum(v) / len(v)
+    for arch in ("strong", "average", "weak"):
+        assert abs(mean("ICT", arch) - mean("CS", arch)) < 5
 
 
 def test_business_students_hold_business_skills(dataset):
