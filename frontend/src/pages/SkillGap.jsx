@@ -122,7 +122,7 @@ export default function SkillGap() {
               {DIMENSIONS.map(dim => <DimensionBar key={dim.key} dim={dim} value={assessment[dim.key]} skills={skills} records={records} matches={matches} />)}
             </div>
             <div style={{ fontSize: '11px', color: '#8b92a8', marginTop: '2px' }}>
-              The readiness score comes from the four skill dimensions. &quot;No data yet&quot; means you list no skill of that
+              The readiness score uses the same skills as the four skill dimensions, but counts them differently (see below). &quot;No data yet&quot; means you list no skill of that
               category; add one on My Profile and run the assessment again.
             </div>
             <HowScored />

@@ -4,7 +4,8 @@ SEAGAS — Run one assessment (skill matching + readiness score) and store it
 Used by POST /api/assessments/run and by data/run_assessments.py (batch
 assessments for the synthetic students), so both compute scores the same way.
 
-Scoring weights: required=3, preferred=2, bonus=1.
+Readiness is tiered coverage, required 70 / preferred 25 / bonus 5 (readiness.py).
+The skill dimensions use points instead: required=3, preferred=2, bonus=1, with
 Strong = full points, Developing = half, Gap = 0.
 Strong / Developing / Gap comes from the NLP matcher (Ng Yong Hin, nlp/);
 rules in docs/NLP_CLASSIFICATION_RULES.md.
@@ -14,9 +15,9 @@ from sqlalchemy import text
 
 import nlp_service
 from nlp import derive_evidence  # importable once nlp_service has put the repo root on the path
+from readiness import STATUS_CREDIT, tier_coverage, tiered_readiness
 
-IMPORTANCE_WEIGHTS = {"required": 3, "preferred": 2, "bonus": 1}
-STATUS_CREDIT      = {"strong": 1.0, "developing": 0.5, "gap": 0.0}
+IMPORTANCE_WEIGHTS = {"required": 3, "preferred": 2, "bonus": 1}   # dimension scores only
 
 
 class AssessmentError(Exception):
@@ -128,8 +129,7 @@ def run_for_profile(db, profile, *, role_id=None, jd_id=None,
         got = sum(IMPORTANCE_WEIGHTS.get(m["importance"], 1) * STATUS_CREDIT[m["match_status"]] for m in rows)
         return got, top
 
-    earned_points, max_points = weighted(match_results)
-    readiness_score = round(earned_points / max_points * 100, 2) if max_points > 0 else 0
+    readiness_score = tiered_readiness(match_results)
 
     # 7 dimensions. match_results are in the same order as required_skills.
     def category_score(category):
@@ -207,7 +207,7 @@ def run_for_profile(db, profile, *, role_id=None, jd_id=None,
     return {
         "assessment_id":   assessment_id,
         "readiness_score": readiness_score,
-        "scoring_method":  "weighted (required=3, preferred=2, bonus=1)",
+        "scoring_method":  "tiered coverage (required=70, preferred=25, bonus=5)",
         "matching_method": method_used,
         "matching_note":   matching_note,
         "dimension_scores": dims,
@@ -216,8 +216,7 @@ def run_for_profile(db, profile, *, role_id=None, jd_id=None,
             "developing": sum(m["match_status"] == "developing" for m in match_results),
             "gaps":       sum(m["match_status"] == "gap" for m in match_results),
             "total":      len(required_skills),
-            "earned_points": earned_points,
-            "max_points":    max_points,
+            "tier_coverage": tier_coverage(match_results),
         },
         "match_results": match_results,
     }

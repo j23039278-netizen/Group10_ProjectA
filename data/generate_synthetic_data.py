@@ -29,8 +29,12 @@ Design notes (for the Dataset section of the report):
     their skills, projects, certifications, programme and interests come from
     that role, drawn with their own random generator. The IT draws are still made
     for them and thrown away, so every CS and ICT student is exactly the same as
-    before Business students existed. (The migration moves ICT students who aim
-    at a CS-only role to the closest ICT role; their skills stay as generated.)
+    before Business students existed.
+  * ICT offers 4 of the 6 IT roles (job_roles.courses in migrate_existing_db.sql).
+    An ICT student who draws a CS-only role aims at the closest ICT role instead,
+    and all their records come from that role, drawn with their own random
+    generator. As with Business students, the IT draws are still made and thrown
+    away, so every other student stays the same.
   * Skills are sampled per role: core skills are likely, secondary skills less
     likely, plus a few random off-role skills (noise). Core / secondary skills
     are read from database/seed_job_role_skills.sql (required -> core,
@@ -161,11 +165,13 @@ ROLES = {
 # default_course() and the target-role update in database/migrate_existing_db.sql.
 COURSE_BY_REMAINDER = {1: "CS", 2: "BUSINESS", 0: "ICT"}
 BUSINESS_ROLE_ORDER = ["Business Analyst", "Marketing Executive", "Financial Analyst", "HR Executive"]
+# CS-only roles -> the closest ICT role, the same mapping as that update
+ICT_ROLE_FOR_CS_ONLY = {"Software Developer": "Web Developer", "Data Scientist": "Data Analyst"}
 
 # Version of the generated data. start_backend.bat replaces the synthetic students
 # in a local database when this differs from the version it loaded last, so change
 # it whenever the output changes.
-SYNTHETIC_DATA_VERSION = "2026-10-31-role-retune"
+SYNTHETIC_DATA_VERSION = "2026-11-05-ict-roles"
 
 # Rough share of IT students aiming at each IT role (sums to 1.0)
 ROLE_WEIGHTS = {
@@ -780,6 +786,8 @@ def generate(n, seed):
     # so the shared Faker sequence (names, IT project titles) does not change
     fk_biz = Faker("en_US")
     fk_biz.seed_instance(f"business-{seed}")
+    fk_ict = Faker("en_US")     # likewise for ICT students who drew a CS-only role
+    fk_ict.seed_instance(f"ict-{seed}")
 
     load_role_skills()
     used_skills = ({s for r in ROLES.values() for s in r["core"] + r["secondary"]}
@@ -851,6 +859,10 @@ def generate(n, seed):
             role = BUSINESS_ROLE_ORDER[i % 4]
             rec = student_records(random.Random(f"business-{seed}-{i}"), fk_biz, role, arch, year,
                                   profile_id, created, business_noise, BUSINESS_PROJECTS, business_certs)
+        elif course == "ICT" and role in ICT_ROLE_FOR_CS_ONLY:
+            role = ICT_ROLE_FOR_CS_ONLY[role]
+            rec = student_records(random.Random(f"ict-{seed}-{i}"), fk_ict, role, arch, year,
+                                  profile_id, created, all_skills, PROJECTS, CERTIFICATIONS)
         spec = ROLES[role]
         skills_rows += rec["skills"]
         projects_rows += rec["projects"]

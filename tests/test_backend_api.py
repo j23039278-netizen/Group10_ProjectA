@@ -266,11 +266,17 @@ class TestAssessment:
         body = r.json()
         mr = body["match_results"]
         assert body["matching_method"] == "keyword" and len(mr) == body["skill_summary"]["total"] > 0
-        w = {"required": 3, "preferred": 2, "bonus": 1}
+        w = {"required": .70, "preferred": .25, "bonus": .05}
         c = {"strong": 1, "developing": .5, "gap": 0}
-        expected = round(sum(w[m["importance"]] * c[m["match_status"]] for m in mr)
-                         / sum(w[m["importance"]] for m in mr) * 100, 2)
+        coverage = {t: [c[m["match_status"]] for m in mr if m["importance"] == t] for t in w}
+        present = [t for t in w if coverage[t]]
+        expected = round(100 * sum(w[t] * sum(coverage[t]) / len(coverage[t]) for t in present)
+                         / sum(w[t] for t in present), 2)
         assert body["readiness_score"] == expected
+        assert "70" in body["scoring_method"]
+        summary = body["skill_summary"]
+        assert "earned_points" not in summary and "max_points" not in summary
+        assert summary["tier_coverage"] == {t: sum(coverage[t]) / len(coverage[t]) if coverage[t] else None for t in w}
         sql = next(m for m in mr if m["skill_name"] == "SQL")
         assert sql["match_status"] == "strong" and sql["matched_student_skill"] == "SQL" and sql["reason"]
         excel = next((m for m in mr if m["skill_name"] == "Excel"), None)
@@ -450,7 +456,9 @@ class TestAdmin:
         r = c.put(f"/api/library/roles/{rid}/skills", headers=admin,
                   json=[{"skill_id": s, "importance": "required"} for s in sids])
         assert r.status_code == 200 and len(r.json()["skills"]) == 3
-        assert run(env, alice, role_id=rid).json()["skill_summary"]["total"] == 3
+        summary = run(env, alice, role_id=rid).json()["skill_summary"]
+        assert summary["total"] == 3
+        assert summary["tier_coverage"]["preferred"] is None and summary["tier_coverage"]["bonus"] is None
         assert c.put(f"/api/library/roles/{env['da']}/skills", headers=admin, json=[]).status_code == 400
 
     def test_audit_log_records_events(self, env, admin, advisor):

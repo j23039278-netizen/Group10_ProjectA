@@ -16,6 +16,7 @@ database/seed_job_role_skills.sql (1,200 assessments). Both sides get the
 weighted readiness score of assessments.py (required 3, preferred 2, bonus 1;
 strong 1.0, developing 0.5, gap 0). Every skill gets a UUID derived from its
 name, so "same skill_id" means "same skills_library row", as in the database.
+These results use the 3/2/1 readiness formula that was current at the time.
 
 Writes to nlp/experiments/results/:
   compare_with_current_scores.csv   one row per student x role: both readiness scores

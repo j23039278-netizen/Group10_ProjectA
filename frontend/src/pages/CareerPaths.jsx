@@ -50,9 +50,9 @@ export default function CareerPaths() {
       <div style={{ marginBottom: '18px' }}>
         <div style={{ fontSize: '26px', fontWeight: '700', color: C.ink }}>Career Paths</div>
         <div style={{ fontSize: '13px', color: C.body, marginTop: '4px', maxWidth: '820px' }}>
-          How well the {data.skill_count} skill{data.skill_count === 1 ? '' : 's'} on your profile fit each job role of your course.
-          This is a quick guide based on which required, preferred and bonus skills you list; run a full assessment in Job Analysis
-          for a readiness score that also looks at your levels, projects and experience.
+          How many of each role&apos;s skills you list. This is a quick guide and long skill lists lower it. It is not your
+          Job Readiness Score, which counts required skills as 70% of the score and also uses your skill levels and evidence,
+          so the two numbers can differ.
         </div>
       </div>
 
@@ -84,12 +84,12 @@ export default function CareerPaths() {
                 {p.description && <div style={{ fontSize: '13px', color: C.body, marginTop: '4px' }}>{p.description}</div>}
                 <div style={{ fontSize: '12px', color: C.muted, marginTop: '6px' }}>
                   Required skills {p.required.have}/{p.required.total} · Preferred {p.preferred.have}/{p.preferred.total} · Bonus {p.bonus.have}/{p.bonus.total}
-                  {p.latest_assessment && <> · Last assessed {p.latest_assessment.score}% on {new Date(p.latest_assessment.date).toLocaleDateString('en-GB')}</>}
+                  {p.latest_assessment && <> · Job Readiness {p.latest_assessment.score}% on{new Date(p.latest_assessment.date).toLocaleDateString('en-GB')}</>}
                 </div>
               </div>
               <div style={{ textAlign: 'right', minWidth: '140px' }}>
                 <div style={{ fontSize: '30px', fontWeight: '700', color: matchColor(p.match_pct), lineHeight: 1 }}>{p.match_pct}%</div>
-                <div style={{ fontSize: '11px', color: C.muted }}>skill match</div>
+                <div style={{ fontSize: '11px', color: C.muted }}>skills listed (quick guide)</div>
               </div>
             </div>
             <div style={{ height: '8px', background: C.line, borderRadius: '99px', overflow: 'hidden', margin: '12px 0' }}>
