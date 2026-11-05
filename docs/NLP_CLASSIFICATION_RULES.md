@@ -212,8 +212,8 @@ and with both methods, strong > average > weak:
 
 | Role | Method | strong | average | weak | means (strong / average / weak) |
 |---|---|---:|---:|---:|---|
-| Data Analyst | keyword | 77.1 | 55.4 | 28.3 | 76.5 / 55.0 / 28.5 |
-| Data Analyst | hybrid | 79.8 | 58.5 | 31.2 | 78.5 / 58.0 / 31.7 |
+| Data Analyst | keyword | 77.1 | 55.4 | 26.0 | 76.5 / 54.8 / 27.4 |
+| Data Analyst | hybrid | 79.9 | 59.0 | 27.7 | 78.6 / 57.8 / 30.5 |
 | Cybersecurity Analyst | keyword | 75.7 | 51.0 | 22.9 | 74.8 / 51.0 / 24.3 |
 | Cybersecurity Analyst | hybrid | 79.2 | 57.8 | 29.1 | 78.7 / 57.2 / 30.2 |
 | Business Analyst | keyword | 77.0 | 54.1 | 24.3 | 75.5 / 53.3 / 25.4 |
@@ -222,7 +222,7 @@ and with both methods, strong > average > weak:
 | HR Executive | hybrid | 78.7 | 56.1 | 27.8 | 77.4 / 55.8 / 27.9 |
 
 Figures are with the tiered formula, the retuned templates and the synthetic data version
-`2026-10-31-role-retune`, for the target roles the students were generated with
+`2026-11-05-ict-roles`, for the target roles the students were generated with
 (`data/output/students_meta.csv`; the student's stored `evidence_type` only).
 Until then the representative student was the one with the median core-skill
 coverage. That pick proved fragile: many students share the median coverage, and for HR

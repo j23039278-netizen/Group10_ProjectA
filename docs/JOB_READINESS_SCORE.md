@@ -60,8 +60,8 @@ readiness = 100 × (0.70 × 0.5) / 0.70 = **50.0**.
 - It does **not** follow that On Track (≥ 70) means all required skills are met, because
   preferred and bonus also score. With every preferred and bonus skill Strong, a job with
   all three tiers reaches 70 at a required coverage of 0.57. In the synthetic cohort of
-  section 2.4, 862 of the 1,319 On Track students do not have all their required skills
-  Strong, and 530 of those have a required skill at Gap. Read the required rows on the
+  section 2.4, 969 of the 1,484 On Track students do not have all their required skills
+  Strong, and 567 of those have a required skill at Gap. Read the required rows on the
   Skill Gap page, not the band alone.
 
 ## 2. Why this formula
@@ -107,25 +107,24 @@ compares them with the current scheme:
 
 | Scheme | Mean | Spearman ρ vs current | Students changing band (70 / 40) |
 |---|---:|---:|---:|
-| **current tiers 70/25/5, developing 0.5** | 53.5 | 1.000 | 0 (0.0%) |
-| old points 3/2/1, developing 0.5 | 44.5 | 0.964 | 1,448 (29.0%) |
-| tiers 75/20/5, developing 0.5 | 54.9 | 0.999 | 229 (4.6%) |
-| tiers 60/30/10, developing 0.5 | 50.3 | 0.997 | 482 (9.6%) |
-| tiers 50/35/15, developing 0.5 | 47.1 | 0.988 | 1,046 (20.9%) |
-| tiers 70/25/5, developing 0.25 | 49.6 | 0.994 | 497 (9.9%) |
-| tiers 70/25/5, developing 0.75 | 57.4 | 0.992 | 580 (11.6%) |
-| required skills only | 62.4 | 0.982 | 1,197 (23.9%) |
+| **current tiers 70/25/5, developing 0.5** | 55.5 | 1.000 | 0 (0.0%) |
+| old points 3/2/1, developing 0.5 | 45.9 | 0.960 | 1,584 (31.7%) |
+| tiers 75/20/5, developing 0.5 | 57.0 | 0.999 | 246 (4.9%) |
+| tiers 60/30/10, developing 0.5 | 52.1 | 0.997 | 522 (10.4%) |
+| tiers 50/35/15, developing 0.5 | 48.7 | 0.987 | 1,126 (22.5%) |
+| tiers 70/25/5, developing 0.25 | 51.6 | 0.994 | 514 (10.3%) |
+| tiers 70/25/5, developing 0.75 | 59.4 | 0.992 | 580 (11.6%) |
+| required skills only | 65.0 | 0.979 | 1,247 (24.9%) |
 
-The order of the students hardly changes among the tier schemes (ρ ≥ 0.988), so
+The order of the students hardly changes among the tier schemes (ρ ≥ 0.987), so
 comparisons between students do not depend much on the exact split. What the weights do
 change is the level of the score, and therefore which band a student near a boundary
-falls into: from 4.6% of students for 75/20/5 to 20.9% for 50/35/15. Ignoring preferred
-and bonus skills would move 24% of students between bands, so we keep them. This shows
-that the score is stable, not that the weights are right. Measured on the local database
-on 5 November 2026, after `python data/run_assessments.py --auto` re-assessed the
-synthetic students. The statuses are those of the rules of 31 October: only 3 of the
-153,275 rows differ from the assessments before that run, all for one student whose
-latest assessment had been a keyword run.
+falls into: from 4.9% of students for 75/20/5 to 22.5% for 50/35/15. Ignoring preferred
+and bonus skills would move 25% of students between bands, so we keep them. This shows
+that the score is stable, not that the weights are right. Measured on 5 November 2026 on
+a copy of the local database, reloaded with the synthetic data version
+`2026-11-05-ict-roles` and re-assessed with `python data/run_assessments.py` (hybrid). The
+statuses are those of the rules of 31 October.
 
 ### 2.5 Readiness bands 70 / 40
 
@@ -133,19 +132,23 @@ The advisor dashboard groups students as On Track (≥ 70), Developing (40 to 69
 Needs Support (< 40). These values did not change with the formula. On the representative
 synthetic students in `NLP_CLASSIFICATION_RULES.md` section 6, across roles and methods,
 the strong students average about 75 to 81, the average ones 51 to 60 and the weak ones
-24 to 32. So 70 lies just below the strong students and 40 lies between average and weak.
-With the current scheme the 5,000 latest assessments split 1,319 / 2,300 / 1,381 (26.4% /
-46.0% / 27.6%); with the old points on the same statuses they split 488 / 2,520 / 1,992.
+24 to 31. So 70 lies just below the strong students and 40 lies between average and weak.
+With the current scheme the 5,000 latest assessments split 1,484 / 2,296 / 1,220 (29.7% /
+45.9% / 24.4%); with the old points on the same statuses they split 514 / 2,658 / 1,828.
 
-By archetype (`data/output/students_meta.csv`), 76.8% of strong students are On Track,
-below the proposal's target of at least 80%, and 78.9% of weak students are Needs Support,
-above its target of at least 75%. The weights were not tuned to reach the first target.
-Part of the shortfall comes from the data: `database/migrate_existing_db.sql` moves 620 ICT
+By archetype (`data/output/students_meta.csv`), 85.3% of strong students are On Track,
+above the proposal's target of at least 80%, and 76.9% of weak students are Needs Support,
+above its target of at least 75%. The weights were not tuned to reach these targets. Before
+the data version `2026-11-05-ict-roles` the figures were 76.8% and 78.9%, and the first
+missed its target because of the data: `database/migrate_existing_db.sql` moved 620 ICT
 students to a role offered to their course (Software Developer to Web Developer, Data
-Scientist to Data Analyst), while their skills were generated for the old role. Among
-strong students, 85.6% of the 1,068 who kept their role are On Track and 12.9% of the 147
-who were moved. Because the right boundaries depend on the institution, admins can change
-both values in **Admin → System Settings**.
+Scientist to Data Analyst), while their skills stayed generated for the old role. The
+generator now gives these students the ICT role from the start. Of the 147 strong students
+among them, 83.0% are now On Track (12.9% before); the other 1,068 strong students did not
+change (85.6%). Both targets are met on synthetic students, so this shows that the bands
+separate the generated archetypes, not that they fit real students (section 5). Because
+the right boundaries depend on the institution, admins can change both values in
+**Admin → System Settings**.
 
 ### 2.6 Why the formula changed (November 2026)
 
@@ -158,10 +161,10 @@ on the role. The same students moved to the new templates lost 6.7 points on ave
 15.7 for Web Developer without any change in their skills
 (`nlp/experiments/results/role_retune_effect.md`).
 
-On the same statuses the new formula raises the mean from 44.5 to 53.5. The score rises
-for most students, but 309 score lower (by at most 8.99 points): those who cover
-preferred and bonus skills better than required ones. Of the 1,448 students who change
-band, 832 move from Developing to On Track, 613 from Needs Support to Developing, 2 from
+On the same statuses the new formula raises the mean from 45.9 to 55.5. The score rises
+for most students, but 256 score lower (by at most 8.99 points): those who cover
+preferred and bonus skills better than required ones. Of the 1,584 students who change
+band, 971 move from Developing to On Track, 610 from Needs Support to Developing, 2 from
 Developing to Needs Support and 1 from On Track to Developing.
 
 Assessments stored before this date keep the score they were given, so a student's
@@ -180,8 +183,8 @@ weight over the job's skills of that category, with required 3, preferred 2, bon
 the credits of section 1. This is a known inconsistency with the overall score, which uses
 tiers: the same skill counts differently in a bar and in the overall score, and the overall
 score is not an average of the bars. On the 5,000 latest assessments the overall score
-averages 53.5 while the bars average 47.3 (Technical), 45.7 (AI / Digital), 41.3
-(Analytical) and 35.7 (Soft), and for 1,272 students it is above all four bars. We accept
+averages 55.5 while the bars average 49.0 (Technical), 46.9 (AI / Digital), 42.3
+(Analytical) and 36.1 (Soft), and for 1,370 students it is above all four bars. We accept
 this for now because a bar covers one category, where a tier may hold a single skill or
 none, so tier weights would let one skill move a bar by up to 70 points. The Skill Gap page
 and "How is this calculated?" tell students that the two count differently.
