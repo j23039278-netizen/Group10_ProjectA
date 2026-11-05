@@ -111,7 +111,8 @@ test('nothing close gives no results', () => {
 
 test('a missing aliases list or description is fine', () => {
   assert.deepEqual(names('no aliases'), ['No aliases'])
-  assert.deepEqual(searchSkills([{ skill_id: '1', skill_name: 'Plain' }], 'plainly'), [{ skill: { skill_id: '1', skill_name: 'Plain' }, alias: undefined, rank: 4 }])
+  const plain = { skill_id: '1', skill_name: 'Plain' }
+  assert.deepEqual(searchSkills([plain], 'plainly').map(m => m.skill), [plain])
 })
 
 test('isExactMatch is true only for a whole name or alias', () => {

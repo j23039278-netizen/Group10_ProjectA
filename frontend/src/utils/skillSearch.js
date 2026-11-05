@@ -1,6 +1,6 @@
 // SEAGAS — Search the skills library while a student types, best match first: the name or an
-// alias ("JS" finds JavaScript), then close spellings if nothing matched ("pyhton" finds Python),
-// then skills whose description uses the words ("dashboard" finds Tableau).
+// alias ("JS" finds JavaScript), close spellings if none starts with the text ("pyhton" finds
+// Python), then skills whose description uses the words ("dashboard" finds Tableau).
 // No React here, so `npm test` can run it on its own.
 
 const RANK = { exact: 0, start: 1, word: 2, inside: 3, close: 4, related: 5 }

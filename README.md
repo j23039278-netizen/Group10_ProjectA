@@ -238,6 +238,7 @@ Test student: `student0001@synthetic.example.com`, student ID `900000001`, passw
 python -m pip install -r tests/requirements.txt
 python -m pytest tests -q                      # backend API (own temporary database) + data tests
 python -m pytest nlp/tests -q -m "not model"   # NLP tests without loading the model
+cd frontend && npm test                        # skill search on the Profile page (no extra packages)
 ```
 
 ### Batch assessments

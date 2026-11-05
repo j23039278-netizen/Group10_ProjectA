@@ -1,6 +1,7 @@
 // SEAGAS — Choose a skill by typing (Profile → Skills), since a plain <select> cannot be searched.
 // It opens like a dropdown and narrows as the student types; utils/skillSearch.js does the matching.
 // skills = what can be chosen, added = library rows the student already has, value = chosen skill_id.
+// The added ones are searched too, only to say so: otherwise "pyhton" would look for something else.
 import { useEffect, useId, useRef, useState } from 'react'
 import { label } from '../utils/labels'
 import { isExactMatch, searchSkills } from '../utils/skillSearch'
@@ -17,7 +18,8 @@ export default function SkillPicker({ skills, added, value, onChange, emptyHint 
   const listId = useId()
 
   const chosen  = skills.find(s => s.skill_id === value)
-  const results = searchSkills(skills, query)
+  const matches = searchSkills([...skills, ...added], query)
+  const results = matches.filter(m => !added.includes(m.skill))
   const typed   = query.trim()
 
   // Bring the whole list into view when it opens near the bottom of the page
@@ -75,8 +77,10 @@ export default function SkillPicker({ skills, added, value, onChange, emptyHint 
     if (!value && isExactMatch(results[0])) pick(results[0].skill)
   }
 
-  const [closestAdded] = searchSkills(added, query)
-  const message = isExactMatch(closestAdded) ? `${closestAdded.skill.skill_name} is already in your skills.`
+  // The best match is already added, and nothing that can be chosen matches as well
+  const best = matches[0]
+  const hasBest = best && added.includes(best.skill) && results[0]?.rank !== best.rank
+  const message = hasBest ? `${best.skill.skill_name} is already in your skills.`
     : results.length ? ''
     : [typed ? `No skill found for "${typed}".` : 'No more skills to add here.', emptyHint].filter(Boolean).join(' ')
 
