@@ -354,6 +354,111 @@ class TestAssessment:
         assert "PowerBI" not in {m["skill_name"] for m in r.json()["match_results"]}   # canonical names
 
 
+# ── Real JDs covered (backend/jd_fit.py) ─────────────────────
+@pytest.fixture(scope="module")
+def jds(env):
+    """The Data Analyst JDs of the committed dataset"""
+    from jd_fit import load_jd_skill_sets
+    return load_jd_skill_sets()["DATA_ANALYST"]
+
+
+class TestJdFit:
+    def new_student(self, env, name):
+        """A student with one skill, so the Data Analyst role can be assessed; no shared state"""
+        email = f"{name}@student.newinti.edu.my"
+        pw = bcrypt.hashpw(PASSWORD.encode(), bcrypt.gensalt()).decode()
+        uid = env["conn"].execute("INSERT INTO users (email, password_hash, role, full_name) VALUES (%s, %s, 'student', %s) "
+                                  "RETURNING user_id::text", (email, pw, name)).fetchone()[0]
+        pid = env["conn"].execute("INSERT INTO student_profiles (user_id, target_role) VALUES (%s, 'Data Analyst') "
+                                  "RETURNING profile_id::text", (uid,)).fetchone()[0]
+        return token(env, email), pid
+
+    def add_skills(self, env, pid, names, level="intermediate"):
+        for name in names:
+            env["conn"].execute("INSERT INTO student_skills (profile_id, skill_id, proficiency_level) "
+                                "SELECT %s, skill_id, %s FROM skills_library WHERE skill_name = %s "
+                                "ON CONFLICT DO NOTHING", (pid, level, name))
+
+    def get(self, env, headers, aid):
+        return env["client"].get(f"/api/assessments/{aid}/jd-fit", headers=headers)
+
+    def test_role_assessment(self, env, jds):
+        h, pid = self.new_student(env, "fit.one")
+        self.add_skills(env, pid, sorted(jds[0]))
+        aid = run(env, h, role_id=env["da"]).json()["assessment_id"]
+        r = self.get(env, h, aid)
+        assert r.status_code == 200, r.text
+        data = r.json()["data"]
+        expected = sum(len(s & jds[0]) / len(s) >= 0.6 for s in jds)
+        assert data["covered"] == expected >= 1
+        assert data["total"] == len(jds) == 35 and data["threshold"] == 0.6
+        assert data["based_on"] == "current_skills" and data["computed_at"]
+
+    def test_uses_current_skills_not_the_stored_assessment(self, env, jds):
+        h, pid = self.new_student(env, "fit.two")
+        self.add_skills(env, pid, ["Tableau"], "beginner")
+        before = run(env, h, role_id=env["da"]).json()
+        assert self.get(env, h, before["assessment_id"]).json()["data"]["covered"] == 0
+        self.add_skills(env, pid, sorted(jds[0]))
+        assert self.get(env, h, before["assessment_id"]).json()["data"]["covered"] >= 1
+        stored = env["client"].get(f"/api/assessments/{before['assessment_id']}", headers=h).json()["assessment"]
+        assert float(stored["readiness_score"]) == before["readiness_score"]       # the stored score does not move
+
+    def test_project_evidence_lifts_a_beginner_skill(self, env, jds):
+        h, pid = self.new_student(env, "fit.three")
+        names = sorted(jds[0])
+        self.add_skills(env, pid, names, "beginner")
+        aid = run(env, h, role_id=env["da"]).json()["assessment_id"]
+        without = self.get(env, h, aid).json()["data"]["covered"]
+        assert env["client"].post("/api/students/projects", headers=h, json={
+            "project_title": "Evidence project", "technologies": names}).status_code == 201
+        assert self.get(env, h, aid).json()["data"]["covered"] > without
+
+    def test_pasted_jd_assessment_has_no_data(self, env, alice):
+        c = env["client"]
+        jd = c.post("/api/jobs/descriptions", headers=alice, json={
+            "raw_text": "We need a graduate with SQL and Python skills for reporting and dashboard work."}).json()["jd_id"]
+        c.post(f"/api/jobs/descriptions/{jd}/analyse?method=keyword", headers=alice)
+        aid = run(env, alice, jd_id=jd).json()["assessment_id"]
+        r = self.get(env, alice, aid)
+        assert r.status_code == 200 and r.json() == {"data": None}
+        # Both ids given: the assessment is against the pasted JD, so the role's JDs do not apply
+        both = run(env, alice, jd_id=jd, role_id=env["da"]).json()["assessment_id"]
+        assert self.get(env, alice, both).json() == {"data": None}
+
+    def test_role_with_no_jds_has_no_data(self, env, admin, alice):
+        c = env["client"]
+        rid = c.post("/api/library/roles", headers=admin, json={"role_name": "Fit Test Role"}).json()["role_id"]
+        sql = env["conn"].execute("SELECT skill_id::text FROM skills_library WHERE skill_name = 'SQL'").fetchone()[0]
+        assert c.put(f"/api/library/roles/{rid}/skills", headers=admin,
+                     json=[{"skill_id": sql, "importance": "required"}]).status_code == 200
+        aid = run(env, alice, role_id=rid).json()["assessment_id"]
+        r = self.get(env, alice, aid)
+        assert r.status_code == 200 and r.json() == {"data": None}
+
+    def test_same_refusal_as_the_detail_route(self, env, alice, bob):
+        c = env["client"]
+        aid = run(env, alice, role_id=env["da"]).json()["assessment_id"]
+        detail, fit = c.get(f"/api/assessments/{aid}", headers=bob), self.get(env, bob, aid)
+        assert fit.status_code == detail.status_code == 404 and fit.json() == detail.json()
+        assert self.get(env, alice, "not-a-uuid").status_code == 404
+        assert c.get(f"/api/assessments/{aid}/jd-fit").status_code == 401
+
+    def test_staff_read_the_students_figure(self, env, advisor, jds):
+        # The assessment's student is scored, never the user who is asking
+        h, pid = self.new_student(env, "fit.four")
+        self.add_skills(env, pid, sorted(jds[0]))
+        aid = run(env, h, role_id=env["da"]).json()["assessment_id"]
+        own, staff = self.get(env, h, aid).json()["data"], self.get(env, advisor, aid).json()["data"]
+        assert staff["covered"] == own["covered"] >= 1
+
+    def test_does_not_touch_readiness(self, env, jds):
+        h, pid = self.new_student(env, "fit.five")
+        self.add_skills(env, pid, sorted(jds[0]))
+        body = run(env, h, role_id=env["da"]).json()
+        assert "jd_fit" not in body and "covered" not in body["skill_summary"]
+
+
 # ── Record-level access ──────────────────────────────────────
 class TestOwnership:
     def test_students_cannot_read_each_others_records(self, env, alice, bob, advisor):

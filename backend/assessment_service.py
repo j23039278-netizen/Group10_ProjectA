@@ -29,6 +29,42 @@ class AssessmentError(Exception):
         self.detail = detail
 
 
+def load_student_skills(db, profile_id):
+    """The student's current skills as dicts, with evidence from their projects and
+    certifications added (nlp/evidence.py): the website does not ask for evidence_type
+    when a skill is added. Stored evidence_type is kept and never overwritten."""
+    student_skills = db.execute(
+        text("""
+            SELECT sl.skill_id, sl.skill_name, sl.category,
+                   ss.proficiency_level, ss.evidence_type
+            FROM student_skills ss
+            JOIN skills_library sl ON sl.skill_id = ss.skill_id
+            WHERE ss.profile_id = :pid
+        """),
+        {"pid": str(profile_id)}
+    ).fetchall()
+    students = [{"skill_id": str(sk.skill_id), "skill_name": sk.skill_name,
+                 "proficiency_level": sk.proficiency_level,
+                 "evidence_type": list(sk.evidence_type or [])} for sk in student_skills]
+    records = db.execute(
+        text("""
+            SELECT 'project' AS kind, p.project_title, p.description, p.technologies,
+                   p.project_type, NULL::varchar AS cert_name, NULL::varchar AS issuer,
+                   (SELECT COUNT(*) FROM student_evidence_files f
+                     WHERE f.project_id = p.project_id) AS proof_count
+            FROM student_projects p WHERE p.profile_id = :pid
+            UNION ALL
+            SELECT 'certification', NULL, NULL, NULL, NULL, c.cert_name, c.issuer,
+                   (SELECT COUNT(*) FROM student_evidence_files f WHERE f.cert_id = c.cert_id)
+            FROM student_certifications c WHERE c.profile_id = :pid
+        """),
+        {"pid": str(profile_id)}
+    ).fetchall()
+    return derive_evidence(students,
+                           [r for r in records if r.kind == "project"],
+                           [r for r in records if r.kind == "certification"])
+
+
 def run_for_profile(db, profile, *, role_id=None, jd_id=None,
                     method=nlp_service.DEFAULT_METHOD, commit=True):
     """Assess one student profile against a role template or an analysed JD.
@@ -44,17 +80,8 @@ def run_for_profile(db, profile, *, role_id=None, jd_id=None,
     if not jd_id and not role_id:
         raise AssessmentError(400, "Provide either a jd_id or a role_id")
 
-    student_skills = db.execute(
-        text("""
-            SELECT sl.skill_id, sl.skill_name, sl.category,
-                   ss.proficiency_level, ss.evidence_type
-            FROM student_skills ss
-            JOIN skills_library sl ON sl.skill_id = ss.skill_id
-            WHERE ss.profile_id = :pid
-        """),
-        {"pid": str(profile.profile_id)}
-    ).fetchall()
-    if not student_skills:
+    students = load_student_skills(db, profile.profile_id)
+    if not students:
         raise AssessmentError(400, "Add at least one skill to your profile before running assessment")
 
     # Required skills — from an analysed JD or a role template
@@ -93,29 +120,6 @@ def run_for_profile(db, profile, *, role_id=None, jd_id=None,
             "or paste a longer description." if jd_id else "No required skills found for this role")
 
     # ── Matching (nlp/) ───────────────────────────────────────
-    students = [{"skill_id": str(sk.skill_id), "skill_name": sk.skill_name,
-                 "proficiency_level": sk.proficiency_level,
-                 "evidence_type": list(sk.evidence_type or [])} for sk in student_skills]
-    # Evidence from the student's projects and certifications, added at assessment
-    # time (nlp/evidence.py): the website does not ask for evidence_type when a skill
-    # is added. Stored evidence_type is kept and never overwritten.
-    records = db.execute(
-        text("""
-            SELECT 'project' AS kind, p.project_title, p.description, p.technologies,
-                   p.project_type, NULL::varchar AS cert_name, NULL::varchar AS issuer,
-                   (SELECT COUNT(*) FROM student_evidence_files f
-                     WHERE f.project_id = p.project_id) AS proof_count
-            FROM student_projects p WHERE p.profile_id = :pid
-            UNION ALL
-            SELECT 'certification', NULL, NULL, NULL, NULL, c.cert_name, c.issuer,
-                   (SELECT COUNT(*) FROM student_evidence_files f WHERE f.cert_id = c.cert_id)
-            FROM student_certifications c WHERE c.profile_id = :pid
-        """),
-        {"pid": str(profile.profile_id)}
-    ).fetchall()
-    students = derive_evidence(students,
-                               [r for r in records if r.kind == "project"],
-                               [r for r in records if r.kind == "certification"])
     required = [{"skill_id": str(r.skill_id) if r.skill_id else None,
                  "skill_name": r.skill_name,
                  "importance": r.importance or "required"} for r in required_skills]

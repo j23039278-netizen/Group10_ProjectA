@@ -104,6 +104,7 @@ export const assessAPI = {
   get:     (id)   => API.get(`/assessments/${id}`),
   history: ()     => API.get('/assessments/my/history'),
   getRecs: (id)   => API.get(`/assessments/${id}/recommendations`),
+  getJdFit: (id)  => API.get(`/assessments/${id}/jd-fit`),
 };
  
 // ── Progress (FR-11: Development Tracking) ────────────────────
