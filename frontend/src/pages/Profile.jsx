@@ -9,6 +9,7 @@ import { MAX_FILES } from '../components/evidenceRules'
 import ResultsReminder from '../components/ResultsReminder'
 import CvUpload from '../components/CvUpload'
 import ExperienceTab from '../components/ExperienceTab'
+import SkillPicker from '../components/SkillPicker'
 import { useNavigate } from 'react-router-dom'
 
 const CATEGORIES = ['Technical','AI_Digital','Analytical','Soft']
@@ -252,11 +253,18 @@ export default function Profile() {
     }
   }
 
+  const addedLib = library.filter(s => skills.find(ms => ms.skill_name === s.skill_name))
   const filteredLib = library.filter(s =>
     !catFilter || s.category === catFilter
   ).filter(s =>
     !skills.find(ms => ms.skill_name === s.skill_name)
   )
+
+  // A skill outside the new category leaves the list, so it must not stay chosen
+  const changeCategory = (category) => {
+    setCatFilter(category)
+    if (category && library.find(s => s.skill_id === selSkill)?.category !== category) setSelSkill('')
+  }
 
   if (loading) return <div style={{ padding: '40px', color: '#8b92a8' }}>Loading...</div>
 
@@ -409,21 +417,18 @@ export default function Profile() {
             <>
               {cardTitle('Add Skill')}
               <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginBottom: '12px' }}>
-                <select value={catFilter} onChange={e => setCatFilter(e.target.value)}
+                <select value={catFilter} onChange={e => changeCategory(e.target.value)}
                   style={{ padding: '8px 12px', border: '1.5px solid #e4e6ef', borderRadius: '8px', fontSize: '13px', background: '#f5f6fa' }}>
                   <option value="">All Categories</option>
                   {CATEGORIES.map(c => <option key={c} value={c}>{label(c)}</option>)}
                 </select>
-                <select value={selSkill} onChange={e => setSelSkill(e.target.value)}
-                  style={{ flex: 1, padding: '8px 12px', border: '1.5px solid #e4e6ef', borderRadius: '8px', fontSize: '13px', background: '#f5f6fa' }}>
-                  <option value="">Select a skill...</option>
-                  {filteredLib.map(s => <option key={s.skill_id} value={s.skill_id}>{s.skill_name} ({label(s.category)})</option>)}
-                </select>
+                <SkillPicker skills={filteredLib} added={addedLib} value={selSkill} onChange={setSelSkill}
+                  emptyHint={catFilter ? 'Try All Categories.' : ''} />
                 <select value={selLevel} onChange={e => setSelLevel(e.target.value)}
                   style={{ padding: '8px 12px', border: '1.5px solid #e4e6ef', borderRadius: '8px', fontSize: '13px', background: '#f5f6fa' }}>
                   {PROFICIENCY.map(p => <option key={p} value={p}>{label(p)}</option>)}
                 </select>
-                <button onClick={addSkill} style={{ padding: '8px 18px', background: '#2d5be3', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: '600', cursor: 'pointer' }}>
+                <button onClick={addSkill} disabled={!selSkill} style={{ padding: '8px 18px', background: '#2d5be3', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: '600', cursor: selSkill ? 'pointer' : 'not-allowed', opacity: selSkill ? 1 : 0.5 }}>
                   Add
                 </button>
               </div>
