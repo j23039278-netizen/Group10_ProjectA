@@ -25,7 +25,7 @@ the Strong / Developing / Gap rules are in docs/NLP_CLASSIFICATION_RULES.md.
 
 from nlp.evidence import derive_evidence
 from nlp.extractor import extract_hybrid, extract_keyword, extract_semantic, extract_tfidf
-from nlp.matcher import match
+from nlp.matcher import STRONG_EVIDENCE, match
 from nlp.skills import SkillCatalogue, load_catalogue
 from nlp.types import (
     EXTRACTION_METHODS,
@@ -40,7 +40,7 @@ from nlp.types import (
 __all__ = [
     "extract_skills", "match_skills", "derive_evidence", "load_catalogue", "SkillCatalogue",
     "ExtractedSkill", "StudentSkill", "RequiredSkill", "MatchResult", "SkillEntry",
-    "VALID_METHODS", "EXTRACTION_METHODS",
+    "VALID_METHODS", "EXTRACTION_METHODS", "STRONG_EVIDENCE",
 ]
 
 

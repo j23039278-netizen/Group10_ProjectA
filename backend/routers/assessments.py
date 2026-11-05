@@ -10,6 +10,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import text
 from pydantic import BaseModel
 from typing import Optional
+from datetime import datetime, timezone
 import sys
 import os
 
@@ -19,6 +20,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import access
 import assessment_service
 import audit
+import jd_fit
 import nlp_service
 from database import get_db
 from routers.auth import get_current_user
@@ -154,6 +156,33 @@ def get_assessment(
         "assessment":    dict(assessment._mapping),
         "match_results": [dict(m._mapping) for m in match_results]
     }
+
+
+@router.get("/{assessment_id}/jd-fit")
+def get_assessment_jd_fit(
+    assessment_id: str,
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Of this role's real job descriptions, how many the student covers (jd_fit.py).
+    Worked out from the student's current skills now, not from the stored assessment,
+    so it can differ from it (based_on, computed_at). Never feeds into readiness.
+    data is null for a pasted-JD assessment or a role with no JDs in the dataset.
+    """
+    assessment = access.get_assessment_or_404(db, current_user, assessment_id)
+    if assessment.jd_id or not assessment.role_id:
+        return {"data": None}
+    role_code = db.execute(
+        text("SELECT role_code FROM job_roles WHERE role_id = :rid"),
+        {"rid": str(assessment.role_id)}
+    ).scalar()
+    fit = jd_fit.jd_fit(assessment_service.load_student_skills(db, assessment.profile_id),
+                        jd_fit.load_jd_skill_sets().get(role_code, ()))
+    if not fit["total"]:
+        return {"data": None}
+    return {"data": {**fit, "based_on": "current_skills",
+                     "computed_at": datetime.now(timezone.utc).isoformat()}}
 
 
 @router.get("/{assessment_id}/recommendations")

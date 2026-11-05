@@ -19,6 +19,7 @@ export default function SkillGap() {
   const [loading,    setLoading]    = useState(true)
   const [skills,     setSkills]     = useState(null)   // to tell "no skills of a category" from 0%
   const [records,    setRecords]    = useState(null)   // projects, certifications, work experience
+  const [jdFit,      setJdFit]      = useState(null)   // real JDs covered; null hides it
 
   useEffect(() => {
     studentAPI.getSkills().then(r => setSkills(r.data)).catch(() => {})
@@ -32,6 +33,16 @@ export default function SkillGap() {
       else setLoading(false)
     }).catch(() => setLoading(false))
   }, [])
+
+  // A late answer for the assessment selected before must not show on this one
+  const assessmentId = assessment?.assessment_id
+  useEffect(() => {
+    setJdFit(null)
+    if (!assessmentId) return
+    let current = true
+    assessAPI.getJdFit(assessmentId).then(r => { if (current) setJdFit(r.data.data) }).catch(() => {})
+    return () => { current = false }
+  }, [assessmentId])
 
   const loadAssessment = async (id) => {
     setLoading(true)
@@ -113,6 +124,19 @@ export default function SkillGap() {
             </div>
           </div>
 
+          {/* Real JDs covered, beside the score and not part of it */}
+          {jdFit && (
+            <div style={{ background: '#fff', border: '1px solid #e4e6ef', borderRadius: '12px', padding: '14px 24px', marginBottom: '16px' }}>
+              <div style={{ fontSize: '14px', color: '#1a1f2e' }}>
+                You cover at least {Math.round(jdFit.threshold * 100)}% of the skills in <b>{jdFit.covered}</b> of
+                the <b>{jdFit.total}</b> real job descriptions we analysed for this role.
+              </div>
+              <div style={{ fontSize: '11px', color: '#8b92a8', marginTop: '4px' }}>
+                Not part of your Job Readiness Score. It uses your skills as they are now, so it can differ from this assessment, and only the same skill name counts.
+              </div>
+            </div>
+          )}
+
           {/* 7-Dimension Scores */}
           <div style={{ background: '#fff', border: '1px solid #e4e6ef', borderRadius: '12px', padding: '24px', marginBottom: '16px' }}>
             <div style={{ fontSize: '13px', fontWeight: '700', color: '#1a1f2e', marginBottom: '16px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
@@ -125,7 +149,7 @@ export default function SkillGap() {
               The readiness score uses the same skills as the four skill dimensions, but counts them differently (see below). &quot;No data yet&quot; means you list no skill of that
               category; add one on My Profile and run the assessment again.
             </div>
-            <HowScored />
+            <HowScored jdFit={jdFit} />
           </div>
 
           {/* Skill Categories */}

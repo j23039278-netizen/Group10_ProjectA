@@ -271,4 +271,53 @@ part of the research work still to do (see section 5).
 | Readiness bands | `backend/settings.py` (`readiness_on_track`, `readiness_needs_support`), Admin → System Settings |
 | "Not required" / "No data yet" | `frontend/src/utils/dimensions.js`, `frontend/src/components/DimensionBar.jsx` |
 | Sensitivity analysis | `data/jrs_sensitivity.py` |
-| Tests | `tests/test_readiness.py`, `tests/test_backend_api.py` (`TestAssessment`), `nlp/tests/test_matcher.py` |
+| Real job descriptions covered (section 7) | `backend/jd_fit.py` (`JD_FIT_THRESHOLD`), `GET /api/assessments/{id}/jd-fit`, `frontend/src/pages/SkillGap.jsx` |
+| Cohort figures for section 7 | `data/jd_fit_cohort.py` |
+| Tests | `tests/test_readiness.py`, `tests/test_jd_fit.py`, `tests/test_backend_api.py` (`TestAssessment`, `TestJdFit`), `nlp/tests/test_matcher.py` |
+
+## 7. Real job descriptions covered (JD fit)
+
+The Skill Gap page of a role-template assessment also says: *You cover at least 60% of
+the skills in X of the N real job descriptions we analysed for this role.* A role template
+is wider than one job, so the readiness score alone can look discouraging to a student who
+would suit some real jobs. This number sits beside readiness and never feeds into it.
+
+For each JD of the role in `data/jd_dataset/jd_skill_evidence.csv`, its skills are the
+`skill_name` values of its `jd_ref`. A skill the student lists under the same name earns
+1.0 if it is intermediate or advanced, or has project, certification or internship
+evidence (stored or derived), and 0.5 at beginner level without it; any other skill earns
+0. A JD's coverage is the mean over its skills, and X counts the JDs at 0.60 or above. It
+is worked out from the student's current skills when the page is read, so it can differ
+from the stored assessment, and the response says so (`based_on`, `computed_at`). There is
+no figure for a pasted JD or for a role with no JDs in the file, such as an admin-created
+role.
+
+On the synthetic students (`python data/jd_fit_cohort.py`, 5 November 2026, data version
+`2026-11-05-ict-roles`, latest role-template assessment of 5,000 students):
+
+| Archetype | Students | Mean X | Mean N | X = 0 |
+|---|---:|---:|---:|---:|
+| strong | 1,215 | 10.3 | 34.7 | 1.4% |
+| average | 2,508 | 2.7 | 34.8 | 28.4% |
+| weak | 1,277 | 0.4 | 34.8 | 80.0% |
+
+Spearman ρ between X and readiness is 0.826. This shows that the number separates the
+generated archetypes, not that it fits real students or predicts hiring.
+
+**Limits.**
+
+- **Same name only.** A similar skill earns nothing here, though it can be Developing in
+  the readiness score (rule A), so a student with MySQL gets no credit for PostgreSQL.
+- **The JD skills come from hybrid extraction**, whose test-set F1 is 0.739 (recall 0.652,
+  on 42 test JDs of the six IT roles, so Business JDs were not part of that test). A skill
+  can be missed, and a skill named anywhere in the text counts, even if it describes the
+  employer and is not a requirement. Three JDs with no skills found are left out, so N is
+  34 for Business Analyst, Financial Analyst and Marketing Executive.
+- **The Business JDs come from the United States**, not Malaysia (`data/jd_dataset/README.md`).
+- **The 60% is a design choice from a pilot.** It has not been validated with employers,
+  advisors or real students.
+- **X cannot be compared across roles.** On similar mean readiness, Software Developer
+  averages 1.4 and Financial Analyst 7.9, because JDs differ in how many skills they name.
+- **Covered is not a job match.** Coverage is a mean of credits, not a share of skills
+  listed (a student listing every skill of a JD at beginner level without evidence reaches
+  only 50%), and it says nothing about seniority or whether an employer would hire.

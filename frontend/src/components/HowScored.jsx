@@ -1,7 +1,7 @@
 // SEAGAS — "How is this calculated?" under the dimensions of an assessment: the same formulas
 // as backend/readiness.py (overall score) and backend/assessment_service.py (dimension bars);
-// docs/JOB_READINESS_SCORE.md.
-export default function HowScored() {
+// docs/JOB_READINESS_SCORE.md. jdFit is passed by the Skill Gap page only, where that number is shown.
+export default function HowScored({ jdFit }) {
   return (
     <details style={{ fontSize: '12px', color: '#4a5168', marginTop: '4px' }}>
       <summary style={{ cursor: 'pointer', color: '#2d5be3', fontWeight: '600' }}>How is this calculated?</summary>
@@ -22,6 +22,13 @@ export default function HowScored() {
           Project, certification and industry experience are not part of the Job Readiness Score, but they can make a
           matching beginner skill count as Strong.
         </div>
+        {jdFit && (
+          <div style={{ marginTop: '6px' }}>
+            <b>Real job descriptions.</b> Each skill you list under the same name as in a job description counts in full,
+            or half if you are a beginner with no project, certification or internship behind it, and the job description
+            counts as covered when these reach {Math.round(jdFit.threshold * 100)}% of its skills.
+          </div>
+        )}
       </div>
     </details>
   )
