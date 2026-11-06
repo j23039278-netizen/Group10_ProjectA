@@ -394,3 +394,28 @@ def test_readiness_ranks_strong_average_weak_keyword(capsys, synthetic, role_ski
 @pytest.mark.parametrize("role", ROLES)
 def test_readiness_ranks_strong_average_weak_hybrid(capsys, synthetic, role_skills, role):
     check_ranking(capsys, synthetic, role_skills, role, "hybrid")
+
+
+# ── A completed learning activity ─────────────────────────────
+@pytest.mark.parametrize("difficulty", ["beginner", "intermediate", "advanced", None])
+@pytest.mark.parametrize("resource_type", ["course", "workshop", "certification", "project", "competition", "internship"])
+def test_status_after_activity_is_what_the_matcher_decides(difficulty, resource_type):
+    # The rule behind gain_if_completed must stay the matcher's rule C
+    level, kind = matcher.activity_evidence(difficulty, resource_type)
+    student = {"skill_name": "SQL", "proficiency_level": level, "evidence_type": [kind]}
+    decided = match_skills([student], [{"skill_name": "SQL"}], "keyword")[0]["match_status"]
+    assert matcher.status_after_activity(difficulty, resource_type) == decided
+
+
+@pytest.mark.parametrize("difficulty, resource_type, expected", [
+    ("beginner", "course", "developing"),
+    ("beginner", "workshop", "developing"),
+    ("beginner", "project", "strong"),
+    ("beginner", "competition", "strong"),
+    ("intermediate", "course", "strong"),
+    (None, "course", "developing"),
+    ("expert", "course", "developing"),
+    ("beginner", "unknown", "developing"),
+])
+def test_status_after_activity(difficulty, resource_type, expected):
+    assert matcher.status_after_activity(difficulty, resource_type) == expected

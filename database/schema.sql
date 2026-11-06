@@ -263,6 +263,10 @@ CREATE TABLE skill_match_results (
                         CHECK (matching_method IN ('keyword', 'semantic', 'hybrid')),
     matched_student_skill VARCHAR(255),                         -- which student skill triggered the match
     reason              TEXT,                                   -- one-sentence explanation from the NLP matcher
+    -- Importance when the assessment ran. NULL on rows stored before 6 November 2026;
+    -- read through assessment_service.load_match_rows, which falls back to the role template.
+    importance          VARCHAR(10)
+                        CHECK (importance IN ('required', 'preferred', 'bonus')),
 
     UNIQUE (assessment_id, skill_id)
 );

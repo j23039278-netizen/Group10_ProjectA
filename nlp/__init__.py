@@ -21,11 +21,15 @@ the Strong / Developing / Gap rules are in docs/NLP_CLASSIFICATION_RULES.md.
                                      internship evidence from the student's records
                                      to the student skills before match_skills()
                                      (keyword extraction, standard library only)
+  activity_evidence(...)             nlp/matcher.py; the level and evidence kind a completed
+                                     learning activity gives its skill
+  status_after_activity(...)         nlp/matcher.py; the status that activity reaches, for a
+                                     skill that is not Strong yet (rule C)
 """
 
 from nlp.evidence import derive_evidence
 from nlp.extractor import extract_hybrid, extract_keyword, extract_semantic, extract_tfidf
-from nlp.matcher import STRONG_EVIDENCE, match
+from nlp.matcher import STRONG_EVIDENCE, activity_evidence, match, status_after_activity
 from nlp.skills import SkillCatalogue, load_catalogue
 from nlp.types import (
     EXTRACTION_METHODS,
@@ -41,6 +45,7 @@ __all__ = [
     "extract_skills", "match_skills", "derive_evidence", "load_catalogue", "SkillCatalogue",
     "ExtractedSkill", "StudentSkill", "RequiredSkill", "MatchResult", "SkillEntry",
     "VALID_METHODS", "EXTRACTION_METHODS", "STRONG_EVIDENCE",
+    "activity_evidence", "status_after_activity",
 ]
 
 

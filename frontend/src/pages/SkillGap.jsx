@@ -9,6 +9,8 @@ import DimensionBar from '../components/DimensionBar'
 import { readinessColor } from '../utils/readiness'
 import { DIMENSIONS } from '../utils/dimensions'
 import { label } from '../utils/labels'
+import { skillHoverText, sortByImportance } from '../utils/importance'
+import ImportanceLabel from '../components/ImportanceLabel'
 
 export default function SkillGap() {
   const location     = useLocation()
@@ -54,9 +56,9 @@ export default function SkillGap() {
     finally { setLoading(false) }
   }
 
-  const strong     = matches.filter(m => m.match_status === 'strong')
-  const developing = matches.filter(m => m.match_status === 'developing')
-  const gaps       = matches.filter(m => m.match_status === 'gap')
+  const strong     = sortByImportance(matches.filter(m => m.match_status === 'strong'))
+  const developing = sortByImportance(matches.filter(m => m.match_status === 'developing'))
+  const gaps       = sortByImportance(matches.filter(m => m.match_status === 'gap'))
 
 
   if (loading) return <div style={{ padding: '40px', color: '#8b92a8' }}>Loading...</div>
@@ -170,13 +172,14 @@ export default function SkillGap() {
                 {col.items.length === 0
                   ? <div style={{ fontSize: '12px', color: '#8b92a8' }}>None</div>
                   : col.items.map((s, j) => (
-                    <div key={j} title={s.reason || undefined} style={{
-                      cursor: s.reason ? 'help' : 'default',
+                    <div key={j} title={skillHoverText(s)} style={{
+                      cursor: skillHoverText(s) ? 'help' : 'default',
                       padding: '6px 10px', borderRadius: '20px', fontSize: '12px',
                       fontWeight: '500', background: col.bg, color: col.color,
-                      display: 'inline-block', margin: '3px'
+                      display: 'inline-flex', alignItems: 'center', gap: '6px', margin: '3px'
                     }}>
                       {s.skill_name}
+                      <ImportanceLabel item={s} />
                     </div>
                   ))
                 }

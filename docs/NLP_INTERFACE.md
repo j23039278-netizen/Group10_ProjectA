@@ -140,7 +140,7 @@ Call it on the `StudentSkill` list just before `match_skills()`.
 |-------|------|---------|-----------|
 | `skill_id` | `str \| None` | Copied from the `RequiredSkill` | `skill_id` |
 | `skill_name` | `str` | Copied from the `RequiredSkill` | (via `skill_id`) |
-| `importance` | `str` | Copied from the `RequiredSkill` | (scoring only) |
+| `importance` | `str` | Copied from the `RequiredSkill` | `importance` (NULL on rows stored before 6 November 2026) |
 | `match_status` | `"strong" \| "developing" \| "gap"` | Decision for this skill | `match_status` |
 | `similarity_score` | `float` 0–1 | 1.0 for the same skill / alias, cosine similarity for a semantic match (cut to 3 decimals), 0.0 for a gap | `similarity_score` |
 | `matching_method` | `"keyword" \| "semantic" \| "hybrid"` | The method passed to `match_skills()`, the same on every row | `matching_method` |

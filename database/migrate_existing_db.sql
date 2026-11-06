@@ -751,6 +751,13 @@ ALTER TABLE email_outbox ADD COLUMN IF NOT EXISTS sent_at TIMESTAMP;
 UPDATE email_outbox SET sent_at = created_at WHERE status = 'sent' AND sent_at IS NULL;
 
 
+-- ── Importance on each match result (6 November) ─────────────
+-- Not backfilled: this file runs on every start and the table is large. Old rows stay
+-- NULL and are read through assessment_service.load_match_rows.
+ALTER TABLE skill_match_results ADD COLUMN IF NOT EXISTS importance VARCHAR(10)
+    CHECK (importance IN ('required', 'preferred', 'bonus'));
+
+
 -- ── Library managed by advisors too (1 November) ─────────────
 -- Who added a learning resource: advisors can change the resources they added
 -- (routers/library.py). NULL for seed resources and older ones.

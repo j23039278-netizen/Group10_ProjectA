@@ -846,6 +846,161 @@ def test_recommendations_free_first(env, alice):
     assert all(t == sorted(t, key=order.get) for t in tiers)       # within each skill: free first
 
 
+# ── Recommendations: what to do first and what it is worth ───
+def finish(env, headers, rid, aid):
+    """Start, attach evidence and complete, as a student does on the page"""
+    c = env["client"]
+    assert c.post(f"/api/progress/{rid}/start?assessment_id={aid}", headers=headers).status_code == 201
+    assert c.post(f"/api/progress/{rid}/links", headers=headers, json={"url": "https://example.com/proof"}).status_code == 201
+    assert c.post(f"/api/progress/{rid}/complete", headers=headers, json={"status": "completed"}).status_code == 200
+
+
+class TestRecommendationPriority:
+    def recs(self, env, headers, aid):
+        r = env["client"].get(f"/api/assessments/{aid}/recommendations", headers=headers)
+        assert r.status_code == 200, r.text
+        return r.json()
+
+    def test_importance_is_stored_on_new_rows(self, env, alice):
+        aid = run(env, alice, role_id=env["da"]).json()["assessment_id"]
+        missing, total = env["conn"].execute(
+            "SELECT count(*) FILTER (WHERE smr.importance IS DISTINCT FROM j.importance), count(*) "
+            "FROM skill_match_results smr JOIN job_role_skills j ON j.skill_id = smr.skill_id AND j.role_id = %s "
+            "WHERE smr.assessment_id = %s", (env["da"], aid)).fetchone()
+        assert total > 0 and missing == 0
+
+    def test_response_has_the_new_fields(self, env, alice):
+        # These come only from the engine, so a broken import behind the route's except
+        # ImportError would fail here, not fall back quietly
+        aid = run(env, alice, role_id=env["da"]).json()["assessment_id"]
+        body = self.recs(env, alice, aid)
+        assert body["recommendations"] and body["first_steps"]
+        for position, rec in enumerate(body["recommendations"], start=1):
+            assert rec["priority"] == position
+            assert rec["importance"] in ("required", "preferred", "bonus") and rec["expected_gain"] > 0
+            assert {"explanation", "similarity", "skill_id", "gap_type", "resources"} <= set(rec)
+            assert all("gain_if_completed" in r and r["cost_tier"] for r in rec["resources"])
+        for step in body["first_steps"]:
+            assert {"skill_id", "skill_name", "category", "gap_type", "importance", "expected_gain", "resource"} <= set(step)
+            assert step["resource"]["gain_if_completed"] > 0 and step["resource"]["url"]
+
+    def test_order_required_first(self, env, alice):
+        aid = run(env, alice, role_id=env["da"]).json()["assessment_id"]
+        recs = self.recs(env, alice, aid)["recommendations"]
+        order = {"required": 1, "preferred": 2, "bonus": 3}
+        keys = [(order[r["importance"]], 0 if r["gap_type"] == "gap" else 1) for r in recs]
+        assert keys == sorted(keys)
+
+    def test_old_row_with_null_importance_reads_as_the_role_template(self, env, alice):
+        conn = env["conn"]
+        aid = run(env, alice, role_id=env["da"]).json()["assessment_id"]
+        before = env["client"].get(f"/api/assessments/{aid}", headers=alice).json()["match_results"]
+        assert any(m["importance"] != "required" for m in before)    # the fallback must not read as required
+        conn.execute("UPDATE skill_match_results SET importance = NULL WHERE assessment_id = %s", (aid,))
+        after = env["client"].get(f"/api/assessments/{aid}", headers=alice).json()["match_results"]
+        assert after == before
+        templates = dict(conn.execute("SELECT s.skill_name, j.importance FROM job_role_skills j JOIN skills_library s "
+                                      "USING (skill_id) WHERE j.role_id = %s", (env["da"],)).fetchall())
+        assert all(m["importance"] == templates[m["skill_name"]] for m in after)
+        assert all(r["importance"] == templates[r["skill_name"]] for r in self.recs(env, alice, aid)["recommendations"])
+
+    def test_old_row_with_no_template_reads_as_required(self, env, alice):
+        conn = env["conn"]
+        jd = env["client"].post("/api/jobs/descriptions", headers=alice, json={
+            "title": "Old JD", "raw_text": "Must know SQL and PowerBI; experience with data visualization "
+                                           "tools is a plus. Good communication skills."}).json()["jd_id"]
+        env["client"].post(f"/api/jobs/descriptions/{jd}/analyse?method=keyword", headers=alice)
+        aid = run(env, alice, jd_id=jd).json()["assessment_id"]
+        conn.execute("UPDATE skill_match_results SET importance = NULL WHERE assessment_id = %s", (aid,))
+        rows = env["client"].get(f"/api/assessments/{aid}", headers=alice).json()["match_results"]
+        assert rows and {m["importance"] for m in rows} == {"required"}
+
+    def test_get_assessment_has_importance_and_expected_gain(self, env, alice):
+        aid = run(env, alice, role_id=env["da"]).json()["assessment_id"]
+        rows = env["client"].get(f"/api/assessments/{aid}", headers=alice).json()["match_results"]
+        assert all(m["importance"] for m in rows)
+        assert all(m["expected_gain"] == 0 for m in rows if m["match_status"] == "strong")
+        assert all(m["expected_gain"] > 0 for m in rows if m["match_status"] != "strong")
+        assert {"skill_name", "category", "match_status", "reason"} <= set(rows[0])
+
+    def test_no_gaps_returns_a_shape_the_page_can_read(self, env):
+        conn, h = env["conn"], course_student(env, "no.gaps@student.newinti.edu.my", "No Gaps", "CS")
+        assert env["client"].post("/api/students/skills", headers=h, json={"skill_id": conn.execute(
+            "SELECT skill_id::text FROM skills_library WHERE skill_name = 'Teamwork'").fetchone()[0],
+            "proficiency_level": "advanced"}).status_code == 201   # creates the profile
+        conn.execute("INSERT INTO student_skills (profile_id, skill_id, proficiency_level) "
+                     "SELECT p.profile_id, j.skill_id, 'advanced' FROM student_profiles p "
+                     "JOIN users u ON u.user_id = p.user_id JOIN job_role_skills j ON j.role_id = %s "
+                     "WHERE u.email = 'no.gaps@student.newinti.edu.my' ON CONFLICT DO NOTHING", (env["da"],))
+        aid = run(env, h, role_id=env["da"]).json()["assessment_id"]
+        body = self.recs(env, h, aid)
+        assert body["recommendations"] == [] and body["first_steps"] == [] and body["total_gaps"] == 0
+
+    def test_import_error_fallback_returns_a_shape_the_page_can_read(self, env, alice, monkeypatch):
+        aid = run(env, alice, role_id=env["da"]).json()["assessment_id"]
+        monkeypatch.setitem(sys.modules, "recommendation.engine", None)   # the import now raises ImportError
+        body = self.recs(env, alice, aid)
+        assert body["first_steps"] == [] and body["recommendations"]
+        for rec in body["recommendations"]:
+            assert {"skill_id", "skill_name", "category", "gap_type", "importance", "expected_gain", "resources"} <= set(rec)
+
+    def test_first_steps_after_completing_skip_the_skill(self, env):
+        h = course_student(env, "steps@student.newinti.edu.my", "First Steps", "CS")
+        env["client"].post("/api/students/skills", headers=h, json={"skill_id": env["conn"].execute(
+            "SELECT skill_id::text FROM skills_library WHERE skill_name = 'Teamwork'").fetchone()[0], "proficiency_level": "advanced"})
+        aid = run(env, h, role_id=env["da"]).json()["assessment_id"]
+        steps = self.recs(env, h, aid)["first_steps"]
+        assert len(steps) == 3
+        finish(env, h, steps[0]["resource"]["resource_id"], aid)
+        after = self.recs(env, h, aid)["first_steps"]
+        assert steps[0]["skill_id"] not in {s["skill_id"] for s in after}
+        assert after[0]["skill_id"] == steps[1]["skill_id"]
+        # A new assessment knows the new status, so the skill can come back; the resource cannot
+        again = run(env, h, role_id=env["da"]).json()["assessment_id"]
+        picked = {s["resource"]["resource_id"] for s in self.recs(env, h, again)["first_steps"]}
+        assert steps[0]["resource"]["resource_id"] not in picked
+
+    @pytest.mark.parametrize("email, kind, difficulty, status_after, share", [
+        ("gain.course@student.newinti.edu.my", "course", "beginner", "developing", .5),
+        ("gain.project@student.newinti.edu.my", "project", None, "strong", 1),
+    ])
+    def test_score_rises_by_gain_if_completed(self, env, email, kind, difficulty, status_after, share):
+        from readiness import skill_points
+        c, conn = env["client"], env["conn"]
+        h = course_student(env, email, "Gain Check", "CS")
+        c.post("/api/students/skills", headers=h, json={"skill_id": conn.execute(
+            "SELECT skill_id::text FROM skills_library WHERE skill_name = 'Teamwork'").fetchone()[0], "proficiency_level": "advanced"})
+        first = run(env, h, role_id=env["da"]).json()
+        rec, resource = next(
+            (rec, r) for rec in self.recs(env, h, first["assessment_id"])["recommendations"]
+            if rec["importance"] == "required" and rec["gap_type"] == "gap"
+            for r in rec["resources"]
+            if r["resource_type"] == kind and difficulty in (None, r["difficulty"]))
+        finish(env, h, resource["resource_id"], first["assessment_id"])
+        second = run(env, h, role_id=env["da"]).json()
+
+        assert next(m for m in second["match_results"] if m["skill_name"] == rec["skill_name"])["match_status"] == status_after
+        exact = skill_points(first["match_results"])["required"] * share
+        assert second["readiness_score"] - first["readiness_score"] == pytest.approx(exact, abs=0.02)
+        # What the student sees is the same number, rounded to 1 decimal
+        assert resource["gain_if_completed"] == round(exact, 1)
+
+    def test_another_student_cannot_read_the_data(self, env, alice, bob):
+        c = env["client"]
+        aid = run(env, alice, role_id=env["da"]).json()["assessment_id"]
+        assert c.get(f"/api/assessments/{aid}", headers=bob).status_code == 404
+        assert c.get(f"/api/assessments/{aid}/recommendations", headers=bob).status_code == 404
+
+    def test_migration_runs_twice_with_one_check(self, env):
+        run_sql_file(env["conn"], "database/migrate_existing_db.sql")
+        run_sql_file(env["conn"], "database/migrate_existing_db.sql")
+        n = env["conn"].execute("SELECT count(*) FROM pg_constraint WHERE conrelid = 'skill_match_results'::regclass "
+                                "AND contype = 'c' AND pg_get_constraintdef(oid) LIKE '%importance%'").fetchone()[0]
+        assert n == 1
+        with pytest.raises(psycopg.errors.CheckViolation):
+            env["conn"].execute("UPDATE skill_match_results SET importance = 'vital'")
+
+
 # ── New student intake: advisor list -> admin accounts -> first login ──
 def upload(env, headers, name, content, mime="text/csv"):
     return env["client"].post("/api/intake/batches", headers=headers, files={"file": (name, content, mime)})

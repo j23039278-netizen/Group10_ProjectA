@@ -17,7 +17,8 @@ import pytest
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "backend"))
 
-from readiness import tier_coverage, tiered_readiness  # noqa: E402
+from readiness import (  # noqa: E402
+    STATUS_CREDIT, expected_gain, gain_between, skill_points, tier_coverage, tiered_readiness)
 
 
 def row(importance, status):
@@ -78,6 +79,59 @@ def test_missing_importance_counts_as_required(missing):
 def test_tier_coverage_is_none_for_an_absent_tier():
     assert tier_coverage(DOCS_REQUIRED + [row("preferred", "developing")]) == {
         "required": 0.5, "preferred": 0.5, "bonus": None}
+
+
+def earned(rows_):
+    points = skill_points(rows_)
+    return sum(points[r.get("importance") or "required"] * STATUS_CREDIT[r["match_status"]] for r in rows_)
+
+
+def test_skill_points_three_tiers():
+    assert skill_points(rows("required", "gap", 10) + rows("preferred", "gap", 5) + rows("bonus", "gap", 2)) == pytest.approx(
+        {"required": 7.0, "preferred": 5.0, "bonus": 2.5})
+
+
+def test_skill_points_job_with_a_missing_tier():
+    # No bonus tier: the weights of the tiers it has are 0.95, and bonus is not in the answer
+    assert skill_points(rows("required", "gap", 2) + rows("preferred", "gap", 1)) == pytest.approx(
+        {"required": 100 * .70 / .95 / 2, "preferred": 100 * .25 / .95})
+
+
+def test_skill_points_required_only_is_the_pasted_jd_case():
+    assert skill_points(rows("required", "gap", 4)) == pytest.approx({"required": 25.0})
+
+
+def test_skill_points_no_rows():
+    assert skill_points([]) == {}
+
+
+@pytest.mark.parametrize("missing", [{}, {"importance": None}])
+def test_skill_points_missing_importance_counts_as_required(missing):
+    assert skill_points([{"match_status": "gap", **missing}, row("required", "gap")]) == pytest.approx({"required": 50.0})
+
+
+@pytest.mark.parametrize("hand_made", [
+    DOCS_EXAMPLE,
+    DOCS_REQUIRED,
+    rows("required", "strong", 4) + rows("preferred", "gap", 9),
+    rows("required", "developing", 7) + rows("bonus", "strong", 3),
+    rows("preferred", "strong", 3) + rows("preferred", "gap", 2),
+    rows("required", "strong", 6) + rows("required", "gap", 1) + rows("preferred", "developing", 16)
+    + rows("bonus", "gap", 12) + rows("bonus", "strong", 1),
+])
+def test_points_times_credit_is_the_readiness(hand_made):
+    assert earned(hand_made) == pytest.approx(tiered_readiness(hand_made), abs=0.005)
+
+
+def test_expected_gain():
+    assert (expected_gain(7.0, "gap"), expected_gain(7.0, "developing"), expected_gain(7.0, "strong")) == (7.0, 3.5, 0.0)
+
+
+def test_gain_between_is_never_negative():
+    assert gain_between(7.0, "gap", "developing") == 3.5
+    assert gain_between(7.0, "gap", "strong") == 7.0
+    assert gain_between(7.0, "developing", "developing") == 0
+    assert gain_between(7.0, "strong", "developing") == 0
 
 
 def test_every_role_template_required_strong_rest_gap_is_70():
