@@ -10,8 +10,8 @@ import { MAX_FILES, ACCEPT, ALLOWED_TEXT, checkFile, checkLink } from './evidenc
 const sizeText = (b) => b >= 1024 * 1024 ? `${(b / 1024 / 1024).toFixed(1)} MB` : `${Math.max(1, Math.round(b / 1024))} KB`
 
 const chip = { display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '4px 6px 4px 9px', borderRadius: '8px',
-               background: '#f5f6fa', border: '1px solid #e4e6ef', fontSize: '12px', color: '#1a1f2e', maxWidth: '100%' }
-const addBtn = { ...chip, padding: '5px 10px', cursor: 'pointer', color: '#2d5be3', fontWeight: '600', background: '#fff', borderStyle: 'dashed' }
+               background: 'var(--s-bg, #f5f6fa)', border: '1px solid var(--s-line, #e4e6ef)', fontSize: '12px', color: 'var(--s-ink, #1a1f2e)', maxWidth: '100%' }
+const addBtn = { ...chip, padding: '5px 10px', cursor: 'pointer', color: 'var(--s-accent, #2d5be3)', fontWeight: '600', background: '#fff', borderStyle: 'dashed' }
 const linkBtn = (color) => ({ border: 'none', background: 'none', padding: '0 3px', fontSize: '12px', fontWeight: '600', color, cursor: 'pointer' })
 const nameStyle = { overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '200px' }
 
@@ -38,7 +38,7 @@ function LinkForm({ onAdd, onCancel, onError }) {
   const [url, setUrl]     = useState('')
   const [title, setTitle] = useState('')
   const [busy, setBusy]   = useState(false)
-  const input = { padding: '5px 8px', fontSize: '12px', border: '1px solid #e4e6ef', borderRadius: '6px', outline: 'none' }
+  const input = { padding: '5px 8px', fontSize: '12px', border: '1px solid var(--s-line, #e4e6ef)', borderRadius: '6px', outline: 'none' }
   const submit = async () => {
     const err = checkLink(url)
     if (err) return onError(err)
@@ -57,8 +57,8 @@ function LinkForm({ onAdd, onCancel, onError }) {
       <input aria-label="Link title (optional)" placeholder="Title (optional)" value={title}
         onChange={e => setTitle(e.target.value)} onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); submit() } }}
         style={{ ...input, width: '150px' }} />
-      <button type="button" disabled={busy} onClick={submit} style={{ ...linkBtn('#2d5be3'), fontSize: '12px' }}>{busy ? 'Adding…' : 'Add'}</button>
-      <button type="button" onClick={onCancel} style={linkBtn('#8b92a8')}>Cancel</button>
+      <button type="button" disabled={busy} onClick={submit} style={{ ...linkBtn('var(--s-accent, #2d5be3)'), fontSize: '12px' }}>{busy ? 'Adding…' : 'Add'}</button>
+      <button type="button" onClick={onCancel} style={linkBtn('var(--s-muted, #8b92a8)')}>Cancel</button>
     </span>
   )
 }
@@ -89,9 +89,9 @@ export function PendingFiles({ files, onChange, onError, slots = MAX_FILES }) {
         <span key={i} style={chip}>
           <span aria-hidden="true">{iconFor(f)}</span>
           <span style={nameStyle}>{f.kind === 'link' ? (f.title || f.url) : f.name}</span>
-          {f.kind !== 'link' && <span style={{ color: '#8b92a8' }}>{sizeText(f.size)}</span>}
+          {f.kind !== 'link' && <span style={{ color: 'var(--s-muted, #8b92a8)' }}>{sizeText(f.size)}</span>}
           <button type="button" onClick={() => onChange(files.filter((_, j) => j !== i))}
-            aria-label="Remove" style={linkBtn('#dc2626')}>✕</button>
+            aria-label="Remove" style={linkBtn('var(--s-bad, #dc2626)')}>✕</button>
         </span>
       ))}
       {files.length < slots ? (
@@ -103,11 +103,11 @@ export function PendingFiles({ files, onChange, onError, slots = MAX_FILES }) {
             <input ref={input} type="file" accept={ACCEPT} multiple onChange={pick} style={{ display: 'none' }} />
             <button type="button" onClick={() => input.current.click()} style={addBtn}>📎 Attach file</button>
             <button type="button" onClick={() => setLinking(true)} style={addBtn}>🔗 Add link</button>
-            <span style={{ fontSize: '11px', color: '#8b92a8' }}>{ALLOWED_TEXT} (max 5 MB), or a link for videos · up to {slots}</span>
+            <span style={{ fontSize: '11px', color: 'var(--s-muted, #8b92a8)' }}>{ALLOWED_TEXT} (max 5 MB), or a link for videos · up to {slots}</span>
           </>
         )
       ) : (
-        <span style={{ fontSize: '11px', color: '#8b92a8' }}>Maximum {MAX_FILES} pieces of evidence</span>
+        <span style={{ fontSize: '11px', color: 'var(--s-muted, #8b92a8)' }}>Maximum {MAX_FILES} pieces of evidence</span>
       )}
     </div>
   )
@@ -177,7 +177,7 @@ export default function EvidenceFiles({ files = [], onUpload, onAddLink, onDelet
   }
 
   const canAdd = (onUpload || onAddLink) && files.length < MAX_FILES
-  if (files.length === 0 && !canAdd) return emptyText ? <span style={{ fontSize: '12px', color: '#8b92a8' }}>{emptyText}</span> : null
+  if (files.length === 0 && !canAdd) return emptyText ? <span style={{ fontSize: '12px', color: 'var(--s-muted, #8b92a8)' }}>{emptyText}</span> : null
 
   return (
     <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '6px', marginTop: '8px' }}>
@@ -187,15 +187,15 @@ export default function EvidenceFiles({ files = [], onUpload, onAddLink, onDelet
           <span aria-hidden="true">{iconFor(f)}</span>
           <span style={nameStyle}>{f.file_name}</span>
           {f.kind === 'link' ? (
-            <a href={f.link_url} target="_blank" rel="noopener noreferrer" style={{ ...linkBtn('#2d5be3'), textDecoration: 'none' }}>Open</a>
+            <a href={f.link_url} target="_blank" rel="noopener noreferrer" style={{ ...linkBtn('var(--s-accent, #2d5be3)'), textDecoration: 'none' }}>Open</a>
           ) : (
             <>
-              <span style={{ color: '#8b92a8' }}>{sizeText(f.size_bytes)}</span>
-              <button type="button" onClick={() => view(f)} style={linkBtn('#2d5be3')}>View</button>
+              <span style={{ color: 'var(--s-muted, #8b92a8)' }}>{sizeText(f.size_bytes)}</span>
+              <button type="button" onClick={() => view(f)} style={linkBtn('var(--s-accent, #2d5be3)')}>View</button>
             </>
           )}
           {onDelete && (
-            <button type="button" onClick={() => remove(f)} aria-label={`Delete ${f.file_name}`} style={linkBtn('#dc2626')}>✕</button>
+            <button type="button" onClick={() => remove(f)} aria-label={`Delete ${f.file_name}`} style={linkBtn('var(--s-bad, #dc2626)')}>✕</button>
           )}
         </span>
       ))}
@@ -215,7 +215,7 @@ export default function EvidenceFiles({ files = [], onUpload, onAddLink, onDelet
         </>
       ))}
       {(onUpload || onAddLink) && files.length >= MAX_FILES && (
-        <span style={{ fontSize: '11px', color: '#8b92a8' }}>Maximum {MAX_FILES} pieces of evidence reached</span>
+        <span style={{ fontSize: '11px', color: 'var(--s-muted, #8b92a8)' }}>Maximum {MAX_FILES} pieces of evidence reached</span>
       )}
     </div>
   )

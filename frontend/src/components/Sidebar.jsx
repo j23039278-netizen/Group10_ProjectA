@@ -12,16 +12,16 @@ export default function Sidebar({ user, navTitle, navItems, onLogout }) {
 
   return (
     <div style={{
-      width: '220px', background: '#1a1f2e', position: 'fixed',
+      width: '220px', background: 'var(--s-side-bg, #1a1f2e)', position: 'fixed',
       top: 0, left: 0, height: '100vh', display: 'flex',
       flexDirection: 'column', zIndex: 10
     }}>
       {/* Logo */}
       <div style={{ padding: '24px 20px 20px', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-        <div style={{ fontSize: '22px', fontWeight: '700', color: '#fff', letterSpacing: '-0.3px' }}>
+        <div className="sb-brand" style={{ fontSize: '22px', fontWeight: '700', color: '#fff', letterSpacing: '-0.3px' }}>
           SEAGAS
         </div>
-        <div style={{ fontSize: '10px', color: 'rgba(255,255,255,0.35)', marginTop: '2px', textTransform: 'uppercase', letterSpacing: '0.8px' }}>
+        <div className="sb-tagline" style={{ fontSize: '10px', color: 'rgba(255,255,255,0.35)', marginTop: '2px', textTransform: 'uppercase', letterSpacing: '0.8px' }}>
           Employability Platform
         </div>
       </div>
@@ -33,32 +33,33 @@ export default function Sidebar({ user, navTitle, navItems, onLogout }) {
       }}>
         <div style={{
           width: '32px', height: '32px', borderRadius: '50%',
-          background: '#2d5be3', display: 'flex', alignItems: 'center',
+          background: 'var(--s-accent, #2d5be3)', display: 'flex', alignItems: 'center',
           justifyContent: 'center', fontSize: '12px', fontWeight: '700', color: '#fff'
         }}>
           {userName.charAt(0).toUpperCase()}
         </div>
         <div>
           <div style={{ fontSize: '13px', fontWeight: '600', color: '#fff' }}>{userName}</div>
-          <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.4)', textTransform: 'capitalize' }}>{role}</div>
+          <div className="sb-role" style={{ fontSize: '11px', color: 'rgba(255,255,255,0.4)', textTransform: 'capitalize' }}>{role}</div>
         </div>
       </div>
 
       {/* Nav Items */}
       <nav style={{ padding: '12px 0', flex: 1 }}>
-        <div style={{ fontSize: '10px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '1px', color: 'rgba(255,255,255,0.3)', padding: '12px 20px 6px' }}>
+        <div className="sb-navtitle" style={{ fontSize: '10px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '1px', color: 'rgba(255,255,255,0.3)', padding: '12px 20px 6px' }}>
           {navTitle}
         </div>
         {navItems.map(item => (
           <div
             key={item.path}
+            className={`sb-item${isActive(item.path) ? ' active' : ''}`}
             onClick={() => navigate(item.path)}
             style={{
               display: 'flex', alignItems: 'center', gap: '10px',
               padding: '9px 20px', cursor: 'pointer', fontSize: '13px',
               fontWeight: '500', transition: 'all .15s',
-              borderLeft: `3px solid ${isActive(item.path) ? '#2d5be3' : 'transparent'}`,
-              background: isActive(item.path) ? 'rgba(45,91,227,0.25)' : 'transparent',
+              borderLeft: `3px solid ${isActive(item.path) ? 'var(--s-accent, #2d5be3)' : 'transparent'}`,
+              background: isActive(item.path) ? 'var(--s-side-active, rgba(45,91,227,0.25))' : 'transparent',
               color: isActive(item.path) ? '#fff' : 'rgba(255,255,255,0.55)',
             }}
           >
@@ -71,6 +72,7 @@ export default function Sidebar({ user, navTitle, navItems, onLogout }) {
       {/* Logout */}
       <div style={{ padding: '16px 20px', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
         <button
+          className="sb-signout"
           onClick={onLogout}
           style={{
             width: '100%', padding: '8px',

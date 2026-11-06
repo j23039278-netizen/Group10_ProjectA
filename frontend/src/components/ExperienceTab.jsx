@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { experienceAPI } from '../api/client'
 import { EXPERIENCE_TYPES, experienceTypeLabel, period } from '../utils/experience'
 
-const C = { ink: '#1a1f2e', body: '#4a5168', muted: '#8b92a8', line: '#e4e6ef', blue: '#2d5be3', green: '#16a34a', red: '#dc2626' }
+const C = { ink: 'var(--s-ink, #1a1f2e)', body: 'var(--s-body, #4a5168)', muted: 'var(--s-muted, #8b92a8)', line: 'var(--s-line, #e4e6ef)', blue: 'var(--s-accent, #2d5be3)', green: 'var(--s-good, #16a34a)', red: 'var(--s-bad, #dc2626)' }
 const EMPTY = { job_title: '', company: '', experience_type: 'internship', location: '', start_date: '', end_date: '', description: '' }
 const today = () => new Date().toISOString().slice(0, 10)
 
@@ -68,9 +68,9 @@ export default function ExperienceTab() {
     }
   }
 
-  const input = { width: '100%', padding: '9px 12px', border: '1.5px solid #e4e6ef', borderRadius: '8px', fontSize: '13px', outline: 'none', background: '#f5f6fa', boxSizing: 'border-box' }
+  const input = { width: '100%', padding: '9px 12px', border: '1.5px solid var(--s-line, #e4e6ef)', borderRadius: '8px', fontSize: '13px', outline: 'none', background: 'var(--s-bg, #f5f6fa)', boxSizing: 'border-box' }
   const lbl = { fontSize: '12px', fontWeight: '600', color: C.body, display: 'block', marginBottom: '5px' }
-  const cardStyle = { background: '#fff', border: `1px solid ${C.line}`, borderRadius: '12px', padding: '24px', marginBottom: '16px' }
+  const cardStyle = { background: '#fff', border: `1px solid ${C.line}`, borderRadius: '12px', boxShadow: 'var(--s-card-shadow, none)', padding: '24px', marginBottom: '16px' }
 
   return (
     <>
@@ -82,8 +82,8 @@ export default function ExperienceTab() {
           Internships, part-time or full-time jobs, freelance work and volunteering. Paid work and internships count towards the
           Industry Experience part of your readiness score.
         </div>
-        {error && <div role="alert" style={{ background: '#fee2e2', color: C.red, padding: '10px', borderRadius: '8px', marginBottom: '12px', fontSize: '13px' }}>{error}</div>}
-        {notice && <div role="status" style={{ background: '#dcfce7', color: C.green, padding: '10px', borderRadius: '8px', marginBottom: '12px', fontSize: '13px' }}>{notice}</div>}
+        {error && <div role="alert" style={{ background: 'var(--s-bad-soft, #fee2e2)', color: C.red, padding: '10px', borderRadius: '8px', marginBottom: '12px', fontSize: '13px' }}>{error}</div>}
+        {notice && <div role="status" style={{ background: 'var(--s-good-soft, #dcfce7)', color: C.green, padding: '10px', borderRadius: '8px', marginBottom: '12px', fontSize: '13px' }}>{notice}</div>}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '12px' }}>
           <div><label style={lbl} htmlFor="ex-title">Job title</label>
             <input id="ex-title" style={input} value={form.job_title} onChange={set('job_title')} maxLength={150} placeholder="e.g. Data Analyst Intern" /></div>
@@ -122,7 +122,7 @@ export default function ExperienceTab() {
           My experience ({items.length})
         </div>
         {items.length === 0 ? <div style={{ fontSize: '13px', color: C.muted }}>No experience added yet.</div> : items.map(x => (
-          <div key={x.experience_id} style={{ display: 'flex', justifyContent: 'space-between', gap: '12px', padding: '12px 0', borderTop: '1px solid #f0f1f5', flexWrap: 'wrap' }}>
+          <div key={x.experience_id} style={{ display: 'flex', justifyContent: 'space-between', gap: '12px', padding: '12px 0', borderTop: '1px solid var(--s-surface-2, #f0f1f5)', flexWrap: 'wrap' }}>
             <div style={{ flex: '1 1 300px', minWidth: 0 }}>
               <div style={{ fontSize: '14px', fontWeight: '600', color: C.ink }}>
                 {x.job_title} <span style={{ fontWeight: '500', color: C.body }}>· {x.company}</span>

@@ -258,42 +258,42 @@ export default function Profile() {
     !skills.find(ms => ms.skill_name === s.skill_name)
   )
 
-  if (loading) return <div style={{ padding: '40px', color: '#8b92a8' }}>Loading...</div>
+  if (loading) return <div style={{ padding: '40px', color: 'var(--s-muted, #8b92a8)' }}>Loading...</div>
 
   const inp = (val, onChange, placeholder, type='text') => (
     <input type={type} value={val} onChange={e => onChange(e.target.value)}
       placeholder={placeholder}
-      style={{ width: '100%', padding: '9px 12px', border: '1.5px solid #e4e6ef', borderRadius: '8px', fontSize: '13px', outline: 'none', background: '#f5f6fa', boxSizing: 'border-box' }}
+      style={{ width: '100%', padding: '9px 12px', border: '1.5px solid var(--s-line, #e4e6ef)', borderRadius: '8px', fontSize: '13px', outline: 'none', background: 'var(--s-bg, #f5f6fa)', boxSizing: 'border-box' }}
     />
   )
 
   const card = (children) => (
-    <div style={{ background: '#fff', border: '1px solid #e4e6ef', borderRadius: '12px', padding: '24px', marginBottom: '16px' }}>
+    <div style={{ background: '#fff', border: '1px solid var(--s-line, #e4e6ef)', borderRadius: '12px', boxShadow: 'var(--s-card-shadow, none)', padding: '24px', marginBottom: '16px' }}>
       {children}
     </div>
   )
 
   const cardTitle = (t) => (
-    <div style={{ fontSize: '13px', fontWeight: '700', color: '#1a1f2e', marginBottom: '16px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{t}</div>
+    <div style={{ fontSize: '13px', fontWeight: '700', color: 'var(--s-ink, #1a1f2e)', marginBottom: '16px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{t}</div>
   )
 
   const tabs = ['info','skills','experience','projects','certifications']
 
   const errorBox = itemError && (
-    <div role="alert" style={{ background: '#fee2e2', color: '#dc2626', padding: '10px', borderRadius: '8px', marginBottom: '12px', fontSize: '13px' }}>{itemError}</div>
+    <div role="alert" style={{ background: 'var(--s-bad-soft, #fee2e2)', color: 'var(--s-bad, #dc2626)', padding: '10px', borderRadius: '8px', marginBottom: '12px', fontSize: '13px' }}>{itemError}</div>
   )
-  const rowBtn = (color) => ({ background: 'none', border: '1px solid #e4e6ef', borderRadius: '6px', padding: '4px 10px', fontSize: '12px', fontWeight: '600', color, cursor: 'pointer' })
-  const secondaryBtn = { padding: '9px 20px', background: '#fff', color: '#4a5168', border: '1px solid #e4e6ef', borderRadius: '8px', fontSize: '13px', fontWeight: '600', cursor: 'pointer', marginLeft: '8px' }
+  const rowBtn = (color) => ({ background: 'none', border: '1px solid var(--s-line, #e4e6ef)', borderRadius: '6px', padding: '4px 10px', fontSize: '12px', fontWeight: '600', color, cursor: 'pointer' })
+  const secondaryBtn = { padding: '9px 20px', background: '#fff', color: 'var(--s-body, #4a5168)', border: '1px solid var(--s-line, #e4e6ef)', borderRadius: '8px', fontSize: '13px', fontWeight: '600', cursor: 'pointer', marginLeft: '8px' }
 
   return (
     <div style={{ padding: '28px 32px' }}>
       <div style={{ marginBottom: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px', flexWrap: 'wrap' }}>
         <div>
-          <div style={{ fontSize: '26px', fontWeight: '700', color: '#1a1f2e' }}>My Profile</div>
-          <div style={{ fontSize: '13px', color: '#4a5168', marginTop: '4px' }}>Manage your employability profile</div>
+          <div style={{ fontSize: '26px', fontWeight: '700', color: 'var(--s-ink, #1a1f2e)' }}>My Profile</div>
+          <div style={{ fontSize: '13px', color: 'var(--s-body, #4a5168)', marginTop: '4px' }}>Manage your employability profile</div>
         </div>
         {/* A one-page CV of the current skills and records, saved as PDF from the browser */}
-        <button onClick={() => navigate('/cv')} style={{ padding: '9px 16px', fontSize: '13px', fontWeight: '600', border: 'none', borderRadius: '8px', background: '#2d5be3', color: '#fff', cursor: 'pointer' }}>
+        <button onClick={() => navigate('/cv')} style={{ padding: '9px 16px', fontSize: '13px', fontWeight: '600', border: 'none', borderRadius: '8px', background: 'var(--s-accent, #2d5be3)', color: '#fff', cursor: 'pointer' }}>
           Export CV
         </button>
       </div>
@@ -315,15 +315,15 @@ export default function Profile() {
                                  ? `${profile.gpa ?? '—'} / ${profile.cgpa ?? '—'}` : null],
             ].map(([k, v, mono]) => (
               <div key={k}>
-                <div style={{ fontSize: '11px', fontWeight: '600', color: '#8b92a8', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{k}</div>
-                <div style={{ fontSize: '14px', color: v ? '#1a1f2e' : '#8b92a8', marginTop: '3px', fontWeight: '500',
+                <div style={{ fontSize: '11px', fontWeight: '600', color: 'var(--s-muted, #8b92a8)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{k}</div>
+                <div style={{ fontSize: '14px', color: v ? 'var(--s-ink, #1a1f2e)' : 'var(--s-muted, #8b92a8)', marginTop: '3px', fontWeight: '500',
                               fontFamily: mono ? 'Consolas, monospace' : undefined, overflowWrap: 'break-word' }}>
                   {v || 'Not set'}
                 </div>
               </div>
             ))}
           </div>
-          <div style={{ fontSize: '12px', color: '#8b92a8', marginTop: '12px' }}>
+          <div style={{ fontSize: '12px', color: 'var(--s-muted, #8b92a8)', marginTop: '12px' }}>
             Name, student ID, course, university, programme and school email are set by the university; contact your advisor if one is wrong.
             Edit the rest in the Info tab.
           </div>
@@ -333,12 +333,12 @@ export default function Profile() {
       <ResultsReminder profile={profile} onUpdate={() => setTab('info')} onConfirmed={loadAll} />
 
       {/* Tabs */}
-      <div style={{ display: 'flex', gap: '4px', borderBottom: '2px solid #e4e6ef', marginBottom: '20px' }}>
+      <div style={{ display: 'flex', gap: '4px', borderBottom: '2px solid var(--s-line, #e4e6ef)', marginBottom: '20px' }}>
         {tabs.map(t => (
           <button key={t} onClick={() => { setTab(t); setItemError('') }} style={{
             padding: '10px 18px', fontSize: '13px', fontWeight: tab === t ? '600' : '500',
-            color: tab === t ? '#2d5be3' : '#4a5168', border: 'none', background: 'none',
-            cursor: 'pointer', borderBottom: `2px solid ${tab === t ? '#2d5be3' : 'transparent'}`,
+            color: tab === t ? 'var(--s-accent, #2d5be3)' : 'var(--s-body, #4a5168)', border: 'none', background: 'none',
+            cursor: 'pointer', borderBottom: `2px solid ${tab === t ? 'var(--s-accent, #2d5be3)' : 'transparent'}`,
             marginBottom: '-2px', textTransform: 'capitalize'
           }}>{t}</button>
         ))}
@@ -348,51 +348,51 @@ export default function Profile() {
       {tab === 'info' && card(
         <>
           {cardTitle('Academic Background')}
-          {msg && <div role="status" style={{ background: msg.startsWith('Profile saved') ? '#dcfce7' : '#fee2e2', color: msg.startsWith('Profile saved') ? '#16a34a' : '#dc2626', padding: '10px', borderRadius: '8px', marginBottom: '12px', fontSize: '13px' }}>{msg}</div>}
+          {msg && <div role="status" style={{ background: msg.startsWith('Profile saved') ? 'var(--s-good-soft, #dcfce7)' : 'var(--s-bad-soft, #fee2e2)', color: msg.startsWith('Profile saved') ? 'var(--s-good, #16a34a)' : 'var(--s-bad, #dc2626)', padding: '10px', borderRadius: '8px', marginBottom: '12px', fontSize: '13px' }}>{msg}</div>}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
-            <div><label style={{ fontSize: '12px', fontWeight: '600', color: '#4a5168', display: 'block', marginBottom: '5px' }}>Programme</label>
+            <div><label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--s-body, #4a5168)', display: 'block', marginBottom: '5px' }}>Programme</label>
               {/* Set with the course by the university; only an admin changes it */}
-              <div style={{ padding: '9px 12px', border: '1.5px solid #e4e6ef', borderRadius: '8px', fontSize: '13px', background: '#eef0f5', color: profile?.programme ? '#1a1f2e' : '#8b92a8' }}>
+              <div style={{ padding: '9px 12px', border: '1.5px solid var(--s-line, #e4e6ef)', borderRadius: '8px', fontSize: '13px', background: 'var(--s-surface-2, #eef0f5)', color: profile?.programme ? 'var(--s-ink, #1a1f2e)' : 'var(--s-muted, #8b92a8)' }}>
                 {profile?.programme || 'Not set yet: ask your advisor'}
               </div>
             </div>
-            <div><label style={{ fontSize: '12px', fontWeight: '600', color: '#4a5168', display: 'block', marginBottom: '5px' }}>University</label>
-              <div style={{ padding: '9px 12px', border: '1.5px solid #e4e6ef', borderRadius: '8px', fontSize: '13px', background: '#eef0f5', color: '#1a1f2e' }}>
+            <div><label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--s-body, #4a5168)', display: 'block', marginBottom: '5px' }}>University</label>
+              <div style={{ padding: '9px 12px', border: '1.5px solid var(--s-line, #e4e6ef)', borderRadius: '8px', fontSize: '13px', background: 'var(--s-surface-2, #eef0f5)', color: 'var(--s-ink, #1a1f2e)' }}>
                 {UNIVERSITY}
               </div>
             </div>
-            <div><label style={{ fontSize: '12px', fontWeight: '600', color: '#4a5168', display: 'block', marginBottom: '5px' }}>GPA (last semester)</label>
+            <div><label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--s-body, #4a5168)', display: 'block', marginBottom: '5px' }}>GPA (last semester)</label>
               {inp(form.gpa, v => setForm({...form, gpa: v}), 'e.g. 3.25', 'number')}
             </div>
-            <div><label style={{ fontSize: '12px', fontWeight: '600', color: '#4a5168', display: 'block', marginBottom: '5px' }}>CGPA (overall)</label>
+            <div><label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--s-body, #4a5168)', display: 'block', marginBottom: '5px' }}>CGPA (overall)</label>
               {inp(form.cgpa, v => setForm({...form, cgpa: v}), 'e.g. 3.40', 'number')}
             </div>
-            <div><label style={{ fontSize: '12px', fontWeight: '600', color: '#4a5168', display: 'block', marginBottom: '5px' }}>Expected Graduation</label>
+            <div><label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--s-body, #4a5168)', display: 'block', marginBottom: '5px' }}>Expected Graduation</label>
               {inp(form.expected_graduation, v => setForm({...form, expected_graduation: v}), 'e.g. December 2027')}
             </div>
-            <div><label style={{ fontSize: '12px', fontWeight: '600', color: '#4a5168', display: 'block', marginBottom: '5px' }}>Year of Study</label>
+            <div><label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--s-body, #4a5168)', display: 'block', marginBottom: '5px' }}>Year of Study</label>
               <select value={form.year_of_study} onChange={e => setForm({...form, year_of_study: e.target.value})}
-                style={{ width: '100%', padding: '9px 12px', border: '1.5px solid #e4e6ef', borderRadius: '8px', fontSize: '13px', background: '#f5f6fa' }}>
+                style={{ width: '100%', padding: '9px 12px', border: '1.5px solid var(--s-line, #e4e6ef)', borderRadius: '8px', fontSize: '13px', background: 'var(--s-bg, #f5f6fa)' }}>
                 <option value="">Select year</option>
                 {[1,2,3,4].map(y => <option key={y} value={y}>Year {y}</option>)}
               </select>
             </div>
-            <div><label style={{ fontSize: '12px', fontWeight: '600', color: '#4a5168', display: 'block', marginBottom: '5px' }}>Target Role</label>
+            <div><label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--s-body, #4a5168)', display: 'block', marginBottom: '5px' }}>Target Role</label>
               <select value={form.target_role} onChange={e => setForm({...form, target_role: e.target.value})}
-                style={{ width: '100%', padding: '9px 12px', border: '1.5px solid #e4e6ef', borderRadius: '8px', fontSize: '13px', background: '#f5f6fa' }}>
+                style={{ width: '100%', padding: '9px 12px', border: '1.5px solid var(--s-line, #e4e6ef)', borderRadius: '8px', fontSize: '13px', background: 'var(--s-bg, #f5f6fa)' }}>
                 <option value="">Select target role</option>
                 {roles.map(r => <option key={r.role_id} value={r.role_name}>{r.role_name}</option>)}
                 {/* A role saved before it was limited to the course stays visible until changed */}
                 {form.target_role && !roles.some(r => r.role_name === form.target_role) &&
                   <option value={form.target_role}>{form.target_role} (not offered to your course)</option>}
               </select>
-              <div style={{ fontSize: '11px', color: '#8b92a8', marginTop: '4px' }}>
+              <div style={{ fontSize: '11px', color: 'var(--s-muted, #8b92a8)', marginTop: '4px' }}>
                 Roles for {courseLabel(account?.course)} students.
               </div>
             </div>
           </div>
           <button onClick={saveProfile} disabled={saving} style={{
-            marginTop: '16px', padding: '10px 24px', background: '#2d5be3',
+            marginTop: '16px', padding: '10px 24px', background: 'var(--s-accent, #2d5be3)',
             color: '#fff', border: 'none', borderRadius: '8px', fontSize: '13px',
             fontWeight: '600', cursor: 'pointer'
           }}>
@@ -410,20 +410,20 @@ export default function Profile() {
               {cardTitle('Add Skill')}
               <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginBottom: '12px' }}>
                 <select value={catFilter} onChange={e => setCatFilter(e.target.value)}
-                  style={{ padding: '8px 12px', border: '1.5px solid #e4e6ef', borderRadius: '8px', fontSize: '13px', background: '#f5f6fa' }}>
+                  style={{ padding: '8px 12px', border: '1.5px solid var(--s-line, #e4e6ef)', borderRadius: '8px', fontSize: '13px', background: 'var(--s-bg, #f5f6fa)' }}>
                   <option value="">All Categories</option>
                   {CATEGORIES.map(c => <option key={c} value={c}>{label(c)}</option>)}
                 </select>
                 <select value={selSkill} onChange={e => setSelSkill(e.target.value)}
-                  style={{ flex: 1, padding: '8px 12px', border: '1.5px solid #e4e6ef', borderRadius: '8px', fontSize: '13px', background: '#f5f6fa' }}>
+                  style={{ flex: 1, padding: '8px 12px', border: '1.5px solid var(--s-line, #e4e6ef)', borderRadius: '8px', fontSize: '13px', background: 'var(--s-bg, #f5f6fa)' }}>
                   <option value="">Select a skill...</option>
                   {filteredLib.map(s => <option key={s.skill_id} value={s.skill_id}>{s.skill_name} ({label(s.category)})</option>)}
                 </select>
                 <select value={selLevel} onChange={e => setSelLevel(e.target.value)}
-                  style={{ padding: '8px 12px', border: '1.5px solid #e4e6ef', borderRadius: '8px', fontSize: '13px', background: '#f5f6fa' }}>
+                  style={{ padding: '8px 12px', border: '1.5px solid var(--s-line, #e4e6ef)', borderRadius: '8px', fontSize: '13px', background: 'var(--s-bg, #f5f6fa)' }}>
                   {PROFICIENCY.map(p => <option key={p} value={p}>{label(p)}</option>)}
                 </select>
-                <button onClick={addSkill} style={{ padding: '8px 18px', background: '#2d5be3', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: '600', cursor: 'pointer' }}>
+                <button onClick={addSkill} style={{ padding: '8px 18px', background: 'var(--s-accent, #2d5be3)', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: '600', cursor: 'pointer' }}>
                   Add
                 </button>
               </div>
@@ -444,19 +444,19 @@ export default function Profile() {
                       </div>
                       <div style={{ padding: '4px 12px 8px' }}>
                         {list.length === 0 ? (
-                          <div style={{ fontSize: '12px', color: '#8b92a8', padding: '8px 0' }}>
+                          <div style={{ fontSize: '12px', color: 'var(--s-muted, #8b92a8)', padding: '8px 0' }}>
                             None yet. Add one above, or upload your CV.
                           </div>
                         ) : list.map((s, i) => (
                           <div key={s.skill_id || s.student_skill_id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '8px',
-                                                                           padding: '7px 0', borderTop: i ? '1px solid #f0f1f5' : 'none' }}>
-                            <span style={{ fontSize: '13px', fontWeight: '500', color: '#1a1f2e', minWidth: 0, overflowWrap: 'anywhere' }}>{s.skill_name}</span>
+                                                                           padding: '7px 0', borderTop: i ? '1px solid var(--s-surface-2, #f0f1f5)' : 'none' }}>
+                            <span style={{ fontSize: '13px', fontWeight: '500', color: 'var(--s-ink, #1a1f2e)', minWidth: 0, overflowWrap: 'anywhere' }}>{s.skill_name}</span>
                             <span style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
-                              <span title={label(s.proficiency_level)} style={{ fontSize: '11px', color: '#4a5168', whiteSpace: 'nowrap' }}>
+                              <span title={label(s.proficiency_level)} style={{ fontSize: '11px', color: 'var(--s-body, #4a5168)', whiteSpace: 'nowrap' }}>
                                 <span style={{ color: cat.color, letterSpacing: '1px' }}>{levelDots(s.proficiency_level)}</span> {label(s.proficiency_level)}
                               </span>
                               <button onClick={() => removeSkill(s.skill_id || s.student_skill_id)} aria-label={`Remove ${s.skill_name}`} title="Remove"
-                                style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#8b92a8', fontSize: '13px', padding: '0 2px' }}>✕</button>
+                                style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--s-muted, #8b92a8)', fontSize: '13px', padding: '0 2px' }}>✕</button>
                             </span>
                           </div>
                         ))}
@@ -465,7 +465,7 @@ export default function Profile() {
                   )
                 })}
               </div>
-              <div style={{ fontSize: '11px', color: '#8b92a8', marginTop: '10px' }}>
+              <div style={{ fontSize: '11px', color: 'var(--s-muted, #8b92a8)', marginTop: '10px' }}>
                 ●○○ Beginner · ●●○ Intermediate · ●●● Advanced. A beginner skill counts as Strong in an assessment when a project,
                 internship or certification in your profile shows it.
               </div>
@@ -498,17 +498,17 @@ export default function Profile() {
                 </div>
                 <div>
                   <select value={projForm.project_type} onChange={e => setProjForm({...projForm, project_type: e.target.value})}
-                    style={{ width: '100%', padding: '9px 12px', border: '1.5px solid #e4e6ef', borderRadius: '8px', fontSize: '13px', background: '#f5f6fa' }}>
+                    style={{ width: '100%', padding: '9px 12px', border: '1.5px solid var(--s-line, #e4e6ef)', borderRadius: '8px', fontSize: '13px', background: 'var(--s-bg, #f5f6fa)' }}>
                     {PROJECT_TYPES.map(t => <option key={t} value={t}>{label(t)}</option>)}
                   </select>
                 </div>
                 <div style={{ gridColumn: '1/-1' }}>
-                  <label style={{ fontSize: '11px', color: '#8b92a8', display: 'block', marginBottom: '5px' }}>Proof (optional): file or link</label>
+                  <label style={{ fontSize: '11px', color: 'var(--s-muted, #8b92a8)', display: 'block', marginBottom: '5px' }}>Proof (optional): file or link</label>
                   <PendingFiles files={projFiles} onChange={setProjFiles} onError={setItemError}
                     slots={MAX_FILES - ((projects.find(x => x.project_id === editProjId)?.files || []).length)} />
                 </div>
                 <div>
-                  <button onClick={saveProject} disabled={savingItem} style={{ padding: '9px 20px', background: '#2d5be3', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: '600', cursor: savingItem ? 'wait' : 'pointer' }}>
+                  <button onClick={saveProject} disabled={savingItem} style={{ padding: '9px 20px', background: 'var(--s-accent, #2d5be3)', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: '600', cursor: savingItem ? 'wait' : 'pointer' }}>
                     {savingItem ? 'Saving…' : editProjId ? 'Save Changes' : 'Add Project'}
                   </button>
                   {editProjId && <button onClick={cancelProject} style={secondaryBtn}>Cancel</button>}
@@ -520,13 +520,13 @@ export default function Profile() {
             <>
               {cardTitle(`My Projects (${projects.length})`)}
               {projects.length === 0
-                ? <div style={{ color: '#8b92a8', fontSize: '13px' }}>No projects added yet.</div>
+                ? <div style={{ color: 'var(--s-muted, #8b92a8)', fontSize: '13px' }}>No projects added yet.</div>
                 : projects.map((p, i) => (
-                  <div key={p.project_id || i} style={{ display: 'flex', justifyContent: 'space-between', gap: '12px', padding: '12px 0', borderBottom: i < projects.length-1 ? '1px solid #e4e6ef' : 'none', background: editProjId === p.project_id ? '#f5f8ff' : 'transparent' }}>
+                  <div key={p.project_id || i} style={{ display: 'flex', justifyContent: 'space-between', gap: '12px', padding: '12px 0', borderBottom: i < projects.length-1 ? '1px solid var(--s-line, #e4e6ef)' : 'none', background: editProjId === p.project_id ? 'var(--s-accent-soft, #f5f8ff)' : 'transparent' }}>
                     <div>
-                      <div style={{ fontSize: '13px', fontWeight: '600', color: '#1a1f2e' }}>{p.project_title}</div>
-                      <div style={{ fontSize: '12px', color: '#4a5168', marginTop: '2px' }}>{p.description}</div>
-                      <div style={{ fontSize: '11px', color: '#8b92a8', marginTop: '4px' }}>
+                      <div style={{ fontSize: '13px', fontWeight: '600', color: 'var(--s-ink, #1a1f2e)' }}>{p.project_title}</div>
+                      <div style={{ fontSize: '12px', color: 'var(--s-body, #4a5168)', marginTop: '2px' }}>{p.description}</div>
+                      <div style={{ fontSize: '11px', color: 'var(--s-muted, #8b92a8)', marginTop: '4px' }}>
                         {[p.technologies?.join(', '), label(p.project_type), p.year_completed].filter(Boolean).join(' · ')}
                       </div>
                       <EvidenceFiles files={p.files}
@@ -536,8 +536,8 @@ export default function Profile() {
                         onError={setItemError} />
                     </div>
                     <div style={{ display: 'flex', gap: '6px', alignItems: 'flex-start', flexShrink: 0 }}>
-                      <button onClick={() => editProject(p)} style={rowBtn('#2d5be3')}>Edit</button>
-                      <button onClick={() => deleteProject(p)} style={rowBtn('#dc2626')}>Delete</button>
+                      <button onClick={() => editProject(p)} style={rowBtn('var(--s-accent, #2d5be3)')}>Edit</button>
+                      <button onClick={() => deleteProject(p)} style={rowBtn('var(--s-bad, #dc2626)')}>Delete</button>
                     </div>
                   </div>
                 ))
@@ -557,19 +557,19 @@ export default function Profile() {
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                 <div>{inp(certForm.cert_name, v => setCertForm({...certForm, cert_name: v}), 'Certification name *')}</div>
                 <div>{inp(certForm.issuer, v => setCertForm({...certForm, issuer: v}), 'Issuer (e.g. AWS, Microsoft)')}</div>
-                <div><label style={{ fontSize: '11px', color: '#8b92a8' }}>Issue Date</label>
+                <div><label style={{ fontSize: '11px', color: 'var(--s-muted, #8b92a8)' }}>Issue Date</label>
                   {inp(certForm.issue_date, v => setCertForm({...certForm, issue_date: v}), '', 'date')}
                 </div>
-                <div><label style={{ fontSize: '11px', color: '#8b92a8' }}>Expiry Date</label>
+                <div><label style={{ fontSize: '11px', color: 'var(--s-muted, #8b92a8)' }}>Expiry Date</label>
                   {inp(certForm.expiry_date, v => setCertForm({...certForm, expiry_date: v}), '', 'date')}
                 </div>
                 <div style={{ gridColumn: '1/-1' }}>
-                  <label style={{ fontSize: '11px', color: '#8b92a8', display: 'block', marginBottom: '5px' }}>Proof (optional): file or link</label>
+                  <label style={{ fontSize: '11px', color: 'var(--s-muted, #8b92a8)', display: 'block', marginBottom: '5px' }}>Proof (optional): file or link</label>
                   <PendingFiles files={certFiles} onChange={setCertFiles} onError={setItemError}
                     slots={MAX_FILES - ((certs.find(x => x.cert_id === editCertId)?.files || []).length)} />
                 </div>
                 <div>
-                  <button onClick={saveCert} disabled={savingItem} style={{ padding: '9px 20px', background: '#2d5be3', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: '600', cursor: savingItem ? 'wait' : 'pointer' }}>
+                  <button onClick={saveCert} disabled={savingItem} style={{ padding: '9px 20px', background: 'var(--s-accent, #2d5be3)', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: '600', cursor: savingItem ? 'wait' : 'pointer' }}>
                     {savingItem ? 'Saving…' : editCertId ? 'Save Changes' : 'Add Certification'}
                   </button>
                   {editCertId && <button onClick={cancelCert} style={secondaryBtn}>Cancel</button>}
@@ -581,13 +581,13 @@ export default function Profile() {
             <>
               {cardTitle(`My Certifications (${certs.length})`)}
               {certs.length === 0
-                ? <div style={{ color: '#8b92a8', fontSize: '13px' }}>No certifications added yet.</div>
+                ? <div style={{ color: 'var(--s-muted, #8b92a8)', fontSize: '13px' }}>No certifications added yet.</div>
                 : certs.map((c, i) => (
-                  <div key={c.cert_id || i} style={{ display: 'flex', justifyContent: 'space-between', gap: '12px', padding: '12px 0', borderBottom: i < certs.length-1 ? '1px solid #e4e6ef' : 'none', background: editCertId === c.cert_id ? '#f5f8ff' : 'transparent' }}>
+                  <div key={c.cert_id || i} style={{ display: 'flex', justifyContent: 'space-between', gap: '12px', padding: '12px 0', borderBottom: i < certs.length-1 ? '1px solid var(--s-line, #e4e6ef)' : 'none', background: editCertId === c.cert_id ? 'var(--s-accent-soft, #f5f8ff)' : 'transparent' }}>
                     <div>
-                      <div style={{ fontSize: '13px', fontWeight: '600', color: '#1a1f2e' }}>{c.cert_name}</div>
-                      <div style={{ fontSize: '12px', color: '#4a5168', marginTop: '2px' }}>{c.issuer}</div>
-                      <div style={{ fontSize: '11px', color: '#8b92a8', marginTop: '2px' }}>
+                      <div style={{ fontSize: '13px', fontWeight: '600', color: 'var(--s-ink, #1a1f2e)' }}>{c.cert_name}</div>
+                      <div style={{ fontSize: '12px', color: 'var(--s-body, #4a5168)', marginTop: '2px' }}>{c.issuer}</div>
+                      <div style={{ fontSize: '11px', color: 'var(--s-muted, #8b92a8)', marginTop: '2px' }}>
                         {c.issue_date && `Issued: ${c.issue_date}`} {c.expiry_date && `· Expires: ${c.expiry_date}`}
                       </div>
                       <EvidenceFiles files={c.files}
@@ -597,8 +597,8 @@ export default function Profile() {
                         onError={setItemError} />
                     </div>
                     <div style={{ display: 'flex', gap: '6px', alignItems: 'flex-start', flexShrink: 0 }}>
-                      <button onClick={() => editCert(c)} style={rowBtn('#2d5be3')}>Edit</button>
-                      <button onClick={() => deleteCert(c)} style={rowBtn('#dc2626')}>Delete</button>
+                      <button onClick={() => editCert(c)} style={rowBtn('var(--s-accent, #2d5be3)')}>Edit</button>
+                      <button onClick={() => deleteCert(c)} style={rowBtn('var(--s-bad, #dc2626)')}>Delete</button>
                     </div>
                   </div>
                 ))

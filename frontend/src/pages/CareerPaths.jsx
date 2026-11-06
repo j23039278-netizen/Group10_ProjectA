@@ -4,12 +4,12 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { careerAPI, studentAPI } from '../api/client'
 
-const C = { ink: '#1a1f2e', body: '#4a5168', muted: '#8b92a8', line: '#e4e6ef', blue: '#2d5be3',
-            green: '#16a34a', amber: '#d97706', red: '#dc2626' }
+const C = { ink: 'var(--s-ink, #1a1f2e)', body: 'var(--s-body, #4a5168)', muted: 'var(--s-muted, #8b92a8)', line: 'var(--s-line, #e4e6ef)', blue: 'var(--s-accent, #2d5be3)',
+            green: 'var(--s-good, #16a34a)', amber: 'var(--s-warn, #d97706)', red: 'var(--s-bad, #dc2626)' }
 const matchColor = (p) => p >= 70 ? C.green : p >= 40 ? C.amber : C.red
-const IMPORTANCE = { required: { label: 'Required', color: C.red, bg: '#fee2e2' },
-                     preferred: { label: 'Preferred', color: C.amber, bg: '#fef3c7' },
-                     bonus: { label: 'Bonus', color: C.muted, bg: '#f1f5f9' } }
+const IMPORTANCE = { required: { label: 'Required', color: C.red, bg: 'var(--s-bad-soft, #fee2e2)' },
+                     preferred: { label: 'Preferred', color: C.amber, bg: 'var(--s-warn-soft, #fef3c7)' },
+                     bonus: { label: 'Bonus', color: C.muted, bg: 'var(--s-surface-2, #f1f5f9)' } }
 const chip = (bg, color) => ({ fontSize: '12px', padding: '3px 9px', borderRadius: '999px', background: bg, color, whiteSpace: 'nowrap' })
 
 export default function CareerPaths() {
@@ -56,11 +56,11 @@ export default function CareerPaths() {
         </div>
       </div>
 
-      {error && <div role="alert" style={{ background: '#fee2e2', color: C.red, padding: '10px 12px', borderRadius: '8px', fontSize: '13px', marginBottom: '14px' }}>{error}</div>}
-      {notice && <div role="status" style={{ background: '#dcfce7', color: C.green, padding: '10px 12px', borderRadius: '8px', fontSize: '13px', marginBottom: '14px' }}>{notice}</div>}
+      {error && <div role="alert" style={{ background: 'var(--s-bad-soft, #fee2e2)', color: C.red, padding: '10px 12px', borderRadius: '8px', fontSize: '13px', marginBottom: '14px' }}>{error}</div>}
+      {notice && <div role="status" style={{ background: 'var(--s-good-soft, #dcfce7)', color: C.green, padding: '10px 12px', borderRadius: '8px', fontSize: '13px', marginBottom: '14px' }}>{notice}</div>}
 
       {data.skill_count === 0 && (
-        <div style={{ background: '#fffbeb', border: '1px solid #fde68a', borderRadius: '10px', padding: '12px 14px', fontSize: '13px', color: '#92400e', marginBottom: '16px' }}>
+        <div style={{ background: 'var(--s-warn-soft, #fffbeb)', border: '1px solid var(--s-warn-line, #fde68a)', borderRadius: '10px', padding: '12px 14px', fontSize: '13px', color: 'var(--s-warn, #92400e)', marginBottom: '16px' }}>
           You have not added any skills yet, so every role shows 0%. <button onClick={() => navigate('/profile')}
             style={{ border: 'none', background: 'none', color: C.blue, fontWeight: '600', cursor: 'pointer', padding: 0, fontSize: '13px' }}>
             Add your skills (or upload your CV)</button> first.
@@ -72,14 +72,14 @@ export default function CareerPaths() {
       ) : data.paths.map((p, i) => {
         const expanded = open === p.role_id
         return (
-          <div key={p.role_id} style={{ background: '#fff', border: `1px solid ${p.is_target_role ? '#c7d4fb' : C.line}`, borderRadius: '12px',
-                                        padding: '20px 24px', marginBottom: '14px', boxShadow: p.is_target_role ? '0 0 0 2px #eef2fd' : 'none' }}>
+          <div key={p.role_id} style={{ background: '#fff', border: `1px solid ${p.is_target_role ? 'var(--s-accent-line, #c7d4fb)' : C.line}`, borderRadius: '12px',
+                                        padding: '20px 24px', marginBottom: '14px', boxShadow: p.is_target_role ? '0 0 0 2px var(--s-accent-soft, #eef2fd)' : 'none' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', gap: '16px', flexWrap: 'wrap', alignItems: 'flex-start' }}>
               <div style={{ flex: '1 1 320px', minWidth: 0 }}>
                 <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
                   <span style={{ fontSize: '12px', color: C.muted, fontWeight: '700' }}>#{i + 1}</span>
                   <span style={{ fontSize: '18px', fontWeight: '700', color: C.ink }}>{p.role_name}</span>
-                  {p.is_target_role && <span style={chip('#eef2fd', C.blue)}>Your target role</span>}
+                  {p.is_target_role && <span style={chip('var(--s-accent-soft, #eef2fd)', C.blue)}>Your target role</span>}
                 </div>
                 {p.description && <div style={{ fontSize: '13px', color: C.body, marginTop: '4px' }}>{p.description}</div>}
                 <div style={{ fontSize: '12px', color: C.muted, marginTop: '6px' }}>
@@ -97,7 +97,7 @@ export default function CareerPaths() {
             </div>
 
             {p.next_steps.length > 0 && (
-              <div style={{ background: '#fafbfc', border: `1px solid ${C.line}`, borderRadius: '10px', padding: '10px 12px', marginBottom: '10px' }}>
+              <div style={{ background: 'var(--s-surface-1, #fafbfc)', border: `1px solid ${C.line}`, borderRadius: '10px', padding: '10px 12px', marginBottom: '10px' }}>
                 <div style={{ fontSize: '12px', fontWeight: '700', color: C.ink, marginBottom: '6px' }}>Next steps: required skills you do not list yet</div>
                 {p.next_steps.map(s => (
                   <div key={s.skill_name} style={{ fontSize: '13px', color: C.body, padding: '3px 0' }}>
@@ -135,7 +135,7 @@ export default function CareerPaths() {
                   <div style={{ fontSize: '12px', fontWeight: '700', color: C.green, marginBottom: '6px' }}>You have ({p.matched_skills.length})</div>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
                     {p.matched_skills.length === 0 && <span style={{ fontSize: '12px', color: C.muted }}>None yet</span>}
-                    {p.matched_skills.map(s => <span key={s} style={chip('#dcfce7', C.green)}>{s}</span>)}
+                    {p.matched_skills.map(s => <span key={s} style={chip('var(--s-good-soft, #dcfce7)', C.green)}>{s}</span>)}
                   </div>
                 </div>
                 <div>

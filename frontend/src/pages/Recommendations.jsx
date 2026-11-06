@@ -12,11 +12,11 @@ import EvidenceFiles from '../components/EvidenceFiles'
 // Cost tiers, in the order the page shows them (cost_tier comes from recommendation/engine.py)
 const TIERS = [
   { id: 'free',          title: 'Free',          note: 'Completely free',
-    style: { bg: '#dcfce7', color: '#15803d', border: '#bbf7d0' } },
+    style: { bg: 'var(--s-good-soft, #dcfce7)', color: 'var(--s-good, #15803d)', border: 'var(--s-good-line, #bbf7d0)' } },
   { id: 'free_to_learn', title: 'Free to learn', note: 'Learning is free; a certificate or extra features cost money',
-    style: { bg: '#e0f2fe', color: '#0369a1', border: '#bae6fd' } },
+    style: { bg: 'var(--s-surface-2, #e0f2fe)', color: 'var(--s-ink-2, #0369a1)', border: 'var(--s-line, #bae6fd)' } },
   { id: 'paid',          title: 'Paid',          note: 'Costs money (including free trials)',
-    style: { bg: '#f1f5f9', color: '#475569', border: '#e2e8f0' } },
+    style: { bg: 'var(--s-surface-2, #f1f5f9)', color: 'var(--s-body, #475569)', border: 'var(--s-line, #e2e8f0)' } },
 ]
 // Category order inside each tier
 const CATEGORY_ORDER = [
@@ -110,16 +110,16 @@ export default function Recommendations() {
     internship:    '💼',
   }
   const typeColor = {
-    course:        { bg: '#fef3c7', color: '#d97706' },
-    certification: { bg: '#eef2fd', color: '#2d5be3' },
-    project:       { bg: '#dcfce7', color: '#16a34a' },
-    workshop:      { bg: '#ede9fe', color: '#7c3aed' },
-    competition:   { bg: '#fce7f3', color: '#db2777' },
-    internship:    { bg: '#f0fdf4', color: '#15803d' },
+    course:        { bg: 'var(--s-warn-soft, #fef3c7)', color: 'var(--s-warn, #d97706)' },
+    certification: { bg: 'var(--s-accent-soft, #eef2fd)', color: 'var(--s-accent, #2d5be3)' },
+    project:       { bg: 'var(--s-good-soft, #dcfce7)', color: 'var(--s-good, #16a34a)' },
+    workshop:      { bg: 'var(--s-surface-2, #ede9fe)', color: 'var(--s-ink, #7c3aed)' },
+    competition:   { bg: 'var(--s-accent-soft, #fce7f3)', color: 'var(--s-accent, #db2777)' },
+    internship:    { bg: 'var(--s-good-soft, #f0fdf4)', color: 'var(--s-good, #15803d)' },
   }
   const gapColor = {
-    gap:        { bg: '#fee2e2', color: '#dc2626' },
-    developing: { bg: '#fef3c7', color: '#d97706' },
+    gap:        { bg: 'var(--s-bad-soft, #fee2e2)', color: 'var(--s-bad, #dc2626)' },
+    developing: { bg: 'var(--s-warn-soft, #fef3c7)', color: 'var(--s-warn, #d97706)' },
   }
 
   // ── Progress button for each resource ────────────────────────
@@ -132,9 +132,9 @@ export default function Recommendations() {
       return (
         <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
           <span style={{
-            padding: '7px 12px', background: '#dcfce7', color: '#16a34a',
+            padding: '7px 12px', background: 'var(--s-good-soft, #dcfce7)', color: 'var(--s-good, #16a34a)',
             borderRadius: '7px', fontSize: '12px', fontWeight: '700',
-            border: '1.5px solid #bbf7d0',
+            border: '1.5px solid var(--s-good-line, #bbf7d0)',
           }}>
             ✅ Completed
           </span>
@@ -146,9 +146,9 @@ export default function Recommendations() {
       return (
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '5px', flexShrink: 0 }}>
           <span style={{
-            padding: '4px 10px', background: '#fef3c7', color: '#d97706',
+            padding: '4px 10px', background: 'var(--s-warn-soft, #fef3c7)', color: 'var(--s-warn, #d97706)',
             borderRadius: '20px', fontSize: '11px', fontWeight: '600',
-            border: '1px solid #fde68a',
+            border: '1px solid var(--s-warn-line, #fde68a)',
           }}>
             ⏳ In Progress
           </span>
@@ -156,7 +156,7 @@ export default function Recommendations() {
             onClick={() => setCompleting(resource)}
             disabled={busy}
             style={{
-              padding: '7px 12px', background: busy ? '#d1d5db' : '#16a34a',
+              padding: '7px 12px', background: busy ? 'var(--s-disabled, #d1d5db)' : 'var(--s-good, #16a34a)',
               color: '#fff', borderRadius: '7px', fontSize: '12px',
               fontWeight: '600', border: 'none', cursor: busy ? 'not-allowed' : 'pointer',
             }}>
@@ -173,9 +173,9 @@ export default function Recommendations() {
         disabled={busy}
         style={{
           padding: '7px 14px',
-          background: busy ? '#d1d5db' : '#f0fdf4',
-          color: busy ? '#9ca3af' : '#16a34a',
-          border: `1.5px solid ${busy ? '#d1d5db' : '#bbf7d0'}`,
+          background: busy ? 'var(--s-disabled, #d1d5db)' : 'var(--s-good-soft, #f0fdf4)',
+          color: busy ? 'var(--s-disabled-ink, #9ca3af)' : 'var(--s-good, #16a34a)',
+          border: `1.5px solid ${busy ? 'var(--s-disabled, #d1d5db)' : 'var(--s-good-line, #bbf7d0)'}`,
           borderRadius: '7px', fontSize: '12px',
           fontWeight: '600', cursor: busy ? 'not-allowed' : 'pointer',
           flexShrink: 0,
@@ -189,12 +189,12 @@ export default function Recommendations() {
   const renderResource = (r, j, total) => (
   <div key={j} style={{
     display: 'flex', alignItems: 'flex-start', gap: '14px',
-    padding: '14px', background: '#f5f6fa', borderRadius: '10px',
+    padding: '14px', background: 'var(--s-bg, #f5f6fa)', borderRadius: '10px',
     marginBottom: j < total - 1 ? '10px' : '0',
     border: progressMap[r.resource_id]?.status === 'completed'
-      ? '1.5px solid #bbf7d0'
+      ? '1.5px solid var(--s-good-line, #bbf7d0)'
       : progressMap[r.resource_id]?.status === 'in_progress'
-      ? '1.5px solid #fde68a'
+      ? '1.5px solid var(--s-warn-line, #fde68a)'
       : '1.5px solid transparent',
     transition: 'border-color 0.2s',
   }}>
@@ -203,38 +203,38 @@ export default function Recommendations() {
       width: '38px', height: '38px', borderRadius: '8px', flexShrink: 0,
       display: 'flex', alignItems: 'center', justifyContent: 'center',
       fontSize: '18px',
-      background: typeColor[r.resource_type]?.bg || '#f5f6fa',
+      background: typeColor[r.resource_type]?.bg || 'var(--s-bg, #f5f6fa)',
     }}>
       {typeIcon[r.resource_type] || '📖'}
     </div>
 
     {/* Details */}
     <div style={{ flex: 1 }}>
-      <div style={{ fontSize: '13px', fontWeight: '600', color: '#1a1f2e', marginBottom: '3px' }}>
+      <div style={{ fontSize: '13px', fontWeight: '600', color: 'var(--s-ink, #1a1f2e)', marginBottom: '3px' }}>
         {r.resource_title}
       </div>
       {r.description && (
-        <div style={{ fontSize: '12px', color: '#4a5168', marginBottom: '6px' }}>{r.description}</div>
+        <div style={{ fontSize: '12px', color: 'var(--s-body, #4a5168)', marginBottom: '6px' }}>{r.description}</div>
       )}
       <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
         <span style={{
           padding: '2px 8px', borderRadius: '20px', fontSize: '11px', fontWeight: '600',
-          background: typeColor[r.resource_type]?.bg || '#f5f6fa',
-          color: typeColor[r.resource_type]?.color || '#4a5168',
+          background: typeColor[r.resource_type]?.bg || 'var(--s-bg, #f5f6fa)',
+          color: typeColor[r.resource_type]?.color || 'var(--s-body, #4a5168)',
         }}>
           {label(r.resource_type)}
         </span>
         {r.provider && (
-          <span style={{ fontSize: '11px', color: '#8b92a8' }}>📍 {r.provider}</span>
+          <span style={{ fontSize: '11px', color: 'var(--s-muted, #8b92a8)' }}>📍 {r.provider}</span>
         )}
         {r.cost && (
-          <span style={{ fontSize: '11px', color: '#8b92a8' }}>💰 {r.cost}</span>
+          <span style={{ fontSize: '11px', color: 'var(--s-muted, #8b92a8)' }}>💰 {r.cost}</span>
         )}
         {r.duration_hours && (
-          <span style={{ fontSize: '11px', color: '#8b92a8' }}>⏱ ~{r.duration_hours} hrs</span>
+          <span style={{ fontSize: '11px', color: 'var(--s-muted, #8b92a8)' }}>⏱ ~{r.duration_hours} hrs</span>
         )}
         {r.difficulty && (
-          <span style={{ fontSize: '11px', color: '#8b92a8', textTransform: 'capitalize' }}>
+          <span style={{ fontSize: '11px', color: 'var(--s-muted, #8b92a8)', textTransform: 'capitalize' }}>
             📊 {r.difficulty}
           </span>
         )}
@@ -250,7 +250,7 @@ export default function Recommendations() {
       {/* Open link */}
       {r.url && (
         <a href={r.url} target="_blank" rel="noreferrer" style={{
-          padding: '7px 14px', background: '#2d5be3', color: '#fff',
+          padding: '7px 14px', background: 'var(--s-accent, #2d5be3)', color: '#fff',
           borderRadius: '7px', fontSize: '12px', fontWeight: '600',
           textDecoration: 'none',
         }}>
@@ -277,7 +277,7 @@ export default function Recommendations() {
   })
   const noResources = recs.filter(rec => rec.resources.length === 0)
 
-  if (loading) return <div style={{ padding: '40px', color: '#8b92a8' }}>Loading...</div>
+  if (loading) return <div style={{ padding: '40px', color: 'var(--s-muted, #8b92a8)' }}>Loading...</div>
 
   return (
     <div style={{ padding: '28px 32px' }}>
@@ -291,12 +291,12 @@ export default function Recommendations() {
           onClose={() => setCompleting(null)} />
       )}
 
-      {notice && <div role="status" style={{ background: '#dcfce7', color: '#16a34a', padding: '10px 12px', borderRadius: '8px', fontSize: '13px', marginBottom: '14px' }}>{notice}</div>}
+      {notice && <div role="status" style={{ background: 'var(--s-good-soft, #dcfce7)', color: 'var(--s-good, #16a34a)', padding: '10px 12px', borderRadius: '8px', fontSize: '13px', marginBottom: '14px' }}>{notice}</div>}
 
       {/* ── Page Header ── */}
       <div style={{ marginBottom: '24px' }}>
-        <div style={{ fontSize: '26px', fontWeight: '700', color: '#1a1f2e' }}>Personalised Recommendations</div>
-        <div style={{ fontSize: '13px', color: '#4a5168', marginTop: '4px' }}>
+        <div style={{ fontSize: '26px', fontWeight: '700', color: 'var(--s-ink, #1a1f2e)' }}>Personalised Recommendations</div>
+        <div style={{ fontSize: '13px', color: 'var(--s-body, #4a5168)', marginTop: '4px' }}>
           Activities to close your skill gaps
         </div>
       </div>
@@ -304,17 +304,17 @@ export default function Recommendations() {
       {/* ── Assessment Selector ── */}
       {history.length > 0 && (
         <div style={{
-          background: '#fff', border: '1px solid #e4e6ef', borderRadius: '12px',
+          background: '#fff', border: '1px solid var(--s-line, #e4e6ef)', borderRadius: '12px', boxShadow: 'var(--s-card-shadow, none)',
           padding: '16px 24px', marginBottom: '16px',
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <label style={{ fontSize: '13px', fontWeight: '600', color: '#4a5168' }}>Assessment:</label>
+          <label style={{ fontSize: '13px', fontWeight: '600', color: 'var(--s-body, #4a5168)' }}>Assessment:</label>
           <select
             value={selId}
             onChange={e => { setSelId(e.target.value); loadRecs(e.target.value) }}
             style={{
-              flex: 1, minWidth: 0, padding: '8px 12px', border: '1.5px solid #e4e6ef',
-              borderRadius: '8px', fontSize: '13px', background: '#f5f6fa',
+              flex: 1, minWidth: 0, padding: '8px 12px', border: '1.5px solid var(--s-line, #e4e6ef)',
+              borderRadius: '8px', fontSize: '13px', background: 'var(--s-bg, #f5f6fa)',
             }}>
             {history.map(h => (
               <option key={h.assessment_id} value={h.assessment_id}>
@@ -330,19 +330,19 @@ export default function Recommendations() {
       {/* ── Progress Summary Bar ── */}
       {Object.keys(progressMap).length > 0 && (
         <div style={{
-          background: '#fff', border: '1px solid #e4e6ef', borderRadius: '12px',
+          background: '#fff', border: '1px solid var(--s-line, #e4e6ef)', borderRadius: '12px', boxShadow: 'var(--s-card-shadow, none)',
           padding: '14px 24px', marginBottom: '16px',
           display: 'flex', gap: '24px', alignItems: 'center',
         }}>
-          <div style={{ fontSize: '12px', fontWeight: '600', color: '#4a5168' }}>Your progress:</div>
+          <div style={{ fontSize: '12px', fontWeight: '600', color: 'var(--s-body, #4a5168)' }}>Your progress:</div>
           <div style={{ display: 'flex', gap: '16px' }}>
-            <span style={{ fontSize: '12px', color: '#16a34a', fontWeight: '600' }}>
+            <span style={{ fontSize: '12px', color: 'var(--s-good, #16a34a)', fontWeight: '600' }}>
               ✅ {Object.values(progressMap).filter(p => p.status === 'completed').length} completed
             </span>
-            <span style={{ fontSize: '12px', color: '#d97706', fontWeight: '600' }}>
+            <span style={{ fontSize: '12px', color: 'var(--s-warn, #d97706)', fontWeight: '600' }}>
               ⏳ {Object.values(progressMap).filter(p => p.status === 'in_progress').length} in progress
             </span>
-            <span style={{ fontSize: '12px', color: '#8b92a8', fontWeight: '600' }}>
+            <span style={{ fontSize: '12px', color: 'var(--s-muted, #8b92a8)', fontWeight: '600' }}>
               ○ {Object.keys(progressMap).length === 0 ? '—' :
                 (recs.reduce((acc, r) => acc + r.resources.length, 0) - Object.keys(progressMap).length)} not started
             </span>
@@ -352,7 +352,7 @@ export default function Recommendations() {
 
       {/* ── Empty State ── */}
       {recs.length === 0 && !loading && (
-        <div style={{ textAlign: 'center', padding: '80px', color: '#8b92a8' }}>
+        <div style={{ textAlign: 'center', padding: '80px', color: 'var(--s-muted, #8b92a8)' }}>
           <div style={{ fontSize: '48px', marginBottom: '12px' }}>💡</div>
           <div>No recommendations yet. Run an assessment first.</div>
         </div>
@@ -377,12 +377,12 @@ export default function Recommendations() {
 
       {/* Nothing in the chosen tier: point to the tiers that have something */}
       {recs.length > 0 && sections.find(sec => sec.id === tier)?.count === 0 && (
-        <div style={{ background: '#fff', border: '1px solid #e4e6ef', borderRadius: '12px', padding: '24px', marginBottom: '12px',
-                      textAlign: 'center', fontSize: '13px', color: '#4a5168' }}>
+        <div style={{ background: '#fff', border: '1px solid var(--s-line, #e4e6ef)', borderRadius: '12px', boxShadow: 'var(--s-card-shadow, none)', padding: '24px', marginBottom: '12px',
+                      textAlign: 'center', fontSize: '13px', color: 'var(--s-body, #4a5168)' }}>
           No {sections.find(sec => sec.id === tier).title.toLowerCase()} resources for these skill gaps.
           {sections.filter(sec => sec.count > 0).map(sec => (
             <button key={sec.id} onClick={() => setTier(sec.id)}
-              style={{ marginLeft: '8px', border: 'none', background: 'none', color: '#2d5be3', fontWeight: '600', cursor: 'pointer', fontSize: '13px' }}>
+              style={{ marginLeft: '8px', border: 'none', background: 'none', color: 'var(--s-accent, #2d5be3)', fontWeight: '600', cursor: 'pointer', fontSize: '13px' }}>
               See {sec.title} ({sec.count}) →
             </button>
           ))}
@@ -394,30 +394,30 @@ export default function Recommendations() {
           <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px', flexWrap: 'wrap', marginBottom: '12px',
                         paddingBottom: '8px', borderBottom: `2px solid ${sec.style.border}` }}>
             <span style={{ fontSize: '18px', fontWeight: '700', color: sec.style.color }}>{sec.title}</span>
-            <span style={{ fontSize: '12px', color: '#8b92a8' }}>{sec.note} · {sec.count} resource{sec.count === 1 ? '' : 's'}</span>
+            <span style={{ fontSize: '12px', color: 'var(--s-muted, #8b92a8)' }}>{sec.note} · {sec.count} resource{sec.count === 1 ? '' : 's'}</span>
           </div>
 
           {sec.categories.map(cat => (
             <div key={cat.id} style={{ marginBottom: '14px' }}>
-              <div style={{ fontSize: '12px', fontWeight: '700', color: '#4a5168', textTransform: 'uppercase',
+              <div style={{ fontSize: '12px', fontWeight: '700', color: 'var(--s-body, #4a5168)', textTransform: 'uppercase',
                             letterSpacing: '0.5px', margin: '0 0 8px 2px' }}>
                 {cat.title}
               </div>
               {cat.skills.map(rec => (
                 <div key={rec.skill_id} style={{
-                  background: '#fff', border: '1px solid #e4e6ef',
+                  background: '#fff', border: '1px solid var(--s-line, #e4e6ef)',
                   borderRadius: '12px', padding: '20px', marginBottom: '12px',
                 }}>
                   {/* Skill Gap Header */}
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px' }}>
                     <span style={{
                       padding: '4px 12px', borderRadius: '20px', fontSize: '12px', fontWeight: '700',
-                      background: gapColor[rec.gap_type]?.bg || '#fee2e2',
-                      color: gapColor[rec.gap_type]?.color || '#dc2626',
+                      background: gapColor[rec.gap_type]?.bg || 'var(--s-bad-soft, #fee2e2)',
+                      color: gapColor[rec.gap_type]?.color || 'var(--s-bad, #dc2626)',
                     }}>
                       {rec.gap_type === 'gap' ? '✖ Skill Gap' : '◆ Developing'}
                     </span>
-                    <span style={{ fontSize: '15px', fontWeight: '700', color: '#1a1f2e' }}>{rec.skill_name}</span>
+                    <span style={{ fontSize: '15px', fontWeight: '700', color: 'var(--s-ink, #1a1f2e)' }}>{rec.skill_name}</span>
                   </div>
                   {rec.resources.map((r, j) => renderResource(r, j, rec.resources.length))}
                 </div>
@@ -429,8 +429,8 @@ export default function Recommendations() {
 
       {/* Skills with no resource in the library yet */}
       {noResources.length > 0 && (
-        <div style={{ background: '#fff', border: '1px solid #e4e6ef', borderRadius: '12px', padding: '16px 20px', marginBottom: '12px',
-                      fontSize: '13px', color: '#4a5168' }}>
+        <div style={{ background: '#fff', border: '1px solid var(--s-line, #e4e6ef)', borderRadius: '12px', boxShadow: 'var(--s-card-shadow, none)', padding: '16px 20px', marginBottom: '12px',
+                      fontSize: '13px', color: 'var(--s-body, #4a5168)' }}>
           <b>No resources in our library yet for:</b> {noResources.map(r => r.skill_name).join(', ')}. Try searching online for courses on these skills.
         </div>
       )}
@@ -438,13 +438,13 @@ export default function Recommendations() {
       {/* ── Note ── */}
       {recs.length > 0 && (
         <div style={{
-          background: '#eef2fd', border: '1px solid #c7d7f8',
+          background: 'var(--s-accent-soft, #eef2fd)', border: '1px solid var(--s-accent-line, #c7d7f8)',
           borderRadius: '10px', padding: '14px 18px', marginTop: '8px',
         }}>
-          <div style={{ fontSize: '12px', color: '#2d5be3', fontWeight: '600', marginBottom: '3px' }}>
+          <div style={{ fontSize: '12px', color: 'var(--s-accent, #2d5be3)', fontWeight: '600', marginBottom: '3px' }}>
             ℹ️ About these recommendations
           </div>
-          <div style={{ fontSize: '12px', color: '#4a5168' }}>
+          <div style={{ fontSize: '12px', color: 'var(--s-body, #4a5168)' }}>
             These are AI-assisted suggestions based on your skill gaps. Track your progress using the Start and Mark Complete buttons. Consult your academic advisor for personalised career guidance.
           </div>
         </div>
