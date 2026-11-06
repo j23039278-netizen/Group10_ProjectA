@@ -32,3 +32,27 @@ def tiered_readiness(rows):
         return 0
     earned = sum(TIER_WEIGHTS[tier] * c for tier, c in present.items())
     return round(100 * earned / sum(TIER_WEIGHTS[tier] for tier in present), 2)
+
+
+def skill_points(rows):
+    """{tier: points of one skill of that tier}, for the tiers this job has. Readiness is
+    linear in the credits, so sum(points x credit) over the rows is tiered_readiness(rows).
+
+    rows have "importance"; a missing importance counts as required.
+    """
+    counts = {}
+    for row in rows:
+        tier = row.get("importance") or "required"
+        counts[tier] = counts.get(tier, 0) + 1
+    total = sum(TIER_WEIGHTS[tier] for tier in counts)
+    return {tier: 100 * TIER_WEIGHTS[tier] / total / n for tier, n in counts.items()}
+
+
+def expected_gain(points, status):
+    """The most a skill at this status can add: what it adds when it reaches Strong."""
+    return points * (1 - STATUS_CREDIT[status])
+
+
+def gain_between(points, status, status_after):
+    """What moving a skill from status to status_after adds; never negative."""
+    return points * max(0, STATUS_CREDIT[status_after] - STATUS_CREDIT[status])

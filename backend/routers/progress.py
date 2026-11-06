@@ -16,10 +16,12 @@ from typing import Optional
 from uuid import UUID
 
 import evidence
+import nlp_service  # noqa: F401  (puts the repo root on the path for nlp)
 from database import get_db
+from nlp import activity_evidence
 from routers.auth import get_current_user
 from routers.students import refresh_profile_complete
- 
+
 router = APIRouter()
  
  
@@ -30,18 +32,14 @@ class ProgressUpdate(BaseModel):
  
 # ── Helper: add the skill of a completed activity ────────────
 LEVEL_ORDER = ["beginner", "intermediate", "advanced"]
-# The kind of evidence each resource type gives (nlp/matcher.py: coursework alone does
-# not make a beginner skill Strong; the other kinds do)
-EVIDENCE_OF_TYPE = {"course": "coursework", "workshop": "coursework", "certification": "certification",
-                    "project": "project", "competition": "project", "internship": "internship"}
 
 
 def add_completed_skill(db, profile_id, resource):
-    """Add the activity's skill at the resource's difficulty, with its kind of evidence.
-    A skill already listed keeps its level unless this one is higher, and gains the evidence.
-    Returns the sentence shown to the student."""
-    level = resource.difficulty if resource.difficulty in LEVEL_ORDER else "beginner"
-    kind = EVIDENCE_OF_TYPE.get(resource.resource_type, "coursework")
+    """Add the activity's skill at the resource's difficulty, with its kind of evidence
+    (nlp/matcher.py: coursework alone does not make a beginner skill Strong; the other
+    kinds do). A skill already listed keeps its level unless this one is higher, and gains
+    the evidence. Returns the sentence shown to the student."""
+    level, kind = activity_evidence(resource.difficulty, resource.resource_type)
     name = resource.skill_name
     row = db.execute(
         text("SELECT proficiency_level, evidence_type FROM student_skills WHERE profile_id = :pid AND skill_id = :sid"),

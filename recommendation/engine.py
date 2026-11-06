@@ -2,20 +2,40 @@
 SEAGAS — Recommendation Engine
 Rule-based engine that maps identified skill gaps to development resources.
 Author: Tan Jun Xiong (Aaron) — Co-Leader & Recommendation Engine Developer
- 
+
 Logic:
-  1. Receive skill gaps from assessment results (gap / developing)
-  2. Look up matching resources in recommendations_library
-  3. Prioritise by: gap > developing; within a skill: cost tier (free first),
-     difficulty order, resource type order
-  4. Return ranked recommendations with explanation
+  1. Receive the match rows of an assessment (assessment_service.load_match_rows)
+  2. Order the skills to work on: required gap, required developing, preferred gap,
+     preferred developing, bonus gap, bonus developing, then skill name (priority_key)
+  3. Look up matching resources in recommendations_library; within a skill: cost tier
+     (free first), difficulty order, resource type order
+  4. Say what each is worth on the readiness score: expected_gain on a skill (the most it
+     can add, when it reaches Strong), gain_if_completed on a resource (what completing
+     that resource adds; the rule is nlp.status_after_activity)
+  5. Pick first_steps: up to 3 skills, each with the resource worth doing first
+  6. Return ranked recommendations with explanation
+
+The gains are arithmetic on the score, not a claim about learning or employability:
+docs/JOB_READINESS_SCORE.md, section 8.
 """
- 
+
+import sys
+from pathlib import Path
+
 from sqlalchemy.orm import Session
 from sqlalchemy import text
 from typing import List, Dict, Optional
- 
- 
+
+# backend/ holds the modules below; recommendation/ is also imported from tests and data scripts
+BACKEND = str(Path(__file__).resolve().parents[1] / "backend")
+if BACKEND not in sys.path:
+    sys.path.append(BACKEND)
+
+from assessment_service import load_match_rows  # noqa: E402
+from nlp import status_after_activity  # noqa: E402  (nlp/ sits next to recommendation/)
+from readiness import expected_gain, gain_between, skill_points  # noqa: E402
+
+
 # ── Resource type priority (what to recommend first) ──────────
 RESOURCE_TYPE_PRIORITY = {
     "course":        1,
@@ -58,6 +78,106 @@ GAP_TYPE_PRIORITY = {
     "gap":        1,
     "developing": 2,
 }
+
+# ── Importance priority (required first) ──────────────────────
+IMPORTANCE_PRIORITY = {
+    "required":  1,
+    "preferred": 2,
+    "bonus":     3,
+}
+
+FIRST_STEPS = 3
+
+
+def priority_key(skill: Dict) -> tuple:
+    """Sort key of a skill to work on: importance, then gap before developing, then name."""
+    return (
+        IMPORTANCE_PRIORITY[skill["importance"]],
+        GAP_TYPE_PRIORITY[skill["gap_type"]],
+        skill["skill_name"].casefold(),
+    )
+
+
+def skills_to_do(rows: List[Dict], include_developing: bool = True) -> List[Dict]:
+    """The skills still to work on from an assessment's match rows, in priority order.
+    Points come from all the rows: a skill's worth depends on how many share its tier."""
+    points = skill_points(rows)
+    statuses = ("gap", "developing") if include_developing else ("gap",)
+    skills = [
+        {
+            "skill_id":      row["skill_id"],
+            "skill_name":    row["skill_name"],
+            "category":      row["category"],
+            "gap_type":      row["match_status"],
+            "similarity":    row["similarity_score"],
+            "importance":    row["importance"],
+            "points":        points[row["importance"]],
+            "expected_gain": round(expected_gain(points[row["importance"]], row["match_status"]), 1),
+        }
+        for row in rows if row["match_status"] in statuses
+    ]
+    return sorted(skills, key=priority_key)
+
+
+def gain_if_completed(points: float, gap_type: str, resource: Dict) -> float:
+    """What completing this resource adds to the score, rounded to 1 decimal."""
+    after = status_after_activity(resource.get("difficulty"), resource.get("resource_type"))
+    return round(gain_between(points, gap_type, after), 1)
+
+
+def with_gains(resources: List[Dict], skill: Dict) -> List[Dict]:
+    """Copies of a skill's resources with gain_if_completed for this student's status."""
+    return [{**r, "gain_if_completed": gain_if_completed(skill["points"], skill["gap_type"], r)}
+            for r in resources]
+
+
+def _best_resource(resources: List[Dict]) -> Optional[Dict]:
+    """The resource worth doing: highest gain among free and free-to-learn ones, or among
+    all when those add nothing. max() keeps the first on a tie, so the existing order holds.
+    None when nothing adds points."""
+    free = [r for r in resources if r["cost_tier"] != "paid"]
+    for choices in (free, resources):
+        best = max(choices, key=lambda r: r["gain_if_completed"], default=None)
+        if best and best["gain_if_completed"] > 0:
+            return best
+    return None
+
+
+def first_steps(
+    skills: List[Dict],
+    resources_by_skill: Dict[str, List[Dict]],
+    completed: List[Dict],
+    assessment_created_at,
+    limit: int = FIRST_STEPS
+) -> List[Dict]:
+    """
+    What to do first: walks the ordered skills and takes the first `limit` with a resource
+    worth doing. A completed resource is never picked. A skill with a resource completed
+    after the assessment was created is skipped, because its status is out of date until
+    the student runs the assessment again.
+
+    Args:
+        skills: from skills_to_do, in order
+        resources_by_skill: {skill_id: all active resources of the skill, with gains}
+        completed: the student's completed resources {resource_id, skill_id, completed_at}
+        assessment_created_at: when this assessment was created
+    """
+    done = {c["resource_id"] for c in completed}
+    out_of_date = {c["skill_id"] for c in completed
+                   if c["completed_at"] and c["completed_at"] > assessment_created_at}
+    steps = []
+    for skill in skills:
+        if skill["skill_id"] in out_of_date:
+            continue
+        resource = _best_resource([r for r in resources_by_skill.get(skill["skill_id"], [])
+                                   if r["resource_id"] not in done])
+        if resource:
+            steps.append({key: skill[key] for key in ("skill_id", "skill_name", "category", "gap_type",
+                                                      "importance", "expected_gain")}
+                         | {"resource": resource})
+        if len(steps) == limit:
+            break
+    return steps
  
  
 def get_recommendations_for_assessment(
@@ -80,95 +200,90 @@ def get_recommendations_for_assessment(
         Dict with recommendations list and summary stats
     """
  
-    # Step 1: Get skill gaps from assessment
-    gap_filter = "('gap', 'developing')" if include_developing else "('gap')"
- 
-    gaps = db.execute(
-        text(f"""
-            SELECT
-                smr.skill_id,
-                sl.skill_name,
-                sl.category,
-                smr.match_status,
-                smr.similarity_score
-            FROM skill_match_results smr
-            JOIN skills_library sl ON sl.skill_id = smr.skill_id
-            WHERE smr.assessment_id = :aid
-            AND smr.match_status IN {gap_filter}
-            ORDER BY
-                CASE smr.match_status
-                    WHEN 'gap'        THEN 1
-                    WHEN 'developing' THEN 2
-                END,
-                sl.skill_name
-        """),
-        {"aid": assessment_id}
-    ).fetchall()
- 
-    if not gaps:
+    # Step 1: Get the skills to work on, in priority order
+    skills = skills_to_do(load_match_rows(db, assessment_id), include_developing)
+
+    if not skills:
         return {
             "assessment_id": assessment_id,
             "total_gaps":    0,
             "recommendations": [],
+            "first_steps":   [],
             "message": "No skill gaps found — great job!"
         }
- 
-    # Step 2: Get resources for each gap
+
+    # Step 2: Get resources for each skill
     recommendations = []
- 
-    for gap in gaps:
-        resources = _get_resources_for_skill(
-            skill_id=str(gap.skill_id),
-            db=db,
-            max_resources=max_resources_per_skill,
-            gap_type=gap.match_status
-        )
- 
+    resources_by_skill = {}
+
+    for position, skill in enumerate(skills, start=1):
+        resources_by_skill[skill["skill_id"]] = with_gains(ranked_resources(skill["skill_id"], db), skill)
+        resources = resources_by_skill[skill["skill_id"]][:max_resources_per_skill]
+
         explanation = _generate_explanation(
-            skill_name=gap.skill_name,
-            gap_type=gap.match_status,
-            category=gap.category,
-            similarity_score=gap.similarity_score,
+            skill_name=skill["skill_name"],
+            gap_type=skill["gap_type"],
+            category=skill["category"],
+            similarity_score=skill["similarity"],
             resource_count=len(resources)
         )
- 
+
         recommendations.append({
-            "skill_id":    str(gap.skill_id),
-            "skill_name":  gap.skill_name,
-            "category":    gap.category,
-            "gap_type":    gap.match_status,
-            "similarity":  gap.similarity_score,
-            "explanation": explanation,
-            "resources":   resources,
-            "priority":    GAP_TYPE_PRIORITY.get(gap.match_status, 99)
+            "skill_id":      skill["skill_id"],
+            "skill_name":    skill["skill_name"],
+            "category":      skill["category"],
+            "gap_type":      skill["gap_type"],
+            "similarity":    skill["similarity"],
+            "importance":    skill["importance"],
+            "expected_gain": skill["expected_gain"],
+            "explanation":   explanation,
+            "resources":     resources,
+            "priority":      position
         })
- 
-    # Step 3: Sort by priority (gaps first)
-    recommendations.sort(key=lambda x: x["priority"])
- 
+
+    # Step 3: What to do first
+    assessment = db.execute(
+        text("SELECT profile_id, created_at FROM assessments WHERE assessment_id = :aid"),
+        {"aid": assessment_id}
+    ).fetchone()
+    steps = first_steps(skills, resources_by_skill, load_completed(db, assessment.profile_id), assessment.created_at)
+
     # Step 4: Generate summary
     gap_count        = sum(1 for r in recommendations if r["gap_type"] == "gap")
     developing_count = sum(1 for r in recommendations if r["gap_type"] == "developing")
     total_resources  = sum(len(r["resources"]) for r in recommendations)
- 
+
     return {
         "assessment_id":    assessment_id,
         "total_gaps":       gap_count,
         "total_developing": developing_count,
         "total_resources":  total_resources,
         "recommendations":  recommendations,
+        "first_steps":      steps,
         "summary": _generate_summary(gap_count, developing_count, total_resources)
     }
- 
- 
-def _get_resources_for_skill(
-    skill_id: str,
-    db: Session,
-    max_resources: int = 3,
-    gap_type: str = "gap"
-) -> List[Dict]:
+
+
+def load_completed(db: Session, profile_id) -> List[Dict]:
+    """The student's completed resources. Starting one again changes its status but keeps
+    completed_at, and the skill it added stays, so it still counts as completed."""
+    rows = db.execute(
+        text("""
+            SELECT srp.resource_id, rl.skill_id, srp.completed_at
+            FROM student_resource_progress srp
+            JOIN recommendations_library rl ON rl.resource_id = srp.resource_id
+            WHERE srp.profile_id = :pid
+            AND (srp.status = 'completed' OR srp.completed_at IS NOT NULL)
+        """),
+        {"pid": str(profile_id)}
+    ).fetchall()
+    return [{"resource_id": str(r.resource_id), "skill_id": str(r.skill_id), "completed_at": r.completed_at}
+            for r in rows]
+
+
+def ranked_resources(skill_id: str, db: Session) -> List[Dict]:
     """
-    Fetch and rank resources for a specific skill gap.
+    Fetch and rank all active resources for a skill.
     Returns resources sorted by: cost tier (free first) → difficulty → type priority.
     Sorted here rather than in SQL so cost_tier() is the only place that reads cost.
     """
@@ -195,8 +310,8 @@ def _get_resources_for_skill(
         DIFFICULTY_ORDER.get(r.difficulty, 4),
         RESOURCE_TYPE_PRIORITY.get(r.resource_type, 7),
         r.resource_title,
-    ))[:max_resources]
- 
+    ))
+
     return [
         {
             "resource_id":    str(r.resource_id),
@@ -212,8 +327,8 @@ def _get_resources_for_skill(
         }
         for r in resources
     ]
- 
- 
+
+
 def _generate_explanation(
     skill_name: str,
     gap_type: str,

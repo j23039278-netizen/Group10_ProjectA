@@ -273,7 +273,10 @@ part of the research work still to do (see section 5).
 | Sensitivity analysis | `data/jrs_sensitivity.py` |
 | Real job descriptions covered (section 7) | `backend/jd_fit.py` (`JD_FIT_THRESHOLD`), `GET /api/assessments/{id}/jd-fit`, `frontend/src/pages/SkillGap.jsx` |
 | Cohort figures for section 7 | `data/jd_fit_cohort.py` |
-| Tests | `tests/test_readiness.py`, `tests/test_jd_fit.py`, `tests/test_backend_api.py` (`TestAssessment`, `TestJdFit`), `nlp/tests/test_matcher.py` |
+| What a recommendation is worth (section 8) | `backend/readiness.py` (`skill_points`, `expected_gain`, `gain_between`), `nlp/matcher.py` (`status_after_activity`), `recommendation/engine.py` (`priority_key`, `first_steps`) |
+| Importance of stored rows | `backend/assessment_service.py` (`load_match_rows`) |
+| Cohort figures for section 8 | `data/rec_order_effect.py` |
+| Tests | `tests/test_readiness.py`, `tests/test_jd_fit.py`, `tests/test_recommendation_engine.py`, `tests/test_backend_api.py` (`TestAssessment`, `TestJdFit`, `TestRecommendationPriority`), `nlp/tests/test_matcher.py` |
 
 ## 7. Real job descriptions covered (JD fit)
 
@@ -321,3 +324,80 @@ generated archetypes, not that it fits real students or predicts hiring.
 - **Covered is not a job match.** Coverage is a mean of credits, not a share of skills
   listed (a student listing every skill of a JD at beginner level without evidence reaches
   only 50%), and it says nothing about seniority or whether an employer would hire.
+
+## 8. What a recommendation is worth
+
+The Recommendations page says what to do first and what it adds to the score. Readiness is
+linear in the credits, so the points are exact:
+
+- **Points of one skill** = 100 × tier weight / (sum of the weights of the tiers this job
+  has) / (number of skills in its tier). `sum(points × credit)` over a job's skills is the
+  readiness score.
+- **`expected_gain`** = points × (1 − current credit): the most this skill can add, which it
+  adds when it reaches Strong. Shown as "up to +X".
+- **`gain_if_completed`** = points × max(0, credit after − current credit): what completing
+  this resource adds. Shown as "+X points", or "No score change on its own" when it is 0.
+
+**Credit after** (`status_after_activity` in `nlp/matcher.py`, the only copy): Strong if the
+resource is intermediate or advanced, or its type gives project, certification or
+internship evidence (a competition counts as a project); otherwise Developing. A missing
+difficulty counts as beginner. So a beginner course takes a Gap to Developing (half the
+points) and leaves a Developing skill where it is (0). Both numbers are rounded to 1 decimal
+for display, so the score can differ from a displayed gain by up to 0.05.
+
+**Order of the skills:** required gap, required developing, preferred gap, preferred
+developing, bonus gap, bonus developing, then skill name.
+
+**`first_steps`** (the "Do these first" card) walks the skills in that order and takes the
+first 3 that have a resource worth doing. A resource the student has completed is never
+picked. A skill with a resource completed after the assessment was created is skipped,
+because its status is out of date until the student runs the assessment again. For each
+skill it picks the highest `gain_if_completed` among free and free-to-learn resources, or
+among all resources if those would add nothing, keeping the existing resource order on a
+tie. A skill where nothing adds points is skipped.
+
+**Importance of stored rows.** `skill_match_results.importance` is written from 6 November
+2026 and not backfilled. Older rows are read as the role template's importance, then as
+required (`load_match_rows`). So an older row follows any later change to the template.
+
+Measured with `python data/rec_order_effect.py` on 6 November 2026, on a copy of the local
+database reloaded with the data version `2026-11-05-ict-roles` and re-assessed (hybrid):
+latest role-template assessment of 5,000 synthetic students, no activities completed.
+
+| | Old order | New order |
+|---|---:|---:|
+| Required share of the first three skills | 8.6% | 74.7% |
+| Students with a required skill to do who have one in the first three | 22.5% | 100.0% |
+| Median position of the first required skill | 7 | 1 |
+| Gain if all three reach Strong, mean / median | +6.1 / +4.4 | +18.2 / +19.5 |
+| Gain from completing the first resource of each, mean / median | +4.5 / +3.2 | +13.0 / +13.2 |
+
+`first_steps` on the same students: 73.9% required, gain +16.7 mean / +17.5 median, 3.4% of
+the resources shown are paid. All 5,000 stored assessments satisfy `sum(points × credit) =
+readiness_score` within 0.02.
+
+These figures depend on the matching method. A machine without `nlp/requirements.txt` falls
+back to keyword, which finds no related skills, so more skills are Gaps and each is worth
+more. On the same data with keyword (mean readiness 52.1, not 55.5) the new order gives
+74.7%, 100.0%, position 1, +19.4 and +14.1, and `first_steps` gives 74.0% required, +17.6 mean,
++18.8 median and 2.2% paid.
+
+**Limits.**
+
+- **The gain is arithmetic on the score, measured on synthetic students.** It does not show
+  that a student learned the skill or became more employable.
+- **Pasted job descriptions count every skill as required** until importance is extracted
+  from them, so their order is only gap, developing, then name, and their label always says
+  required.
+- **With the semantic and hybrid methods the rise can be larger than the gain.** Adding a
+  skill to a profile can also make a related skill of the job Developing (rule A), for
+  example AWS for Azure. The gain counts only the skill the resource teaches. Simulating the
+  `first_steps` of every 25th student (200 students, 600 steps, hybrid), the rise equalled the
+  gain in 85.2% of steps and was larger in 14.8%, by +2.06 on average, and was never smaller.
+  With the keyword method it is exact.
+- **The number assumes the same job and an assessment run again.** The score does not change
+  until the student runs the assessment again. An assessment scored before 5 November 2026
+  also carries the old formula (section 2.6), so its next score moves by more than the gain.
+- **Later resources of an out-of-date skill.** Below the card, the list still shows gains from
+  the stored status, so after a beginner course a second beginner course on that skill still
+  shows "+X points" until the student runs the assessment again.

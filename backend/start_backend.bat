@@ -29,10 +29,17 @@ set "PGCLIENTENCODING=UTF8"
 set "PGHOST=localhost"
 set "PGUSER=postgres"
 
-REM Find a real Python (the Microsoft Store "python" alias does not count)
+REM Find a real Python (the Microsoft Store "python" alias does not count).
+REM Prefer one with the NLP packages: the default Python may be a newer one without them,
+REM and then every assessment would fall back to keyword matching.
 set "PY="
-py -3 --version >nul 2>&1 && set "PY=py -3"
+for %%C in ("py -3" "py -3.13" "py -3.12" "py -3.11" "py -3.10" "python") do (
+    if not defined PY %%~C -c "import nlp_service, sys; sys.exit(not nlp_service.level2_installed())" >nul 2>&1 && set "PY=%%~C"
+)
+REM None has them: keyword matching still works
+if not defined PY py -3 --version >nul 2>&1 && set "PY=py -3"
 if not defined PY python --version >nul 2>&1 && set "PY=python"
+if defined PY echo Using Python: %PY%
 if not defined PY (
     echo [ERROR] Python is not installed.
     echo         Install Python 3.12 from https://www.python.org/downloads/
@@ -159,7 +166,8 @@ if errorlevel 1 (
 REM The advisor dashboard needs assessment data: assess the synthetic students
 REM (same code as the website). Assesses students with none yet, and every
 REM synthetic student once more when the matching rules changed
-REM (nlp\config.py MATCH_RULES_VERSION); otherwise it does nothing.
+REM (nlp\config.py MATCH_RULES_VERSION) or when they were assessed with keyword and
+REM hybrid is available now; otherwise it does nothing.
 echo [4c/4] Checking synthetic assessments ...
 %PY% "..\data\run_assessments.py" --auto
 if errorlevel 1 goto :fail

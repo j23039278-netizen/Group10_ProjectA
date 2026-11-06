@@ -65,6 +65,34 @@ def load_student_skills(db, profile_id):
                            [r for r in records if r.kind == "certification"])
 
 
+def load_match_rows(db, assessment_id):
+    """The stored match rows of an assessment as dicts, strong first, then by skill name.
+    The one place that reads importance: rows stored before the column existed fall back to
+    the role template, then to required (a pasted JD counts every skill as required)."""
+    rows = db.execute(
+        text("""
+            SELECT smr.skill_id, sl.skill_name, sl.category,
+                   smr.match_status, smr.similarity_score, smr.matching_method,
+                   smr.matched_student_skill, smr.reason,
+                   COALESCE(smr.importance, jrs.importance, 'required') AS importance
+            FROM skill_match_results smr
+            JOIN assessments a     ON a.assessment_id = smr.assessment_id
+            JOIN skills_library sl ON sl.skill_id = smr.skill_id
+            LEFT JOIN job_role_skills jrs ON jrs.role_id = a.role_id AND jrs.skill_id = smr.skill_id
+            WHERE smr.assessment_id = :aid
+            ORDER BY
+                CASE smr.match_status
+                    WHEN 'strong'     THEN 1
+                    WHEN 'developing' THEN 2
+                    WHEN 'gap'        THEN 3
+                END,
+                sl.skill_name
+        """),
+        {"aid": str(assessment_id)}
+    ).fetchall()
+    return [{**r._mapping, "skill_id": str(r.skill_id)} for r in rows]
+
+
 def run_for_profile(db, profile, *, role_id=None, jd_id=None,
                     method=nlp_service.DEFAULT_METHOD, commit=True):
     """Assess one student profile against a role template or an analysed JD.
@@ -192,15 +220,16 @@ def run_for_profile(db, profile, *, role_id=None, jd_id=None,
 
     rows = [{"aid": assessment_id, "sid": m["skill_id"], "status": m["match_status"],
              "score": m["similarity_score"], "method": m["matching_method"],
-             "matched": m["matched_student_skill"], "reason": m["reason"]}
+             "matched": m["matched_student_skill"], "reason": m["reason"],
+             "importance": m["importance"]}
             for m in match_results if m["skill_id"]]
     if rows:
         db.execute(
             text("""
                 INSERT INTO skill_match_results
                     (assessment_id, skill_id, match_status, similarity_score,
-                     matching_method, matched_student_skill, reason)
-                VALUES (:aid, :sid, :status, :score, :method, :matched, :reason)
+                     matching_method, matched_student_skill, reason, importance)
+                VALUES (:aid, :sid, :status, :score, :method, :matched, :reason, :importance)
                 ON CONFLICT (assessment_id, skill_id) DO NOTHING
             """),
             rows

@@ -282,11 +282,13 @@ class SkillMatchResult(Base):
     matching_method       = Column(String(20), nullable=False)
     matched_student_skill = Column(String(255))
     reason              = Column(Text)
+    importance            = Column(String(10))   # NULL on rows stored before 6 November 2026
 
     __table_args__ = (
         UniqueConstraint("assessment_id", "skill_id", name="uq_assessment_skill"),
         CheckConstraint("match_status IN ('strong','developing','gap')",          name="chk_match_status"),
         CheckConstraint("matching_method IN ('keyword','semantic','hybrid')",     name="chk_result_method"),
+        CheckConstraint("importance IN ('required','preferred','bonus')",         name="chk_result_importance"),
     )
 
     assessment = relationship("Assessment",   back_populates="match_results")
