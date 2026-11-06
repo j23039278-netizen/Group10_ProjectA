@@ -2068,6 +2068,62 @@ def test_assessment_service_matches_endpoint(env, alice):
     assert [m["match_status"] for m in direct["match_results"]] == [m["match_status"] for m in via_api["match_results"]]
 
 
+def batch_script():
+    sys.path.insert(0, str(ROOT / "data"))
+    import run_assessments
+    return run_assessments
+
+
+class TestReassessWhenHybridArrives:
+    """start_backend.bat runs data/run_assessments.py --auto: it re-assesses once when the
+    students were assessed with keyword and hybrid works now, and never in a loop."""
+
+    def synthetic_assessment(self, env, n, method):
+        conn = env["conn"]
+        uid = conn.execute("INSERT INTO users (email, password_hash, role, full_name) "
+                           "VALUES (%s, 'x', 'student', %s) RETURNING user_id::text",
+                           (f"student{n:04d}@synthetic.example.com", f"Synthetic {n}")).fetchone()[0]
+        pid = conn.execute("INSERT INTO student_profiles (user_id) VALUES (%s) RETURNING profile_id::text", (uid,)).fetchone()[0]
+        return lambda m=method: conn.execute(
+            "INSERT INTO assessments (profile_id, role_id, matching_method, readiness_score) "
+            "VALUES (%s, %s, %s, 50)", (pid, env["da"], m))
+
+    def test_only_when_most_latest_assessments_are_keyword(self, env):
+        from database import SessionLocal
+        script, db = batch_script(), SessionLocal()
+        try:
+            assert script.mostly_keyword(db) is False                 # nobody assessed yet
+            first = self.synthetic_assessment(env, 9001, "keyword")
+            first()
+            assert script.mostly_keyword(db) is True
+            second = self.synthetic_assessment(env, 9002, "hybrid")
+            second()
+            third = self.synthetic_assessment(env, 9003, "hybrid")
+            third()
+            db.commit()
+            assert script.mostly_keyword(db) is False                 # one demo account on keyword
+            first("hybrid")                                           # only the latest one counts
+            second("keyword")
+            third("keyword")
+            db.commit()
+            assert script.mostly_keyword(db) is True
+        finally:
+            db.close()
+            env["conn"].execute("DELETE FROM users WHERE email LIKE 'student900_@synthetic.example.com'")
+
+    def test_hybrid_works_needs_the_packages(self, env, monkeypatch):
+        script = batch_script()
+        monkeypatch.setattr(script.nlp_service, "level2_installed", lambda: False)
+        assert script.hybrid_works() is False
+
+    @pytest.mark.parametrize("used, expected", [("hybrid", True), ("keyword", False)])
+    def test_hybrid_works_needs_the_model_to_load(self, env, monkeypatch, used, expected):
+        script = batch_script()
+        monkeypatch.setattr(script.nlp_service, "level2_installed", lambda: True)
+        monkeypatch.setattr(script.nlp_service, "match_skills", lambda *a: ([], used, None))
+        assert script.hybrid_works() is expected
+
+
 class TestLibraryForAdvisors:
     """Advisors manage the skills, roles and resources of their own courses (routers/library.py)"""
 

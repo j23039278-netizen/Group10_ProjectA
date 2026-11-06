@@ -246,6 +246,11 @@ cd frontend && npm test                        # skill search and importance wor
 (the start script runs it once), so the advisor dashboard has cohort data.
 Options: `--method keyword|semantic|hybrid`, `--limit N`, `--force`.
 
+The start script picks a Python that has `nlp/requirements.txt` installed (`py -3`, then 3.13 to
+3.10, then `python`), so a newer default Python without them does not turn matching into keyword.
+If it finds none, it says so and uses keyword. Once hybrid works on a machine whose students
+were assessed with keyword, the next start re-assesses them once.
+
 ---
 
 ## 📅 Sprint Plan
