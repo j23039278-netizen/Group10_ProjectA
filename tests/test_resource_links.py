@@ -25,8 +25,7 @@ SQL_FILES = ["database/schema.sql", "database/migrate_existing_db.sql",
              "database/seed_recommendations_library_final.sql", "database/seed_business_skills.sql"]
 RERUN = SQL_FILES[1:]   # what start_backend.bat runs on every start
 
-# Returned 404 on 4 and 9 November 2026 and were replaced. The LinkedIn Learning link
-# (Attention to Detail) is still dead: no good replacement was found yet.
+# Returned 404 on 4 and 9 November 2026 and were replaced.
 OLD_DEAD_URLS = [
     "https://learn.microsoft.com/en-us/training/paths/windows-server-fundamentals-getting-started/",
     "https://pecb.com/en/education-and-training-for-iso-iec-27001",
@@ -51,6 +50,7 @@ OLD_DEAD_URLS = [
     "https://www.iiba.org/certification/entry-certificate-in-business-analysis/",
     "https://www.kaggle.com/learn/numpy",
     "https://www.kaggle.com/learn/r",
+    "https://www.linkedin.com/learning/improving-your-attention-to-detail",
     "https://www.mongodb.com/developer/languages/javascript/",
     "https://www.tenable.com/education/nessus",
 ]

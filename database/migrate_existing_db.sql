@@ -786,8 +786,7 @@ WHERE full_name <> regexp_replace(btrim(full_name), '\s+', ' ', 'g');
 
 
 -- ── Dead learning-resource links (9 November) ───────────────
--- data/check_resource_links.py found 26 seed URLs that return 404 (27 rows); 25 of them
--- (26 rows) are replaced here. The seed
+-- data/check_resource_links.py found 26 seed URLs that return 404 (27 rows). The seed
 -- files use ON CONFLICT DO NOTHING, so their new rows never reach an existing database:
 -- these UPDATEs fix the old rows in place (same resource_id, so student progress stays).
 -- Each one matches the skill and the old URL, so running this file again changes nothing.
@@ -935,6 +934,18 @@ UPDATE recommendations_library r SET
 FROM skills_library sl
 WHERE r.skill_id = sl.skill_id AND sl.skill_name = 'Adaptability' AND r.source = 'seed'
   AND r.url = 'https://www.coursera.org/learn/adaptability';
+
+-- Attention to Detail: Improve Attention to Detail
+UPDATE recommendations_library r SET
+    resource_title = CASE WHEN EXISTS (SELECT 1 FROM recommendations_library x
+        WHERE x.skill_id = r.skill_id AND x.resource_title = 'Building Focus in a Distracting World'
+          AND x.resource_id <> r.resource_id) THEN r.resource_title ELSE 'Building Focus in a Distracting World' END,
+    url = 'https://www.linkedin.com/learning/building-focus-in-a-distracting-world',
+    duration_hours = 1,
+    description = 'Strategies to build and keep focus at work, ending with sharpening attention to detail.'
+FROM skills_library sl
+WHERE r.skill_id = sl.skill_id AND sl.skill_name = 'Attention to Detail' AND r.source = 'seed'
+  AND r.url = 'https://www.linkedin.com/learning/improving-your-attention-to-detail';
 
 -- Interpersonal Skills: Inspiring and Motivating Individuals
 UPDATE recommendations_library r SET
