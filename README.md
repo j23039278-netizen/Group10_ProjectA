@@ -239,6 +239,7 @@ python -m pip install -r tests/requirements.txt
 python -m pytest tests -q                      # backend API (own temporary database) + data tests
 python -m pytest nlp/tests -q -m "not model"   # NLP tests without loading the model
 cd frontend && npm test                        # skill search and importance wording (no extra packages)
+python data/check_resource_links.py            # run before each demo: requests each learning-resource link once, exits 1 if any is dead (404/410)
 ```
 
 ### Batch assessments
