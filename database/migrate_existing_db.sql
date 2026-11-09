@@ -785,4 +785,304 @@ UPDATE users SET full_name = regexp_replace(btrim(full_name), '\s+', ' ', 'g')
 WHERE full_name <> regexp_replace(btrim(full_name), '\s+', ' ', 'g');
 
 
+-- ── Dead learning-resource links (9 November) ───────────────
+-- data/check_resource_links.py found 26 seed URLs that return 404 (27 rows); 25 of them
+-- (26 rows) are replaced here. The seed
+-- files use ON CONFLICT DO NOTHING, so their new rows never reach an existing database:
+-- these UPDATEs fix the old rows in place (same resource_id, so student progress stays).
+-- Each one matches the skill and the old URL, so running this file again changes nothing.
+-- A new title is only set when no other resource of the skill has it (uq_resource_skill).
+-- Keep the new values the same as in seed_recommendations_library_final.sql.
+-- Machine Learning: Build an ML Classification Model Project
+UPDATE recommendations_library r SET
+    url = 'https://scikit-learn.org/stable/getting_started.html'
+FROM skills_library sl
+WHERE r.skill_id = sl.skill_id AND sl.skill_name = 'Machine Learning' AND r.source = 'seed'
+  AND r.url = 'https://scikit-learn.org/stable/tutorial/index.html';
+
+-- Scikit-learn: Scikit-learn Official Tutorials
+UPDATE recommendations_library r SET
+    url = 'https://scikit-learn.org/stable/getting_started.html'
+FROM skills_library sl
+WHERE r.skill_id = sl.skill_id AND sl.skill_name = 'Scikit-learn' AND r.source = 'seed'
+  AND r.url = 'https://scikit-learn.org/stable/tutorial/index.html';
+
+-- Network Security: Cybrary Network Security Fundamentals
+UPDATE recommendations_library r SET
+    resource_title = CASE WHEN EXISTS (SELECT 1 FROM recommendations_library x
+        WHERE x.skill_id = r.skill_id AND x.resource_title = 'Connect and Protect: Networks and Network Security'
+          AND x.resource_id <> r.resource_id) THEN r.resource_title ELSE 'Connect and Protect: Networks and Network Security' END,
+    url = 'https://www.coursera.org/learn/networks-and-network-security',
+    provider = 'Coursera / Google',
+    duration_hours = 12,
+    cost = 'Free to audit',
+    description = 'Network architecture, protocols, common intrusion tactics and how to harden a network; part of the Google Cybersecurity Certificate.'
+FROM skills_library sl
+WHERE r.skill_id = sl.skill_id AND sl.skill_name = 'Network Security' AND r.source = 'seed'
+  AND r.url = 'https://www.cybrary.it/course/network-security-fundamentals/';
+
+-- Communication: Technical Writing Fundamentals
+UPDATE recommendations_library r SET
+    resource_title = CASE WHEN EXISTS (SELECT 1 FROM recommendations_library x
+        WHERE x.skill_id = r.skill_id AND x.resource_title = 'Technical Writing One'
+          AND x.resource_id <> r.resource_id) THEN r.resource_title ELSE 'Technical Writing One' END,
+    url = 'https://developers.google.com/tech-writing/one',
+    provider = 'Google for Developers',
+    duration_hours = 2,
+    cost = 'Free',
+    description = 'Google''s free self-study course on clear technical writing: consistent terms, active voice, short sentences, lists and audience.'
+FROM skills_library sl
+WHERE r.skill_id = sl.skill_id AND sl.skill_name = 'Communication' AND r.source = 'seed'
+  AND r.url = 'https://www.coursera.org/learn/technical-writing-101';
+
+-- Teamwork: Everyday Leadership
+UPDATE recommendations_library r SET
+    resource_title = CASE WHEN EXISTS (SELECT 1 FROM recommendations_library x
+        WHERE x.skill_id = r.skill_id AND x.resource_title = 'Teamwork Skills: Communicating Effectively in Groups'
+          AND x.resource_id <> r.resource_id) THEN r.resource_title ELSE 'Teamwork Skills: Communicating Effectively in Groups' END,
+    url = 'https://www.coursera.org/learn/teamwork-skills-effective-communication',
+    provider = 'Coursera / University of Colorado Boulder',
+    duration_hours = 10,
+    description = 'Communicate, make decisions and handle conflict effectively in teams and groups.'
+FROM skills_library sl
+WHERE r.skill_id = sl.skill_id AND sl.skill_name = 'Teamwork' AND r.source = 'seed'
+  AND r.url = 'https://www.coursera.org/learn/everyday-leadership-new';
+
+-- MongoDB: Build a REST API with Node.js and MongoDB
+UPDATE recommendations_library r SET
+    url = 'https://www.mongodb.com/resources/languages/mern-stack-tutorial',
+    description = 'Follow MongoDB''s MERN tutorial: build a CRUD REST API with Node.js, Express and MongoDB Atlas, then add a React front end.'
+FROM skills_library sl
+WHERE r.skill_id = sl.skill_id AND sl.skill_name = 'MongoDB' AND r.source = 'seed'
+  AND r.url = 'https://www.mongodb.com/developer/languages/javascript/';
+
+-- Feature Engineering: Feature Engineering for Machine Learning
+UPDATE recommendations_library r SET
+    resource_title = CASE WHEN EXISTS (SELECT 1 FROM recommendations_library x
+        WHERE x.skill_id = r.skill_id AND x.resource_title = 'Working with Numerical Data (Machine Learning Crash Course)'
+          AND x.resource_id <> r.resource_id) THEN r.resource_title ELSE 'Working with Numerical Data (Machine Learning Crash Course)' END,
+    url = 'https://developers.google.com/machine-learning/crash-course/numerical-data',
+    provider = 'Google for Developers',
+    duration_hours = 2,
+    cost = 'Free',
+    description = 'Google''s free module on feature vectors, normalisation, binning, outliers and synthetic features.'
+FROM skills_library sl
+WHERE r.skill_id = sl.skill_id AND sl.skill_name = 'Feature Engineering' AND r.source = 'seed'
+  AND r.url = 'https://www.coursera.org/learn/feature-engineering';
+
+-- Business Analysis: IIBA Entry Certificate in Business Analysis (ECBA)
+UPDATE recommendations_library r SET
+    url = 'https://www.iiba.org/business-analysis-certifications/ecba/',
+    cost = '$395 USD'
+FROM skills_library sl
+WHERE r.skill_id = sl.skill_id AND sl.skill_name = 'Business Analysis' AND r.source = 'seed'
+  AND r.url = 'https://www.iiba.org/certification/entry-certificate-in-business-analysis/';
+
+-- Decision Making: Decision Making and Scenarios
+UPDATE recommendations_library r SET
+    url = 'https://www.coursera.org/learn/wharton-decision-making-scenarios',
+    duration_hours = 9
+FROM skills_library sl
+WHERE r.skill_id = sl.skill_id AND sl.skill_name = 'Decision Making' AND r.source = 'seed'
+  AND r.url = 'https://www.coursera.org/learn/wharton-decision-making';
+
+-- Financial Analysis: Introduction to Financial Analysis
+UPDATE recommendations_library r SET
+    resource_title = CASE WHEN EXISTS (SELECT 1 FROM recommendations_library x
+        WHERE x.skill_id = r.skill_id AND x.resource_title = 'Fundamentals of Financial Analysis'
+          AND x.resource_id <> r.resource_id) THEN r.resource_title ELSE 'Fundamentals of Financial Analysis' END,
+    url = 'https://www.coursera.org/learn/fundamentals-of-financial-analysis',
+    provider = 'Coursera / London Business School',
+    duration_hours = 4,
+    description = 'Read the balance sheet, income statement and cash flow statement and calculate simple ratios.'
+FROM skills_library sl
+WHERE r.skill_id = sl.skill_id AND sl.skill_name = 'Financial Analysis' AND r.source = 'seed'
+  AND r.url = 'https://www.coursera.org/learn/financial-analysis';
+
+-- Research Skills: How to Write and Publish a Research Paper
+UPDATE recommendations_library r SET
+    resource_title = CASE WHEN EXISTS (SELECT 1 FROM recommendations_library x
+        WHERE x.skill_id = r.skill_id AND x.resource_title = 'How to Write and Publish a Scientific Paper'
+          AND x.resource_id <> r.resource_id) THEN r.resource_title ELSE 'How to Write and Publish a Scientific Paper' END,
+    url = 'https://www.coursera.org/learn/how-to-write-a-scientific-paper',
+    provider = 'Coursera / Ecole Polytechnique',
+    duration_hours = 14,
+    difficulty = 'intermediate',
+    description = 'Project-based course: outline a paper, choose a journal and prepare it for submission; for students with some research experience.'
+FROM skills_library sl
+WHERE r.skill_id = sl.skill_id AND sl.skill_name = 'Research Skills' AND r.source = 'seed'
+  AND r.url = 'https://www.coursera.org/learn/how-to-write-a-research-paper';
+
+-- Risk Analysis: Introduction to Risk Management
+UPDATE recommendations_library r SET
+    url = 'https://www.coursera.org/learn/introduction-to-risk-management',
+    provider = 'Coursera / New York Institute of Finance',
+    duration_hours = 16,
+    description = 'Types and sources of business and financial risk, and how firms measure and manage them.'
+FROM skills_library sl
+WHERE r.skill_id = sl.skill_id AND sl.skill_name = 'Risk Analysis' AND r.source = 'seed'
+  AND r.url = 'https://www.coursera.org/learn/risk-management-project';
+
+-- Adaptability: Developing Adaptability as a Manager
+UPDATE recommendations_library r SET
+    resource_title = CASE WHEN EXISTS (SELECT 1 FROM recommendations_library x
+        WHERE x.skill_id = r.skill_id AND x.resource_title = 'Adaptability and Resiliency'
+          AND x.resource_id <> r.resource_id) THEN r.resource_title ELSE 'Adaptability and Resiliency' END,
+    url = 'https://www.coursera.org/learn/adaptability-and-resiliency',
+    provider = 'Coursera / UC Davis',
+    duration_hours = 10,
+    description = 'Build self-awareness and an action plan for adapting to change at work.'
+FROM skills_library sl
+WHERE r.skill_id = sl.skill_id AND sl.skill_name = 'Adaptability' AND r.source = 'seed'
+  AND r.url = 'https://www.coursera.org/learn/adaptability';
+
+-- Interpersonal Skills: Inspiring and Motivating Individuals
+UPDATE recommendations_library r SET
+    url = 'https://www.coursera.org/learn/motivate-people-teams',
+    duration_hours = 17
+FROM skills_library sl
+WHERE r.skill_id = sl.skill_id AND sl.skill_name = 'Interpersonal Skills' AND r.source = 'seed'
+  AND r.url = 'https://www.coursera.org/learn/inspire-motivate';
+
+-- Firewall Management: Network Security: Firewalls and VPNs
+UPDATE recommendations_library r SET
+    resource_title = CASE WHEN EXISTS (SELECT 1 FROM recommendations_library x
+        WHERE x.skill_id = r.skill_id AND x.resource_title = 'Secure Networked System with Firewall and IDS'
+          AND x.resource_id <> r.resource_id) THEN r.resource_title ELSE 'Secure Networked System with Firewall and IDS' END,
+    url = 'https://www.coursera.org/learn/secure-networked-system-with-firewall-ids',
+    provider = 'Coursera / University of Colorado System',
+    duration_hours = 9,
+    description = 'How network systems are secured with firewalls and intrusion detection systems.'
+FROM skills_library sl
+WHERE r.skill_id = sl.skill_id AND sl.skill_name = 'Firewall Management' AND r.source = 'seed'
+  AND r.url = 'https://www.coursera.org/learn/network-security-firewalls-vpns';
+
+-- Google Analytics: Google Analytics Certification (GA4)
+UPDATE recommendations_library r SET
+    url = 'https://skillshop.docebosaas.com/learn/public/catalog/view/37',
+    provider = 'Google Skillshop'
+FROM skills_library sl
+WHERE r.skill_id = sl.skill_id AND sl.skill_name = 'Google Analytics' AND r.source = 'seed'
+  AND r.url = 'https://skillshop.withgoogle.com/googleanalytics';
+
+-- Identity & Access Management: IAM and Security in the Cloud
+UPDATE recommendations_library r SET
+    resource_title = CASE WHEN EXISTS (SELECT 1 FROM recommendations_library x
+        WHERE x.skill_id = r.skill_id AND x.resource_title = 'Managing Security in Google Cloud'
+          AND x.resource_id <> r.resource_id) THEN r.resource_title ELSE 'Managing Security in Google Cloud' END,
+    url = 'https://www.coursera.org/learn/managing-security-in-google-cloud-platform',
+    duration_hours = 14,
+    description = 'Google Cloud identity services and IAM roles, conditions and policies for least-privilege access.'
+FROM skills_library sl
+WHERE r.skill_id = sl.skill_id AND sl.skill_name = 'Identity & Access Management' AND r.source = 'seed'
+  AND r.url = 'https://www.coursera.org/learn/google-cloud-iam';
+
+-- Log Analysis: Security Monitoring and SIEM Fundamentals
+UPDATE recommendations_library r SET
+    resource_title = CASE WHEN EXISTS (SELECT 1 FROM recommendations_library x
+        WHERE x.skill_id = r.skill_id AND x.resource_title = 'Sound the Alarm: Detection and Response'
+          AND x.resource_id <> r.resource_id) THEN r.resource_title ELSE 'Sound the Alarm: Detection and Response' END,
+    url = 'https://www.coursera.org/learn/detection-and-response',
+    provider = 'Coursera / Google',
+    duration_hours = 17,
+    cost = 'Free to audit',
+    description = 'Analyse packets and IDS logs and query SIEM tools to investigate security events; part of the Google Cybersecurity Certificate.'
+FROM skills_library sl
+WHERE r.skill_id = sl.skill_id AND sl.skill_name = 'Log Analysis' AND r.source = 'seed'
+  AND r.url = 'https://www.cybrary.it/course/security-monitoring-and-siem/';
+
+-- Monitoring & Observability: Site Reliability Engineering: Measuring and Managing Reliability
+UPDATE recommendations_library r SET
+    resource_title = CASE WHEN EXISTS (SELECT 1 FROM recommendations_library x
+        WHERE x.skill_id = r.skill_id AND x.resource_title = 'Logging and Monitoring in Google Cloud'
+          AND x.resource_id <> r.resource_id) THEN r.resource_title ELSE 'Logging and Monitoring in Google Cloud' END,
+    url = 'https://www.coursera.org/learn/logging-monitoring-observability-google-cloud',
+    provider = 'Coursera / Google Cloud',
+    duration_hours = 14,
+    difficulty = 'beginner',
+    description = 'Monitoring dashboards, alerting policies, uptime checks and log collection with Google Cloud Observability.'
+FROM skills_library sl
+WHERE r.skill_id = sl.skill_id AND sl.skill_name = 'Monitoring & Observability' AND r.source = 'seed'
+  AND r.url = 'https://www.coursera.org/learn/site-reliability-engineering-slos';
+
+-- Nessus: Vulnerability Scanning with Nessus Essentials
+UPDATE recommendations_library r SET
+    url = 'https://tryhackme.com/room/rpnessusredux',
+    provider = 'TryHackMe',
+    duration_hours = 1,
+    description = 'Free guided room: install Nessus Essentials, scan a target and read the results.'
+FROM skills_library sl
+WHERE r.skill_id = sl.skill_id AND sl.skill_name = 'Nessus' AND r.source = 'seed'
+  AND r.url = 'https://www.tenable.com/education/nessus';
+
+-- NumPy: NumPy Exercises on Kaggle
+UPDATE recommendations_library r SET
+    resource_title = CASE WHEN EXISTS (SELECT 1 FROM recommendations_library x
+        WHERE x.skill_id = r.skill_id AND x.resource_title = '100 NumPy Exercises'
+          AND x.resource_id <> r.resource_id) THEN r.resource_title ELSE '100 NumPy Exercises' END,
+    url = 'https://github.com/rougier/numpy-100',
+    provider = 'GitHub / Nicolas Rougier',
+    duration_hours = 6,
+    description = 'Work through 100 NumPy exercises with solutions, from creating arrays to vectorised operations.'
+FROM skills_library sl
+WHERE r.skill_id = sl.skill_id AND sl.skill_name = 'NumPy' AND r.source = 'seed'
+  AND r.url = 'https://www.kaggle.com/learn/numpy';
+
+-- R: Data Analysis with R -- Kaggle Course
+UPDATE recommendations_library r SET
+    resource_title = CASE WHEN EXISTS (SELECT 1 FROM recommendations_library x
+        WHERE x.skill_id = r.skill_id AND x.resource_title = 'R for Data Science (2e)'
+          AND x.resource_id <> r.resource_id) THEN r.resource_title ELSE 'R for Data Science (2e)' END,
+    url = 'https://r4ds.hadley.nz/',
+    provider = 'Wickham, Cetinkaya-Rundel and Grolemund (free online book)',
+    duration_hours = 30,
+    description = 'Free online book with exercises: import, tidy, transform and visualise data in R with the tidyverse.'
+FROM skills_library sl
+WHERE r.skill_id = sl.skill_id AND sl.skill_name = 'R' AND r.source = 'seed'
+  AND r.url = 'https://www.kaggle.com/learn/r';
+
+-- Security Frameworks: ISO 27001 Lead Implementer Certification
+UPDATE recommendations_library r SET
+    url = 'https://pecb.com/en/education-and-certification-for-individuals/iso-iec-27001/iso-iec-27001-lead-implementer',
+    cost = 'Paid (set by training partner)'
+FROM skills_library sl
+WHERE r.skill_id = sl.skill_id AND sl.skill_name = 'Security Frameworks' AND r.source = 'seed'
+  AND r.url = 'https://pecb.com/en/education-and-training-for-iso-iec-27001';
+
+-- Snort: Intrusion Detection with Snort
+UPDATE recommendations_library r SET
+    url = 'https://tryhackme.com/room/snort',
+    provider = 'TryHackMe',
+    duration_hours = 2,
+    description = 'Free hands-on room: write Snort rules and detect threats in live and recorded traffic.'
+FROM skills_library sl
+WHERE r.skill_id = sl.skill_id AND sl.skill_name = 'Snort' AND r.source = 'seed'
+  AND r.url = 'https://www.cybrary.it/course/snort/';
+
+-- VPN: VPN Fundamentals
+UPDATE recommendations_library r SET
+    resource_title = CASE WHEN EXISTS (SELECT 1 FROM recommendations_library x
+        WHERE x.skill_id = r.skill_id AND x.resource_title = 'Securing the Network'
+          AND x.resource_id <> r.resource_id) THEN r.resource_title ELSE 'Securing the Network' END,
+    url = 'https://www.coursera.org/learn/ts-comptia-securityplus-securing-the-network',
+    provider = 'Coursera / Total Seminars',
+    duration_hours = 4,
+    cost = 'Free to audit',
+    difficulty = 'intermediate',
+    description = 'CompTIA Security+ network security: VPNs and IPsec, firewalls, network access control and IDS/IPS, with online labs.'
+FROM skills_library sl
+WHERE r.skill_id = sl.skill_id AND sl.skill_name = 'VPN' AND r.source = 'seed'
+  AND r.url = 'https://www.cybrary.it/course/vpn-fundamentals/';
+
+-- Windows Server: Windows Server -- Free Microsoft Learn Path
+UPDATE recommendations_library r SET
+    url = 'https://learn.microsoft.com/en-us/training/paths/windows-server-deployment-configuration-administration/',
+    duration_hours = 4,
+    difficulty = 'intermediate',
+    description = 'Free Microsoft Learn path: deploy Windows Server, configure it after installation and administer it securely.'
+FROM skills_library sl
+WHERE r.skill_id = sl.skill_id AND sl.skill_name = 'Windows Server' AND r.source = 'seed'
+  AND r.url = 'https://learn.microsoft.com/en-us/training/paths/windows-server-fundamentals-getting-started/';
+
+
 COMMIT;
