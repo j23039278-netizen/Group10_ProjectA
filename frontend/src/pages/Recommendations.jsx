@@ -6,8 +6,10 @@ import { assessmentLabel } from '../utils/assessments'
 import AssessmentDetails from '../components/AssessmentDetails'
 import { assessAPI, progressAPI } from '../api/client'
 import { label } from '../utils/labels'
+import { firstStepsTotal, resourceGainText, upToText } from '../utils/importance'
 import CompleteActivity from '../components/CompleteActivity'
 import EvidenceFiles from '../components/EvidenceFiles'
+import ImportanceLabel from '../components/ImportanceLabel'
 
 // Cost tiers, in the order the page shows them (cost_tier comes from recommendation/engine.py)
 const TIERS = [
@@ -32,6 +34,8 @@ export default function Recommendations() {
   const location = useLocation()
 
   const [recs,        setRecs]        = useState([])
+  // "Do these first": up to 3 skills, each with the resource worth doing first
+  const [firstSteps,  setFirstSteps]  = useState([])
   const [history,     setHistory]     = useState([])
   const [selId,       setSelId]       = useState(location.state?.assessmentId || '')
   const [loading,     setLoading]     = useState(true)
@@ -66,6 +70,7 @@ export default function Recommendations() {
         progressAPI.getAssessmentProgress(id),
       ])
       setRecs(recsRes.data.recommendations)
+      setFirstSteps(recsRes.data.first_steps || [])
       setProgressMap(progressRes.data.progress || {})
     } catch {}
     finally { setLoading(false) }
@@ -93,10 +98,19 @@ export default function Recommendations() {
     setProgressMap(res.data.progress || {})
   }
 
+  // A completed activity changes what to do first; the list below stays as it is
+  const reloadFirstSteps = async () => {
+    try {
+      const res = await assessAPI.getRecs(selId)
+      setFirstSteps(res.data.first_steps || [])
+    } catch { /* the activity is completed either way; the card updates on the next load */ }
+  }
+
   // ── Activity completed in the Complete dialog (evidence attached) ──
   const handleCompleted = async (resource, res) => {
     setCompleting(null)
     await reloadProgress()
+    await reloadFirstSteps()
     setNotice(`"${resource.resource_title}" is completed. ${res.data.notice} Run the assessment again to see your new score.`)
   }
 
@@ -238,6 +252,12 @@ export default function Recommendations() {
             📊 {r.difficulty}
           </span>
         )}
+        {/* What completing it adds; already counted once it is completed */}
+        {resourceGainText(r.gain_if_completed) && progressMap[r.resource_id]?.status !== 'completed' && (
+          <span style={{ fontSize: '11px', fontWeight: '700', color: r.gain_if_completed > 0 ? '#16a34a' : '#8b92a8' }}>
+            {resourceGainText(r.gain_if_completed)}
+          </span>
+        )}
       </div>
       {/* Evidence the student attached to this activity */}
       {progressMap[r.resource_id]?.evidence?.length > 0 && (
@@ -263,7 +283,7 @@ export default function Recommendations() {
   </div>
   )
 
-  // ── Sections: cost tier first, then category, then skill (gaps first) ──
+  // ── Sections: cost tier first, then category, then skill (in the engine's priority order) ──
   const sections = TIERS.map(t => {
     const categories = CATEGORY_ORDER.map(c => ({
       ...c,
@@ -325,6 +345,31 @@ export default function Recommendations() {
           </div>
           <AssessmentDetails assessment={history.find(h => h.assessment_id === selId)} />
         </div>
+      )}
+
+      {/* ── Do these first: not affected by the cost tab ── */}
+      {firstSteps.length > 0 && (
+        <section aria-label="Do these first" style={{
+          background: '#fff', border: '2px solid #2d5be3', borderRadius: '12px',
+          padding: '20px', marginBottom: '16px',
+        }}>
+          <div style={{ fontSize: '16px', fontWeight: '700', color: '#1a1f2e' }}>Do these first</div>
+          <div style={{ fontSize: '13px', color: '#1a1f2e', marginTop: '4px' }}>
+            Completing these adds about <b>{firstStepsTotal(firstSteps)} points</b> to your score.
+          </div>
+          <div style={{ fontSize: '12px', color: '#4a5168', marginTop: '2px', marginBottom: '14px' }}>
+            A beginner course makes a skill Developing, which earns half. An intermediate activity, project, certification or internship can make it Strong.
+          </div>
+          {firstSteps.map(step => (
+            <div key={step.skill_id} style={{ marginTop: '12px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap', marginBottom: '6px' }}>
+                <span style={{ fontSize: '14px', fontWeight: '700', color: '#1a1f2e' }}>{step.skill_name}</span>
+                <ImportanceLabel item={step} />
+              </div>
+              {renderResource(step.resource, 0, 1)}
+            </div>
+          ))}
+        </section>
       )}
 
       {/* ── Progress Summary Bar ── */}
@@ -409,7 +454,7 @@ export default function Recommendations() {
                   borderRadius: '12px', padding: '20px', marginBottom: '12px',
                 }}>
                   {/* Skill Gap Header */}
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap', marginBottom: '14px' }}>
                     <span style={{
                       padding: '4px 12px', borderRadius: '20px', fontSize: '12px', fontWeight: '700',
                       background: gapColor[rec.gap_type]?.bg || 'var(--s-bad-soft, #fee2e2)',
@@ -418,6 +463,10 @@ export default function Recommendations() {
                       {rec.gap_type === 'gap' ? '✖ Skill Gap' : '◆ Developing'}
                     </span>
                     <span style={{ fontSize: '15px', fontWeight: '700', color: 'var(--s-ink, #1a1f2e)' }}>{rec.skill_name}</span>
+                    <ImportanceLabel item={rec} />
+                    {upToText(rec.expected_gain) && (
+                      <span style={{ fontSize: '12px', fontWeight: '600', color: 'var(--s-body, #4a5168)' }}>{upToText(rec.expected_gain)}</span>
+                    )}
                   </div>
                   {rec.resources.map((r, j) => renderResource(r, j, rec.resources.length))}
                 </div>
