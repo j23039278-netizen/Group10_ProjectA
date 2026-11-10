@@ -10,7 +10,7 @@ export function applyBands(settings) {
 }
 
 export const readinessColor = (score) => {
-  if (score == null) return '#8b92a8'
+  if (score == null) return 'var(--s-muted, #8b92a8)'
   const s = parseFloat(score)
-  return s >= onTrack ? '#16a34a' : s >= needsSupport ? '#d97706' : '#dc2626'
+  return s >= onTrack ? 'var(--s-good, #16a34a)' : s >= needsSupport ? 'var(--s-warn, #d97706)' : 'var(--s-bad, #dc2626)'
 }

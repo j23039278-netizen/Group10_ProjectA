@@ -16,9 +16,9 @@ import EvidenceFiles from '../components/EvidenceFiles'
 import { readinessColor } from '../utils/readiness'
 import { assessmentName } from '../utils/assessments'
 
-const C = { ink: '#1a1f2e', body: '#4a5168', muted: '#8b92a8', line: '#e4e6ef',
-            blue: '#2d5be3', green: '#16a34a', amber: '#d97706', red: '#dc2626' }
-const card    = { background: '#fff', border: `1px solid ${C.line}`, borderRadius: '12px', padding: '20px 24px', marginBottom: '16px' }
+const C = { ink: 'var(--s-ink, #1a1f2e)', body: 'var(--s-body, #4a5168)', muted: 'var(--s-muted, #8b92a8)', line: 'var(--s-line, #e4e6ef)',
+            blue: 'var(--s-accent, #2d5be3)', green: 'var(--s-good, #16a34a)', amber: 'var(--s-warn, #d97706)', red: 'var(--s-bad, #dc2626)' }
+const card    = { background: '#fff', border: `1px solid ${C.line}`, borderRadius: '12px', boxShadow: 'var(--s-card-shadow, none)', padding: '20px 24px', marginBottom: '16px' }
 const heading = { fontSize: '13px', fontWeight: '700', color: C.ink, marginBottom: '14px', textTransform: 'uppercase', letterSpacing: '0.5px' }
 const muted   = { color: C.muted, fontSize: '13px' }
 
@@ -32,7 +32,7 @@ const actionBtn = (bg, color, border = bg) => ({
 function ActivityList({ items, empty, done, actions }) {
   if (items.length === 0) return <div style={muted}>{empty}</div>
   return items.map(p => (
-    <div key={p.progress_id} style={{ display: 'flex', justifyContent: 'space-between', gap: '12px', padding: '10px 0', borderBottom: '1px solid #f0f1f5' }}>
+    <div key={p.progress_id} style={{ display: 'flex', justifyContent: 'space-between', gap: '12px', padding: '10px 0', borderBottom: '1px solid var(--s-surface-2, #f0f1f5)' }}>
       <div style={{ minWidth: 0 }}>
         <div style={{ fontSize: '13px', fontWeight: '600', color: C.ink }}>
           {p.url
@@ -48,7 +48,7 @@ function ActivityList({ items, empty, done, actions }) {
       </div>
       <div style={{ display: 'flex', gap: '6px', alignItems: 'flex-start', flexWrap: 'wrap', justifyContent: 'flex-end', flexShrink: 0 }}>
         {done && (
-          <span style={{ fontSize: '11px', fontWeight: '600', color: C.green, background: '#dcfce7', padding: '3px 9px', borderRadius: '20px', whiteSpace: 'nowrap' }}>✓ Completed</span>
+          <span style={{ fontSize: '11px', fontWeight: '600', color: C.green, background: 'var(--s-good-soft, #dcfce7)', padding: '3px 9px', borderRadius: '20px', whiteSpace: 'nowrap' }}>✓ Completed</span>
         )}
         {actions && actions(p)}
       </div>
@@ -193,12 +193,12 @@ export default function ProgressTracking() {
           onClose={() => setCompleting(null)} />
       )}
 
-      {notice && <div role="status" style={{ background: '#dcfce7', color: C.green, padding: '10px 12px', borderRadius: '8px', fontSize: '13px', marginBottom: '14px' }}>{notice}</div>}
+      {notice && <div role="status" style={{ background: 'var(--s-good-soft, #dcfce7)', color: C.green, padding: '10px 12px', borderRadius: '8px', fontSize: '13px', marginBottom: '14px' }}>{notice}</div>}
 
       {/* Reassessment reminder after finishing activities */}
       {canRerun && doneSince.length > 0 && (
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px', flexWrap: 'wrap',
-                      background: '#eef3ff', border: '1px solid #cddbfb', borderRadius: '10px', padding: '12px 16px', marginBottom: '16px' }}>
+                      background: 'var(--s-accent-soft, #eef3ff)', border: '1px solid var(--s-accent-line, #cddbfb)', borderRadius: '10px', padding: '12px 16px', marginBottom: '16px' }}>
           <div style={{ fontSize: '13px', color: C.body }}>
             You completed <b>{doneSince.length}</b> {doneSince.length === 1 ? 'activity' : 'activities'} since your last <b>{last.role_name}</b> assessment
             ({fmtDate(last.created_at)}). Their skills are now on your profile. Run it again to see your progress.
@@ -206,7 +206,7 @@ export default function ProgressTracking() {
           {runAgainBtn(true)}
         </div>
       )}
-      {error && <div role="alert" style={{ background: '#fee2e2', color: C.red, padding: '10px 12px', borderRadius: '8px', fontSize: '13px', marginBottom: '14px' }}>{error}</div>}
+      {error && <div role="alert" style={{ background: 'var(--s-bad-soft, #fee2e2)', color: C.red, padding: '10px 12px', borderRadius: '8px', fontSize: '13px', marginBottom: '14px' }}>{error}</div>}
 
       {/* Stat cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', marginBottom: '16px' }}>
@@ -252,7 +252,7 @@ export default function ProgressTracking() {
         ) : (
           <ResponsiveContainer width="100%" height={260}>
             <LineChart data={chart} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--s-line, #f0f0f0)" />
               <XAxis dataKey="date" tick={{ fontSize: 11 }} />
               <YAxis domain={[0, 100]} tick={{ fontSize: 11 }} tickFormatter={v => `${v}%`} />
               <Tooltip formatter={(v, _n, p) => [`${v}% (${p.payload.method})`, 'Readiness']} />

@@ -46,7 +46,7 @@ export default function Dashboard({ onLogout }) {
   }
 
   if (loading) return (
-    <div style={{ padding: '40px', textAlign: 'center', color: '#8b92a8' }}>
+    <div style={{ padding: '40px', textAlign: 'center', color: 'var(--s-muted, #8b92a8)' }}>
       Loading...
     </div>
   )
@@ -58,10 +58,10 @@ export default function Dashboard({ onLogout }) {
     <div style={{ padding: '28px 32px' }}>
       {/* Header */}
       <div style={{ marginBottom: '24px' }}>
-        <div style={{ fontSize: '26px', fontWeight: '700', color: '#1a1f2e' }}>
+        <div style={{ fontSize: '26px', fontWeight: '700', color: 'var(--s-ink, #1a1f2e)' }}>
           Good day 👋
         </div>
-        <div style={{ fontSize: '13px', color: '#4a5168', marginTop: '4px' }}>
+        <div style={{ fontSize: '13px', color: 'var(--s-body, #4a5168)', marginTop: '4px' }}>
           {profile?.target_role
             ? `Your employability snapshot for ${profile.target_role}`
             : 'Complete your profile to get started'}
@@ -74,15 +74,15 @@ export default function Dashboard({ onLogout }) {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: '16px', marginBottom: '16px' }}>
         {[
           { label: 'Job Readiness',  value: `${score}%`,             color: scoreColor },
-          { label: 'Assessments',    value: history.length,           color: '#2d5be3' },
-          { label: 'Target Role',    value: profile?.target_role || '—', color: '#1a1f2e', small: true },
-          { label: 'GPA / CGPA',     value: `${profile?.gpa ?? '—'} / ${profile?.cgpa ?? '—'}`, color: '#1a1f2e', small: true },
+          { label: 'Assessments',    value: history.length,           color: 'var(--s-accent, #2d5be3)' },
+          { label: 'Target Role',    value: profile?.target_role || '—', color: 'var(--s-ink, #1a1f2e)', small: true },
+          { label: 'GPA / CGPA',     value: `${profile?.gpa ?? '—'} / ${profile?.cgpa ?? '—'}`, color: 'var(--s-ink, #1a1f2e)', small: true },
         ].map((s, i) => (
           <div key={i} style={{
-            background: '#fff', border: '1px solid #e4e6ef',
+            background: '#fff', border: '1px solid var(--s-line, #e4e6ef)',
             borderRadius: '12px', padding: '20px'
           }}>
-            <div style={{ fontSize: '11px', fontWeight: '600', color: '#8b92a8', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+            <div style={{ fontSize: '11px', fontWeight: '600', color: 'var(--s-muted, #8b92a8)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
               {s.label}
             </div>
             <div style={{ fontSize: s.small ? '18px' : '30px', fontWeight: '700', color: s.color, margin: '4px 0', lineHeight: 1 }}>
@@ -96,8 +96,8 @@ export default function Dashboard({ onLogout }) {
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
 
         {/* Score Breakdown */}
-        <div style={{ background: '#fff', border: '1px solid #e4e6ef', borderRadius: '12px', padding: '24px' }}>
-          <div style={{ fontSize: '13px', fontWeight: '700', color: '#1a1f2e', marginBottom: '16px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+        <div style={{ background: '#fff', border: '1px solid var(--s-line, #e4e6ef)', borderRadius: '12px', boxShadow: 'var(--s-card-shadow, none)', padding: '24px' }}>
+          <div style={{ fontSize: '13px', fontWeight: '700', color: 'var(--s-ink, #1a1f2e)', marginBottom: '16px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
             Employability Profile
           </div>
           {latest ? (
@@ -106,11 +106,11 @@ export default function Dashboard({ onLogout }) {
               <HowScored />
             </>
           ) : (
-            <div style={{ textAlign: 'center', padding: '40px 0', color: '#8b92a8' }}>
+            <div style={{ textAlign: 'center', padding: '40px 0', color: 'var(--s-muted, #8b92a8)' }}>
               <div style={{ fontSize: '32px', marginBottom: '8px' }}>📊</div>
               <div>No assessment yet</div>
               <button onClick={() => navigate('/job-analysis')} style={{
-                marginTop: '12px', padding: '8px 16px', background: '#2d5be3',
+                marginTop: '12px', padding: '8px 16px', background: 'var(--s-accent, #2d5be3)',
                 color: '#fff', border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '12px'
               }}>
                 Run First Assessment →
@@ -122,22 +122,22 @@ export default function Dashboard({ onLogout }) {
         {/* Quick Actions + History */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           {/* Quick Actions */}
-          <div style={{ background: '#fff', border: '1px solid #e4e6ef', borderRadius: '12px', padding: '24px' }}>
-            <div style={{ fontSize: '13px', fontWeight: '700', color: '#1a1f2e', marginBottom: '16px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+          <div style={{ background: '#fff', border: '1px solid var(--s-line, #e4e6ef)', borderRadius: '12px', boxShadow: 'var(--s-card-shadow, none)', padding: '24px' }}>
+            <div style={{ fontSize: '13px', fontWeight: '700', color: 'var(--s-ink, #1a1f2e)', marginBottom: '16px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
               Quick Actions
             </div>
             {[
-              { label: '📄 Analyse a Job Description', path: '/job-analysis', color: '#2d5be3' },
-              { label: '👤 Update My Profile',         path: '/profile',      color: '#16a34a' },
-              { label: '💡 View Recommendations',      path: '/recommendations', color: '#d97706' },
-              { label: '🎯 View Skill Gaps',           path: '/skill-gap',    color: '#7c3aed' },
+              { label: '📄 Analyse a Job Description', path: '/job-analysis', color: 'var(--s-accent, #2d5be3)' },
+              { label: '👤 Update My Profile',         path: '/profile',      color: 'var(--s-good, #16a34a)' },
+              { label: '💡 View Recommendations',      path: '/recommendations', color: 'var(--s-warn, #d97706)' },
+              { label: '🎯 View Skill Gaps',           path: '/skill-gap',    color: 'var(--s-ink, #7c3aed)' },
             ].map((a, i) => (
               <button key={i} onClick={() => navigate(a.path)} style={{
                 display: 'block', width: '100%', textAlign: 'left',
                 padding: '10px 14px', marginBottom: '8px',
-                background: '#f5f6fa', border: '1px solid #e4e6ef',
+                background: 'var(--s-bg, #f5f6fa)', border: '1px solid var(--s-line, #e4e6ef)',
                 borderRadius: '8px', cursor: 'pointer', fontSize: '13px',
-                fontWeight: '500', color: '#1a1f2e',
+                fontWeight: '500', color: 'var(--s-ink, #1a1f2e)',
               }}>
                 {a.label}
               </button>
@@ -145,23 +145,23 @@ export default function Dashboard({ onLogout }) {
           </div>
 
           {/* Assessment History */}
-          <div style={{ background: '#fff', border: '1px solid #e4e6ef', borderRadius: '12px', padding: '24px' }}>
-            <div style={{ fontSize: '13px', fontWeight: '700', color: '#1a1f2e', marginBottom: '16px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+          <div style={{ background: '#fff', border: '1px solid var(--s-line, #e4e6ef)', borderRadius: '12px', boxShadow: 'var(--s-card-shadow, none)', padding: '24px' }}>
+            <div style={{ fontSize: '13px', fontWeight: '700', color: 'var(--s-ink, #1a1f2e)', marginBottom: '16px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
               Assessment History
             </div>
             {history.length === 0 ? (
-              <div style={{ color: '#8b92a8', fontSize: '13px' }}>No assessments yet.</div>
+              <div style={{ color: 'var(--s-muted, #8b92a8)', fontSize: '13px' }}>No assessments yet.</div>
             ) : (
               history.slice(0, 4).map((h, i) => (
                 <div key={i} style={{
                   display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                  padding: '10px 0', borderBottom: i < 3 ? '1px solid #e4e6ef' : 'none'
+                  padding: '10px 0', borderBottom: i < 3 ? '1px solid var(--s-line, #e4e6ef)' : 'none'
                 }}>
                   <div>
-                    <div style={{ fontSize: '13px', fontWeight: '500', color: '#1a1f2e' }}>
+                    <div style={{ fontSize: '13px', fontWeight: '500', color: 'var(--s-ink, #1a1f2e)' }}>
                       {assessmentName(h)}
                     </div>
-                    <div style={{ fontSize: '11px', color: '#8b92a8' }}>
+                    <div style={{ fontSize: '11px', color: 'var(--s-muted, #8b92a8)' }}>
                       {assessmentDate(h)}
                     </div>
                   </div>

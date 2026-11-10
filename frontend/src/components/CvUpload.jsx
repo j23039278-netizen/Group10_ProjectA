@@ -4,8 +4,8 @@
 import { useState, useEffect, useRef } from 'react'
 import { cvAPI } from '../api/client'
 
-const C = { ink: '#1a1f2e', body: '#4a5168', muted: '#8b92a8', line: '#e4e6ef', blue: '#2d5be3',
-            green: '#16a34a', red: '#dc2626', amber: '#d97706' }
+const C = { ink: 'var(--s-ink, #1a1f2e)', body: 'var(--s-body, #4a5168)', muted: 'var(--s-muted, #8b92a8)', line: 'var(--s-line, #e4e6ef)', blue: 'var(--s-accent, #2d5be3)',
+            green: 'var(--s-good, #16a34a)', red: 'var(--s-bad, #dc2626)', amber: 'var(--s-warn, #d97706)' }
 const LEVELS = ['beginner', 'intermediate', 'advanced']
 const btn = (primary) => ({ padding: '8px 14px', fontSize: '13px', fontWeight: '600', borderRadius: '8px', cursor: 'pointer',
   border: primary ? 'none' : `1px solid ${C.line}`, background: primary ? C.blue : '#fff', color: primary ? '#fff' : C.body })
@@ -94,7 +94,7 @@ export default function CvUpload({ onSkillsAdded }) {
   const addable = cv?.skills.filter(s => s.in_course && !s.already_added) || []
 
   return (
-    <div style={{ background: '#fff', border: `1px solid ${C.line}`, borderRadius: '12px', padding: '24px', marginBottom: '16px' }}>
+    <div style={{ background: '#fff', border: `1px solid ${C.line}`, borderRadius: '12px', boxShadow: 'var(--s-card-shadow, none)', padding: '24px', marginBottom: '16px' }}>
       <div style={{ fontSize: '13px', fontWeight: '700', color: C.ink, marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
         Add skills from your CV
       </div>
@@ -103,8 +103,8 @@ export default function CvUpload({ onSkillsAdded }) {
         really have, choose your level, and add them. Nothing is added until you confirm.
       </div>
 
-      {error && <div role="alert" style={{ background: '#fee2e2', color: C.red, padding: '10px', borderRadius: '8px', marginBottom: '12px', fontSize: '13px' }}>{error}</div>}
-      {notice && <div role="status" style={{ background: '#dcfce7', color: C.green, padding: '10px', borderRadius: '8px', marginBottom: '12px', fontSize: '13px' }}>{notice}</div>}
+      {error && <div role="alert" style={{ background: 'var(--s-bad-soft, #fee2e2)', color: C.red, padding: '10px', borderRadius: '8px', marginBottom: '12px', fontSize: '13px' }}>{error}</div>}
+      {notice && <div role="status" style={{ background: 'var(--s-good-soft, #dcfce7)', color: C.green, padding: '10px', borderRadius: '8px', marginBottom: '12px', fontSize: '13px' }}>{notice}</div>}
 
       <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
         <input ref={input} type="file" accept=".pdf,.docx" aria-label="CV file" style={{ display: 'none' }}
@@ -141,7 +141,7 @@ export default function CvUpload({ onSkillsAdded }) {
                   const on = !!picked[s.skill_id]
                   return (
                     <div key={s.skill_id} style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap', padding: '8px 10px',
-                                                  border: `1px solid ${on ? '#c7d4fb' : C.line}`, borderRadius: '8px', background: on ? '#eef2fd' : '#fafbfc',
+                                                  border: `1px solid ${on ? 'var(--s-accent-line, #c7d4fb)' : C.line}`, borderRadius: '8px', background: on ? 'var(--s-accent-soft, #eef2fd)' : 'var(--s-surface-1, #fafbfc)',
                                                   opacity: canAdd ? 1 : 0.65 }}>
                       <input type="checkbox" aria-label={`Add ${s.skill_name}`} checked={on} disabled={!canAdd} onChange={() => toggle(s.skill_id)} />
                       <div style={{ flex: '1 1 240px', minWidth: 0 }}>

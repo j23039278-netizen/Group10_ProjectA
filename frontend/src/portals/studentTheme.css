@@ -1,0 +1,130 @@
+/* SEAGAS — Student portal theme (college colours: red, white, black, grey).
+   Pages and shared components write their colours as var(--s-…, <old colour>), so the
+   advisor and admin portals, which never set these variables, keep their own look.
+   Change the brand red here (--s-accent and its tints) to retheme every student page. */
+
+.student-theme {
+  /* Brand */
+  --s-accent:        #c8102e;   /* college red: buttons, links, active menu, highlights */
+  --s-accent-dark:   #9e0b23;   /* hover / pressed */
+  --s-accent-mid:    #e3808f;
+  --s-accent-line:   #f3c4cb;   /* borders of red-tinted boxes */
+  --s-accent-soft:   #fdeef0;   /* red-tinted backgrounds */
+  --s-ring:          rgba(200, 16, 46, 0.18);
+
+  /* Neutrals: black, greys, white */
+  --s-ink:           #0a0a0a;   /* headings, main text */
+  --s-ink-2:         #262626;
+  --s-body:          #3d3d3d;   /* body text */
+  --s-muted:         #6b6b6b;   /* labels, hints (AA contrast on white) */
+  --s-line:          #dcdcdc;   /* card borders, dividers */
+  --s-line-strong:   #b5b5b5;   /* dashed "no data" outlines */
+  --s-bg:            #f2f2f2;   /* page background, inputs */
+  --s-surface-1:     #fafafa;
+  --s-surface-2:     #ececec;
+  --s-card-shadow:   0 1px 2px rgba(0, 0, 0, 0.06);
+
+  /* Status, in the same four colours: black = on track / met, grey = in between,
+     red = needs attention / missing. Replaces green, amber and red. */
+  --s-good:          #0a0a0a;
+  --s-good-soft:     #ececec;
+  --s-good-line:     #c9c9c9;
+  --s-warn:          #6b6b6b;
+  --s-warn-soft:     #f7f7f7;
+  --s-warn-line:     #d4d4d4;
+  --s-bad:           #c8102e;
+  --s-bad-soft:      #fdeef0;
+  --s-disabled:      #d4d4d4;   /* disabled button background */
+  --s-disabled-ink:  #8f8f8f;
+
+  /* Sidebar */
+  --s-side-bg:       #0a0a0a;
+  --s-side-line:     rgba(255, 255, 255, 0.08);
+  --s-side-active:   #c8102e;
+
+  /* Skill categories, told apart within the palette: black, red, grey, dark red */
+  --s-cat-tech:        #0a0a0a;
+  --s-cat-tech-bg:     #ececec;
+  --s-cat-tech-border: #c9c9c9;
+  --s-cat-ai:          #c8102e;
+  --s-cat-ai-bg:       #fdeef0;
+  --s-cat-ai-border:   #f3c4cb;
+  --s-cat-ana:         #4d4d4d;
+  --s-cat-ana-bg:      #ffffff;
+  --s-cat-ana-border:  #b5b5b5;
+  --s-cat-soft:        #7f0a1d;
+  --s-cat-soft-bg:     #f6e7ea;
+  --s-cat-soft-border: #e2bcc3;
+
+  background: var(--s-bg);
+  color: var(--s-ink);
+}
+
+/* Red strip along the top of every student page */
+.student-theme .s-main { border-top: 4px solid var(--s-accent); }
+
+/* Sidebar menu: hover state and red brand mark */
+.student-theme .sb-item:not(.active):hover {
+  background: rgba(255, 255, 255, 0.06) !important;
+  color: #fff !important;
+}
+/* Sidebar text: brighter and bolder so it reads clearly on the black */
+.student-theme .sb-item { color: rgba(255, 255, 255, 0.86) !important; font-size: 14px !important; font-weight: 500 !important; }
+.student-theme .sb-item.active { color: #fff !important; }
+.student-theme .sb-navtitle { color: rgba(255, 255, 255, 0.6) !important; }
+.student-theme .sb-tagline { color: rgba(255, 255, 255, 0.6) !important; }
+.student-theme .sb-role { color: rgba(255, 255, 255, 0.7) !important; }
+.student-theme .sb-signout { color: rgba(255, 255, 255, 0.85) !important; border-color: rgba(255, 255, 255, 0.25) !important; }
+
+/* Menu icons in greyscale, so the only colour in the sidebar is the red */
+.student-theme .sb-item > span:first-child { filter: grayscale(1); }
+.student-theme .sb-item.active > span:first-child { filter: grayscale(1) brightness(1.6); }
+.student-theme .sb-item.active { border-left-color: #fff !important; font-weight: 600 !important; }
+
+.student-theme .sb-brand::before {
+  content: '';
+  display: inline-block;
+  width: 8px; height: 22px;
+  margin-right: 8px;
+  vertical-align: -3px;
+  border-radius: 2px;
+  background: var(--s-accent);
+}
+.student-theme .sb-signout:hover {
+  background: var(--s-accent) !important;
+  border-color: var(--s-accent) !important;
+  color: #fff !important;
+}
+
+/* Buttons: smooth hover, darker red for primary buttons */
+.student-theme button { transition: filter .15s, background-color .15s, border-color .15s, box-shadow .15s; }
+.student-theme button:not(:disabled):hover { filter: brightness(0.94); }
+.student-theme button:not(:disabled):active { filter: brightness(0.88); }
+.student-theme button:disabled { cursor: not-allowed; }
+
+/* Keyboard focus and input focus in the brand colour */
+.student-theme :focus-visible {
+  outline: 2px solid var(--s-accent);
+  outline-offset: 2px;
+}
+.student-theme input:focus,
+.student-theme select:focus,
+.student-theme textarea:focus {
+  border-color: var(--s-accent) !important;
+  box-shadow: 0 0 0 3px var(--s-ring);
+  outline: none;
+}
+
+.student-theme a { color: var(--s-accent); }
+.student-theme a:hover { color: var(--s-accent-dark); }
+
+.student-theme ::selection { background: var(--s-accent-soft); color: var(--s-ink); }
+
+.student-theme ::-webkit-scrollbar-track { background: var(--s-bg); }
+.student-theme ::-webkit-scrollbar-thumb { background: #c4c4c4; }
+.student-theme ::-webkit-scrollbar-thumb:hover { background: #9a9a9a; }
+
+/* The printed CV stays plain: no strip, no page background */
+@media print {
+  .student-theme, .student-theme .s-main { background: #fff !important; border-top: none !important; }
+}

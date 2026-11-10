@@ -3,9 +3,9 @@
 // docs/JOB_READINESS_SCORE.md. jdFit is passed by the Skill Gap page only, where that number is shown.
 export default function HowScored({ jdFit }) {
   return (
-    <details style={{ fontSize: '12px', color: '#4a5168', marginTop: '4px' }}>
-      <summary style={{ cursor: 'pointer', color: '#2d5be3', fontWeight: '600' }}>How is this calculated?</summary>
-      <div style={{ marginTop: '6px', padding: '10px 12px', background: '#f5f6fa', borderRadius: '8px', lineHeight: 1.55 }}>
+    <details style={{ fontSize: '12px', color: 'var(--s-body, #4a5168)', marginTop: '4px' }}>
+      <summary style={{ cursor: 'pointer', color: 'var(--s-accent, #2d5be3)', fontWeight: '600' }}>How is this calculated?</summary>
+      <div style={{ marginTop: '6px', padding: '10px 12px', background: 'var(--s-bg, #f5f6fa)', borderRadius: '8px', lineHeight: 1.55 }}>
         <div>
           <b>Overall score.</b> The skills a job asks for are split into three groups: required, preferred and bonus.
           In each group, a Strong skill counts in full, a Developing skill counts half and a Gap counts nothing, which gives

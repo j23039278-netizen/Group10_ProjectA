@@ -41,13 +41,13 @@ export default function CvExport() {
       })
   }, [])
 
-  if (error) return <div style={{ padding: '40px', color: '#dc2626' }}>{error}</div>
-  if (!data) return <div style={{ padding: '40px', color: '#8b92a8' }}>Loading...</div>
+  if (error) return <div style={{ padding: '40px', color: 'var(--s-bad, #dc2626)' }}>{error}</div>
+  if (!data) return <div style={{ padding: '40px', color: 'var(--s-muted, #8b92a8)' }}>Loading...</div>
 
   const { me, profile, skills, projects, certs, activities, experiences } = data
-  const h2 = { fontSize: '13px', fontWeight: '700', color: '#2d5be3', textTransform: 'uppercase', letterSpacing: '0.6px',
-               borderBottom: '1.5px solid #dbe3fb', paddingBottom: '4px', margin: '18px 0 8px' }
-  const small = { fontSize: '12px', color: '#4a5168' }
+  const h2 = { fontSize: '13px', fontWeight: '700', color: 'var(--s-accent, #2d5be3)', textTransform: 'uppercase', letterSpacing: '0.6px',
+               borderBottom: '1.5px solid var(--s-accent-line, #dbe3fb)', paddingBottom: '4px', margin: '18px 0 8px' }
+  const small = { fontSize: '12px', color: 'var(--s-body, #4a5168)' }
   const results = [profile.gpa != null && `GPA ${profile.gpa}`, profile.cgpa != null && `CGPA ${profile.cgpa}`].filter(Boolean)
 
   return (
@@ -56,26 +56,26 @@ export default function CvExport() {
 
       <div className="no-print" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px', flexWrap: 'wrap', marginBottom: '16px' }}>
         <div>
-          <div style={{ fontSize: '26px', fontWeight: '700', color: '#1a1f2e' }}>Export CV</div>
-          <div style={{ fontSize: '13px', color: '#4a5168', marginTop: '4px' }}>
+          <div style={{ fontSize: '26px', fontWeight: '700', color: 'var(--s-ink, #1a1f2e)' }}>Export CV</div>
+          <div style={{ fontSize: '13px', color: 'var(--s-body, #4a5168)', marginTop: '4px' }}>
             Your current skills and records on one page. Click <b>Save as PDF</b> and choose &quot;Save as PDF&quot; as the printer.
           </div>
         </div>
         <div style={{ display: 'flex', gap: '8px' }}>
-          <button onClick={() => navigate('/profile')} style={{ padding: '9px 16px', fontSize: '13px', fontWeight: '600', border: '1px solid #e4e6ef', borderRadius: '8px', background: '#fff', color: '#4a5168', cursor: 'pointer' }}>
+          <button onClick={() => navigate('/profile')} style={{ padding: '9px 16px', fontSize: '13px', fontWeight: '600', border: '1px solid var(--s-line, #e4e6ef)', borderRadius: '8px', background: '#fff', color: 'var(--s-body, #4a5168)', cursor: 'pointer' }}>
             ← Back to profile
           </button>
-          <button onClick={() => window.print()} style={{ padding: '9px 16px', fontSize: '13px', fontWeight: '600', border: 'none', borderRadius: '8px', background: '#2d5be3', color: '#fff', cursor: 'pointer' }}>
+          <button onClick={() => window.print()} style={{ padding: '9px 16px', fontSize: '13px', fontWeight: '600', border: 'none', borderRadius: '8px', background: 'var(--s-accent, #2d5be3)', color: '#fff', cursor: 'pointer' }}>
             Save as PDF
           </button>
         </div>
       </div>
 
-      <div className="cv-sheet" style={{ background: '#fff', border: '1px solid #e4e6ef', borderRadius: '12px', padding: '36px 40px',
-                                          maxWidth: '820px', margin: '0 auto', color: '#1a1f2e', fontFamily: '"Segoe UI", Arial, sans-serif' }}>
+      <div className="cv-sheet" style={{ background: '#fff', border: '1px solid var(--s-line, #e4e6ef)', borderRadius: '12px', boxShadow: 'var(--s-card-shadow, none)', padding: '36px 40px',
+                                          maxWidth: '820px', margin: '0 auto', color: 'var(--s-ink, #1a1f2e)', fontFamily: '"Segoe UI", Arial, sans-serif' }}>
         {/* Header */}
         <div style={{ fontSize: '26px', fontWeight: '700' }}>{me.full_name}</div>
-        <div style={{ fontSize: '14px', color: '#2d5be3', fontWeight: '600', marginTop: '2px' }}>
+        <div style={{ fontSize: '14px', color: 'var(--s-accent, #2d5be3)', fontWeight: '600', marginTop: '2px' }}>
           {profile.target_role ? `Aspiring ${profile.target_role}` : courseLabel(me.course)}
         </div>
         <div style={{ ...small, marginTop: '6px', lineHeight: 1.6 }}>
@@ -109,7 +109,7 @@ export default function CvExport() {
               </div>
             )
           })}
-          {skills.length > 0 && <div style={{ fontSize: '10px', color: '#8b92a8', marginTop: '4px' }}>●○○ Beginner · ●●○ Intermediate · ●●● Advanced</div>}
+          {skills.length > 0 && <div style={{ fontSize: '10px', color: 'var(--s-muted, #8b92a8)', marginTop: '4px' }}>●○○ Beginner · ●●○ Intermediate · ●●● Advanced</div>}
         </div>
 
         {/* Work experience */}
@@ -121,7 +121,7 @@ export default function CvExport() {
                 <div style={{ fontSize: '13px', fontWeight: '600' }}>
                   {x.job_title} <span style={{ fontWeight: '400' }}>· {x.company}{x.location ? `, ${x.location}` : ''}</span>
                 </div>
-                <div style={{ ...small, color: '#8b92a8' }}>{experienceTypeLabel(x.experience_type)} · {period(x.start_date, x.end_date)}</div>
+                <div style={{ ...small, color: 'var(--s-muted, #8b92a8)' }}>{experienceTypeLabel(x.experience_type)} · {period(x.start_date, x.end_date)}</div>
                 {x.description && <div style={small}>{x.description}</div>}
               </div>
             ))}
@@ -136,10 +136,10 @@ export default function CvExport() {
               <div key={p.project_id} style={{ marginBottom: '8px' }}>
                 <div style={{ fontSize: '13px', fontWeight: '600' }}>
                   {p.project_title}
-                  <span style={{ fontWeight: '400', color: '#8b92a8' }}>{[cap(p.project_type), p.year_completed].filter(Boolean).length ? ` · ${[cap(p.project_type), p.year_completed].filter(Boolean).join(' · ')}` : ''}</span>
+                  <span style={{ fontWeight: '400', color: 'var(--s-muted, #8b92a8)' }}>{[cap(p.project_type), p.year_completed].filter(Boolean).length ? ` · ${[cap(p.project_type), p.year_completed].filter(Boolean).join(' · ')}` : ''}</span>
                 </div>
                 {p.description && <div style={small}>{p.description}</div>}
-                {p.technologies && <div style={{ ...small, color: '#8b92a8' }}>Technologies: {Array.isArray(p.technologies) ? p.technologies.join(', ') : p.technologies}</div>}
+                {p.technologies && <div style={{ ...small, color: 'var(--s-muted, #8b92a8)' }}>Technologies: {Array.isArray(p.technologies) ? p.technologies.join(', ') : p.technologies}</div>}
               </div>
             ))}
           </div>
@@ -152,7 +152,7 @@ export default function CvExport() {
             {certs.map(c => (
               <div key={c.cert_id} style={{ fontSize: '13px', marginBottom: '4px' }}>
                 <b>{c.cert_name}</b>
-                <span style={{ color: '#4a5168' }}>{c.issuer ? ` · ${c.issuer}` : ''}{c.issue_date ? ` · ${fmtDate(c.issue_date)}` : ''}</span>
+                <span style={{ color: 'var(--s-body, #4a5168)' }}>{c.issuer ? ` · ${c.issuer}` : ''}{c.issue_date ? ` · ${fmtDate(c.issue_date)}` : ''}</span>
               </div>
             ))}
           </div>
@@ -165,13 +165,13 @@ export default function CvExport() {
             {activities.map(a => (
               <div key={a.progress_id} style={{ fontSize: '13px', marginBottom: '4px' }}>
                 <b>{a.resource_title}</b>
-                <span style={{ color: '#4a5168' }}>{a.provider ? ` · ${a.provider}` : ''}{a.skill_name ? ` · ${a.skill_name}` : ''}{a.completed_at ? ` · ${fmtDate(a.completed_at)}` : ''}</span>
+                <span style={{ color: 'var(--s-body, #4a5168)' }}>{a.provider ? ` · ${a.provider}` : ''}{a.skill_name ? ` · ${a.skill_name}` : ''}{a.completed_at ? ` · ${fmtDate(a.completed_at)}` : ''}</span>
               </div>
             ))}
           </div>
         )}
 
-        <div style={{ fontSize: '10px', color: '#8b92a8', marginTop: '22px', borderTop: '1px solid #eef0f5', paddingTop: '8px' }}>
+        <div style={{ fontSize: '10px', color: 'var(--s-muted, #8b92a8)', marginTop: '22px', borderTop: '1px solid var(--s-surface-2, #eef0f5)', paddingTop: '8px' }}>
           Generated from SEAGAS on {new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}. Skill levels are self-reported.
         </div>
       </div>
