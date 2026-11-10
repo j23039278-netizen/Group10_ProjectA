@@ -39,6 +39,9 @@ PROFICIENCY_LEVELS = ("beginner", "intermediate", "advanced")
 IMPORTANCE_LEVELS = ("required", "preferred", "bonus")
 # Evidence that lets a beginner skill count as Strong; coursework alone does not (rule C).
 STRONG_EVIDENCE = frozenset({"project", "certification", "internship"})
+# The kind of evidence a completed learning activity gives, by resource type.
+EVIDENCE_OF_TYPE = {"course": "coursework", "workshop": "coursework", "certification": "certification",
+                    "project": "project", "competition": "project", "internship": "internship"}
 _STATUS_RANK = {"gap": 0, "developing": 1, "strong": 2}
 
 # ── Reasons ───────────────────────────────────────────────────
@@ -137,10 +140,29 @@ def _same(required, student):
     return bool(required.key) and required.key == student.key
 
 
-def _solid(student):
+def _solid_level(level, evidence):
     """Intermediate / advanced, or a beginner backed by a project, certification or
     internship. Coursework alone does not count (rule C)."""
-    return student.level != "beginner" or not STRONG_EVIDENCE.isdisjoint(student.evidence)
+    return level != "beginner" or not STRONG_EVIDENCE.isdisjoint(evidence)
+
+
+def _solid(student):
+    return _solid_level(student.level, student.evidence)
+
+
+def activity_evidence(difficulty, resource_type):
+    """(level, evidence kind) a completed learning activity gives its skill. A missing
+    difficulty counts as beginner, a type this table does not know as coursework."""
+    level = difficulty if difficulty in PROFICIENCY_LEVELS else "beginner"
+    return level, EVIDENCE_OF_TYPE.get(resource_type, "coursework")
+
+
+def status_after_activity(difficulty, resource_type):
+    """The status a skill that is not Strong yet reaches by completing this activity:
+    the student then has the same skill, so only rule C decides, and it depends only on
+    the resource. The "credit after" of docs/JOB_READINESS_SCORE.md, section 8."""
+    level, kind = activity_evidence(difficulty, resource_type)
+    return "strong" if _solid_level(level, (kind,)) else "developing"
 
 
 # ── Similarity ────────────────────────────────────────────────

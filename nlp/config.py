@@ -29,7 +29,10 @@ SKILL_TEXT_MODE = "name_aliases"
 # merged into evidence_type before matching, and reasons name the project / certification.
 # 2026-10-31: role templates re-tuned against the JD dataset (database/seed_job_role_skills.sql)
 # and six v4 library skills plus new aliases, which change extraction and matching.
-MATCH_RULES_VERSION = "2026-10-31"
+# 2026-11-05: the readiness formula changed to tiered coverage (backend/readiness.py) and
+# classifications did not. The bump is there so start_backend.bat re-assesses the synthetic
+# students, whose stored scores would otherwise keep the old formula.
+MATCH_RULES_VERSION = "2026-11-05"
 
 # nlp/evidence.py: count a project / certification as evidence only when it has at
 # least one evidence file or link (student_evidence_files). Off: listing it is enough.

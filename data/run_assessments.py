@@ -19,8 +19,9 @@ back to keyword (the stored matching_method says which one ran).
 --auto assesses students with no assessment yet, and adds a new assessment for
 every synthetic student when nlp/config.py MATCH_RULES_VERSION differs from the
 version this machine last ran (kept in backend/.assessment_rules_version, not in
-git). The advisor dashboard reads each student's latest assessment, so the old
-ones stay as history.
+git), or when most of them were assessed with keyword and hybrid works now. The
+advisor dashboard reads each student's latest assessment, so the old ones stay as
+history.
 """
 
 import argparse
@@ -51,6 +52,36 @@ def stored_rules_version():
         return None
 
 
+def mostly_keyword(db):
+    """True when most synthetic students' latest assessment used keyword. Most, not any:
+    someone trying keyword on one demo account must not re-assess everybody."""
+    keyword, assessed = db.execute(
+        text("""
+            SELECT count(*) FILTER (WHERE matching_method = 'keyword'), count(*)
+            FROM (
+                SELECT DISTINCT ON (a.profile_id) a.matching_method
+                FROM assessments a
+                JOIN student_profiles sp USING (profile_id)
+                JOIN users u USING (user_id)
+                WHERE u.email LIKE :synthetic
+                ORDER BY a.profile_id, a.created_at DESC
+            ) latest
+        """),
+        {"synthetic": SYNTHETIC_EMAIL}
+    ).one()
+    return keyword * 2 > assessed
+
+
+def hybrid_works():
+    """Whether hybrid really runs here, not only whether its packages are installed: a model
+    that fails to load would re-assess everybody on every start. Writes nothing."""
+    if not nlp_service.level2_installed():
+        return False
+    _, used, _ = nlp_service.match_skills([{"skill_name": "SQL", "proficiency_level": "beginner"}],
+                                          [{"skill_name": "Python"}], "hybrid")
+    return used == "hybrid"
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[1])
     ap.add_argument("--method", default=nlp_service.DEFAULT_METHOD, choices=nlp_service.METHODS)
@@ -79,6 +110,10 @@ def main():
             stored = stored_rules_version()
             if assessed and stored != MATCH_RULES_VERSION:
                 print(f"      matching rules changed ({stored or 'older'} -> {MATCH_RULES_VERSION}): "
+                      f"re-assessing every synthetic student once")
+                force = True
+            elif assessed and args.method != "keyword" and mostly_keyword(db) and hybrid_works():
+                print(f"      assessed with keyword, but {args.method} works now: "
                       f"re-assessing every synthetic student once")
                 force = True
             elif assessed:

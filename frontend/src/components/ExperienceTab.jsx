@@ -80,7 +80,7 @@ export default function ExperienceTab() {
         </div>
         <div style={{ fontSize: '12px', color: C.muted, marginBottom: '14px' }}>
           Internships, part-time or full-time jobs, freelance work and volunteering. Paid work and internships count towards the
-          Industry Experience part of your readiness score.
+          Industry Experience dimension, which is shown beside your readiness score and not added to it.
         </div>
         {error && <div role="alert" style={{ background: 'var(--s-bad-soft, #fee2e2)', color: C.red, padding: '10px', borderRadius: '8px', marginBottom: '12px', fontSize: '13px' }}>{error}</div>}
         {notice && <div role="status" style={{ background: 'var(--s-good-soft, #dcfce7)', color: C.green, padding: '10px', borderRadius: '8px', marginBottom: '12px', fontSize: '13px' }}>{notice}</div>}

@@ -10,6 +10,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import text
 from pydantic import BaseModel
 from typing import Optional
+from datetime import datetime, timezone
 import sys
 import os
 
@@ -19,8 +20,10 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import access
 import assessment_service
 import audit
+import jd_fit
 import nlp_service
 from database import get_db
+from readiness import expected_gain, skill_points
 from routers.auth import get_current_user
 
 router = APIRouter()
@@ -43,9 +46,9 @@ def run_assessment(
 ):
     """
     Run skill matching and generate the readiness score (assessment_service.py).
-    Scoring weights: required=3, preferred=2, bonus=1; strong = full points,
-    developing = half, gap = 0. Strong / Developing / Gap comes from the NLP
-    matcher (Ng Yong Hin, nlp/); rules in docs/NLP_CLASSIFICATION_RULES.md.
+    Readiness is tiered coverage, required 70 / preferred 25 / bonus 5 (readiness.py);
+    strong = full credit, developing = half, gap = 0. Strong / Developing / Gap comes
+    from the NLP matcher (Ng Yong Hin, nlp/); rules in docs/NLP_CLASSIFICATION_RULES.md.
     """
     profile = db.execute(
         text("SELECT * FROM student_profiles WHERE user_id = :uid"),
@@ -130,30 +133,44 @@ def get_assessment(
 ):
     """Get a specific assessment with full skill breakdown (own, or any for staff)"""
     assessment = access.get_assessment_or_404(db, current_user, assessment_id)
-
-    match_results = db.execute(
-        text("""
-            SELECT sl.skill_name, sl.category,
-                   smr.match_status, smr.similarity_score, smr.matching_method,
-                   smr.matched_student_skill, smr.reason
-            FROM skill_match_results smr
-            JOIN skills_library sl ON sl.skill_id = smr.skill_id
-            WHERE smr.assessment_id = :aid
-            ORDER BY
-                CASE smr.match_status
-                    WHEN 'strong'     THEN 1
-                    WHEN 'developing' THEN 2
-                    WHEN 'gap'        THEN 3
-                END,
-                sl.skill_name
-        """),
-        {"aid": assessment_id}
-    ).fetchall()
-
     return {
         "assessment":    dict(assessment._mapping),
-        "match_results": [dict(m._mapping) for m in match_results]
+        "match_results": _with_gain(assessment_service.load_match_rows(db, assessment_id)),
     }
+
+
+def _with_gain(rows):
+    """Match rows with expected_gain: the most each skill can add (0 for Strong)."""
+    points = skill_points(rows)
+    return [{**m, "expected_gain": round(expected_gain(points[m["importance"]], m["match_status"]), 1)}
+            for m in rows]
+
+
+@router.get("/{assessment_id}/jd-fit")
+def get_assessment_jd_fit(
+    assessment_id: str,
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Of this role's real job descriptions, how many the student covers (jd_fit.py).
+    Worked out from the student's current skills now, not from the stored assessment,
+    so it can differ from it (based_on, computed_at). Never feeds into readiness.
+    data is null for a pasted-JD assessment or a role with no JDs in the dataset.
+    """
+    assessment = access.get_assessment_or_404(db, current_user, assessment_id)
+    if assessment.jd_id or not assessment.role_id:
+        return {"data": None}
+    role_code = db.execute(
+        text("SELECT role_code FROM job_roles WHERE role_id = :rid"),
+        {"rid": str(assessment.role_id)}
+    ).scalar()
+    fit = jd_fit.jd_fit(assessment_service.load_student_skills(db, assessment.profile_id),
+                        jd_fit.load_jd_skill_sets().get(role_code, ()))
+    if not fit["total"]:
+        return {"data": None}
+    return {"data": {**fit, "based_on": "current_skills",
+                     "computed_at": datetime.now(timezone.utc).isoformat()}}
 
 
 @router.get("/{assessment_id}/recommendations")
@@ -177,21 +194,12 @@ def get_assessment_recommendations(
             include_developing=True
         )
     except ImportError:
-        # Fallback if engine module not found
-        gaps = db.execute(
-            text("""
-                SELECT smr.skill_id, sl.skill_name, smr.match_status
-                FROM skill_match_results smr
-                JOIN skills_library sl ON sl.skill_id = smr.skill_id
-                WHERE smr.assessment_id = :aid
-                AND smr.match_status IN ('gap', 'developing')
-                ORDER BY smr.match_status, sl.skill_name
-            """),
-            {"aid": assessment_id}
-        ).fetchall()
-
+        # Fallback if engine module not found: no first steps, and no gain per resource
+        rows = _with_gain(assessment_service.load_match_rows(db, assessment_id))
         recommendations = []
-        for gap in gaps:
+        for gap in rows:
+            if gap["match_status"] == "strong":
+                continue
             resources = db.execute(
                 text("""
                     SELECT resource_id, resource_title, resource_type,
@@ -201,13 +209,17 @@ def get_assessment_recommendations(
                     ORDER BY difficulty
                     LIMIT 3
                 """),
-                {"sid": str(gap.skill_id)}
+                {"sid": gap["skill_id"]}
             ).fetchall()
 
             recommendations.append({
-                "skill_name": gap.skill_name,
-                "gap_type":   gap.match_status,
-                "resources":  [dict(r._mapping) for r in resources]
+                "skill_id":      gap["skill_id"],
+                "skill_name":    gap["skill_name"],
+                "category":      gap["category"],
+                "gap_type":      gap["match_status"],
+                "importance":    gap["importance"],
+                "expected_gain": gap["expected_gain"],
+                "resources":     [dict(r._mapping) for r in resources]
             })
 
-        return {"assessment_id": assessment_id, "recommendations": recommendations}
+        return {"assessment_id": assessment_id, "recommendations": recommendations, "first_steps": []}

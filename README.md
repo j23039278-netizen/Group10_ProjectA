@@ -238,12 +238,19 @@ Test student: `student0001@synthetic.example.com`, student ID `900000001`, passw
 python -m pip install -r tests/requirements.txt
 python -m pytest tests -q                      # backend API (own temporary database) + data tests
 python -m pytest nlp/tests -q -m "not model"   # NLP tests without loading the model
+cd frontend && npm test                        # skill search and importance wording (no extra packages)
+python data/check_resource_links.py            # run before each demo: requests each learning-resource link once, exits 1 if any is dead (404/410)
 ```
 
 ### Batch assessments
 `python data/run_assessments.py` assesses every synthetic student that has no assessment yet
 (the start script runs it once), so the advisor dashboard has cohort data.
 Options: `--method keyword|semantic|hybrid`, `--limit N`, `--force`.
+
+The start script picks a Python that has `nlp/requirements.txt` installed (`py -3`, then 3.13 to
+3.10, then `python`), so a newer default Python without them does not turn matching into keyword.
+If it finds none, it says so and uses keyword. Once hybrid works on a machine whose students
+were assessed with keyword, the next start re-assesses them once.
 
 ---
 

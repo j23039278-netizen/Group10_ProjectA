@@ -76,7 +76,7 @@ returns `[]`.
 
 Returns exactly **one `MatchResult` per item of `required_skills`, in the same
 order**. An empty `required_skills` returns `[]`. Readiness scoring
-(required = 3, preferred = 2, bonus = 1; strong = full, developing = half)
+(tiered coverage: required 70, preferred 25, bonus 5; strong = full, developing = half)
 stays in the backend.
 
 ### Method values
@@ -132,7 +132,7 @@ Call it on the `StudentSkill` list just before `match_skills()`.
 |-------|------|---------|-----------|
 | `skill_id` | `str \| None` | UUID | `jd_extracted_skills.skill_id` / `job_role_skills.skill_id` |
 | `skill_name` | `str` | **Canonical** name (not the raw JD text) | `skills_library.skill_name` |
-| `importance` | `"required" \| "preferred" \| "bonus"` | Weight in the readiness score; `None` counts as `"required"` (the column default) | `jd_extracted_skills.importance` / `job_role_skills.importance` |
+| `importance` | `"required" \| "preferred" \| "bonus"` | Tier in the readiness score; `None` counts as `"required"` (the column default) | `jd_extracted_skills.importance` / `job_role_skills.importance` |
 
 ### `MatchResult` → `skill_match_results`
 
@@ -140,7 +140,7 @@ Call it on the `StudentSkill` list just before `match_skills()`.
 |-------|------|---------|-----------|
 | `skill_id` | `str \| None` | Copied from the `RequiredSkill` | `skill_id` |
 | `skill_name` | `str` | Copied from the `RequiredSkill` | (via `skill_id`) |
-| `importance` | `str` | Copied from the `RequiredSkill` | (scoring only) |
+| `importance` | `str` | Copied from the `RequiredSkill` | `importance` (NULL on rows stored before 6 November 2026) |
 | `match_status` | `"strong" \| "developing" \| "gap"` | Decision for this skill | `match_status` |
 | `similarity_score` | `float` 0–1 | 1.0 for the same skill / alias, cosine similarity for a semantic match (cut to 3 decimals), 0.0 for a gap | `similarity_score` |
 | `matching_method` | `"keyword" \| "semantic" \| "hybrid"` | The method passed to `match_skills()`, the same on every row | `matching_method` |
@@ -238,8 +238,8 @@ match_skills(
 ```
 
 Tableau scores only 0.251 against Power BI, so Power BI is a gap (see the
-classification rules, section 7). With the backend's weights this student's readiness
-is 5.5 / 12 = **45.83**.
+classification rules, section 7). With the backend's tiered formula this student's readiness
+is 100 × (0.70 × 0.5 + 0.25 × 0.5 + 0.05 × 0) = **47.5**.
 
 ## 5. Error behaviour
 
@@ -323,13 +323,8 @@ loop):
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-    # Weighted scoring: required=3, preferred=2, bonus=1; strong=1, developing=0.5, gap=0
-    IMPORTANCE_WEIGHTS = {"required": 3, "preferred": 2, "bonus": 1}
-    STATUS_CREDIT      = {"strong": 1.0, "developing": 0.5, "gap": 0.0}
-
-    earned_points = sum(IMPORTANCE_WEIGHTS.get(m["importance"], 1) * STATUS_CREDIT[m["match_status"]]
-                        for m in match_results)
-    max_points    = sum(IMPORTANCE_WEIGHTS.get(m["importance"], 1) for m in match_results)
+    # Tiered coverage (backend/readiness.py): required 70, preferred 25, bonus 5; strong=1, developing=0.5, gap=0
+    readiness_score  = tiered_readiness(match_results)
     strong_count     = sum(m["match_status"] == "strong" for m in match_results)
     developing_count = sum(m["match_status"] == "developing" for m in match_results)
     gap_count        = sum(m["match_status"] == "gap" for m in match_results)

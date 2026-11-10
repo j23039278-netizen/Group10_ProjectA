@@ -4,7 +4,8 @@
 //   not_required  NULL: the job asks for no skill of this category, so there is nothing to score
 //   no_data       0% because no skill of the category is listed, not because the student was
 //                 assessed as lacking it. The lecturer asked us to show these differently.
-// Only the four skill dimensions are part of the readiness score (assessment_service.py).
+// Only the skills of the four skill dimensions count in the readiness score, which uses tiers
+// (backend/readiness.py); these dimensions use points of 3, 2 and 1 (assessment_service.py).
 // The experience dimensions (records) show the student's records, not a percentage.
 
 export const DIMENSIONS = [

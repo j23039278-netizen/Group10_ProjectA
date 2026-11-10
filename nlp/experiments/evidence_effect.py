@@ -9,6 +9,7 @@ role (database/seed_job_role_skills.sql), as data/run_assessments.py does, with
 and without nlp.derive_evidence(). Readiness is the weighted score of
 backend/assessment_service.py (required 3, preferred 2, bonus 1; strong 1.0,
 developing 0.5, gap 0).
+These results use the 3/2/1 readiness formula that was current at the time.
 
 Two scenarios:
   website  stored evidence_type emptied. This is what real users have: the

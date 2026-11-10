@@ -4,7 +4,8 @@ SEAGAS — Run one assessment (skill matching + readiness score) and store it
 Used by POST /api/assessments/run and by data/run_assessments.py (batch
 assessments for the synthetic students), so both compute scores the same way.
 
-Scoring weights: required=3, preferred=2, bonus=1.
+Readiness is tiered coverage, required 70 / preferred 25 / bonus 5 (readiness.py).
+The skill dimensions use points instead: required=3, preferred=2, bonus=1, with
 Strong = full points, Developing = half, Gap = 0.
 Strong / Developing / Gap comes from the NLP matcher (Ng Yong Hin, nlp/);
 rules in docs/NLP_CLASSIFICATION_RULES.md.
@@ -14,9 +15,9 @@ from sqlalchemy import text
 
 import nlp_service
 from nlp import derive_evidence  # importable once nlp_service has put the repo root on the path
+from readiness import STATUS_CREDIT, tier_coverage, tiered_readiness
 
-IMPORTANCE_WEIGHTS = {"required": 3, "preferred": 2, "bonus": 1}
-STATUS_CREDIT      = {"strong": 1.0, "developing": 0.5, "gap": 0.0}
+IMPORTANCE_WEIGHTS = {"required": 3, "preferred": 2, "bonus": 1}   # dimension scores only
 
 
 class AssessmentError(Exception):
@@ -26,6 +27,70 @@ class AssessmentError(Exception):
         super().__init__(detail)
         self.status = status
         self.detail = detail
+
+
+def load_student_skills(db, profile_id):
+    """The student's current skills as dicts, with evidence from their projects and
+    certifications added (nlp/evidence.py): the website does not ask for evidence_type
+    when a skill is added. Stored evidence_type is kept and never overwritten."""
+    student_skills = db.execute(
+        text("""
+            SELECT sl.skill_id, sl.skill_name, sl.category,
+                   ss.proficiency_level, ss.evidence_type
+            FROM student_skills ss
+            JOIN skills_library sl ON sl.skill_id = ss.skill_id
+            WHERE ss.profile_id = :pid
+        """),
+        {"pid": str(profile_id)}
+    ).fetchall()
+    students = [{"skill_id": str(sk.skill_id), "skill_name": sk.skill_name,
+                 "proficiency_level": sk.proficiency_level,
+                 "evidence_type": list(sk.evidence_type or [])} for sk in student_skills]
+    records = db.execute(
+        text("""
+            SELECT 'project' AS kind, p.project_title, p.description, p.technologies,
+                   p.project_type, NULL::varchar AS cert_name, NULL::varchar AS issuer,
+                   (SELECT COUNT(*) FROM student_evidence_files f
+                     WHERE f.project_id = p.project_id) AS proof_count
+            FROM student_projects p WHERE p.profile_id = :pid
+            UNION ALL
+            SELECT 'certification', NULL, NULL, NULL, NULL, c.cert_name, c.issuer,
+                   (SELECT COUNT(*) FROM student_evidence_files f WHERE f.cert_id = c.cert_id)
+            FROM student_certifications c WHERE c.profile_id = :pid
+        """),
+        {"pid": str(profile_id)}
+    ).fetchall()
+    return derive_evidence(students,
+                           [r for r in records if r.kind == "project"],
+                           [r for r in records if r.kind == "certification"])
+
+
+def load_match_rows(db, assessment_id):
+    """The stored match rows of an assessment as dicts, strong first, then by skill name.
+    The one place that reads importance: rows stored before the column existed fall back to
+    the role template, then to required (a pasted JD counts every skill as required)."""
+    rows = db.execute(
+        text("""
+            SELECT smr.skill_id, sl.skill_name, sl.category,
+                   smr.match_status, smr.similarity_score, smr.matching_method,
+                   smr.matched_student_skill, smr.reason,
+                   COALESCE(smr.importance, jrs.importance, 'required') AS importance
+            FROM skill_match_results smr
+            JOIN assessments a     ON a.assessment_id = smr.assessment_id
+            JOIN skills_library sl ON sl.skill_id = smr.skill_id
+            LEFT JOIN job_role_skills jrs ON jrs.role_id = a.role_id AND jrs.skill_id = smr.skill_id
+            WHERE smr.assessment_id = :aid
+            ORDER BY
+                CASE smr.match_status
+                    WHEN 'strong'     THEN 1
+                    WHEN 'developing' THEN 2
+                    WHEN 'gap'        THEN 3
+                END,
+                sl.skill_name
+        """),
+        {"aid": str(assessment_id)}
+    ).fetchall()
+    return [{**r._mapping, "skill_id": str(r.skill_id)} for r in rows]
 
 
 def run_for_profile(db, profile, *, role_id=None, jd_id=None,
@@ -43,17 +108,8 @@ def run_for_profile(db, profile, *, role_id=None, jd_id=None,
     if not jd_id and not role_id:
         raise AssessmentError(400, "Provide either a jd_id or a role_id")
 
-    student_skills = db.execute(
-        text("""
-            SELECT sl.skill_id, sl.skill_name, sl.category,
-                   ss.proficiency_level, ss.evidence_type
-            FROM student_skills ss
-            JOIN skills_library sl ON sl.skill_id = ss.skill_id
-            WHERE ss.profile_id = :pid
-        """),
-        {"pid": str(profile.profile_id)}
-    ).fetchall()
-    if not student_skills:
+    students = load_student_skills(db, profile.profile_id)
+    if not students:
         raise AssessmentError(400, "Add at least one skill to your profile before running assessment")
 
     # Required skills — from an analysed JD or a role template
@@ -92,29 +148,6 @@ def run_for_profile(db, profile, *, role_id=None, jd_id=None,
             "or paste a longer description." if jd_id else "No required skills found for this role")
 
     # ── Matching (nlp/) ───────────────────────────────────────
-    students = [{"skill_id": str(sk.skill_id), "skill_name": sk.skill_name,
-                 "proficiency_level": sk.proficiency_level,
-                 "evidence_type": list(sk.evidence_type or [])} for sk in student_skills]
-    # Evidence from the student's projects and certifications, added at assessment
-    # time (nlp/evidence.py): the website does not ask for evidence_type when a skill
-    # is added. Stored evidence_type is kept and never overwritten.
-    records = db.execute(
-        text("""
-            SELECT 'project' AS kind, p.project_title, p.description, p.technologies,
-                   p.project_type, NULL::varchar AS cert_name, NULL::varchar AS issuer,
-                   (SELECT COUNT(*) FROM student_evidence_files f
-                     WHERE f.project_id = p.project_id) AS proof_count
-            FROM student_projects p WHERE p.profile_id = :pid
-            UNION ALL
-            SELECT 'certification', NULL, NULL, NULL, NULL, c.cert_name, c.issuer,
-                   (SELECT COUNT(*) FROM student_evidence_files f WHERE f.cert_id = c.cert_id)
-            FROM student_certifications c WHERE c.profile_id = :pid
-        """),
-        {"pid": str(profile.profile_id)}
-    ).fetchall()
-    students = derive_evidence(students,
-                               [r for r in records if r.kind == "project"],
-                               [r for r in records if r.kind == "certification"])
     required = [{"skill_id": str(r.skill_id) if r.skill_id else None,
                  "skill_name": r.skill_name,
                  "importance": r.importance or "required"} for r in required_skills]
@@ -128,8 +161,7 @@ def run_for_profile(db, profile, *, role_id=None, jd_id=None,
         got = sum(IMPORTANCE_WEIGHTS.get(m["importance"], 1) * STATUS_CREDIT[m["match_status"]] for m in rows)
         return got, top
 
-    earned_points, max_points = weighted(match_results)
-    readiness_score = round(earned_points / max_points * 100, 2) if max_points > 0 else 0
+    readiness_score = tiered_readiness(match_results)
 
     # 7 dimensions. match_results are in the same order as required_skills.
     def category_score(category):
@@ -188,15 +220,16 @@ def run_for_profile(db, profile, *, role_id=None, jd_id=None,
 
     rows = [{"aid": assessment_id, "sid": m["skill_id"], "status": m["match_status"],
              "score": m["similarity_score"], "method": m["matching_method"],
-             "matched": m["matched_student_skill"], "reason": m["reason"]}
+             "matched": m["matched_student_skill"], "reason": m["reason"],
+             "importance": m["importance"]}
             for m in match_results if m["skill_id"]]
     if rows:
         db.execute(
             text("""
                 INSERT INTO skill_match_results
                     (assessment_id, skill_id, match_status, similarity_score,
-                     matching_method, matched_student_skill, reason)
-                VALUES (:aid, :sid, :status, :score, :method, :matched, :reason)
+                     matching_method, matched_student_skill, reason, importance)
+                VALUES (:aid, :sid, :status, :score, :method, :matched, :reason, :importance)
                 ON CONFLICT (assessment_id, skill_id) DO NOTHING
             """),
             rows
@@ -207,7 +240,7 @@ def run_for_profile(db, profile, *, role_id=None, jd_id=None,
     return {
         "assessment_id":   assessment_id,
         "readiness_score": readiness_score,
-        "scoring_method":  "weighted (required=3, preferred=2, bonus=1)",
+        "scoring_method":  "tiered coverage (required=70, preferred=25, bonus=5)",
         "matching_method": method_used,
         "matching_note":   matching_note,
         "dimension_scores": dims,
@@ -216,8 +249,7 @@ def run_for_profile(db, profile, *, role_id=None, jd_id=None,
             "developing": sum(m["match_status"] == "developing" for m in match_results),
             "gaps":       sum(m["match_status"] == "gap" for m in match_results),
             "total":      len(required_skills),
-            "earned_points": earned_points,
-            "max_points":    max_points,
+            "tier_coverage": tier_coverage(match_results),
         },
         "match_results": match_results,
     }
