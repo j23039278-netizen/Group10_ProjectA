@@ -14,10 +14,10 @@ import AdminResources from '../pages/AdminResources'
 import './advisorTheme.css'
 
 const NAV = [
-  { path: '/', label: 'Cohort Overview', icon: '📊' },
-  { path: '/new-students', label: 'New Students', icon: '📝' },
-  { path: '/library', label: 'Skills & Roles', icon: '📚' },
-  { path: '/resources', label: 'Learning Resources', icon: '🎓' },
+  { path: '/', label: 'Cohort Overview', icon: 'barChart' },
+  { path: '/new-students', label: 'New Students', icon: 'userPlus' },
+  { path: '/library', label: 'Skills & Roles', icon: 'book' },
+  { path: '/resources', label: 'Learning Resources', icon: 'graduationCap' },
 ]
 
 export default function AdvisorPortal({ user, onLogout }) {

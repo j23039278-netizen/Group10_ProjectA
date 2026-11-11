@@ -47,7 +47,7 @@ export default function Login({ onLogin }) {
             id="login-email"
             className="au-input"
             type="email" required
-            autoComplete="email"
+            autoComplete="username"
             placeholder="105967029@student.newinti.edu.my"
             value={email} onChange={e => setEmail(e.target.value)}
           />
@@ -58,8 +58,8 @@ export default function Login({ onLogin }) {
             id="login-student-id"
             className="au-input"
             type="text" inputMode="numeric" maxLength={9}
-            autoComplete="username"
-            placeholder="9 digits, e.g. 105967029"
+            autoComplete="off"
+            placeholder="e.g. 105967029"
             value={studentId} onChange={e => setStudentId(e.target.value.replace(/\D/g, ''))}
           />
         </Field>

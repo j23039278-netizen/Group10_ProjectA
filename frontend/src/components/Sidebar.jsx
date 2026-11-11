@@ -1,7 +1,9 @@
 // SEAGAS — Sidebar Navigation
 import { useNavigate, useLocation } from 'react-router-dom'
 import emblem from '../assets/brand/seagas-emblem.png'
+import wordmark from '../assets/brand/seagas-wordmark.png'
 import { AFFILIATION } from '../pages/home/BrandLogo'
+import NavIcon from './NavIcon'
 
 const PORTAL_NAMES = { student: 'Student Portal', advisor: 'Advisor Portal', admin: 'Admin Portal' }
 
@@ -22,19 +24,18 @@ export default function Sidebar({ user, navTitle, navItems, onLogout }) {
     }}>
       {/* Logo */}
       <div className="sb-head" style={{ padding: '24px 20px 20px', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-        {/* The logo lockup, as on the sign-in page: emblem on the left, SEAGAS above the course line
-            on the right. The portal's tagline sits under it, spread over the lockup's full width
-            (from the emblem's left edge to the end of the course line). */}
-        <div style={{ display: 'inline-flex', flexDirection: 'column', marginLeft: '-4px', maxWidth: 'calc(100% + 4px)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <img src={emblem} alt="" aria-hidden="true" style={{ width: '34px', height: '34px', objectFit: 'contain', flex: 'none' }} />
-            <div style={{ minWidth: 0 }}>
-              <div className="sb-brand" style={{ fontSize: '20px', fontWeight: '700', color: '#fff', letterSpacing: '-0.2px', lineHeight: 1.05 }}>
-                SEAGAS
-              </div>
-              <div className="sb-affiliation" style={{ fontSize: '9px', fontWeight: '600', color: 'rgba(255,255,255,0.7)', marginTop: '3px', letterSpacing: '0.1px', whiteSpace: 'nowrap' }}>
-                {AFFILIATION}
-              </div>
+        {/* The logo lockup, as on the home page: the emblem on the left; on the right the
+            "Seagas" wordmark above the course line. Emblem and wordmark are made white for the
+            dark sidebar (only here; the home and sign-in pages keep the red emblem). */}
+        <div role="img" aria-label={`Seagas, ${AFFILIATION}`}
+             style={{ display: 'flex', alignItems: 'center', gap: '6px', marginLeft: '-4px' }}>
+          <img src={emblem} alt="" draggable="false" style={{ height: '32px', width: 'auto', flex: 'none', filter: 'brightness(0) invert(1)' }} />
+          <div style={{ minWidth: 0, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '4px' }}>
+            <img className="sb-brand" src={wordmark} alt="" draggable="false"
+                 style={{ display: 'block', height: '19px', width: 'auto', filter: 'brightness(0) invert(1)' }} />
+            <div className="sb-affiliation" style={{ fontSize: '9px', fontWeight: '500', color: 'rgba(255,255,255,0.7)',
+                                                     letterSpacing: '0.2px', lineHeight: 1, whiteSpace: 'nowrap' }}>
+              {AFFILIATION}
             </div>
           </div>
         </div>
@@ -86,7 +87,7 @@ export default function Sidebar({ user, navTitle, navItems, onLogout }) {
               color: isActive(item.path) ? '#fff' : 'rgba(255,255,255,0.55)',
             }}
           >
-            <span style={{ fontSize: '15px' }}>{item.icon}</span>
+            <span style={{ display: 'inline-flex', width: '18px', justifyContent: 'center', flex: 'none' }}><NavIcon name={item.icon} /></span>
             {item.label}
           </div>
         ))}

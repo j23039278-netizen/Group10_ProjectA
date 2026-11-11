@@ -14,13 +14,10 @@ export default function AuthLayout({ heading, title, subtitle, children }) {
   useCanvasColor('#ffffff')
   return (
     <div className="hp au">
-      {/* Background: INTI campus photos left and right, red / pink blocks in between; the form sits on top */}
+      {/* Background: two INTI campus photos, left and right; the form sits on top */}
       <div className="au-bg" aria-hidden="true">
         <div className="au-mosaic">
           <div className="au-tile au-t-main" style={{ backgroundImage: `url(${campusMain})` }} />
-          <div className="au-tile au-t-pink1" />
-          <div className="au-tile au-t-red1" />
-          <div className="au-tile au-t-pink2" />
           <div className="au-tile au-t-subang" style={{ backgroundImage: `url(${campusSubang})` }} />
         </div>
       </div>
@@ -52,11 +49,13 @@ export default function AuthLayout({ heading, title, subtitle, children }) {
 
 export function Field({ id, label, icon, error, hint, children }) {
   return (
-    <div className={`au-field ${error ? 'has-error' : ''}`}>
-      <label htmlFor={id} className="au-label">{label}</label>
+    <div className={`au-field au-float ${error ? 'has-error' : ''}`}>
+      {/* Floating label: inside the box while it is empty, moves up onto the border when the
+          box is clicked or filled in (CSS in Auth.css; the label comes after the input for that) */}
       <div className="au-input-wrap">
         {icon && <span className="au-input-icon"><Icon name={icon} size={17} /></span>}
         {children}
+        <label htmlFor={id} className="au-label">{label}</label>
       </div>
       {error
         ? <div className="au-field-error" id={`${id}-error`}>{error}</div>
@@ -65,7 +64,7 @@ export function Field({ id, label, icon, error, hint, children }) {
   )
 }
 
-export function PasswordInput({ id, value, onChange, placeholder = '••••••••', autoComplete, invalid }) {
+export function PasswordInput({ id, value, onChange, placeholder = 'Enter your password', autoComplete, invalid }) {
   const [show, setShow] = useState(false)
   return (
     <>

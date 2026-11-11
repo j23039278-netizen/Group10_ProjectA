@@ -39,7 +39,7 @@ export default function ChangePassword({ user, onDone, onLogout }) {
     >
       <form onSubmit={submit}>
         <Field id="cp-new" label="New password" icon="lock">
-          <PasswordInput id="cp-new" autoComplete="new-password" value={next} onChange={e => setNext(e.target.value)} />
+          <PasswordInput id="cp-new" placeholder="Choose a new password" autoComplete="new-password" value={next} onChange={e => setNext(e.target.value)} />
         </Field>
 
         {/* Live checklist of the password rules */}
@@ -48,7 +48,7 @@ export default function ChangePassword({ user, onDone, onLogout }) {
             const ok = r.test(next)
             return (
               <li key={r.id} style={{ display: 'flex', alignItems: 'center', gap: '8px', margin: '3px 0',
-                                      color: ok ? '#2dd4bf' : 'rgba(255,255,255,0.55)' }}>
+                                      color: ok ? '#15803d' : '#6b7280', fontWeight: ok ? 600 : 500 }}>
                 <span aria-hidden="true" style={{ width: '14px', textAlign: 'center' }}>{ok ? '✓' : '○'}</span>
                 {r.text}<span className="sr-only">{ok ? ' (done)' : ' (missing)'}</span>
               </li>
@@ -58,7 +58,7 @@ export default function ChangePassword({ user, onDone, onLogout }) {
 
         <Field id="cp-confirm" label="Confirm new password" icon="lock"
           error={confirm && confirm !== next ? 'The two passwords do not match.' : undefined}>
-          <PasswordInput id="cp-confirm" autoComplete="new-password" value={confirm} onChange={e => setConfirm(e.target.value)}
+          <PasswordInput id="cp-confirm" placeholder="Type the new password again" autoComplete="new-password" value={confirm} onChange={e => setConfirm(e.target.value)}
             invalid={!!confirm && confirm !== next} />
         </Field>
 

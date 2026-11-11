@@ -11,26 +11,34 @@
 /* ============ Background: campus photo wall ============ */
 
 .au-bg { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
-/* Tiles with thin white seams, like a photo wall; the form panel sits in the middle */
+/* Two campus photos (the INTI tower on the left, INTI College Subang on the right). They
+   overlap in the middle and the right one fades in over the left one, so there is no hard
+   seam; the form panel sits on top of the blend. */
 .au-mosaic {
   position: absolute;
   inset: 0;
-  display: grid;
-  grid-template-columns: 2fr 1fr 2fr;
-  grid-template-rows: 1fr 1.4fr 1fr;
-  gap: 6px;
+  display: block;
   background: #fff;
 }
-.au-t-main   { grid-column: 1; grid-row: 1 / 4; }
-.au-t-subang { grid-column: 3; grid-row: 1 / 4; }
-.au-t-pink1  { grid-column: 2; grid-row: 1; background: #fbe3e5; }
-.au-t-red1   { grid-column: 2; grid-row: 2; background: #e30613; }
-.au-t-pink2  { grid-column: 2; grid-row: 3; background: #f6c9cd; }
-.au-tile { background-size: cover; background-position: center; }
+.au-tile {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 64%;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+.au-t-main   { left: 0;  background-position: center 62%; }
+.au-t-subang {
+  right: 0;
+  background-position: 30% center;
+  /* transparent at its left edge, fully visible from 44% of its width: a soft 28%-wide blend */
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, rgba(0, 0, 0, .55) 22%, #000 44%);
+          mask-image: linear-gradient(to right, transparent 0%, rgba(0, 0, 0, .55) 22%, #000 44%);
+}
 
-/* Depth: the wall sits behind a soft blur, a light veil and a vignette; the panel floats on top */
+/* Depth: sharp photos (no blur) under a light veil and a vignette; the panel floats on top */
 .au-mosaic {
-  filter: blur(1.5px) saturate(1.05);
   transform: scale(1.03);              /* hides the blurred edges */
   animation: au-wall-drift 32s ease-in-out infinite alternate;
 }
@@ -45,6 +53,7 @@
   inset: 0;
   background:
     radial-gradient(ellipse 38% 55% at 50% 50%, rgba(255, 255, 255, .4) 0%, rgba(255, 255, 255, .12) 60%, transparent 100%),
+    linear-gradient(to right, transparent 30%, rgba(255, 255, 255, .16) 50%, transparent 70%),
     radial-gradient(ellipse 120% 100% at 50% 50%, transparent 55%, rgba(30, 8, 12, .22) 100%);
 }
 @media (prefers-reduced-motion: reduce) { .au-mosaic { animation: none; } }
@@ -132,14 +141,7 @@
   .au-mosaic {
     bottom: auto;
     height: 220px;
-    grid-template-columns: 2fr 1fr 2fr;
-    grid-template-rows: 1fr;
   }
-  .au-t-main   { grid-column: 1; grid-row: 1; }
-  .au-t-red1   { grid-column: 2; grid-row: 1; }
-  .au-t-subang { grid-column: 3; grid-row: 1; }
-  .au-mosaic { filter: blur(1px); }
-  .au-t-pink1, .au-t-pink2 { display: none; }
   .au-center { justify-content: flex-start; padding-top: 130px; }
   .au-card { padding: 24px 20px 18px; }
 }
@@ -313,3 +315,47 @@
 /* Logo centred on its own; a heading, when a page has one, sits under it */
 .au-card-head { display: flex !important; flex-direction: column; align-items: center; justify-content: center; gap: 8px; }
 .au-card-head .au-logo { margin-bottom: 0; }
+
+/* Floating labels (outlined style): the label sits in the middle of the empty box; when the box is
+   clicked or has text it moves up onto the top border, and a light grey hint shows inside the box.
+   The boxes are white so the label's white background blends with both the card and the box. */
+.au-float { margin-top: 10px; }
+.au-float .au-input,
+.au-float .au-input:focus { background: #fff; }
+.au-float .au-input:-webkit-autofill,
+.au-float .au-input:-webkit-autofill:hover,
+.au-float .au-input:-webkit-autofill:focus { -webkit-box-shadow: 0 0 0 1000px #fff inset; }
+.au-float .au-input-wrap .au-label {
+  position: absolute;
+  top: 50%;
+  left: 38px;
+  margin: 0;
+  padding: 0 5px;
+  max-width: calc(100% - 84px);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 14.5px;
+  font-weight: 500;
+  line-height: 1.2;
+  color: rgba(22,22,26, .5);
+  background: #fff;
+  transform: translateY(-50%);
+  pointer-events: none;
+  transition: top .18s ease, left .18s ease, font-size .18s ease, color .18s ease;
+}
+.au-float .au-input:not(:focus)::placeholder { color: transparent; }
+.au-float .au-input:focus::placeholder { color: rgba(22,22,26, .36); }
+.au-float .au-input:focus ~ .au-label,
+.au-float .au-input:not(:placeholder-shown) ~ .au-label {
+  top: 0;
+  left: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(22,22,26, .72);
+}
+.au-float .au-input:focus ~ .au-label { color: var(--hp-teal-2); }
+.au-float.has-error .au-input ~ .au-label { color: #c8102e; }
+@media (prefers-reduced-motion: reduce) {
+  .au-float .au-input-wrap .au-label { transition: none; }
+}

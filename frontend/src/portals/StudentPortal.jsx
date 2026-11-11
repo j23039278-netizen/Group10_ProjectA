@@ -17,13 +17,13 @@ import { applyLimits } from '../components/evidenceRules'
 import './studentTheme.css'
 
 const NAV = [
-  { path: '/',                label: 'Dashboard',       icon: '📊' },
-  { path: '/profile',         label: 'My Profile',      icon: '👤' },
-  { path: '/job-analysis',    label: 'Job Analysis',    icon: '📄' },
-  { path: '/skill-gap',       label: 'Skill Gap',       icon: '🎯' },
-  { path: '/recommendations', label: 'Recommendations', icon: '💡' },
-  { path: '/progress',        label: 'Progress',        icon: '📈' },
-  { path: '/career-paths',    label: 'Career Paths',    icon: '🧭' },
+  { path: '/',                label: 'Dashboard',       icon: 'dashboard' },
+  { path: '/profile',         label: 'My Profile',      icon: 'user' },
+  { path: '/job-analysis',    label: 'Job Analysis',    icon: 'fileSearch' },
+  { path: '/skill-gap',       label: 'Skill Gap',       icon: 'target' },
+  { path: '/recommendations', label: 'Recommendations', icon: 'lightbulb' },
+  { path: '/progress',        label: 'Progress',        icon: 'trendingUp' },
+  { path: '/career-paths',    label: 'Career Paths',    icon: 'compass' },
 ]
 
 export default function StudentPortal({ user, onLogout }) {

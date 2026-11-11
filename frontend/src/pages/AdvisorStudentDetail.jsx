@@ -269,7 +269,9 @@ export default function AdvisorStudentDetail() {
   const latestReview = notes.find(n => n.note_type === 'ai_review' && assessment && n.assessment_id === assessment.assessment_id)
 
   // Readiness over time: one line, labelled with the role assessed each time
-  const chart = history.map(h => ({ date: fmtDate(h.created_at), score: num(h.readiness_score), role: h.role_name || 'Job description' }))
+  // One point per assessment, keyed by its position (several can share a date)
+  const chart = history.map((h, i) => ({ n: i + 1, date: fmtDate(h.created_at), when: fmtDateTime(h.created_at),
+                                         score: num(h.readiness_score), role: h.role_name || 'Job description' }))
 
   return (
     <div className="report-sheet" style={{ padding: '28px 32px' }}>
@@ -394,9 +396,10 @@ export default function AdvisorStudentDetail() {
           <ResponsiveContainer width="100%" height={240}>
             <LineChart data={chart} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-              <XAxis dataKey="date" tick={{ fontSize: 11 }} />
+              <XAxis dataKey="n" tick={{ fontSize: 11 }} tickFormatter={n => chart[n - 1]?.date ?? ''} />
               <YAxis domain={[0, 100]} tick={{ fontSize: 11 }} tickFormatter={v => `${v}%`} />
-              <Tooltip formatter={(v, _n, p) => [`${v}%`, p.payload.role]} />
+              <Tooltip labelFormatter={n => `Assessment ${n} of ${chart.length} · ${chart[n - 1]?.when ?? ''}`}
+                formatter={(v, _n, p) => [`${v}%`, p.payload.role]} />
               <Line type="monotone" dataKey="score" stroke={C.blue} strokeWidth={2} dot={{ r: 4 }} />
             </LineChart>
           </ResponsiveContainer>

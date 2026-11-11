@@ -11,12 +11,12 @@ import AdminSettings from '../pages/AdminSettings'
 import './adminTheme.css'
 
 const NAV = [
-  { path: '/',        label: 'User Management', icon: '👥' },
-  { path: '/intake',  label: 'Student Intake',  icon: '🧑‍🎓' },
-  { path: '/library', label: 'Skills & Roles',  icon: '📚' },
-  { path: '/resources', label: 'Learning Resources', icon: '🎓' },
-  { path: '/audit',   label: 'Audit Log',       icon: '🧾' },
-  { path: '/settings', label: 'System Settings', icon: '⚙️' },
+  { path: '/',        label: 'User Management', icon: 'users' },
+  { path: '/intake',  label: 'Student Intake',  icon: 'userPlus' },
+  { path: '/library', label: 'Skills & Roles',  icon: 'book' },
+  { path: '/resources', label: 'Learning Resources', icon: 'graduationCap' },
+  { path: '/audit',   label: 'Audit Log',       icon: 'clipboardList' },
+  { path: '/settings', label: 'System Settings', icon: 'settings' },
 ]
 
 export default function AdminPortal({ user, onLogout }) {

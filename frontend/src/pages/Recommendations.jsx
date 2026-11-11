@@ -111,7 +111,7 @@ export default function Recommendations() {
     setCompleting(null)
     await reloadProgress()
     await reloadFirstSteps()
-    setNotice(`"${resource.resource_title}" is completed. ${res.data.notice} Run the assessment again to see your new score.`)
+    setNotice(`"${resource.resource_title}" is completed. ${res.data.notice} The skill has moved to Completed skills below. Run the assessment again to see your new score.`)
   }
 
   // ── UI helpers ────────────────────────────────────────────────
@@ -268,11 +268,20 @@ export default function Recommendations() {
   </div>
   )
 
+  // Skills with a completed activity: the skill is now on the student's profile (added or raised
+  // when the activity was completed with evidence), so it leaves the to-do list and shows under
+  // "Completed skills" until the next assessment.
+  const doneSkillIds = new Set(recs.filter(rec => rec.resources.some(r => progressMap[r.resource_id]?.status === 'completed'))
+                                   .map(rec => rec.skill_id))
+  const doneSkills = recs.filter(rec => doneSkillIds.has(rec.skill_id))
+  const openRecs   = recs.filter(rec => !doneSkillIds.has(rec.skill_id))
+  const openSteps  = firstSteps.filter(step => !doneSkillIds.has(step.skill_id))
+
   // ── Sections: cost tier first, then category, then skill (in the engine's priority order) ──
   const sections = TIERS.map(t => {
     const categories = CATEGORY_ORDER.map(c => ({
       ...c,
-      skills: recs
+      skills: openRecs
         .filter(rec => (CATEGORY_IDS.includes(rec.category) ? rec.category : 'Other') === c.id)
         .map(rec => ({ ...rec, resources: rec.resources.filter(r => (r.cost_tier || 'paid') === t.id) }))
         .filter(rec => rec.resources.length > 0),
@@ -280,7 +289,7 @@ export default function Recommendations() {
     const count = categories.reduce((n, c) => n + c.skills.reduce((m, rec) => m + rec.resources.length, 0), 0)
     return { ...t, categories, count }
   })
-  const noResources = recs.filter(rec => rec.resources.length === 0)
+  const noResources = openRecs.filter(rec => rec.resources.length === 0)
 
   if (loading) return <div style={{ padding: '40px', color: 'var(--s-muted, #8b92a8)' }}>Loading...</div>
 
@@ -333,19 +342,19 @@ export default function Recommendations() {
       )}
 
       {/* ── Do these first: not affected by the cost tab ── */}
-      {firstSteps.length > 0 && (
+      {openSteps.length > 0 && (
         <section aria-label="Do these first" style={{
           background: '#fff', border: '2px solid #2d5be3', borderRadius: '12px',
           padding: '20px', marginBottom: '16px',
         }}>
           <div style={{ fontSize: '16px', fontWeight: '700', color: '#1a1f2e' }}>Do these first</div>
           <div style={{ fontSize: '13px', color: '#1a1f2e', marginTop: '4px' }}>
-            Completing these adds about <b>{firstStepsTotal(firstSteps)} points</b> to your score.
+            Completing these adds about <b>{firstStepsTotal(openSteps)} points</b> to your score.
           </div>
           <div style={{ fontSize: '12px', color: '#4a5168', marginTop: '2px', marginBottom: '14px' }}>
             A beginner course makes a skill Developing, which earns half. An intermediate activity, project, certification or internship can make it Strong.
           </div>
-          {firstSteps.map(step => (
+          {openSteps.map(step => (
             <div key={step.skill_id} style={{ marginTop: '12px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap', marginBottom: '6px' }}>
                 <span style={{ fontSize: '14px', fontWeight: '700', color: '#1a1f2e' }}>{step.skill_name}</span>
@@ -460,6 +469,40 @@ export default function Recommendations() {
           ))}
         </section>
       ))}
+
+      {/* All skill gaps done: nothing left to do in the list */}
+      {recs.length > 0 && openRecs.length === 0 && (
+        <div style={{ background: '#fff', border: '1px solid var(--s-line, #e4e6ef)', borderRadius: '12px', padding: '20px', marginBottom: '12px',
+                      textAlign: 'center', fontSize: '13px', color: 'var(--s-body, #4a5168)' }}>
+          You have completed an activity for every skill in this assessment. Run the assessment again to see your new score.
+        </div>
+      )}
+
+      {/* ── Completed skills: added to the profile, no longer in the to-do list ── */}
+      {doneSkills.length > 0 && (
+        <section aria-label="Completed skills" style={{ marginBottom: '24px' }}>
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px', flexWrap: 'wrap', marginBottom: '12px',
+                        paddingBottom: '8px', borderBottom: '2px solid #bbf7d0' }}>
+            <span style={{ fontSize: '18px', fontWeight: '700', color: 'var(--s-score-good, #16a34a)' }}>Completed skills ({doneSkills.length})</span>
+            <span style={{ fontSize: '12px', color: 'var(--s-muted, #8b92a8)' }}>
+              Added to My Skills with your evidence · run the assessment again to update your score
+            </span>
+          </div>
+          {doneSkills.map(rec => (
+            <div key={rec.skill_id} style={{ background: '#fff', border: '1px solid #bbf7d0', borderRadius: '12px', padding: '20px', marginBottom: '12px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap', marginBottom: '14px' }}>
+                <span style={{ padding: '4px 12px', borderRadius: '20px', fontSize: '12px', fontWeight: '700', background: '#dcfce7', color: '#15803d' }}>
+                  ✓ Completed
+                </span>
+                <span style={{ fontSize: '15px', fontWeight: '700', color: 'var(--s-ink, #1a1f2e)' }}>{rec.skill_name}</span>
+                <span style={{ fontSize: '12px', color: 'var(--s-muted, #8b92a8)' }}>Added to your skills</span>
+              </div>
+              {rec.resources.filter(r => progressMap[r.resource_id]?.status === 'completed')
+                .map((r, j, done) => renderResource(r, j, done.length))}
+            </div>
+          ))}
+        </section>
+      )}
 
       {/* Skills with no resource in the library yet */}
       {noResources.length > 0 && (

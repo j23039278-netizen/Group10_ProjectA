@@ -23,6 +23,7 @@ const heading = { fontSize: '13px', fontWeight: '700', color: C.ink, marginBotto
 const muted   = { color: C.muted, fontSize: '13px' }
 
 const fmtDate = (d) => d ? new Date(d).toLocaleDateString('en-GB') : '—'
+const fmtDateTime = (d) => d ? new Date(d).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' }) : '—'
 const actionBtn = (bg, color, border = bg) => ({
   padding: '5px 11px', fontSize: '12px', fontWeight: '600', borderRadius: '7px', cursor: 'pointer',
   background: bg, color, border: `1px solid ${border}`, whiteSpace: 'nowrap',
@@ -168,7 +169,10 @@ export default function ProgressTracking() {
   const change    = forRole.length > 1 ? Math.round((current - first) * 100) / 100 : null
   const doneList  = progress.filter(p => p.status === 'completed')
   const active    = progress.filter(p => p.status !== 'completed')
-  const chart     = forRole.map(h => ({ date: fmtDate(h.created_at), score: parseFloat(h.readiness_score), method: h.matching_method }))
+  // One point per assessment, keyed by its position: several assessments on the same day must stay
+  // separate points (keyed by date, the tooltip showed the first one of that day for all of them)
+  const chart     = forRole.map((h, i) => ({ n: i + 1, date: fmtDate(h.created_at), when: fmtDateTime(h.created_at),
+                                             score: parseFloat(h.readiness_score), method: h.matching_method }))
   const last      = forRole.length ? forRole[forRole.length - 1] : null
   const canRerun  = !!(last && (last.role_id || last.jd_id))
   // Activities finished after the latest assessment for this role: time to run it again
@@ -253,9 +257,10 @@ export default function ProgressTracking() {
           <ResponsiveContainer width="100%" height={260}>
             <LineChart data={chart} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="var(--s-line, #f0f0f0)" />
-              <XAxis dataKey="date" tick={{ fontSize: 11 }} />
+              <XAxis dataKey="n" tick={{ fontSize: 11 }} tickFormatter={n => chart[n - 1]?.date ?? ''} />
               <YAxis domain={[0, 100]} tick={{ fontSize: 11 }} tickFormatter={v => `${v}%`} />
-              <Tooltip formatter={(v, _n, p) => [`${v}% (${p.payload.method})`, 'Readiness']} />
+              <Tooltip labelFormatter={n => `Assessment ${n} of ${chart.length} · ${chart[n - 1]?.when ?? ''}`}
+                formatter={(v, _n, p) => [`${v}% (${p.payload.method})`, 'Readiness']} />
               <Line type="monotone" dataKey="score" stroke={C.blue} strokeWidth={2} dot={{ r: 4 }} />
             </LineChart>
           </ResponsiveContainer>
