@@ -8,6 +8,7 @@ import AdminLibrary from '../pages/AdminLibrary'
 import AdminResources from '../pages/AdminResources'
 import AdminAudit from '../pages/AdminAudit'
 import AdminSettings from '../pages/AdminSettings'
+import './adminTheme.css'
 
 const NAV = [
   { path: '/',        label: 'User Management', icon: '👥' },
@@ -20,7 +21,7 @@ const NAV = [
 
 export default function AdminPortal({ user, onLogout }) {
   return (
-    <PortalLayout user={user} navTitle="Administration" navItems={NAV} onLogout={onLogout}>
+    <PortalLayout user={user} navTitle="Administration" navItems={NAV} onLogout={onLogout} className="admin-theme">
       <Routes>
         <Route path="/"        element={<AdminUsers />} />
         <Route path="/intake"  element={<AdminIntake />} />

@@ -11,6 +11,7 @@ import AdvisorNewStudents from '../pages/AdvisorNewStudents'
 // Shared with the admin portal; advisors change the entries of their own courses
 import AdminLibrary from '../pages/AdminLibrary'
 import AdminResources from '../pages/AdminResources'
+import './advisorTheme.css'
 
 const NAV = [
   { path: '/', label: 'Cohort Overview', icon: '📊' },
@@ -23,7 +24,7 @@ export default function AdvisorPortal({ user, onLogout }) {
   useEffect(() => { settingsAPI.get().then(r => applyBands(r.data)).catch(() => {}) }, [])
 
   return (
-    <PortalLayout user={user} navTitle="Overview" navItems={NAV} onLogout={onLogout}>
+    <PortalLayout user={user} navTitle="Overview" navItems={NAV} onLogout={onLogout} className="advisor-theme">
       <Routes>
         <Route path="/" element={<AdvisorDashboard />} />
         <Route path="/students/:userId" element={<AdvisorStudentDetail />} />

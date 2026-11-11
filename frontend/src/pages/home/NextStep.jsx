@@ -12,11 +12,11 @@ const VIEWS = [
   { id: 'progress',  label: 'Progress' },
 ]
 
-const AXIS = { stroke: '#A9B8C8', fontSize: 11, tickLine: false, axisLine: false }
+const AXIS = { stroke: '#5d5d66', fontSize: 11, tickLine: false, axisLine: false }
 const TOOLTIP = {
-  contentStyle: { background: '#0B2945', border: '1px solid rgba(255,255,255,.12)', borderRadius: 10, fontSize: 12, color: '#F8FAFC' },
-  labelStyle: { color: '#A9B8C8' },
-  cursor: { fill: 'rgba(255,255,255,.04)', stroke: 'rgba(255,255,255,.1)' },
+  contentStyle: { background: '#ffffff', border: '1px solid rgba(22,22,26, .108)', borderRadius: 10, fontSize: 12, color: '#16161a' },
+  labelStyle: { color: '#5d5d66' },
+  cursor: { fill: 'rgba(22,22,26, .036)', stroke: 'rgba(22,22,26, .09)' },
 }
 
 export function RecommendationPreview({ onView }) {
@@ -117,37 +117,37 @@ export function ProgressPreview() {
               <AreaChart key="readiness" data={PROGRESS_DATA} margin={{ top: 10, right: 8, left: -18, bottom: 0 }}>
                 <defs>
                   <linearGradient id="hp-area" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#19C3B1" stopOpacity={0.45} />
-                    <stop offset="100%" stopColor="#19C3B1" stopOpacity={0} />
+                    <stop offset="0%" stopColor="#c8102e" stopOpacity={0.45} />
+                    <stop offset="100%" stopColor="#c8102e" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid stroke="rgba(255,255,255,.06)" vertical={false} />
+                <CartesianGrid stroke="rgba(22,22,26, .054)" vertical={false} />
                 <XAxis dataKey="name" {...AXIS} />
                 <YAxis domain={[0, 100]} {...AXIS} unit="%" />
                 <Tooltip {...TOOLTIP} formatter={(v) => [`${v}%`, 'Readiness']} />
                 <Area
-                  type="monotone" dataKey="readiness" stroke="#39D6C5" strokeWidth={3}
-                  fill="url(#hp-area)" dot={{ r: 4, fill: '#39D6C5', strokeWidth: 0 }} activeDot={{ r: 6 }}
+                  type="monotone" dataKey="readiness" stroke="#e11d2e" strokeWidth={3}
+                  fill="url(#hp-area)" dot={{ r: 4, fill: '#e11d2e', strokeWidth: 0 }} activeDot={{ r: 6 }}
                   isAnimationActive={animate} animationDuration={1100}
                 />
               </AreaChart>
             ) : view === 'skills' ? (
               <BarChart key="skills" data={PROGRESS_DATA} margin={{ top: 10, right: 8, left: -18, bottom: 0 }}>
-                <CartesianGrid stroke="rgba(255,255,255,.06)" vertical={false} />
+                <CartesianGrid stroke="rgba(22,22,26, .054)" vertical={false} />
                 <XAxis dataKey="name" {...AXIS} />
                 <YAxis {...AXIS} allowDecimals={false} />
                 <Tooltip {...TOOLTIP} />
-                <Bar dataKey="strong" name="Strong" stackId="s" fill="#34D399" isAnimationActive={animate} />
-                <Bar dataKey="developing" name="Developing" stackId="s" fill="#FBBF24" isAnimationActive={animate} />
-                <Bar dataKey="gap" name="Gap" stackId="s" fill="#F87171" radius={[6, 6, 0, 0]} isAnimationActive={animate} />
+                <Bar dataKey="strong" name="Strong" stackId="s" fill="#16a34a" isAnimationActive={animate} />
+                <Bar dataKey="developing" name="Developing" stackId="s" fill="#f59e0b" isAnimationActive={animate} />
+                <Bar dataKey="gap" name="Gap" stackId="s" fill="#ef4444" radius={[6, 6, 0, 0]} isAnimationActive={animate} />
               </BarChart>
             ) : (
               <BarChart key="progress" data={PROGRESS_DATA} margin={{ top: 10, right: 8, left: -18, bottom: 0 }}>
-                <CartesianGrid stroke="rgba(255,255,255,.06)" vertical={false} />
+                <CartesianGrid stroke="rgba(22,22,26, .054)" vertical={false} />
                 <XAxis dataKey="name" {...AXIS} />
                 <YAxis {...AXIS} allowDecimals={false} />
                 <Tooltip {...TOOLTIP} formatter={(v) => [v, 'Completed']} />
-                <Bar dataKey="completed" fill="#4F7CFF" radius={[6, 6, 0, 0]} isAnimationActive={animate} animationDuration={900} />
+                <Bar dataKey="completed" fill="#8f0a1f" radius={[6, 6, 0, 0]} isAnimationActive={animate} animationDuration={900} />
               </BarChart>
             )}
           </ResponsiveContainer>

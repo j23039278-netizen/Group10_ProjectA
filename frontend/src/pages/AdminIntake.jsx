@@ -52,7 +52,7 @@ export default function AdminIntake() {
                   <thead><tr>{['File', 'Uploaded by', 'Uploaded', 'Students', 'Waiting', 'Created', 'Rejected', ''].map(h => <th key={h} style={th}>{h}</th>)}</tr></thead>
                   <tbody>
                     {batches.map(b => (
-                      <tr key={b.batch_id} style={{ background: selected === b.batch_id ? '#f5f8ff' : 'transparent' }}>
+                      <tr key={b.batch_id} style={{ background: selected === b.batch_id ? 'var(--s-accent-soft, #f5f8ff)' : 'transparent' }}>
                         <td style={{ ...td, color: C.ink, fontWeight: '600' }}>{b.file_name}</td>
                         <td style={td}>{b.uploaded_by_name || '—'}</td>
                         <td style={td}>{fmtDate(b.uploaded_at)}</td>

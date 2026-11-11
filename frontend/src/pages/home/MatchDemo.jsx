@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import { DEMO_YOUR_SKILLS, DEMO_JOB_SKILLS, DEMO_MODES } from './data'
 import { prefersReducedMotion } from './hooks'
 import Icon from './Icon'
+import { groupOf } from './skillGroups'
 
 const STAGE_MS = 750
 
@@ -53,7 +54,7 @@ export default function MatchDemo() {
       <div className="hp-hv-label">{col.label}</div>
       <div className="hp-match-chips">
         {col.skills.map((s, i) => (
-          <span key={s} className={`hp-chip ${isScanning ? 'is-scanning' : ''}`} style={{ animationDelay: `${i * 120}ms` }}>{s}</span>
+          <span key={s} className={`hp-chip hp-chip-sg hp-sg-${groupOf(s)} ${isScanning ? 'is-scanning' : ''}`} style={{ animationDelay: `${i * 120}ms` }}>{s}</span>
         ))}
       </div>
     </div>

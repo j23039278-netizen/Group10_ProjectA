@@ -34,8 +34,8 @@ function ReadinessCard({ sample }) {
           <svg width="140" height="140" viewBox="0 0 140 140">
             <defs>
               <linearGradient id="hp-ring-grad" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stopColor="#39D6C5" />
-                <stop offset="100%" stopColor="#4F7CFF" />
+                <stop offset="0%" stopColor="#e11d2e" />
+                <stop offset="100%" stopColor="#8f0a1f" />
               </linearGradient>
             </defs>
             <circle className="hp-ring-track" cx="70" cy="70" r={RING_RADIUS} fill="none" strokeWidth="11" />

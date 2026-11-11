@@ -5,37 +5,44 @@ import { Link } from 'react-router-dom'
 import { BrandLogo } from '../home/BrandLogo'
 import Icon from '../home/Icon'
 import { useCanvasColor } from '../home/hooks'
+import campusMain from '../../assets/campus/inti-campus-main.jpg'
+import campusSubang from '../../assets/campus/inti-campus-subang.jpg'
 import '../Home.css'
 import './Auth.css'
 
 export default function AuthLayout({ heading, title, subtitle, children }) {
-  useCanvasColor('#071D33')
+  useCanvasColor('#ffffff')
   return (
     <div className="hp au">
+      {/* Background: INTI campus photos left and right, red / pink blocks in between; the form sits on top */}
       <div className="au-bg" aria-hidden="true">
-        <div className="hp-grid" />
-        <div className="au-glow au-glow-teal" />
-        <div className="au-glow au-glow-blue" />
+        <div className="au-mosaic">
+          <div className="au-tile au-t-main" style={{ backgroundImage: `url(${campusMain})` }} />
+          <div className="au-tile au-t-pink1" />
+          <div className="au-tile au-t-red1" />
+          <div className="au-tile au-t-pink2" />
+          <div className="au-tile au-t-subang" style={{ backgroundImage: `url(${campusSubang})` }} />
+        </div>
       </div>
 
       <Link to="/" className="au-back">
         <Icon name="back" size={16} /> Back to home
       </Link>
 
+      {/* One white panel: logo, heading and form, so they read clearly over the photos */}
       <main className="au-center">
-        <Link to="/" className="au-logo hp-enter" aria-label="SEAGAS home">
-          <BrandLogo className="au-logo-img" />
-        </Link>
-
-        <h1 className="au-heading hp-enter" style={{ '--d': '100ms' }}>{heading}</h1>
-
-        <div className="au-card hp-enter" style={{ '--d': '200ms' }}>
+        <div className="au-card hp-enter" style={{ '--d': '100ms' }}>
+          <div className="au-card-head">
+            <Link to="/" className="au-logo" aria-label="SEAGAS home">
+              <BrandLogo className="au-logo-img" />
+            </Link>
+            <h1 className="au-heading">{heading}</h1>
+          </div>
           <h2 className="au-title">{title}</h2>
           <p className="au-subtitle">{subtitle}</p>
           {children}
+          <div className="au-foot">© 2026 SEAGAS · Group 10</div>
         </div>
-
-        <div className="au-foot">© 2026 SEAGAS · Group 10</div>
       </main>
     </div>
   )

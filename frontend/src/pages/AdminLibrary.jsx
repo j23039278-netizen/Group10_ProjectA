@@ -226,7 +226,7 @@ function RoleSkillsModal({ role, allSkills, onClose, onSaved }) {
     <Modal title={`${role.role_name}: required skills`} onClose={onClose} width="560px">
       {error && <Alert>{error}</Alert>}
       {!editable && (
-        <div style={{ fontSize: '12px', color: C.muted, background: '#f5f6fa', padding: '10px 12px', borderRadius: '8px', marginBottom: '14px' }}>
+        <div style={{ fontSize: '12px', color: C.muted, background: 'var(--s-bg, #f5f6fa)', padding: '10px 12px', borderRadius: '8px', marginBottom: '14px' }}>
           {role.source !== 'admin'
             ? 'This role comes from the seed files (database/seed_job_role_skills.sql), so its skills are changed there, not here.'
             : 'This role is also offered to courses you do not manage, so only an admin can change its skills.'}

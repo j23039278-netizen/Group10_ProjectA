@@ -1,12 +1,12 @@
 // SEAGAS — Shared styles and helpers for the admin pages
 export const C = {
-  ink: '#1a1f2e', body: '#4a5168', muted: '#8b92a8', line: '#e4e6ef',
-  blue: '#2d5be3', green: '#16a34a', red: '#dc2626', amber: '#d97706',
+  ink: 'var(--s-ink, #1a1f2e)', body: 'var(--s-body, #4a5168)', muted: 'var(--s-muted, #8b92a8)', line: 'var(--s-line, #e4e6ef)',
+  blue: 'var(--s-accent, #2d5be3)', green: '#16a34a', red: '#dc2626', amber: '#d97706',
 }
 
-export const card  = { background: '#fff', border: `1px solid ${C.line}`, borderRadius: '12px' }
-export const th    = { textAlign: 'left', fontSize: '11px', fontWeight: '700', color: C.muted, textTransform: 'uppercase', letterSpacing: '0.5px', padding: '10px 12px', borderBottom: `1px solid ${C.line}`, background: '#fff', whiteSpace: 'nowrap' }
-export const td    = { padding: '11px 12px', fontSize: '13px', color: C.body, borderBottom: '1px solid #f0f1f5', verticalAlign: 'top' }
+export const card  = { background: '#fff', border: `1px solid ${C.line}`, borderRadius: '12px', boxShadow: 'var(--s-card-shadow, none)' }
+export const th    = { textAlign: 'left', fontSize: '11px', fontWeight: '700', color: C.muted, textTransform: 'uppercase', letterSpacing: '0.5px', padding: '10px 12px', borderBottom: `1px solid ${C.line}`, background: 'var(--s-th-bg, #fff)', whiteSpace: 'nowrap' }
+export const td    = { padding: '11px 12px', fontSize: '13px', color: C.body, borderBottom: '1px solid var(--s-line-soft, #f0f1f5)', verticalAlign: 'top' }
 // IDs, emails and phone numbers stay on one line; the table scrolls sideways instead
 export const tdOne = { ...td, whiteSpace: 'nowrap' }
 export const input = { width: '100%', padding: '9px 11px', fontSize: '13px', border: `1px solid ${C.line}`, borderRadius: '8px', outline: 'none', boxSizing: 'border-box', color: C.ink, background: '#fff' }
