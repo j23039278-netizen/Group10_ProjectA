@@ -1,0 +1,121 @@
+/* SEAGAS — Advisor portal theme: "rose workspace".
+   Same variable names as studentTheme.css (--s-…), so pages and shared components that
+   read them pick up the advisor look. Student = bright college red on black; admin =
+   oxblood on deep wine; advisor = rose red on the original navy sidebar with warm off-white
+   surfaces, so it reads as an approachable workspace for working with students.
+   Readiness colours (green / amber / red) are not overridden: On Track, Developing and
+   Needs Support keep their usual meaning in the charts.
+   Change --s-accent and its tints to retheme every advisor page. */
+
+.advisor-theme {
+  /* Brand */
+  --s-accent:        #b4234f;   /* rose red: buttons, links, active tabs and filters */
+  --s-accent-dark:   #8d1a3d;   /* hover / pressed */
+  --s-accent-line:   #f0c6d3;   /* borders of rose-tinted boxes (e.g. the decision notice) */
+  --s-accent-soft:   #fcedf2;   /* rose-tinted backgrounds, selected cards */
+  --s-ring:          rgba(180, 35, 79, 0.16);
+
+  /* Neutrals: warm greys */
+  --s-ink:           #1f1a1c;
+  --s-ink-2:         #3a2f33;
+  --s-body:          #4b4246;
+  --s-muted:         #776c70;   /* AA contrast on white */
+  --s-line:          #ebe3e4;
+  --s-line-soft:     #f3eeee;
+  --s-bg:            #f8f4f3;
+  --s-surface-1:     #fcfaf9;
+
+  /* Sidebar: the original dark navy; the selected item gets a rose tint */
+  --s-side-bg:       #1a1f2e;
+  --s-side-active:   rgba(224, 87, 127, 0.22);
+
+  background: var(--s-bg);
+  color: var(--s-ink);
+}
+
+/* Sidebar: the original dark navy, with rose-red accents */
+.advisor-theme .sb-tagline { font-size: 0 !important; }
+.advisor-theme .sb-tagline::after {
+  content: 'Advisor workspace';
+  font-size: 10px;
+  letter-spacing: 1.2px;
+  font-weight: 600;
+  color: #ec8fab;
+}
+.advisor-theme .sb-role { color: rgba(255, 255, 255, 0.6) !important; }
+.advisor-theme .sb-navtitle { color: rgba(236, 143, 171, 0.75) !important; }
+
+.advisor-theme .sb-item { color: rgba(255, 255, 255, 0.8) !important; font-size: 14px !important; }
+.advisor-theme .sb-item:not(.active):hover { background: rgba(255, 255, 255, 0.06) !important; color: #fff !important; }
+.advisor-theme .sb-item.active { color: #fff !important; font-weight: 600 !important; border-left-color: #e0577f !important; }
+/* Menu icons keep their colour (the student portal shows them in greyscale) */
+.advisor-theme .sb-item > span:first-child { opacity: .9; }
+.advisor-theme .sb-item.active > span:first-child,
+.advisor-theme .sb-item:hover > span:first-child { opacity: 1; }
+
+.advisor-theme .sb-signout { color: rgba(255, 255, 255, 0.82) !important; border-color: rgba(255, 255, 255, 0.18) !important; }
+.advisor-theme .sb-signout:hover { background: var(--s-accent) !important; border-color: var(--s-accent) !important; color: #fff !important; }
+
+/* Soft rose wash across the top of each page */
+.advisor-theme .s-main { background: linear-gradient(180deg, #fbeef2 0, var(--s-bg) 220px); }
+
+/* Buttons, focus and links */
+.advisor-theme button { transition: filter .15s, background-color .15s, border-color .15s, box-shadow .15s; }
+.advisor-theme button:not(:disabled):hover { filter: brightness(0.95); }
+.advisor-theme button:not(:disabled):active { filter: brightness(0.88); }
+.advisor-theme button:disabled { cursor: not-allowed; }
+.advisor-theme :focus-visible { outline: 2px solid var(--s-accent); outline-offset: 2px; }
+.advisor-theme input:focus, .advisor-theme select:focus, .advisor-theme textarea:focus {
+  border-color: var(--s-accent) !important;
+  box-shadow: 0 0 0 3px var(--s-ring);
+  outline: none;
+}
+.advisor-theme a { color: var(--s-accent); }
+.advisor-theme a:hover { color: var(--s-accent-dark); }
+.advisor-theme ::selection { background: #f6d3de; color: var(--s-ink); }
+.advisor-theme ::-webkit-scrollbar-thumb { background: #d5c9cc; }
+
+/* New Students: designed file picker (replaces the browser's "Choose File" control) */
+.advisor-theme .nsx-drop {
+  width: 100%;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+  padding: 30px 20px;
+  text-align: center;
+  font: inherit;
+  color: var(--s-body);
+  background: var(--s-surface-1);
+  border: 1.5px dashed #dcc3cb;
+  border-radius: 12px;
+  cursor: pointer;
+}
+.advisor-theme .nsx-drop:hover,
+.advisor-theme .nsx-drop.is-over {
+  filter: none !important;
+  border-color: var(--s-accent);
+  background: var(--s-accent-soft);
+}
+.advisor-theme .nsx-drop.is-over { box-shadow: 0 0 0 4px var(--s-ring); }
+.advisor-theme .nsx-drop.has-file { border-style: solid; border-color: var(--s-accent-line); background: #fff; }
+.advisor-theme .nsx-drop-icon {
+  flex: none;
+  width: 48px; height: 48px;
+  display: grid; place-items: center;
+  border-radius: 12px;
+  font-size: 22px; font-weight: 700;
+  color: var(--s-accent);
+  background: var(--s-accent-soft);
+  border: 1px solid var(--s-accent-line);
+}
+.advisor-theme .nsx-drop.has-file .nsx-drop-icon { background: #e9f6ee; border-color: #bfe3cc; }
+.advisor-theme .nsx-drop-text { display: flex; flex-direction: column; align-items: center; gap: 3px; min-width: 0; max-width: 100%; }
+.advisor-theme .nsx-drop-text b {
+  max-width: 100%;
+  font-size: 15px; font-weight: 600; color: var(--s-ink);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.advisor-theme .nsx-drop-text small { font-size: 12px; color: var(--s-muted); }
+
+/* Printed student reports stay plain */
+@media print {
+  .advisor-theme, .advisor-theme .s-main { background: #fff !important; }
+}

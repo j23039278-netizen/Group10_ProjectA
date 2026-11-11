@@ -16,8 +16,8 @@ import { SKILL_CATEGORIES, levelDots } from '../utils/skillCategories'
 import { courseLabel } from '../utils/courses'
 import { experienceTypeLabel, period } from '../utils/experience'
 
-const C = { ink: '#1a1f2e', body: '#4a5168', muted: '#8b92a8', line: '#e4e6ef',
-            blue: '#2d5be3', green: '#16a34a', amber: '#d97706', red: '#dc2626' }
+const C = { ink: 'var(--s-ink, #1a1f2e)', body: 'var(--s-body, #4a5168)', muted: 'var(--s-muted, #8b92a8)', line: 'var(--s-line, #e4e6ef)',
+            blue: 'var(--s-accent, #2d5be3)', green: '#16a34a', amber: '#d97706', red: '#dc2626' }
 const card    = { background: '#fff', border: `1px solid ${C.line}`, borderRadius: '12px', padding: '20px 24px', marginBottom: '16px' }
 const heading = { fontSize: '13px', fontWeight: '700', color: C.ink, marginBottom: '14px', textTransform: 'uppercase', letterSpacing: '0.5px' }
 const muted   = { color: C.muted, fontSize: '13px' }
@@ -33,7 +33,7 @@ const STATUS = {
 }
 const PROGRESS = {
   completed:   { label: 'Completed',   bg: '#dcfce7', color: C.green },
-  in_progress: { label: 'In progress', bg: '#dbeafe', color: C.blue },
+  in_progress: { label: 'In progress', bg: 'var(--s-accent-soft, #dbeafe)', color: C.blue },
   saved:       { label: 'Saved',       bg: '#f1f5f9', color: C.muted },
 }
 const VERDICT = {
@@ -132,7 +132,7 @@ function Notes({ userId, notes, assessment, onChange }) {
       </div>
       {error && <div role="alert" style={{ background: '#fee2e2', color: C.red, padding: '8px 10px', borderRadius: '8px', fontSize: '12px', marginBottom: '10px' }}>{error}</div>}
 
-      <div className="no-print" style={{ border: `1px solid ${C.line}`, borderRadius: '10px', padding: '12px', marginBottom: '14px', background: '#fafbfc' }}>
+      <div className="no-print" style={{ border: `1px solid ${C.line}`, borderRadius: '10px', padding: '12px', marginBottom: '14px', background: 'var(--s-surface-1, #fafbfc)' }}>
         <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', marginBottom: '8px', fontSize: '13px', color: C.body }}>
           <label style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}>
             <input type="radio" name="note-type" checked={type === 'general'} onChange={() => setType('general')} /> General note

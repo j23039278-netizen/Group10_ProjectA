@@ -8,8 +8,8 @@ import { authAPI } from '../api/client'
 import { COURSES } from '../utils/courses'
 import { BatchDetail, Outbox } from './intake/IntakeParts'
 
-const C = { ink: '#1a1f2e', body: '#4a5168', muted: '#8b92a8', line: '#e4e6ef',
-            blue: '#2d5be3', green: '#16a34a', amber: '#d97706', red: '#dc2626' }
+const C = { ink: 'var(--s-ink, #1a1f2e)', body: 'var(--s-body, #4a5168)', muted: 'var(--s-muted, #8b92a8)', line: 'var(--s-line, #e4e6ef)',
+            blue: 'var(--s-accent, #2d5be3)', green: '#16a34a', amber: '#d97706', red: '#dc2626' }
 const card    = { background: '#fff', border: `1px solid ${C.line}`, borderRadius: '12px', padding: '20px 24px', marginBottom: '16px' }
 const heading = { fontSize: '13px', fontWeight: '700', color: C.ink, marginBottom: '14px', textTransform: 'uppercase', letterSpacing: '0.5px' }
 const th = { textAlign: 'left', fontSize: '11px', fontWeight: '700', color: C.muted, textTransform: 'uppercase', padding: '8px 10px', borderBottom: `1px solid ${C.line}`, whiteSpace: 'nowrap' }
@@ -36,6 +36,7 @@ export default function AdvisorNewStudents() {
   const [result, setResult]     = useState(null)    // last upload result
   const [error, setError]       = useState('')
   const [busy, setBusy]         = useState(false)
+  const [dragOver, setDragOver] = useState(false)   // a file is being dragged over the picker
 
   // Advisors only add students of their own courses (Dean / Head of Programme)
   const [myCourses, setMyCourses] = useState(COURSES.map(c => c.id))
@@ -120,12 +121,41 @@ export default function AdvisorNewStudents() {
             Download the template
           </button>
         </div>
-        <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
-          <input ref={input} type="file" accept=".xlsx,.csv" aria-label="Student list file"
-            onChange={e => { setFile(e.target.files[0] || null); setError('') }} style={{ fontSize: '13px' }} />
-          <button onClick={upload} disabled={busy || !file} style={{ ...button(true), opacity: busy || !file ? 0.6 : 1 }}>
-            {busy ? 'Uploading…' : 'Upload'}
+        <div>
+          {/* Designed file picker: the native input is hidden; click or drop a file on the box */}
+          <input ref={input} type="file" accept=".xlsx,.csv" aria-label="Student list file" style={{ display: 'none' }}
+            onChange={e => { setFile(e.target.files[0] || null); setError('') }} />
+          <button type="button" className={`nsx-drop${file ? ' has-file' : ''}${dragOver ? ' is-over' : ''}`}
+            onClick={() => input.current?.click()}
+            onDragOver={e => { e.preventDefault(); setDragOver(true) }}
+            onDragLeave={() => setDragOver(false)}
+            onDrop={e => {
+              e.preventDefault(); setDragOver(false)
+              const f = e.dataTransfer.files[0]
+              if (!f) return
+              if (!/\.(xlsx|csv)$/i.test(f.name)) return setError('Choose an Excel (.xlsx) or CSV file.')
+              setFile(f); setError('')
+            }}>
+            <span className="nsx-drop-icon" aria-hidden="true">{file ? '📗' : '⬆'}</span>
+            <span className="nsx-drop-text">
+              {file ? (
+                <>
+                  <b>{file.name}</b>
+                  <small>{(file.size / 1024).toFixed(file.size < 10240 ? 1 : 0)} KB · click to choose another file</small>
+                </>
+              ) : (
+                <>
+                  <b>{dragOver ? 'Drop the file here' : 'Choose a file or drag it here'}</b>
+                  <small>Excel (.xlsx) or CSV · max 2 MB</small>
+                </>
+              )}
+            </span>
           </button>
+          <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '12px' }}>
+            <button onClick={upload} disabled={busy || !file} style={{ ...button(true), opacity: busy || !file ? 0.6 : 1 }}>
+              {busy ? 'Uploading…' : 'Upload'}
+            </button>
+          </div>
         </div>
         {result && (
           <div style={{ marginTop: '14px', fontSize: '13px' }}>

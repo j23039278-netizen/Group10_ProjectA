@@ -1,7 +1,7 @@
 // SEAGAS — Shared page frame for the signed-in portals: sidebar on the left, page on the right.
 import Sidebar from '../components/Sidebar'
 
-// className: an optional theme wrapper (the student portal passes "student-theme")
+// className: the role theme wrapper ("student-theme", "advisor-theme" or "admin-theme")
 export default function PortalLayout({ user, navTitle, navItems, onLogout, className, children }) {
   return (
     <div className={className} style={{ display: 'flex', minHeight: '100vh', background: 'var(--s-bg, #f5f6fa)' }}>

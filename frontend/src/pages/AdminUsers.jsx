@@ -17,9 +17,9 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const EMAIL_DOMAINS = { advisor: 'advisor.newinti.edu.my', admin: 'admin.newinti.edu.my' }
 
 const ROLE_BADGE = {
-  admin:   { bg: '#ede9fe', color: '#6d28d9' },
-  advisor: { bg: '#dbeafe', color: '#1d4ed8' },
-  student: { bg: '#f1f5f9', color: '#475569' },
+  admin:   { bg: 'var(--s-role-admin-bg, #ede9fe)', color: 'var(--s-role-admin, #6d28d9)' },
+  advisor: { bg: 'var(--s-role-advisor-bg, #dbeafe)', color: 'var(--s-role-advisor, #1d4ed8)' },
+  student: { bg: 'var(--s-role-student-bg, #f1f5f9)', color: 'var(--s-role-student, #475569)' },
 }
 
 // Position drop-down and staff ID. The ID is suggested for the chosen position until the
@@ -405,9 +405,9 @@ export default function AdminUsers() {
 
   const pages = Math.max(1, Math.ceil(total / PAGE_SIZE))
   const statCards = [
-    { label: 'Students', value: stats?.student, color: C.ink },
-    { label: 'Advisors', value: stats?.advisor, color: C.blue },
-    { label: 'Admins',   value: stats?.admin,   color: '#6d28d9' },
+    { label: 'Students', value: stats?.student, color: 'var(--s-role-student, #1a1f2e)' },
+    { label: 'Advisors', value: stats?.advisor, color: 'var(--s-role-advisor, #2d5be3)' },
+    { label: 'Admins',   value: stats?.admin,   color: 'var(--s-role-admin, #6d28d9)' },
   ]
 
   return (

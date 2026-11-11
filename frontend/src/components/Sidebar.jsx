@@ -11,13 +11,13 @@ export default function Sidebar({ user, navTitle, navItems, onLogout }) {
   const isActive = (path) => location.pathname === path
 
   return (
-    <div style={{
+    <div className="sb-root" style={{
       width: '220px', background: 'var(--s-side-bg, #1a1f2e)', position: 'fixed',
       top: 0, left: 0, height: '100vh', display: 'flex',
       flexDirection: 'column', zIndex: 10
     }}>
       {/* Logo */}
-      <div style={{ padding: '24px 20px 20px', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+      <div className="sb-head" style={{ padding: '24px 20px 20px', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
         <div className="sb-brand" style={{ fontSize: '22px', fontWeight: '700', color: '#fff', letterSpacing: '-0.3px' }}>
           SEAGAS
         </div>
@@ -27,7 +27,7 @@ export default function Sidebar({ user, navTitle, navItems, onLogout }) {
       </div>
 
       {/* User */}
-      <div style={{
+      <div className="sb-user" style={{
         padding: '16px 20px', borderBottom: '1px solid rgba(255,255,255,0.08)',
         display: 'flex', alignItems: 'center', gap: '10px'
       }}>
@@ -39,7 +39,7 @@ export default function Sidebar({ user, navTitle, navItems, onLogout }) {
           {userName.charAt(0).toUpperCase()}
         </div>
         <div>
-          <div style={{ fontSize: '13px', fontWeight: '600', color: '#fff' }}>{userName}</div>
+          <div className="sb-name" style={{ fontSize: '13px', fontWeight: '600', color: '#fff' }}>{userName}</div>
           <div className="sb-role" style={{ fontSize: '11px', color: 'rgba(255,255,255,0.4)', textTransform: 'capitalize' }}>{role}</div>
         </div>
       </div>
@@ -70,7 +70,7 @@ export default function Sidebar({ user, navTitle, navItems, onLogout }) {
       </nav>
 
       {/* Logout */}
-      <div style={{ padding: '16px 20px', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+      <div className="sb-foot" style={{ padding: '16px 20px', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
         <button
           className="sb-signout"
           onClick={onLogout}

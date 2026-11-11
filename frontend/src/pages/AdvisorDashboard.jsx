@@ -10,13 +10,13 @@ import { COURSES, courseLabel } from '../utils/courses'
 import { downloadCsv, csvName } from '../utils/csv'
 import DecisionNotice from '../components/DecisionNotice'
 
-const C = { ink: '#1a1f2e', body: '#4a5168', muted: '#8b92a8', line: '#e4e6ef', blue: '#2d5be3',
-            green: '#16a34a', amber: '#d97706', red: '#dc2626', bg: '#f5f6fa' }
+const C = { ink: 'var(--s-ink, #1a1f2e)', body: 'var(--s-body, #4a5168)', muted: 'var(--s-muted, #8b92a8)', line: 'var(--s-line, #e4e6ef)', blue: 'var(--s-accent, #2d5be3)',
+            green: '#16a34a', amber: '#d97706', red: '#dc2626', bg: 'var(--s-bg, #f5f6fa)' }
 const card    = { background: '#fff', border: `1px solid ${C.line}`, borderRadius: '12px', padding: '22px 24px', marginBottom: '16px' }
 const heading = { fontSize: '13px', fontWeight: '700', color: C.ink, textTransform: 'uppercase', letterSpacing: '0.5px' }
 const th      = { textAlign: 'left', fontSize: '11px', fontWeight: '700', color: C.muted, textTransform: 'uppercase', letterSpacing: '0.5px',
                   padding: '10px 12px', borderBottom: `1px solid ${C.line}`, whiteSpace: 'nowrap', background: '#fff' }
-const td      = { padding: '10px 12px', fontSize: '12px', color: C.body, borderBottom: '1px solid #f0f1f5' }
+const td      = { padding: '10px 12px', fontSize: '12px', color: C.body, borderBottom: '1px solid var(--s-line-soft, #f0f1f5)' }
 const input   = { padding: '8px 11px', fontSize: '13px', border: `1px solid ${C.line}`, borderRadius: '8px', background: '#fff', outline: 'none' }
 const btn     = (primary) => ({ padding: '8px 14px', fontSize: '13px', fontWeight: '600', borderRadius: '8px', cursor: 'pointer', whiteSpace: 'nowrap',
                                 border: primary ? 'none' : `1px solid ${C.line}`, background: primary ? C.blue : '#fff', color: primary ? '#fff' : C.body })
@@ -379,7 +379,7 @@ export default function AdvisorDashboard() {
                 <button key={cat.category} onClick={() => setGapCategory(selected ? '' : cat.category)} aria-pressed={selected}
                   title={selected ? 'Show every category' : `Show only ${categoryLabel(cat.category)}`}
                   style={{ textAlign: 'left', cursor: 'pointer', borderRadius: '10px', padding: '12px 14px',
-                           background: selected ? '#eef3ff' : soft ? '#fbf8ff' : '#fff',
+                           background: selected ? 'var(--s-accent-soft, #eef3ff)' : soft ? '#fbf8ff' : '#fff',
                            border: `1.5px solid ${selected ? C.blue : soft ? '#ddd6fe' : C.line}` }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: '6px' }}>
                     <span style={{ fontSize: '12px', fontWeight: '700', color: C.ink }}>{categoryLabel(cat.category)}</span>
