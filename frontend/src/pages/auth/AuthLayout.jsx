@@ -36,7 +36,7 @@ export default function AuthLayout({ heading, title, subtitle, children }) {
             <Link to="/" className="au-logo" aria-label="SEAGAS home">
               <BrandLogo className="au-logo-img" />
             </Link>
-            <h1 className="au-heading">{heading}</h1>
+            {heading && <h1 className="au-heading">{heading}</h1>}
           </div>
           <h2 className="au-title">{title}</h2>
           <p className="au-subtitle">{subtitle}</p>

@@ -136,6 +136,15 @@ export default function Recommendations() {
     developing: { bg: 'var(--s-warn-soft, #fef3c7)', color: 'var(--s-warn, #d97706)' },
   }
 
+  // Every action button has the same shape, so a row of them lines up
+  const actionBtn = (bg, color, border = bg) => ({
+    display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
+    height: '36px', padding: '0 16px', boxSizing: 'border-box', whiteSpace: 'nowrap',
+    background: bg, color, border: `1.5px solid ${border}`, borderRadius: '8px',
+    fontSize: '13px', fontWeight: '600', textDecoration: 'none', cursor: 'pointer',
+  })
+  const fmtStarted = (d) => d ? new Date(d).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : ''
+
   // ── Progress button for each resource ────────────────────────
   const ProgressButton = ({ resource }) => {
     const rid    = resource.resource_id
@@ -145,12 +154,8 @@ export default function Recommendations() {
     if (status === 'completed') {
       return (
         <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
-          <span style={{
-            padding: '7px 12px', background: 'var(--s-good-soft, #dcfce7)', color: 'var(--s-good, #16a34a)',
-            borderRadius: '7px', fontSize: '12px', fontWeight: '700',
-            border: '1.5px solid var(--s-good-line, #bbf7d0)',
-          }}>
-            ✅ Completed
+          <span style={{ ...actionBtn('#dcfce7', '#15803d', '#86efac'), cursor: 'default' }}>
+            ✓ Completed
           </span>
         </div>
       )
@@ -158,43 +163,18 @@ export default function Recommendations() {
 
     if (status === 'in_progress') {
       return (
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '5px', flexShrink: 0 }}>
-          <span style={{
-            padding: '4px 10px', background: 'var(--s-warn-soft, #fef3c7)', color: 'var(--s-warn, #d97706)',
-            borderRadius: '20px', fontSize: '11px', fontWeight: '600',
-            border: '1px solid var(--s-warn-line, #fde68a)',
-          }}>
-            ⏳ In Progress
-          </span>
-          <button
-            onClick={() => setCompleting(resource)}
-            disabled={busy}
-            style={{
-              padding: '7px 12px', background: busy ? 'var(--s-disabled, #d1d5db)' : 'var(--s-good, #16a34a)',
-              color: '#fff', borderRadius: '7px', fontSize: '12px',
-              fontWeight: '600', border: 'none', cursor: busy ? 'not-allowed' : 'pointer',
-            }}>
-            {busy ? '...' : '✓ Mark Complete'}
-          </button>
-        </div>
+        <button onClick={() => setCompleting(resource)} disabled={busy}
+          style={actionBtn(busy ? 'var(--s-disabled, #d1d5db)' : '#111111', '#ffffff')}>
+          {busy ? '…' : '✓ Mark Complete'}
+        </button>
       )
     }
 
     // Not started
     return (
-      <button
-        onClick={() => handleStart(rid)}
-        disabled={busy}
-        style={{
-          padding: '7px 14px',
-          background: busy ? 'var(--s-disabled, #d1d5db)' : 'var(--s-good-soft, #f0fdf4)',
-          color: busy ? 'var(--s-disabled-ink, #9ca3af)' : 'var(--s-good, #16a34a)',
-          border: `1.5px solid ${busy ? 'var(--s-disabled, #d1d5db)' : 'var(--s-good-line, #bbf7d0)'}`,
-          borderRadius: '7px', fontSize: '12px',
-          fontWeight: '600', cursor: busy ? 'not-allowed' : 'pointer',
-          flexShrink: 0,
-        }}>
-        {busy ? '...' : '▶ Start'}
+      <button onClick={() => handleStart(rid)} disabled={busy}
+        style={actionBtn('#ffffff', '#111111', busy ? 'var(--s-disabled, #d1d5db)' : '#111111')}>
+        {busy ? '…' : '▶ Start'}
       </button>
     )
   }
@@ -203,14 +183,13 @@ export default function Recommendations() {
   const renderResource = (r, j, total) => (
   <div key={j} style={{
     display: 'flex', alignItems: 'flex-start', gap: '14px',
-    padding: '14px', background: 'var(--s-bg, #f5f6fa)', borderRadius: '10px',
+    padding: '14px', borderRadius: '10px',
     marginBottom: j < total - 1 ? '10px' : '0',
-    border: progressMap[r.resource_id]?.status === 'completed'
-      ? '1.5px solid var(--s-good-line, #bbf7d0)'
-      : progressMap[r.resource_id]?.status === 'in_progress'
-      ? '1.5px solid var(--s-warn-line, #fde68a)'
-      : '1.5px solid transparent',
-    transition: 'border-color 0.2s',
+    background: progressMap[r.resource_id]?.status === 'completed' ? '#f0fdf4'
+      : progressMap[r.resource_id]?.status === 'in_progress' ? '#fffbeb' : 'var(--s-bg, #f5f6fa)',
+    border: progressMap[r.resource_id]?.status === 'completed' ? '1.5px solid #bbf7d0'
+      : progressMap[r.resource_id]?.status === 'in_progress' ? '1.5px solid #facc15' : '1.5px solid transparent',
+    transition: 'border-color 0.2s, background-color 0.2s',
   }}>
     {/* Icon */}
     <div style={{
@@ -223,9 +202,16 @@ export default function Recommendations() {
     </div>
 
     {/* Details */}
-    <div style={{ flex: 1 }}>
-      <div style={{ fontSize: '13px', fontWeight: '600', color: 'var(--s-ink, #1a1f2e)', marginBottom: '3px' }}>
-        {r.resource_title}
+    <div style={{ flex: 1, minWidth: 0 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap', marginBottom: '3px' }}>
+        <span style={{ fontSize: '13px', fontWeight: '600', color: 'var(--s-ink, #1a1f2e)' }}>{r.resource_title}</span>
+        {progressMap[r.resource_id]?.status === 'in_progress' && (
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', padding: '2px 9px', borderRadius: '20px',
+                         fontSize: '11px', fontWeight: '700', background: '#fef08a', color: '#713f12' }}>
+            <span aria-hidden="true" style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#ca8a04' }} />
+            In progress{progressMap[r.resource_id]?.started_at ? ` · started ${fmtStarted(progressMap[r.resource_id].started_at)}` : ''}
+          </span>
+        )}
       </div>
       {r.description && (
         <div style={{ fontSize: '12px', color: 'var(--s-body, #4a5168)', marginBottom: '6px' }}>{r.description}</div>
@@ -269,11 +255,10 @@ export default function Recommendations() {
     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0, alignSelf: 'center' }}>
       {/* Open link */}
       {r.url && (
-        <a href={r.url} target="_blank" rel="noreferrer" style={{
-          padding: '7px 14px', background: 'var(--s-accent, #2d5be3)', color: '#fff',
-          borderRadius: '7px', fontSize: '12px', fontWeight: '600',
-          textDecoration: 'none',
-        }}>
+        <a href={r.url} target="_blank" rel="noreferrer"
+          style={progressMap[r.resource_id]?.status === 'in_progress'
+            ? actionBtn('#ffffff', 'var(--s-accent, #c8102e)', 'var(--s-accent, #c8102e)')
+            : actionBtn('var(--s-accent, #c8102e)', '#ffffff')}>
           Open →
         </a>
       )}

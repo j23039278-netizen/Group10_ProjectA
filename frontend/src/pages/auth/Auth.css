@@ -309,3 +309,7 @@
   .au-switch { font-size: 12.5px; }
   .au-foot { display: none; }
 }
+
+/* Logo centred on its own; a heading, when a page has one, sits under it */
+.au-card-head { display: flex !important; flex-direction: column; align-items: center; justify-content: center; gap: 8px; }
+.au-card-head .au-logo { margin-bottom: 0; }

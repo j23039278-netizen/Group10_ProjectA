@@ -38,7 +38,6 @@ export default function Login({ onLogin }) {
 
   return (
     <AuthLayout
-      heading={<>Welcome <span className="au-accent">back</span></>}
       title="Sign in"
       subtitle="Students: use your school email, student ID and password. Advisors and admins: leave Student ID empty."
     >
@@ -82,8 +81,8 @@ export default function Login({ onLogin }) {
       </form>
 
       <p className="au-switch">
-        New students: your advisor creates your account, and your student ID, school email
-        and temporary password will be sent to your personal email.
+        New students: Please wait for your advisor to add your details. Once your account is ready,
+        your login details will be sent to your personal email. Check your email, then come back here to sign in.
       </p>
 
       {/* Test account hint (synthetic student data only) */}

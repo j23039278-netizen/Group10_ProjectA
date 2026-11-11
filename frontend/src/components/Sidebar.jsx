@@ -1,5 +1,9 @@
 // SEAGAS — Sidebar Navigation
 import { useNavigate, useLocation } from 'react-router-dom'
+import emblem from '../assets/brand/seagas-emblem.png'
+import { AFFILIATION } from '../pages/home/BrandLogo'
+
+const PORTAL_NAMES = { student: 'Student Portal', advisor: 'Advisor Portal', admin: 'Admin Portal' }
 
 // The portal passes its own menu, so this file holds no student, advisor or admin pages.
 export default function Sidebar({ user, navTitle, navItems, onLogout }) {
@@ -18,28 +22,47 @@ export default function Sidebar({ user, navTitle, navItems, onLogout }) {
     }}>
       {/* Logo */}
       <div className="sb-head" style={{ padding: '24px 20px 20px', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-        <div className="sb-brand" style={{ fontSize: '22px', fontWeight: '700', color: '#fff', letterSpacing: '-0.3px' }}>
-          SEAGAS
+        {/* The logo lockup, as on the sign-in page: emblem on the left, SEAGAS above the course line
+            on the right. The portal's tagline sits under it, spread over the lockup's full width
+            (from the emblem's left edge to the end of the course line). */}
+        <div style={{ display: 'inline-flex', flexDirection: 'column', marginLeft: '-4px', maxWidth: 'calc(100% + 4px)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <img src={emblem} alt="" aria-hidden="true" style={{ width: '34px', height: '34px', objectFit: 'contain', flex: 'none' }} />
+            <div style={{ minWidth: 0 }}>
+              <div className="sb-brand" style={{ fontSize: '20px', fontWeight: '700', color: '#fff', letterSpacing: '-0.2px', lineHeight: 1.05 }}>
+                SEAGAS
+              </div>
+              <div className="sb-affiliation" style={{ fontSize: '9px', fontWeight: '600', color: 'rgba(255,255,255,0.7)', marginTop: '3px', letterSpacing: '0.1px', whiteSpace: 'nowrap' }}>
+                {AFFILIATION}
+              </div>
+            </div>
+          </div>
         </div>
-        <div className="sb-tagline" style={{ fontSize: '10px', color: 'rgba(255,255,255,0.35)', marginTop: '2px', textTransform: 'uppercase', letterSpacing: '0.8px' }}>
-          Employability Platform
-        </div>
+      </div>
+
+      {/* Which portal this is, above the signed-in user (own class: the themes' tagline rules
+          do not swap the text) */}
+      <div className="sb-portal" style={{ padding: '14px 20px 0', fontSize: '12px', fontWeight: '700', color: 'rgba(255,255,255,0.85)',
+                                          textTransform: 'uppercase', letterSpacing: '1.5px', lineHeight: 1.2 }}>
+        {PORTAL_NAMES[role] || 'Employability Platform'}
       </div>
 
       {/* User */}
       <div className="sb-user" style={{
-        padding: '16px 20px', borderBottom: '1px solid rgba(255,255,255,0.08)',
+        padding: '10px 20px 16px', borderBottom: '1px solid rgba(255,255,255,0.08)',
         display: 'flex', alignItems: 'center', gap: '10px'
       }}>
         <div style={{
-          width: '32px', height: '32px', borderRadius: '50%',
+          width: '32px', height: '32px', borderRadius: '50%', flex: 'none',
           background: 'var(--s-accent, #2d5be3)', display: 'flex', alignItems: 'center',
           justifyContent: 'center', fontSize: '12px', fontWeight: '700', color: '#fff'
         }}>
           {userName.charAt(0).toUpperCase()}
         </div>
-        <div>
-          <div className="sb-name" style={{ fontSize: '13px', fontWeight: '600', color: '#fff' }}>{userName}</div>
+        {/* One line; a long name ends in "…" and shows in full on hover */}
+        <div style={{ minWidth: 0, flex: 1 }}>
+          <div className="sb-name" title={userName} style={{ fontSize: '13px', fontWeight: '600', color: '#fff',
+                                                             whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{userName}</div>
           <div className="sb-role" style={{ fontSize: '11px', color: 'rgba(255,255,255,0.4)', textTransform: 'capitalize' }}>{role}</div>
         </div>
       </div>

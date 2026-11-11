@@ -457,8 +457,11 @@ export default function Profile() {
                                                                            padding: '7px 0', borderTop: i ? '1px solid var(--s-surface-2, #f0f1f5)' : 'none' }}>
                             <span style={{ fontSize: '13px', fontWeight: '500', color: 'var(--s-ink, #1a1f2e)', minWidth: 0, overflowWrap: 'anywhere' }}>{s.skill_name}</span>
                             <span style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
-                              <span title={label(s.proficiency_level)} style={{ fontSize: '11px', color: 'var(--s-body, #4a5168)', whiteSpace: 'nowrap' }}>
-                                <span style={{ color: cat.color, letterSpacing: '1px' }}>{levelDots(s.proficiency_level)}</span> {label(s.proficiency_level)}
+                              {/* Fixed-width level column: dots and words line up in every row */}
+                              <span title={label(s.proficiency_level)} style={{ fontSize: '11px', color: 'var(--s-body, #4a5168)', whiteSpace: 'nowrap',
+                                                                                display: 'inline-flex', alignItems: 'center', gap: '6px', width: '106px' }}>
+                                <span style={{ color: cat.color, letterSpacing: '1px', width: '34px', flex: 'none' }}>{levelDots(s.proficiency_level)}</span>
+                                {label(s.proficiency_level)}
                               </span>
                               <button onClick={() => removeSkill(s.skill_id || s.student_skill_id)} aria-label={`Remove ${s.skill_name}`} title="Remove"
                                 style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--s-muted, #8b92a8)', fontSize: '13px', padding: '0 2px' }}>✕</button>

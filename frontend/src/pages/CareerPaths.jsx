@@ -6,7 +6,8 @@ import { careerAPI, studentAPI } from '../api/client'
 
 const C = { ink: 'var(--s-ink, #1a1f2e)', body: 'var(--s-body, #4a5168)', muted: 'var(--s-muted, #8b92a8)', line: 'var(--s-line, #e4e6ef)', blue: 'var(--s-accent, #2d5be3)',
             green: 'var(--s-good, #16a34a)', amber: 'var(--s-warn, #d97706)', red: 'var(--s-bad, #dc2626)' }
-const matchColor = (p) => p >= 70 ? C.green : p >= 40 ? C.amber : C.red
+// Bright green / yellow / red, the same as the readiness scores (utils/readiness.js); fixed 70 / 40
+const matchColor = (p) => p >= 70 ? 'var(--s-score-good, #16a34a)' : p >= 40 ? 'var(--s-score-warn, #ca8a04)' : 'var(--s-score-bad, #dc2626)'
 const IMPORTANCE = { required: { label: 'Required', color: C.red, bg: 'var(--s-bad-soft, #fee2e2)' },
                      preferred: { label: 'Preferred', color: C.amber, bg: 'var(--s-warn-soft, #fef3c7)' },
                      bonus: { label: 'Bonus', color: C.muted, bg: 'var(--s-surface-2, #f1f5f9)' } }

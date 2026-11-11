@@ -3,6 +3,7 @@
 // shown but cannot be added; nothing is added until the student ticks it and confirms.
 import { useState, useEffect, useRef } from 'react'
 import { cvAPI } from '../api/client'
+import './dropZone.css'
 
 const C = { ink: 'var(--s-ink, #1a1f2e)', body: 'var(--s-body, #4a5168)', muted: 'var(--s-muted, #8b92a8)', line: 'var(--s-line, #e4e6ef)', blue: 'var(--s-accent, #2d5be3)',
             green: 'var(--s-good, #16a34a)', red: 'var(--s-bad, #dc2626)', amber: 'var(--s-warn, #d97706)' }
@@ -20,6 +21,7 @@ export default function CvUpload({ onSkillsAdded }) {
   const [cv, setCv]         = useState(null)       // stored CV with the skills found in it
   const [picked, setPicked] = useState({})         // skill_id -> proficiency level
   const [busy, setBusy]     = useState('')
+  const [dragOver, setDragOver] = useState(false)   // a file is being dragged over the box
   const [error, setError]   = useState('')
   const [notice, setNotice] = useState('')
 
@@ -109,8 +111,24 @@ export default function CvUpload({ onSkillsAdded }) {
       <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
         <input ref={input} type="file" accept=".pdf,.docx" aria-label="CV file" style={{ display: 'none' }}
           onChange={e => upload(e.target.files[0])} />
-        <button style={btn(true)} disabled={!!busy} onClick={() => input.current.click()}>
-          {busy === 'upload' ? 'Reading your CV…' : cv ? 'Upload a new CV' : 'Upload CV'}
+        {/* Click or drop a file on the box */}
+        <button type="button" className={`file-drop${dragOver ? ' is-over' : ''}`} disabled={!!busy}
+          onClick={() => input.current.click()}
+          onDragOver={e => { e.preventDefault(); setDragOver(true) }}
+          onDragLeave={() => setDragOver(false)}
+          onDrop={e => {
+            e.preventDefault(); setDragOver(false)
+            const f = e.dataTransfer.files[0]
+            if (!f) return
+            if (!/\.(pdf|docx)$/i.test(f.name)) return setError('Upload your CV as a PDF or Word (.docx) file.')
+            upload(f)
+          }}>
+          <span className="file-drop-icon" aria-hidden="true">⬆</span>
+          <span className="file-drop-text">
+            <b>{busy === 'upload' ? 'Reading your CV…' : dragOver ? 'Drop your CV here'
+              : cv ? 'Upload a new CV: choose a file or drag it here' : 'Choose your CV or drag it here'}</b>
+            <small>PDF or Word (.docx) · max 5 MB</small>
+          </span>
         </button>
         {cv && (
           <>

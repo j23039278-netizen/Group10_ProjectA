@@ -37,101 +37,12 @@
   --s-th-bg:         #f6f6f8;
 
   /* Sidebar */
-  --s-side-bg:       #1c1d22;   /* charcoal: between the student's black and the advisor's navy */
-  --s-side-active:   #9b1e34;   /* selected menu item: solid oxblood */
+  --s-side-bg:       #1a1f2e;   /* same sidebar as the advisor portal */
+  --s-side-active:   rgba(224, 87, 127, 0.22);
 
   background: var(--s-bg);
   color: var(--s-ink);
 }
-
-/* Sidebar: plain charcoal with a faint top-to-bottom shade (no red wash) */
-.admin-theme .sb-root {
-  background: linear-gradient(180deg, #23242a 0%, #1a1b20 55%, #16171b 100%) !important;
-  box-shadow: 1px 0 0 rgba(255, 255, 255, 0.04), 6px 0 24px rgba(10, 10, 14, 0.12);
-}
-.admin-theme .sb-head { border-bottom: none !important; padding-bottom: 14px !important; }
-.admin-theme .sb-foot { border-top-color: rgba(255, 255, 255, 0.06) !important; }
-
-/* Brand: a small diamond mark and "Admin console" in place of the tagline */
-.admin-theme .sb-brand { letter-spacing: 0.2px !important; }
-.admin-theme .sb-brand::before {
-  content: '';
-  display: inline-block;
-  width: 11px; height: 11px;
-  margin-right: 10px;
-  vertical-align: 3px;
-  transform: rotate(45deg);
-  border-radius: 2px;
-  background: linear-gradient(135deg, #e0566e, #a3223a);
-  box-shadow: 0 0 0 3px rgba(209, 67, 91, 0.22), 0 0 14px rgba(224, 86, 110, 0.45);
-}
-.admin-theme .sb-tagline { font-size: 0 !important; margin-top: 4px !important; }
-.admin-theme .sb-tagline::after {
-  content: 'Admin console';
-  font-size: 10px;
-  letter-spacing: 1.8px;
-  font-weight: 600;
-  color: #e59aa7;
-}
-
-/* Signed-in account as a small card, with the role as a badge */
-.admin-theme .sb-user {
-  margin: 0 12px 6px;
-  padding: 12px !important;
-  border: 1px solid rgba(255, 255, 255, 0.07) !important;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.035);
-}
-.admin-theme .sb-user > div:first-child {
-  border-radius: 8px !important;
-  width: 34px !important; height: 34px !important;
-  background: linear-gradient(135deg, #c43650, #9b1e34) !important;
-  box-shadow: 0 2px 8px rgba(155, 30, 52, 0.45);
-}
-.admin-theme .sb-role {
-  display: inline-block;
-  margin-top: 3px;
-  padding: 1px 7px;
-  border-radius: 99px;
-  font-size: 9.5px !important;
-  font-weight: 700;
-  letter-spacing: 0.8px;
-  text-transform: uppercase !important;
-  color: #f2a9b6 !important;
-  background: rgba(209, 67, 91, 0.16);
-  border: 1px solid rgba(209, 67, 91, 0.3);
-}
-
-.admin-theme .sb-navtitle { color: rgba(255, 255, 255, 0.42) !important; letter-spacing: 1.4px !important; padding-top: 14px !important; }
-
-/* Menu: rounded items; the current page is a solid oxblood block with depth */
-.admin-theme .sb-item {
-  color: rgba(255, 255, 255, 0.74) !important;
-  font-size: 14px !important;
-  margin: 2px 10px;
-  padding: 9px 12px !important;
-  border-left: none !important;
-  border-radius: 9px;
-}
-.admin-theme .sb-item:not(.active):hover { background: rgba(255, 255, 255, 0.06) !important; color: #fff !important; }
-.admin-theme .sb-item.active {
-  color: #fff !important;
-  font-weight: 600 !important;
-  background: linear-gradient(135deg, #a8243c 0%, #8a1a2e 100%) !important;
-  box-shadow: 0 6px 16px rgba(155, 30, 52, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.14);
-}
-/* Menu icons keep their colour (the student portal shows them in greyscale) */
-.admin-theme .sb-item > span:first-child { opacity: .85; }
-.admin-theme .sb-item.active > span:first-child,
-.admin-theme .sb-item:hover > span:first-child { opacity: 1; }
-
-.admin-theme .sb-signout {
-  color: rgba(255, 255, 255, 0.82) !important;
-  border-color: rgba(255, 255, 255, 0.14) !important;
-  border-radius: 9px !important;
-  padding: 9px !important;
-}
-.admin-theme .sb-signout:hover { background: var(--s-accent) !important; border-color: var(--s-accent) !important; color: #fff !important; }
 
 /* Page: lifted cards, grey table headers, row highlight, aligned numbers */
 .admin-theme .s-main { font-variant-numeric: tabular-nums; }
@@ -153,3 +64,21 @@
 .admin-theme a:hover { color: var(--s-accent-dark); }
 .admin-theme ::selection { background: #f1d3d9; color: var(--s-ink); }
 .admin-theme ::-webkit-scrollbar-thumb { background: #c3c4ca; }
+
+/* Portal name above the account card: set like the "Administration" menu title and lined up
+   with the card's edge, so the label, card and menu read as one column */
+
+/* Sidebar: the same as the advisor portal (dark navy, rose-red accents) */
+.admin-theme .sb-role { color: rgba(255, 255, 255, 0.6) !important; }
+.admin-theme .sb-navtitle { color: rgba(236, 143, 171, 0.75) !important; }
+
+.admin-theme .sb-item { color: rgba(255, 255, 255, 0.8) !important; font-size: 14px !important; }
+.admin-theme .sb-item:not(.active):hover { background: rgba(255, 255, 255, 0.06) !important; color: #fff !important; }
+.admin-theme .sb-item.active { color: #fff !important; font-weight: 600 !important; border-left-color: #e0577f !important; }
+/* Menu icons keep their colour (the student portal shows them in greyscale) */
+.admin-theme .sb-item > span:first-child { opacity: .9; }
+.admin-theme .sb-item.active > span:first-child,
+.admin-theme .sb-item:hover > span:first-child { opacity: 1; }
+
+.admin-theme .sb-signout { color: rgba(255, 255, 255, 0.82) !important; border-color: rgba(255, 255, 255, 0.18) !important; }
+.admin-theme .sb-signout:hover { background: var(--s-accent) !important; border-color: var(--s-accent) !important; color: #fff !important; }

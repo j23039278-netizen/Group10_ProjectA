@@ -43,18 +43,18 @@
   --s-side-active:   #c8102e;
 
   /* Skill categories, told apart within the palette: black, red, grey, dark red */
-  --s-cat-tech:        #0a0a0a;
-  --s-cat-tech-bg:     #ececec;
-  --s-cat-tech-border: #c9c9c9;
-  --s-cat-ai:          #c8102e;
-  --s-cat-ai-bg:       #fdeef0;
-  --s-cat-ai-border:   #f3c4cb;
-  --s-cat-ana:         #4d4d4d;
-  --s-cat-ana-bg:      #ffffff;
-  --s-cat-ana-border:  #b5b5b5;
-  --s-cat-soft:        #7f0a1d;
-  --s-cat-soft-bg:     #f6e7ea;
-  --s-cat-soft-border: #e2bcc3;
+  --s-cat-tech:        #111111;
+  --s-cat-tech-bg:     #f2f2f2;
+  --s-cat-tech-border: #cfcfcf;
+  --s-cat-ai:          #dc2626;
+  --s-cat-ai-bg:       #fef2f2;
+  --s-cat-ai-border:   #fecaca;
+  --s-cat-ana:         #ca8a04;
+  --s-cat-ana-bg:      #fefce8;
+  --s-cat-ana-border:  #fde047;
+  --s-cat-soft:        #ea580c;
+  --s-cat-soft-bg:     #fff7ed;
+  --s-cat-soft-border: #fed7aa;
 
   background: var(--s-bg);
   color: var(--s-ink);
@@ -77,8 +77,9 @@
 .student-theme .sb-signout { color: rgba(255, 255, 255, 0.85) !important; border-color: rgba(255, 255, 255, 0.25) !important; }
 
 /* Menu icons in greyscale, so the only colour in the sidebar is the red */
-.student-theme .sb-item > span:first-child { filter: grayscale(1); }
-.student-theme .sb-item.active > span:first-child { filter: grayscale(1) brightness(1.6); }
+/* Menu icons keep their own colours (they were greyscale) */
+.student-theme .sb-item > span:first-child { filter: none; }
+.student-theme .sb-item.active > span:first-child { filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.5)); }
 .student-theme .sb-item.active { border-left-color: #fff !important; font-weight: 600 !important; }
 
 .student-theme .sb-brand::before {
@@ -128,3 +129,6 @@
 @media print {
   .student-theme, .student-theme .s-main { background: #fff !important; border-top: none !important; }
 }
+
+/* The rocket emblem (Sidebar.jsx) replaces the brand mark */
+.student-theme .sb-brand::before { display: none !important; }
