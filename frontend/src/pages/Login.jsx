@@ -82,7 +82,7 @@ export default function Login({ onLogin }) {
 
       <p className="au-switch">
         New students: Please wait for your advisor to add your details. Once your account is ready,
-        your login details will be sent to your personal email. Check your email, then come back here to sign in.
+        your login details will be sent to your school email. Check your email, then come back here to sign in.
       </p>
 
       {/* Test account hint (synthetic student data only) */}

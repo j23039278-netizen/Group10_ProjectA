@@ -289,7 +289,7 @@ CREATE TABLE IF NOT EXISTS student_intake_rows (
     line_number     INTEGER      NOT NULL,                     -- row in the uploaded file
     full_name       VARCHAR(255) NOT NULL,
     phone           VARCHAR(30),
-    personal_email  VARCHAR(255) NOT NULL,
+    personal_email  VARCHAR(255),                -- only on lists uploaded before 12 Nov 2026
     student_number  VARCHAR(9),
     school_email    VARCHAR(255),
     status          VARCHAR(10)  NOT NULL DEFAULT 'pending'
@@ -301,6 +301,8 @@ CREATE TABLE IF NOT EXISTS student_intake_rows (
 );
 CREATE INDEX IF NOT EXISTS idx_intake_rows_batch  ON student_intake_rows(batch_id);
 CREATE INDEX IF NOT EXISTS idx_intake_rows_status ON student_intake_rows(status);
+-- The login email now goes to the school email: lists no longer have a Personal Email column
+ALTER TABLE student_intake_rows ALTER COLUMN personal_email DROP NOT NULL;
 
 -- Every notification email. status 'not_sent' = no mail server configured
 -- (SMTP_HOST in backend/.env), so admins read it here and pass it on.

@@ -5,20 +5,21 @@ Advisors do all of it; admins can only look (lists, students and emails).
 
 1. An advisor uploads a list of new students (Excel .xlsx or .csv) with their full
    name, student ID and school email (given by the university), phone number,
-   personal email, course (Computer Science, Business or Information and
-   Communications Technology) and programme (one of the course's programmes).
+   course (Computer Science, Business or Information and Communications
+   Technology) and programme (one of the course's programmes).
                                                                 POST /batches
 2. The advisor checks the list, can correct or reject a student, then creates the
    accounts. Each student gets a temporary password.
    PATCH /rows/{id}, POST /rows/{id}/reject, POST /batches/{id}/create-accounts
-3. The student's personal email receives the student ID, school email and
+3. The student's school email receives the student ID, school email and
    temporary password (notifications.py; stored in the outbox when no mail
    server is configured). The advisor can resend them.          GET /outbox
 4. The student signs in with school email + student ID + temporary password and
    must choose a new password first (routers/auth.py).
 
-Personal emails and phone numbers stay in student_intake_rows: they are only
-needed to send the account email. Use made-up data when testing (NFR-05).
+Phone numbers stay in student_intake_rows. The personal_email column is only filled
+for lists uploaded before the Personal Email column was removed (12 Nov 2026).
+Use made-up data when testing (NFR-05).
 """
 
 import csv
@@ -51,17 +52,16 @@ EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 PHONE_RE = re.compile(r"^\+?[0-9 ()\-]{7,25}$")
 
 # Header words that identify each column (case-insensitive, first match wins)
-# The school email comes before the personal one, which also accepts a plain "Email"
+# The login email goes to the school email, so a plain "Email" column is the school email
 COLUMN_WORDS = {
     "full_name":      ("full name", "name", "student name"),
     "student_number": ("student id", "student number", "student no", "matric"),
-    "school_email":   ("school email", "student email", "university email"),
+    "school_email":   ("school email", "student email", "university email", "email", "e-mail"),
     "phone":          ("phone", "mobile", "contact", "tel"),
-    "personal_email": ("personal email", "email", "e-mail"),
     "course":         ("course", "faculty"),
     "programme":      ("programme", "program", "major"),
 }
-REQUIRED_COLUMNS = "Full Name, Student ID, School Email, Phone Number, Personal Email, Course, Programme"
+REQUIRED_COLUMNS = "Full Name, Student ID, School Email, Phone Number, Course, Programme"
 
 # What the Course column may say (case-insensitive) -> stored code
 COURSES = {
@@ -77,7 +77,7 @@ def parse_course(value):
     """CS / BUSINESS / ICT, or None if the text is not one of the three courses"""
     return COURSES.get(" ".join((value or "").lower().split()))
 
-ROW_COLUMNS = """r.row_id, r.batch_id, r.line_number, r.full_name, r.phone, r.personal_email, r.course, r.programme,
+ROW_COLUMNS = """r.row_id, r.batch_id, r.line_number, r.full_name, r.phone, r.course, r.programme,
                  r.student_number, r.school_email, r.status, r.user_id, r.note, r.processed_at"""
 
 
@@ -145,7 +145,7 @@ def find_columns(header):
             if hit is not None:
                 cols[key] = hit
                 break
-    missing = [k for k in ("full_name", "student_number", "school_email", "personal_email", "course", "programme")
+    missing = [k for k in ("full_name", "student_number", "school_email", "course", "programme")
                if k not in cols]
     if missing:
         raise HTTPException(
@@ -158,7 +158,7 @@ def clean_row(cells, cols, course_programmes):
     """(values, None) or (None, error message) for one data row.
     course_programmes: programmes.by_course(db)"""
     cell = lambda k: (cells[cols[k]] if k in cols and cols[k] < len(cells) else "").strip()
-    name, email, phone = " ".join(cell("full_name").split()), cell("personal_email").lower(), cell("phone")
+    name, phone = " ".join(cell("full_name").split()), cell("phone")
     number, school_email = cell("student_number"), cell("school_email").lower()
     if phone.endswith(".0") and phone[:-2].isdigit():   # Excel stores numbers as floats
         phone = phone[:-2]
@@ -172,8 +172,6 @@ def clean_row(cells, cols, course_programmes):
         return None, "student ID must be exactly 9 digits"
     if not EMAIL_RE.match(school_email) or not school_email.endswith("@" + STUDENT_DOMAIN) or len(school_email) > 255:
         return None, f"school email must end with @{STUDENT_DOMAIN}"
-    if not EMAIL_RE.match(email) or len(email) > 255:
-        return None, "personal email is not valid"
     if phone and not PHONE_RE.match(phone):
         return None, "phone number is not valid"
     course = parse_course(cell("course"))
@@ -182,17 +180,17 @@ def clean_row(cells, cols, course_programmes):
     programme = course_programmes.get(course, {}).get(" ".join(cell("programme").lower().split()))
     if not programme:
         return None, f"programme must be one of the {COURSE_NAMES[course]} programmes"
-    return {"full_name": name, "student_number": number, "school_email": school_email, "personal_email": email,
+    return {"full_name": name, "student_number": number, "school_email": school_email,
             "phone": phone or None, "course": course, "programme": programme}, None
 
 
 # ── Advisor: Excel template (Course and Programme are drop-down lists) ──
 TEMPLATE_ROWS = [
-    ("Example Student", "199000001", "199000001@student.newinti.edu.my", "+60 12-345 6789", "example.student@gmail.com",
+    ("Example Student", "199000001", "199000001@student.newinti.edu.my", "+60 12-345 6789",
      "Computer Science", "Bachelor of Computer Science (Software Engineering)"),
-    ("Another Student", "199000002", "199000002@student.newinti.edu.my", "+60 13-222 3333", "another.student@gmail.com",
+    ("Another Student", "199000002", "199000002@student.newinti.edu.my", "+60 13-222 3333",
      "Business", "Bachelor of Business (Marketing)"),
-    ("Third Student", "199000003", "199000003@student.newinti.edu.my", "+60 14-444 5555", "third.student@gmail.com",
+    ("Third Student", "199000003", "199000003@student.newinti.edu.my", "+60 14-444 5555",
      "Information and Communications Technology",
      "Bachelor of Information and Communications Technology (Web and Mobile Development)"),
 ]
@@ -200,7 +198,7 @@ TEMPLATE_ROWS = [
 
 @router.get("/template")
 def download_template(current_user=Depends(get_current_user), db: Session = Depends(get_db)):
-    """An .xlsx with the seven columns. Course only accepts the courses this advisor may add;
+    """An .xlsx with the six columns. Course only accepts the courses this advisor may add;
     Programme only the programmes of the course chosen in the same row."""
     require_advisor(current_user)
     from openpyxl import Workbook
@@ -213,13 +211,13 @@ def download_template(current_user=Depends(get_current_user), db: Session = Depe
     wb = Workbook()
     ws = wb.active
     ws.title = "New students"
-    ws.append(["Full Name", "Student ID", "School Email", "Phone Number", "Personal Email", "Course", "Programme"])
+    ws.append(["Full Name", "Student ID", "School Email", "Phone Number", "Course", "Programme"])
     for cell in ws[1]:
         cell.font = Font(bold=True)
     for row in TEMPLATE_ROWS:
-        if row[5] in names:
+        if row[4] in names:
             ws.append(row)
-    for col, width in zip("ABCDEFG", (28, 14, 36, 20, 34, 20, 70)):
+    for col, width in zip("ABCDEF", (28, 14, 36, 20, 40, 70)):
         ws.column_dimensions[col].width = width
     # Text, so Excel keeps the ID as typed: new rows (the column) and the example rows
     ws.column_dimensions["B"].number_format = "@"
@@ -244,13 +242,13 @@ def download_template(current_user=Depends(get_current_user), db: Session = Depe
     course_dv = DataValidation(type="list", formula1=f'"{",".join(names)}"', allow_blank=False,
                                showErrorMessage=True, errorTitle="Course",
                                error=f"Choose {' or '.join(names)} from the list.")
-    programme_dv = DataValidation(type="list", formula1='INDIRECT(SUBSTITUTE($F2," ","_"))', allow_blank=False,
+    programme_dv = DataValidation(type="list", formula1='INDIRECT(SUBSTITUTE($E2," ","_"))', allow_blank=False,
                                   showErrorMessage=True, errorTitle="Programme",
                                   error="Choose the course first, then one of its programmes from the list.")
     ws.add_data_validation(course_dv)
     ws.add_data_validation(programme_dv)
-    course_dv.add("F2:F1001")      # one row per student, up to the 1,000-student limit
-    programme_dv.add("G2:G1001")
+    course_dv.add("E2:E1001")      # one row per student, up to the 1,000-student limit
+    programme_dv.add("F2:F1001")
     ws.freeze_panes = "A2"
 
     out = io.BytesIO()
@@ -283,9 +281,6 @@ def upload_batch(
         raise HTTPException(status_code=400, detail=f"At most {MAX_ROWS} students per file.")
     cols = find_columns(table[0])
 
-    # Personal emails already on another list (pending or with an account)
-    taken = {r[0] for r in db.execute(
-        text("SELECT lower(personal_email) FROM student_intake_rows WHERE status <> 'rejected'")).fetchall()}
     # Student IDs and school emails already used: value -> where
     used_ids, used_emails = {}, {}
     for number, email, where in db.execute(text("""
@@ -296,16 +291,12 @@ def upload_batch(
     """)).fetchall():
         used_ids[number] = where
         used_emails[email] = where
-    rows, skipped, duplicates, seen = [], [], [], set()
+    rows, skipped, duplicates = [], [], []
     course_programmes = programmes.by_course(db)
     for line, cells in enumerate(table[1:], start=2):
         values, error = clean_row(cells, cols, course_programmes)
         if not error and values["course"] not in courses_of(current_user):
             error = f"you can only add {' / '.join(COURSE_NAMES[c] for c in courses_of(current_user))} students"
-        if not error and values["personal_email"] in seen:
-            error = "same personal email appears twice in this file"
-        if not error and values["personal_email"] in taken:
-            error = "this personal email is already on an earlier list"
         if error:
             skipped.append({"line": line, "error": error})
             continue
@@ -316,7 +307,6 @@ def upload_batch(
         if school in used_emails:
             duplicates.append({"line": line, "error": f"school email {school} is already used by {used_emails[school]}"})
             continue
-        seen.add(values["personal_email"])
         used_ids[number] = used_emails[school] = f"row {line} of this file"
         rows.append({**values, "line": line})
     if duplicates:
@@ -335,8 +325,8 @@ def upload_batch(
     db.execute(
         text("""
             INSERT INTO student_intake_rows (batch_id, line_number, full_name, student_number, school_email,
-                                             phone, personal_email, course, programme)
-            VALUES (:b, :line, :full_name, :student_number, :school_email, :phone, :personal_email, :course, :programme)
+                                             phone, course, programme)
+            VALUES (:b, :line, :full_name, :student_number, :school_email, :phone, :course, :programme)
         """),
         [{"b": str(batch_id), **r} for r in rows]
     )
@@ -477,7 +467,7 @@ def create_accounts(
     current_user=Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    """Create student accounts and email each student their login details.
+    """Create student accounts and email each student their login details (to the school email).
 
     A student whose ID or email is missing or already taken is skipped and reported;
     the others still go ahead.
@@ -490,7 +480,7 @@ def create_accounts(
         only = "AND row_id = ANY(CAST(:ids AS uuid[]))"
         params["ids"] = [str(i) for i in req.row_ids]
     rows = db.execute(text(f"""
-        SELECT row_id, full_name, personal_email, student_number, school_email, course, programme
+        SELECT row_id, full_name, student_number, school_email, course, programme
         FROM student_intake_rows
         WHERE batch_id = :b AND status = 'pending' {only}
         ORDER BY line_number
@@ -533,7 +523,7 @@ def create_accounts(
                "by": str(current_user.user_id), "r": str(r.row_id)})
         subject, body = notifications.welcome_email(r.full_name, number, email, password, COURSE_NAMES[r.course],
                                                     r.programme)
-        mail = notifications.send_email(db, r.personal_email, subject, body, related_user_id=user_id)
+        mail = notifications.send_email(db, email, subject, body, related_user_id=user_id)
         created.append({"row_id": str(r.row_id), "full_name": r.full_name, "student_number": number,
                         "school_email": email, "email_status": mail})
 

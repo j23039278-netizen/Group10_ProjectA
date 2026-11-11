@@ -107,7 +107,7 @@ export function BatchDetail({ batchId, readOnly = false, courses = [], onChanged
   const setField = (row, key, value) => setEdits(e => ({
     ...e, [row.row_id]: { student_number: field(row, 'student_number'), school_email: field(row, 'school_email'), ...e[row.row_id], [key]: value },
   }))
-  const headers = ['Row', 'Name', 'Student ID', 'School email', 'Phone', 'Personal email', 'Course', 'Programme', 'Status']
+  const headers = ['Row', 'Name', 'Student ID', 'School email', 'Phone', 'Course', 'Programme', 'Status']
 
   return (
     <div style={{ ...card, padding: '20px 24px' }}>
@@ -125,7 +125,7 @@ export function BatchDetail({ batchId, readOnly = false, courses = [], onChanged
       {notice && <Alert type="success">{notice}</Alert>}
       {error && <Alert>{error}</Alert>}
       <div style={{ overflowX: 'auto' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '1450px' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '1250px' }}>
           <thead><tr>{(readOnly ? headers : [...headers, '']).map(h => <th key={h} style={th}>{h}</th>)}</tr></thead>
           <tbody>
             {data.rows.map(r => {
@@ -148,7 +148,6 @@ export function BatchDetail({ batchId, readOnly = false, courses = [], onChanged
                       : r.school_email || '—'}
                   </td>
                   <td style={tdOne}>{r.phone || '—'}</td>
-                  <td style={tdOne}>{r.personal_email}</td>
                   <td style={{ ...td, minWidth: '170px' }}>
                     {editable
                       ? <select aria-label={`Course for ${r.full_name}`} style={{ ...input, width: 'auto', padding: '6px 8px' }}

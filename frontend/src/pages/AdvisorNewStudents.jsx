@@ -1,7 +1,7 @@
 // SEAGAS — Advisor: new students
 // The advisor uploads an Excel / CSV file (Full Name, Student ID, School Email, Phone Number,
-// Personal Email, Course, Programme), checks the list and creates the accounts; each student
-// receives the login details at their personal email. Admins only look (AdminIntake).
+// Course, Programme), checks the list and creates the accounts; each student
+// receives the login details at their school email. Admins only look (AdminIntake).
 import { useState, useEffect, useRef } from 'react'
 import { intakeAPI } from '../api/intake'
 import { authAPI } from '../api/client'
@@ -94,7 +94,7 @@ export default function AdvisorNewStudents() {
         <div style={{ fontSize: '26px', fontWeight: '700', color: C.ink }}>New Students</div>
         <div style={{ fontSize: '13px', color: C.body, marginTop: '4px', maxWidth: '760px' }}>
           Upload the list of new students with their student IDs and school emails, check it, then create the accounts.
-          Each student receives the login details at their personal email.
+          Each student receives the login details at their school email.
         </div>
       </div>
 
@@ -112,7 +112,7 @@ export default function AdvisorNewStudents() {
         <div style={heading}>Upload a list</div>
         <div style={{ fontSize: '13px', color: C.body, marginBottom: '12px' }}>
           Excel (.xlsx) or CSV, first row with the column names <b>Full Name</b>, <b>Student ID</b> (9 digits),{' '}
-          <b>School Email</b> (@student.newinti.edu.my), <b>Phone Number</b>, <b>Personal Email</b>,{' '}
+          <b>School Email</b> (@student.newinti.edu.my), <b>Phone Number</b>,{' '}
           <b>Course</b> ({courseNames}) and <b>Programme</b> — in the template the last two are drop-down lists, and the
           programme list follows the course chosen in the row. You can add students
           of your own course{myCourses.length === 1 ? '' : 's'} only; rows of other courses are skipped.

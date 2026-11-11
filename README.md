@@ -138,7 +138,7 @@ semantic and hybrid requests fall back to keyword matching and the student sees 
 ### Accounts and roles
 | Role | How the account is created | Email must end with |
 |------|----------------------------|---------------------|
-| Student | An advisor uploads the new-student list (**New Students**: Full Name, Student ID, School Email, Phone Number, Personal Email, Course, Programme), checks it and creates the accounts, which sends the login emails. A student ID or school email used twice (in the file or already in the system) refuses the whole file until it is corrected. Admins can only view this (**Student Intake**) | `@student.newinti.edu.my` |
+| Student | An advisor uploads the new-student list (**New Students**: Full Name, Student ID, School Email, Phone Number, Course, Programme), checks it and creates the accounts, which sends the login emails. A student ID or school email used twice (in the file or already in the system) refuses the whole file until it is corrected. Admins can only view this (**Student Intake**) | `@student.newinti.edu.my` |
 | Advisor | An admin creates it in **User Management** and sets the position (Dean or Head of Programme), which decides the courses the advisor sees, and a 5-digit staff ID | `@advisor.newinti.edu.my` |
 | Admin | The first one in the backend window (`backend/create_admin.py`); more in User Management | `@admin.newinti.edu.my` |
 
@@ -224,7 +224,7 @@ replace a Dean, change the old Dean's position or deactivate the account first. 
 before this change became Dean of Computing (the earliest one) or Head of Programme, CS; change them in
 User Management if needed.
 
-New students receive their student ID, school email and a temporary password at their personal
+New students receive their student ID, school email and a temporary password at their school
 email, and must choose their own password at first sign-in (admin password resets work the same
 way). Without a mail server the emails are only stored, and advisors read them under
 **New Students → Email outbox** (admins under **Student Intake → Email outbox**). To send real emails, add `SMTP_HOST`, `SMTP_PORT`,
