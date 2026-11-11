@@ -3,15 +3,24 @@ import { useState, useEffect } from 'react'
 import { STEPS } from './data'
 import { useInView, prefersReducedMotion } from './hooks'
 import Icon from './Icon'
+import { groupOf } from './skillGroups'
 
 const STEP_ICONS = { profile: 'profile', career: 'target', compare: 'compare', gaps: 'gap' }
 const AUTO_ADVANCE_MS = 5500
+const STACKED_MQ = '(max-width: 960px)'   // matches the single-column layout in Home.css
 
 // Row layout used by the "compare" visual so the SVG lines can line up with the chips
 const ROW_H = 46
 const YOUR = ['Python', 'React', 'Git']
 const REQUIRED = ['AWS', 'Python', 'Docker', 'React']
 const MATCHES = [[0, 1], [1, 3]] // [your index, required index]
+
+// Sample (made-up) entries for the "Build your profile" preview
+const SAMPLE_ITEMS = [
+  { kind: 'project', title: 'Campus Event Booking App', meta: 'React · Node.js · 2025' },
+  { kind: 'cert',    title: 'AWS Certified Cloud Practitioner', meta: 'Amazon Web Services · 2026' },
+  { kind: 'project', title: 'Sales Insights Dashboard', meta: 'SQL · Power BI · 2025' },
+]
 
 function ProfileVisual() {
   return (
@@ -26,14 +35,22 @@ function ProfileVisual() {
       <div className="hp-hv-label">Skills</div>
       <div className="hp-hv-chips">
         {['Python', 'React', 'Git', 'SQL', 'Teamwork'].map((s, i) => (
-          <span key={s} className="hp-chip hp-pop-in" style={{ animationDelay: `${150 + i * 90}ms` }}>{s}</span>
+          <span key={s} className={`hp-chip hp-chip-sg hp-sg-${groupOf(s)} hp-pop-in`} style={{ animationDelay: `${150 + i * 90}ms` }}>{s}</span>
         ))}
       </div>
       <div className="hp-hv-label">Projects & certifications</div>
-      <div className="hp-hv-lines">
-        <span className="hp-grow-in" style={{ '--w': '82%', animationDelay: '500ms' }} />
-        <span className="hp-grow-in" style={{ '--w': '64%', animationDelay: '620ms' }} />
-      </div>
+      <ul className="hp-hv-items">
+        {SAMPLE_ITEMS.map((it, i) => (
+          <li key={it.title} className={`hp-hv-item is-${it.kind} hp-pop-in`} style={{ animationDelay: `${500 + i * 120}ms` }}>
+            <span className="hp-hv-item-icon"><Icon name={it.kind === 'cert' ? 'check' : 'code'} size={15} /></span>
+            <span className="hp-hv-item-text">
+              <b>{it.title}</b>
+              <small>{it.meta}</small>
+            </span>
+            <span className="hp-hv-item-tag">{it.kind === 'cert' ? 'Certification' : 'Project'}</span>
+          </li>
+        ))}
+      </ul>
     </div>
   )
 }
@@ -139,19 +156,38 @@ export default function HowItWorks() {
   const [active, setActive] = useState(0)
   const [userPicked, setUserPicked] = useState(false)
 
-  // Gently auto-advance while visible, until the visitor clicks a step
+  // Tablet/phone (single column): show the preview right under the active step
+  const [stacked, setStacked] = useState(() => window.matchMedia(STACKED_MQ).matches)
   useEffect(() => {
-    if (!inView || userPicked || prefersReducedMotion()) return
+    const mq = window.matchMedia(STACKED_MQ)
+    const onChange = () => setStacked(mq.matches)
+    mq.addEventListener('change', onChange)
+    return () => mq.removeEventListener('change', onChange)
+  }, [])
+
+  // Gently auto-advance while visible, until the visitor clicks a step.
+  // Not on tablet/phone: the preview would jump between steps and shift the page.
+  const autoPlay = inView && !userPicked && !stacked
+  useEffect(() => {
+    if (!autoPlay || prefersReducedMotion()) return
     const t = setTimeout(() => setActive(a => (a + 1) % STEPS.length), AUTO_ADVANCE_MS)
     return () => clearTimeout(t)
-  }, [active, inView, userPicked])
+  }, [active, autoPlay])
 
   const Visual = VISUALS[STEPS[active].id]
+  const panel = (
+    <div className="hp-how-visual" role="tabpanel" aria-label={STEPS[active].title}>
+      <div className="hp-demo-tag">Example</div>
+      <div key={STEPS[active].id} className="hp-swap">
+        <Visual />
+      </div>
+    </div>
+  )
 
   return (
     <div ref={ref} className={`hp-how hp-reveal ${inView ? 'is-visible' : ''}`}>
       <div className="hp-steps" role="tablist" aria-label="How SEAGAS works">
-        {STEPS.map((step, i) => (
+        {STEPS.map((step, i) => [
           <button
             key={step.id}
             type="button"
@@ -166,19 +202,15 @@ export default function HowItWorks() {
               <span className="hp-step-title">{step.title}</span>
               <span className="hp-step-text">{step.text}</span>
             </span>
-            {i === active && !userPicked && inView && (
+            {i === active && autoPlay && (
               <span className="hp-step-timer" style={{ animationDuration: `${AUTO_ADVANCE_MS}ms` }} />
             )}
-          </button>
-        ))}
+          </button>,
+          stacked && i === active && <div key="panel">{panel}</div>,
+        ])}
       </div>
 
-      <div className="hp-how-visual" role="tabpanel" aria-label={STEPS[active].title}>
-        <div className="hp-demo-tag">Example</div>
-        <div key={STEPS[active].id} className="hp-swap">
-          <Visual />
-        </div>
-      </div>
+      {!stacked && panel}
     </div>
   )
 }

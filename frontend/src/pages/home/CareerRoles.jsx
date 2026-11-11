@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { CAREER_ROLES } from './data'
 import { useInView } from './hooks'
 import Icon from './Icon'
+import { groupOf } from './skillGroups'
 
 function RoleCard({ role, open, onToggle, onExplore, delay, inView }) {
   const panelId = `hp-role-${role.id}`
@@ -24,7 +25,7 @@ function RoleCard({ role, open, onToggle, onExplore, delay, inView }) {
         <div className="hp-role-panel-inner">
           <div className="hp-hv-label">Core skills</div>
           <div className="hp-hv-chips">
-            {role.core.map(s => <span key={s} className="hp-chip">{s}</span>)}
+            {role.core.map(s => <span key={s} className={`hp-chip hp-chip-sg hp-sg-${groupOf(s)}`}>{s}</span>)}
           </div>
           <div className="hp-hv-label">Example skill gaps</div>
           <div className="hp-hv-chips">

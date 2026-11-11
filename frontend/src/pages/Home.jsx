@@ -11,6 +11,7 @@ import CareerRoles from './home/CareerRoles'
 import { RecommendationPreview, ProgressPreview } from './home/NextStep'
 import Audience from './home/Audience'
 import Preloader from './home/Preloader'
+import { groupOf } from './home/skillGroups'
 import { useInView, prefersReducedMotion, useCanvasColor } from './home/hooks'
 import './Home.css'
 
@@ -27,6 +28,7 @@ const MARQUEE_SKILLS = [
   'React', 'JavaScript', 'Wireshark', 'Nmap', 'SIEM', 'Pandas', 'NumPy',
   'Generative AI', 'Critical Thinking', 'Communication', 'Teamwork', 'Project Management',
 ]
+
 
 function scrollToSection(id) {
   const el = document.getElementById(id)
@@ -133,6 +135,48 @@ function HomeContent() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
+  // Keep the same section in view when the window is resized (e.g. desktop -> phone width).
+  // Without this the browser keeps the old scroll offset, which lands on a different section
+  // once the page gets taller or shorter.
+  useEffect(() => {
+    const NAV_LINE = 80
+    let anchor = null
+    let width = window.innerWidth
+    let raf = 0
+    const sections = () => [...document.querySelectorAll('.hp-hero, .hp main > section')]
+
+    const remember = () => {
+      if (window.innerWidth !== width) return   // mid-resize: keep the anchor from before
+      const el = sections().filter(s => s.getBoundingClientRect().top <= NAV_LINE).pop()
+      if (!el) { anchor = null; return }
+      const r = el.getBoundingClientRect()
+      anchor = { el, ratio: (NAV_LINE - r.top) / Math.max(r.height, 1) }
+    }
+    const restore = () => {
+      if (anchor) {
+        const r = anchor.el.getBoundingClientRect()
+        const top = window.scrollY + r.top + anchor.ratio * r.height - NAV_LINE
+        window.scrollTo({ top, behavior: 'instant' })
+      }
+      width = window.innerWidth
+    }
+    const onResize = () => {
+      if (window.innerWidth === width) return
+      cancelAnimationFrame(raf)
+      // Wait two frames so React re-renders that depend on the width have landed
+      raf = requestAnimationFrame(() => { raf = requestAnimationFrame(restore) })
+    }
+
+    remember()
+    window.addEventListener('scroll', remember, { passive: true })
+    window.addEventListener('resize', onResize)
+    return () => {
+      cancelAnimationFrame(raf)
+      window.removeEventListener('scroll', remember)
+      window.removeEventListener('resize', onResize)
+    }
+  }, [])
+
   // Highlight the nav item for the section currently in view
   useEffect(() => {
     const sections = NAV.map(n => document.getElementById(n.id)).filter(Boolean)
@@ -201,7 +245,7 @@ function HomeContent() {
       <div className="hp-marquee" aria-hidden="true">
         <div className="hp-marquee-track">
           {[...MARQUEE_SKILLS, ...MARQUEE_SKILLS].map((s, i) => (
-            <span key={i} className="hp-marquee-item">{s}</span>
+            <span key={i} className={`hp-marquee-item hp-sg-${groupOf(s)}`}>{s}</span>
           ))}
         </div>
       </div>

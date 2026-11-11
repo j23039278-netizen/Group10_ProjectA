@@ -82,8 +82,8 @@ export default function Login({ onLogin }) {
       </form>
 
       <p className="au-switch">
-        New student? Your advisor registers you. Your student ID, school email and a temporary
-        password are sent to your personal email.
+        New students: your advisor creates your account, and your student ID, school email
+        and temporary password will be sent to your personal email.
       </p>
 
       {/* Test account hint (synthetic student data only) */}
