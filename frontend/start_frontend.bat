@@ -7,12 +7,14 @@ echo.
 
 cd /d "%~dp0"
 
-echo [1/2] Checking node_modules...
-if not exist "node_modules" (
-    echo node_modules not found. Installing...
-    npm install
-) else (
-    echo node_modules already exists.
+echo [1/2] Installing / updating packages...
+REM Runs every time so packages added by teammates (package.json) are installed too;
+REM it takes only a few seconds when nothing has changed.
+call npm install --no-audit --no-fund
+if errorlevel 1 (
+    echo [ERROR] npm install failed. Check your internet connection and run it again.
+    pause
+    exit /b 1
 )
 
 echo.
