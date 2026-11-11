@@ -62,7 +62,7 @@ export default function Home() {
   // 'loading' → splash only; 'leaving' → splash slides away while the page mounts; 'done'
   const [stage, setStage] = useState(preloaderShown ? 'done' : 'loading')
 
-  useCanvasColor('#071D33')
+  useCanvasColor('#ffffff')
 
   // Tapping the splash speeds it up: the splash clock and its CSS animations run at this rate
   const speedRef = useRef(1)
