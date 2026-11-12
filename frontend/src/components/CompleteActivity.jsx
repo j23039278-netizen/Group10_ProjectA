@@ -8,10 +8,15 @@ import EvidenceFiles from './EvidenceFiles'
 import { ALLOWED_TEXT } from './evidenceRules'
 
 // resource: { resource_id, resource_title }; evidence: its current evidence list.
-// onChanged(): reload the evidence; onCompleted(response): the activity is complete.
+// onChanged(): reload the evidence; onCompleted(response): the activity is complete (called once
+// the student has seen the "Congratulations" step and, for a skill they already had, chosen
+// whether to raise its level).
+const LEVEL = { beginner: 'Beginner', intermediate: 'Intermediate', advanced: 'Advanced' }
+
 export default function CompleteActivity({ resource, evidence = [], onChanged, onCompleted, onClose }) {
   const [error, setError]   = useState('')
   const [saving, setSaving] = useState(false)
+  const [result, setResult] = useState(null)    // the complete response: shows the Congratulations step
   const rid = resource.resource_id
 
   const complete = async () => {
@@ -19,12 +24,68 @@ export default function CompleteActivity({ resource, evidence = [], onChanged, o
     setSaving(true)
     try {
       const res = await progressAPI.complete(rid)
-      onCompleted(res)
+      setResult(res)
     } catch (e) {
       const d = e.response?.data?.detail
       setError(typeof d === 'string' ? d : 'Could not mark it as completed. Please try again.')
+    } finally {
       setSaving(false)
     }
+  }
+
+  // Raise the skill the student already had, then finish with that as the notice
+  const raise = async (level) => {
+    setError('')
+    setSaving(true)
+    try {
+      const r = await progressAPI.raiseSkill(rid, level)
+      onCompleted({ ...result, data: { ...result.data, notice: r.data.notice } })
+    } catch (e) {
+      const d = e.response?.data?.detail
+      setError(typeof d === 'string' ? d : 'Could not change the level. Please try again.')
+      setSaving(false)
+    }
+  }
+
+  const btnStyle = (primary) => ({ padding: '10px 16px', borderRadius: '8px', fontSize: '13px', fontWeight: '600', cursor: 'pointer',
+    background: primary ? 'var(--s-score-good, #16a34a)' : '#fff', color: primary ? '#fff' : 'var(--s-body, #4a5168)',
+    border: primary ? 'none' : '1.5px solid var(--s-line, #e4e6ef)' })
+
+  if (result) {
+    const s = result.data.skill || {}
+    const finish = () => onCompleted(result)
+    return (
+      <div onClick={finish} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.45)', zIndex: 1000,
+                                     display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
+        <div role="dialog" aria-modal="true" aria-label="Activity completed" onClick={e => e.stopPropagation()}
+          style={{ background: '#fff', borderRadius: '16px', padding: '28px', width: '100%', maxWidth: '480px', textAlign: 'center',
+                   boxShadow: '0 20px 60px rgba(0,0,0,0.2)' }}>
+          <div aria-hidden="true" style={{ fontSize: '44px', lineHeight: 1 }}>🎉</div>
+          <div style={{ fontSize: '20px', fontWeight: '700', color: 'var(--s-ink, #1a1f2e)', marginTop: '10px' }}>Congratulations!</div>
+          <div style={{ fontSize: '14px', color: 'var(--s-body, #4a5168)', marginTop: '10px', lineHeight: 1.6 }}>
+            You have completed <b>{resource.resource_title}</b>.
+            {s.status === 'added' && <> <b>{s.skill_name}</b> has been added to your skill profile at <b>{LEVEL[s.level] || s.level}</b> level.</>}
+            {s.status === 'existing' && s.suggested_level && <>
+              {' '}Your profile already has <b>{s.skill_name}</b> at <b>{LEVEL[s.level] || s.level}</b> level.
+              Would you like to raise it to <b>{LEVEL[s.suggested_level]}</b>?</>}
+            {s.status === 'existing' && !s.suggested_level && <>
+              {' '}<b>{s.skill_name}</b> is already at <b>{LEVEL[s.level] || s.level}</b> level in your profile;
+              this activity has been added to it as evidence.</>}
+          </div>
+          {error && <div role="alert" style={{ background: 'var(--s-bad-soft, #fee2e2)', color: 'var(--s-bad, #dc2626)', padding: '10px 12px', borderRadius: '8px', fontSize: '13px', marginTop: '12px' }}>{error}</div>}
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginTop: '20px', flexWrap: 'wrap' }}>
+            {s.status === 'existing' && s.suggested_level ? <>
+              <button onClick={finish} disabled={saving} style={btnStyle(false)}>Keep at {LEVEL[s.level] || s.level}</button>
+              <button onClick={() => raise(s.suggested_level)} disabled={saving} style={btnStyle(true)}>
+                {saving ? 'Saving…' : `Raise to ${LEVEL[s.suggested_level]}`}
+              </button>
+            </> : (
+              <button onClick={finish} style={btnStyle(true)}>Great!</button>
+            )}
+          </div>
+        </div>
+      </div>
+    )
   }
 
   return (

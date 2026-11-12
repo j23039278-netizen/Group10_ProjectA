@@ -4,7 +4,8 @@ Handles student resource tracking (FR-11)
 Start, complete, and track recommended learning activities.
 A student must attach evidence (a file or a link, evidence.py) to an activity
 before it can be marked complete; advisors see that evidence on the student page.
-Completing an activity adds its skill to the student's skills (add_completed_skill).
+Completing an activity adds its skill to the student's skills (add_completed_skill); a skill
+the student already has keeps its level until the student chooses to raise it (raise-skill).
 Author: Soh Way Miin (Carl) -- Backend Developer
 """
  
@@ -28,6 +29,10 @@ router = APIRouter()
 # ── Pydantic Schemas ──────────────────────────────────────────
 class ProgressUpdate(BaseModel):
     status: str                        # 'in_progress' | 'completed'
+
+
+class RaiseSkill(BaseModel):
+    level: str                         # 'intermediate' | 'advanced'
  
  
 # ── Helper: add the skill of a completed activity ────────────
@@ -35,10 +40,14 @@ LEVEL_ORDER = ["beginner", "intermediate", "advanced"]
 
 
 def add_completed_skill(db, profile_id, resource):
-    """Add the activity's skill at the resource's difficulty, with its kind of evidence
-    (nlp/matcher.py: coursework alone does not make a beginner skill Strong; the other
-    kinds do). A skill already listed keeps its level unless this one is higher, and gains
-    the evidence. Returns the sentence shown to the student."""
+    """A completed activity's skill (nlp/matcher.py: coursework alone does not make a beginner
+    skill Strong; the other kinds do).
+
+    - Not on the profile yet: added at the resource's difficulty, with its kind of evidence.
+    - Already on the profile: it gains the evidence but keeps its level; the student is asked
+      whether to raise it (suggested_level, then POST /{resource_id}/raise-skill).
+
+    Returns what the "Congratulations" pop-up shows."""
     level, kind = activity_evidence(resource.difficulty, resource.resource_type)
     name = resource.skill_name
     row = db.execute(
@@ -53,18 +62,29 @@ def add_completed_skill(db, profile_id, resource):
             """),
             {"pid": profile_id, "sid": str(resource.skill_id), "level": level, "kinds": [kind]}
         )
-        return f"{name} was added to your skills ({level})."
-    higher = LEVEL_ORDER.index(level) > LEVEL_ORDER.index(row.proficiency_level)
+        return {"status": "added", "skill_id": str(resource.skill_id), "skill_name": name, "level": level,
+                "suggested_level": None, "notice": f"{name} was added to your skills ({level})."}
     kinds = list(row.evidence_type or [])
     db.execute(
         text("""
-            UPDATE student_skills SET proficiency_level = :level, evidence_type = CAST(:kinds AS VARCHAR(20)[])
+            UPDATE student_skills SET evidence_type = CAST(:kinds AS VARCHAR(20)[])
             WHERE profile_id = :pid AND skill_id = :sid
         """),
-        {"pid": profile_id, "sid": str(resource.skill_id), "level": level if higher else row.proficiency_level,
-         "kinds": kinds if kind in kinds else kinds + [kind]}
+        {"pid": profile_id, "sid": str(resource.skill_id), "kinds": kinds if kind in kinds else kinds + [kind]}
     )
-    return f"{name} was raised to {level} in your skills." if higher else f"{name} was already in your skills; this activity now counts as evidence."
+    current = row.proficiency_level
+    return {"status": "existing", "skill_id": str(resource.skill_id), "skill_name": name, "level": current,
+            "suggested_level": suggested_level(current, level),
+            "notice": f"{name} was already in your skills ({current}); this activity now counts as evidence."}
+
+
+def suggested_level(current, activity_level):
+    """The level offered to a student who already has the skill: one level up, or the
+    activity's own level when that is higher still; None when the skill is already advanced."""
+    if current not in LEVEL_ORDER or current == LEVEL_ORDER[-1]:
+        return None
+    up = LEVEL_ORDER.index(current) + 1
+    return LEVEL_ORDER[max(up, LEVEL_ORDER.index(activity_level) if activity_level in LEVEL_ORDER else 0)]
 
 
 # ── Helper: get student profile_id ───────────────────────────
@@ -193,7 +213,7 @@ def complete_resource(
         """),
         {"prog": str(activity.progress_id)}
     )
-    notice = add_completed_skill(db, profile_id, resource)
+    skill = add_completed_skill(db, profile_id, resource)
     refresh_profile_complete(db, current_user.user_id)
     db.commit()
  
@@ -202,8 +222,43 @@ def complete_resource(
         "resource_id": resource_id,
         "resource_title": resource.resource_title,
         "status": "completed",
-        "notice": notice,
+        "notice": skill["notice"],
+        "skill": {k: v for k, v in skill.items() if k != "notice"},
     }
+
+
+@router.post("/{resource_id}/raise-skill")
+def raise_skill(
+    resource_id: str,
+    req: RaiseSkill,
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """After completing an activity whose skill was already on the profile, the student may
+    raise that skill's level (asked in the pop-up). Only a completed activity of this
+    student, and only upwards."""
+    profile_id, _ = get_activity(db, current_user, resource_id)
+    if req.level not in LEVEL_ORDER:
+        raise HTTPException(status_code=400, detail="Choose beginner, intermediate or advanced.")
+    row = db.execute(text("""
+        SELECT srp.status, ss.proficiency_level, sl.skill_name, rl.skill_id
+        FROM student_resource_progress srp
+        JOIN recommendations_library rl ON rl.resource_id = srp.resource_id
+        JOIN skills_library sl ON sl.skill_id = rl.skill_id
+        LEFT JOIN student_skills ss ON ss.profile_id = srp.profile_id AND ss.skill_id = rl.skill_id
+        WHERE srp.profile_id = :pid AND srp.resource_id = :rid
+    """), {"pid": profile_id, "rid": str(UUID(resource_id))}).fetchone()
+    if row.status != "completed":
+        raise HTTPException(status_code=400, detail="Complete this activity (with evidence) first.")
+    if row.proficiency_level is None:
+        raise HTTPException(status_code=400, detail=f"{row.skill_name} is not in your skills.")
+    if LEVEL_ORDER.index(req.level) <= LEVEL_ORDER.index(row.proficiency_level):
+        raise HTTPException(status_code=400, detail=f"{row.skill_name} is already {row.proficiency_level}; choose a higher level.")
+    db.execute(text("UPDATE student_skills SET proficiency_level = :level WHERE profile_id = :pid AND skill_id = :sid"),
+               {"level": req.level, "pid": profile_id, "sid": str(row.skill_id)})
+    db.commit()
+    return {"skill_name": row.skill_name, "level": req.level,
+            "notice": f"{row.skill_name} was raised to {req.level} in your skills."}
  
  
 # ══════════════════════════════════════════════════════════════

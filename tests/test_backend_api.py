@@ -2206,12 +2206,40 @@ class TestCompleteAddsSkill:
         added = mine(sid)
         assert added["proficiency_level"] == "intermediate" and added["evidence_type"] == ["coursework"]
 
-        # A skill already listed never goes down, and gains the evidence
+        assert done.json()["skill"] == {"status": "added", "skill_id": sid, "skill_name": name,
+                                        "level": "intermediate", "suggested_level": None}
+
+        # A skill already listed never goes down, and gains the evidence; advanced: nothing to offer
         rid, sid, name = res("r.difficulty = 'beginner' AND r.resource_type = 'project' AND s.skill_name = 'Teamwork'") or \
             res("r.difficulty = 'beginner' AND s.skill_name = 'Teamwork'")
-        assert finish(rid).status_code == 200
+        done = finish(rid)
+        assert done.status_code == 200 and done.json()["skill"]["status"] == "existing"
+        assert done.json()["skill"]["suggested_level"] is None
         kept = mine(sid)
         assert kept["proficiency_level"] == "advanced" and kept["evidence_type"]
+
+    def test_existing_skill_is_raised_only_when_the_student_says_so(self, env):
+        c, conn = env["client"], env["conn"]
+        h = course_student(env, "raise.skill@student.newinti.edu.my", "Raise Skill", "CS")
+        rid, sid = conn.execute("SELECT r.resource_id::text, r.skill_id::text FROM recommendations_library r "
+                                "WHERE r.difficulty = 'beginner' AND r.is_active LIMIT 1").fetchone()
+        assert c.post("/api/students/skills", headers=h, json={"skill_id": sid, "proficiency_level": "beginner"}).status_code in (200, 201)
+        aid = run(env, h, role_id=env["da"]).json()["assessment_id"]
+        level = lambda: next(s for s in c.get("/api/students/skills", headers=h).json() if s["skill_id"] == sid)["proficiency_level"]
+        raise_to = lambda lv: c.post(f"/api/progress/{rid}/raise-skill", headers=h, json={"level": lv})
+
+        assert c.post(f"/api/progress/{rid}/start?assessment_id={aid}", headers=h).status_code == 201
+        assert raise_to("intermediate").status_code == 400                       # not completed yet
+        assert c.post(f"/api/progress/{rid}/links", headers=h, json={"url": "https://example.com/proof"}).status_code in (200, 201)
+        done = c.post(f"/api/progress/{rid}/complete", headers=h, json={"status": "completed"}).json()
+        assert done["skill"]["status"] == "existing" and done["skill"]["level"] == "beginner"
+        assert done["skill"]["suggested_level"] == "intermediate"
+        assert level() == "beginner"                                              # not raised on its own
+        assert raise_to("beginner").status_code == 400                           # only upwards
+        assert raise_to("expert").status_code == 400
+        r = raise_to("intermediate")
+        assert r.status_code == 200 and level() == "intermediate"
+        assert raise_to("intermediate").status_code == 400                       # already intermediate
 
 
 class TestSearchByName:

@@ -154,6 +154,9 @@ export const progressAPI = {
   // Mark a resource as completed (needs evidence); this also adds its skill to the student's skills
   complete: (resourceId) =>
     API.post(`/progress/${resourceId}/complete`, { status: 'completed' }),
+  // After completing: raise the level of a skill the student already had (they choose to)
+  raiseSkill: (resourceId, level) =>
+    API.post(`/progress/${resourceId}/raise-skill`, { level }),
  
   // Give up an unfinished activity (it shows as not started again)
   drop: (resourceId) =>
