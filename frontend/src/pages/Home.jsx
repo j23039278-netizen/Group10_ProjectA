@@ -6,6 +6,27 @@ import { BrandLogo, BrandEmblem } from './home/BrandLogo'
 import Hero from './home/Hero'
 import HowItWorks from './home/HowItWorks'
 import MatchDemo from './home/MatchDemo'
+
+// Small dots around the three clusters (students, advisors, universities): [x, y, r]
+const LINK_NODES = [
+  [95, 395, 4], [190, 470, 3], [110, 480, 3], [200, 390, 2.5], [60, 440, 2.5],
+  [560, 90, 3], [650, 95, 4], [600, 60, 2.5], [540, 140, 2.5], [665, 150, 3],
+  [1010, 395, 3], [1110, 470, 4], [1100, 390, 2.5], [1020, 480, 3], [1150, 430, 2.5],
+]
+
+// Number of rising steps behind the Recommendations & progress section
+const GROW_BARS = 24
+
+// Destination pins on the Career paths "explore" map: [left %, top %, pulse delay s]
+const EXPLORE_PINS = [[10, 20, 0], [91, 15, 1.2], [7.5, 83, 2.4], [93, 87, 0.6], [28, 96, 1.8], [73, 3, 3]]
+
+// Skill names that drift up behind the Skill matching section: [word, left %, seconds, start offset]
+const RISE_TOKENS = [
+  ['Python', 4, 22, 0], ['SQL', 12, 26, 9], ['Excel', 20, 19, 4], ['React', 28, 24, 15], ['Git', 36, 21, 7],
+  ['Power BI', 63, 25, 12], ['AWS', 71, 20, 2], ['Docker', 79, 27, 18], ['Linux', 87, 23, 6], ['Tableau', 94, 21, 11],
+  ['Statistics', 8, 28, 20], ['Teamwork', 91, 26, 23], ['Java', 46, 30, 14], ['Machine Learning', 55, 29, 25],
+  ['Communication', 16, 31, 27], ['Cloud', 83, 24, 16],
+]
 import SkillGapPreview from './home/SkillGapPreview'
 import CareerRoles from './home/CareerRoles'
 import { RecommendationPreview, ProgressPreview } from './home/NextStep'
@@ -251,7 +272,33 @@ function HomeContent() {
       </div>
 
       <main>
-        <section id="how" className="hp-section">
+        <section id="how" className="hp-section hp-route-section">
+          {/* Background: a faint route from bottom left (your profile) to top right (your plan),
+              with four stops for the four steps and a red dot travelling along it */}
+          <div className="hp-route-bg" aria-hidden="true">
+            <svg viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice">
+              <defs>
+                <linearGradient id="hp-route-fade" x1="0" x2="1" y1="0" y2="0">
+                  <stop offset="0" stopColor="#c8102e" stopOpacity="0" />
+                  <stop offset=".15" stopColor="#c8102e" stopOpacity=".35" />
+                  <stop offset=".85" stopColor="#c8102e" stopOpacity=".35" />
+                  <stop offset="1" stopColor="#c8102e" stopOpacity="0" />
+                </linearGradient>
+              </defs>
+              <path id="hp-route-path" className="hp-route-line" d="M -40 560 C 180 560, 260 380, 430 380 S 700 250, 820 230 S 1060 90, 1240 40" />
+              {[[214, 470], [546, 359], [820, 230], [1008, 146]].map(([x, y], i) => (
+                <g key={i} className="hp-route-stop" style={{ animationDelay: `${i * 1.5}s` }}>
+                  <circle cx={x} cy={y} r="14" className="hp-route-stop-ring" />
+                  <circle cx={x} cy={y} r="5" className="hp-route-stop-dot" />
+                </g>
+              ))}
+              <circle r="6" className="hp-route-runner">
+                <animateMotion dur="6s" repeatCount="indefinite" rotate="auto">
+                  <mpath href="#hp-route-path" />
+                </animateMotion>
+              </circle>
+            </svg>
+          </div>
           <div className="hp-container">
             <SectionHead
               eyebrow="How it works"
@@ -262,7 +309,17 @@ function HomeContent() {
           </div>
         </section>
 
-        <section id="skill-gap" className="hp-section hp-section-alt">
+        <section id="skill-gap" className="hp-section hp-section-alt hp-rise-section">
+          {/* Background: a grid and skill names drifting upwards, like data being analysed */}
+          <div className="hp-rise-bg" aria-hidden="true">
+            <div className="hp-rise-grid" />
+            <div className="hp-rise-scan" />
+            {RISE_TOKENS.map(([word, left, dur, delay], i) => (
+              <span key={i} className="hp-rise-token" style={{ left: `${left}%`, animationDuration: `${dur}s`, animationDelay: `-${delay}s` }}>
+                {word}
+              </span>
+            ))}
+          </div>
           <div className="hp-container">
             <SectionHead
               eyebrow="Skill matching"
@@ -282,7 +339,26 @@ function HomeContent() {
           </div>
         </section>
 
-        <section id="careers" className="hp-section">
+        <section id="careers" className="hp-section hp-explore-section">
+          {/* Background: an "explore" map. A large compass with a slow radar sweep in the middle,
+              and destination pins (career roles) around it, joined by dotted paths */}
+          <div className="hp-explore-bg" aria-hidden="true">
+            <div className="hp-explore-radar">
+              <div className="hp-explore-sweep" />
+              <svg viewBox="-100 -100 200 200" className="hp-explore-compass">
+                <circle r="96" /><circle r="70" /><circle r="44" /><circle r="18" />
+                <path d="M -100 0 H 100 M 0 -100 V 100" />
+                <path className="hp-explore-needle" d="M 0 -60 L 7 0 L 0 60 L -7 0 Z" />
+              </svg>
+            </div>
+            <svg viewBox="0 0 1200 600" preserveAspectRatio="none" className="hp-explore-paths">
+              <path d="M 600 300 Q 360 160 120 120 M 600 300 Q 820 120 1090 90 M 600 300 Q 330 430 90 500
+                       M 600 300 Q 900 470 1120 520 M 600 300 Q 470 520 340 575 M 600 300 Q 760 40 880 20" />
+            </svg>
+            {EXPLORE_PINS.map(([left, top, delay], i) => (
+              <span key={i} className="hp-explore-pin" style={{ left: `${left}%`, top: `${top}%`, animationDelay: `${delay}s` }} />
+            ))}
+          </div>
           <div className="hp-container">
             <SectionHead
               eyebrow="Career paths"
@@ -293,7 +369,23 @@ function HomeContent() {
           </div>
         </section>
 
-        <section className="hp-section hp-section-alt">
+        <section className="hp-section hp-section-alt hp-grow-section">
+          {/* Background: "watch yourself improve". Steps rising from left to right along the
+              bottom, growing in a wave, and an upward trend line that draws itself again and again */}
+          <div className="hp-grow-bg" aria-hidden="true">
+            <div className="hp-grow-bars">
+              {Array.from({ length: GROW_BARS }, (_, i) => (
+                <span key={i} style={{ height: `${14 + (i / (GROW_BARS - 1)) * 58}%`, animationDelay: `${i * 0.18}s` }} />
+              ))}
+            </div>
+            <svg viewBox="0 0 1200 600" preserveAspectRatio="none" className="hp-grow-trend">
+              <path pathLength="100" d="M 0 540 C 160 520, 260 470, 380 450 S 600 380, 720 330 S 960 200, 1200 90" />
+            </svg>
+            <span className="hp-grow-chip" style={{ left: '8%', animationDelay: '0s' }}>+12%</span>
+            <span className="hp-grow-chip" style={{ left: '90%', animationDelay: '2.5s' }}>+8%</span>
+            <span className="hp-grow-chip" style={{ left: '15%', animationDelay: '5s' }}>Strong</span>
+            <span className="hp-grow-chip" style={{ left: '84%', animationDelay: '7.5s' }}>+15%</span>
+          </div>
           <div className="hp-container">
             <SectionHead
               eyebrow="Recommendations & progress"
@@ -307,7 +399,22 @@ function HomeContent() {
           </div>
         </section>
 
-        <section id="who" className="hp-section">
+        <section id="who" className="hp-section hp-link-section">
+          {/* Background: students, advisors and universities as three faint clusters joined by
+              lines, with a light travelling student -> advisor -> university */}
+          <div className="hp-link-bg" aria-hidden="true">
+            <svg viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice">
+              <path id="hp-link-path" className="hp-link-line" d="M 140 430 Q 380 170 600 120 Q 820 170 1060 430" />
+              <path className="hp-link-line" d="M 140 430 Q 600 600 1060 430" />
+              {LINK_NODES.map(([x, y, r], i) => <circle key={i} cx={x} cy={y} r={r} className="hp-link-node" />)}
+              {[[140, 430], [600, 120], [1060, 430]].map(([x, y], i) => (
+                <circle key={i} cx={x} cy={y} r="16" className="hp-link-hub" style={{ animationDelay: `${i * 2}s` }} />
+              ))}
+              <circle r="5" className="hp-link-runner">
+                <animateMotion dur="9s" repeatCount="indefinite"><mpath href="#hp-link-path" /></animateMotion>
+              </circle>
+            </svg>
+          </div>
           <div className="hp-container">
             <SectionHead eyebrow="Who's it for" title="Built for everyone on the path to employment" />
             <Audience />
@@ -318,10 +425,18 @@ function HomeContent() {
           <div className="hp-container">
             <div ref={ctaRef} className={`hp-cta hp-reveal hp-reveal-scale ${ctaInView ? 'is-visible' : ''}`}>
               <div className="hp-cta-bg" aria-hidden="true" />
+              {/* The rocket emblem, white and faint, floating on the right with sparks rising: ready for take-off */}
+              <div className="hp-cta-rocket" aria-hidden="true"><BrandEmblem className="hp-cta-rocket-img" /></div>
+              <div className="hp-cta-sparks" aria-hidden="true">
+                {[12, 22, 34, 66, 76, 86, 93].map((left, i) => (
+                  <span key={i} style={{ left: `${left}%`, animationDelay: `${i * 0.9}s`, animationDuration: `${5 + (i % 3)}s` }} />
+                ))}
+              </div>
+              <div className="hp-cta-sheen" aria-hidden="true" />
               <h2 className="hp-h2">Ready to understand your career readiness?</h2>
               <p>Find your strengths. Discover your gaps. Build what comes next.</p>
               <div className="hp-cta-row hp-cta-center">
-                <button type="button" className="hp-btn hp-btn-primary" onClick={goLogin}>
+                <button type="button" className="hp-btn hp-btn-primary hp-cta-pulse" onClick={goLogin}>
                   Check my readiness <span className="hp-arrow" aria-hidden="true">→</span>
                 </button>
                 <button type="button" className="hp-btn hp-btn-ghost" onClick={goLogin}>Sign in</button>

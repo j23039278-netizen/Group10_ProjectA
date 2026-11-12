@@ -1,35 +1,27 @@
-// SEAGAS Home — "Who's it for?" cards (click / tap to expand details)
-import { useState } from 'react'
+// SEAGAS Home - "Who's it for?" cards. All three show their details, so the cards are the
+// same height and the three kinds of user can be compared at a glance.
 import { AUDIENCES } from './data'
 import { useInView } from './hooks'
 import Icon from './Icon'
 
 export default function Audience() {
   const [ref, inView] = useInView(0.2)
-  const [active, setActive] = useState('students')
   return (
     <div ref={ref} className="hp-audience">
-      {AUDIENCES.map((a, i) => {
-        const open = active === a.id
-        return (
-          <button
-            key={a.id}
-            type="button"
-            className={`hp-aud-card hp-reveal ${inView ? 'is-visible' : ''} ${open ? 'is-open' : ''}`}
-            style={{ '--d': `${i * 120}ms` }}
-            onClick={() => setActive(a.id)}
-            aria-expanded={open}
-          >
-            <span className="hp-aud-icon"><Icon name={a.icon} size={26} /></span>
-            <span className="hp-aud-title">{a.title}</span>
-            <span className="hp-aud-text">{a.text}</span>
-            <span className="hp-aud-points" hidden={!open}>
-              {a.points.map(p => <span key={p} className="hp-aud-point">{p}</span>)}
-            </span>
-            <span className="hp-aud-more" aria-hidden="true">{open ? '' : 'See more →'}</span>
-          </button>
-        )
-      })}
+      {AUDIENCES.map((a, i) => (
+        <div
+          key={a.id}
+          className={`hp-aud-card is-open hp-reveal ${inView ? 'is-visible' : ''}`}
+          style={{ '--d': `${i * 120}ms` }}
+        >
+          <span className="hp-aud-icon"><Icon name={a.icon} size={26} /></span>
+          <span className="hp-aud-title">{a.title}</span>
+          <span className="hp-aud-text">{a.text}</span>
+          <span className="hp-aud-points">
+            {a.points.map(pt => <span key={pt} className="hp-aud-point">{pt}</span>)}
+          </span>
+        </div>
+      ))}
     </div>
   )
 }
