@@ -2,21 +2,30 @@
 import logoSrc from '../../assets/brand/seagas-logo.png'
 import emblemSrc from '../../assets/brand/seagas-emblem.png'
 import wordmarkSrc from '../../assets/brand/seagas-wordmark.png'
+import intiSrc from '../../assets/brand/inti-logo.png'
+import swinburneSrc from '../../assets/brand/swinburne-logo.png'
 
-// The course line shown under the logo everywhere (home, sign-in pages, portal sidebars)
-export const AFFILIATION = 'INTI × Swinburne · COS40005'
+// The course line (portal sidebars)
+export const AFFILIATION = 'INTI × SWINBURNE × COS40005'
 
-// Emblem on the left; "Seagas" above the course line on the right (navbar, sign-in pages).
-// className sizes the emblem (its height sets the lockup's height).
-export function BrandLogo({ className = '' }) {
+// Rocket emblem + "Seagas" × Swinburne logo × INTI logo (home navbar, sign-in pages).
+// scale shrinks the whole lockup (the sign-in card is narrower than the navbar). On narrow
+// screens the two university logos are hidden (.brand-partners in Home.css).
+export function BrandLogo({ className = '', scale = 1 }) {
+  const px = (n) => `${Math.round(n * scale)}px`
+  const times = <span aria-hidden="true" style={{ fontSize: px(18), fontWeight: 500, color: '#9ca3af', lineHeight: 1 }}>×</span>
   return (
-    <span role="img" aria-label={`Seagas, ${AFFILIATION}`} style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
-      <img src={emblemSrc} alt="" className={className} draggable="false" style={{ height: '44px', width: 'auto' }} />
-      <span style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '4px' }}>
-        <img src={wordmarkSrc} alt="" draggable="false" style={{ display: 'block', height: '22px', width: 'auto' }} />
-        <span style={{ fontSize: '10.5px', fontWeight: 600, letterSpacing: '0.5px', color: '#6b7280', whiteSpace: 'nowrap', lineHeight: 1 }}>
-          {AFFILIATION}
-        </span>
+    <span role="img" aria-label="Seagas × Swinburne University of Technology × INTI International University & Colleges"
+          style={{ display: 'inline-flex', alignItems: 'center', gap: px(10) }}>
+      <span style={{ display: 'inline-flex', alignItems: 'center', gap: px(6) }}>
+        <img src={emblemSrc} alt="" className={className} draggable="false" style={{ height: px(40), width: 'auto' }} />
+        <img src={wordmarkSrc} alt="" draggable="false" style={{ display: 'block', height: px(22), width: 'auto' }} />
+      </span>
+      <span className="brand-partners" style={{ display: 'inline-flex', alignItems: 'center', gap: px(10) }}>
+        {times}
+        <img src={swinburneSrc} alt="" draggable="false" style={{ display: 'block', height: px(36), width: 'auto' }} />
+        {times}
+        <img src={intiSrc} alt="" draggable="false" style={{ display: 'block', height: px(22), width: 'auto' }} />
       </span>
     </span>
   )

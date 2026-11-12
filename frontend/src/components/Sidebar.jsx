@@ -33,8 +33,8 @@ export default function Sidebar({ user, navTitle, navItems, onLogout }) {
           <div style={{ minWidth: 0, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '4px' }}>
             <img className="sb-brand" src={wordmark} alt="" draggable="false"
                  style={{ display: 'block', height: '19px', width: 'auto', filter: 'brightness(0) invert(1)' }} />
-            <div className="sb-affiliation" style={{ fontSize: '9px', fontWeight: '500', color: 'rgba(255,255,255,0.7)',
-                                                     letterSpacing: '0.2px', lineHeight: 1, whiteSpace: 'nowrap' }}>
+            <div className="sb-affiliation" style={{ fontSize: '8.5px', fontWeight: '500', color: 'rgba(255,255,255,0.7)',
+                                                     letterSpacing: '0', lineHeight: 1, whiteSpace: 'nowrap' }}>
               {AFFILIATION}
             </div>
           </div>

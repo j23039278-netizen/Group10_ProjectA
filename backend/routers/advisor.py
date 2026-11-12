@@ -19,6 +19,7 @@ from sqlalchemy import text
 import audit
 import evidence
 import settings
+import student_status
 from advisor_scope import ALL_COURSES, courses_of
 from database import get_db
 from routers.auth import get_current_user
@@ -90,9 +91,12 @@ def get_cohort_overview(
     """Cohort-level summary for the advisor dashboard (one course, or all of the advisor's)"""
     require_advisor(current_user)
     params = {"courses": course_param(course, current_user), "role_id": None, "programme": None}
-    # Readiness bands (System Settings): On Track >= on_track, Needs Support < needs_support
+    # Readiness bands (System Settings) for the distribution colours; the status of each
+    # student also uses their year of study and recent activity (student_status.py)
     on_track, needs_support = settings.get(db, "readiness_on_track"), settings.get(db, "readiness_needs_support")
     params.update(on_track=on_track, needs_support=needs_support)
+    statuses = [s["status"] for s in student_rows(db, params["courses"])]
+    status_counts = {k: statuses.count(k) for k in student_status.STATUSES}
 
     counts = db.execute(
         text(f"""
@@ -157,12 +161,10 @@ def get_cohort_overview(
         "profiles_complete":   counts.complete,
         "students_assessed":   scores.assessed,
         "avg_readiness_score": float(scores.avg_score) if scores.avg_score else 0,
-        "students_at_risk":    scores.needs_support,     # below the Needs Support limit
+        "students_at_risk":    status_counts["needs_support"],   # below their year's level and not active
         "bands":               {"on_track": on_track, "needs_support": needs_support},
-        "status_counts": {
-            "on_track": scores.on_track, "developing": scores.developing,
-            "needs_support": scores.needs_support, "not_assessed": counts.total - scores.assessed,
-        },
+        "status_rules":        student_status.public_rules(student_status.config(db)),
+        "status_counts":       {**status_counts, "not_assessed": status_counts["none"]},
         "distribution":        distribution,
         "target_roles":        [{**dict(r._mapping), "avg_score": float(r.avg_score) if r.avg_score is not None else None}
                                 for r in roles],
@@ -258,15 +260,11 @@ def get_cohort_skill_categories(
 
 
 # ── Student List ──────────────────────────────────────────────
-@router.get("/students")
-def get_all_students(
-    current_user=Depends(get_current_user),
-    db: Session = Depends(get_db)
-):
-    """The students of the advisor's courses with their latest readiness score and progress"""
-    require_advisor(current_user)
-
-    students = db.execute(
+def student_rows(db, courses, user_id=None):
+    """The students of these courses with their latest readiness score, progress and the
+    status the advisor sees (student_status.py: compared with their year of study)"""
+    cfg = student_status.config(db)
+    rows = db.execute(
         text(f"""
             SELECT
                 u.user_id,
@@ -285,7 +283,8 @@ def get_all_students(
                 jr.role_name        AS assessed_role,
                 (SELECT COUNT(*) FROM student_resource_progress srp
                   WHERE srp.profile_id = sp.profile_id AND srp.status = 'completed') AS activities_completed,
-                (SELECT COUNT(*) FROM advisor_notes n WHERE n.student_id = u.user_id) AS note_count
+                (SELECT COUNT(*) FROM advisor_notes n WHERE n.student_id = u.user_id) AS note_count,
+                {student_status.STATUS_COLUMNS}
             FROM users u
             LEFT JOIN student_profiles sp ON sp.user_id = u.user_id
             LEFT JOIN LATERAL (
@@ -296,12 +295,29 @@ def get_all_students(
             ) a ON TRUE
             LEFT JOIN job_roles jr ON jr.role_id = a.role_id
             WHERE u.role = 'student' AND u.is_active = TRUE AND {COURSE_FILTER}
+              AND (CAST(:uid AS uuid) IS NULL OR u.user_id = CAST(:uid AS uuid))
             ORDER BY u.full_name
         """),
-        {"courses": courses_of(current_user)}
+        {"courses": courses, "uid": str(user_id) if user_id else None}
     ).fetchall()
+    out = []
+    for r in rows:
+        d = dict(r._mapping)
+        d["status"], d["status_reason"] = student_status.classify(d, cfg)
+        for k in ("account_created", "last_activity_at", "previous_score"):
+            d.pop(k, None)
+        out.append(d)
+    return out
 
-    return [dict(s._mapping) for s in students]
+
+@router.get("/students")
+def get_all_students(
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """The students of the advisor's courses with their latest readiness score, progress and status"""
+    require_advisor(current_user)
+    return student_rows(db, courses_of(current_user))
 
 
 @router.get("/students/{user_id}")
@@ -451,6 +467,9 @@ def get_student_detail(
         "cv":             dict(cv._mapping) if cv else None,
         "experiences":    [dict(e._mapping) for e in experiences],
         "notes":          list_notes(db, user_id, current_user),
+        # Status on the advisor dashboard and why (student_status.py)
+        "status":         {k: v for k, v in (student_rows(db, courses_of(current_user), user_id) or [{}])[0].items()
+                           if k in ("status", "status_reason")},
     }
 
 
@@ -505,6 +524,42 @@ def get_cohort_progress(
     """), params).fetchall()
     return {"totals": dict(totals._mapping), "top_resources": [dict(t._mapping) for t in top],
             "students": [dict(r._mapping) for r in students]}
+
+
+@router.get("/cohort/activities")
+def get_cohort_activities(
+    status: Literal["completed", "in_progress", "saved"],
+    course: Optional[str] = None,
+    limit: int = 500,
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """The single activities behind a Learning Progress number (e.g. every completed
+    activity), newest first: who, which resource and skill, and when"""
+    require_advisor(current_user)
+    params = {"courses": course_param(course, current_user), "status": status, "n": max(1, min(limit, 2000))}
+    rows = db.execute(text(f"""
+        SELECT u.user_id, u.full_name, u.student_number, u.course,
+               rl.resource_title, rl.resource_type, rl.provider, sl.skill_name,
+               srp.status, srp.started_at, srp.completed_at, srp.created_at,
+               COALESCE(srp.completed_at, srp.started_at, srp.created_at) AS happened_at,
+               (SELECT COUNT(*) FROM student_evidence_files f WHERE f.progress_id = srp.progress_id) AS evidence_count
+        FROM student_resource_progress srp
+        JOIN recommendations_library rl ON rl.resource_id = srp.resource_id
+        LEFT JOIN skills_library sl     ON sl.skill_id    = rl.skill_id
+        JOIN student_profiles sp        ON sp.profile_id  = srp.profile_id
+        JOIN users u                    ON u.user_id      = sp.user_id
+        WHERE u.role = 'student' AND u.is_active AND {COURSE_FILTER} AND srp.status = :status
+        ORDER BY happened_at DESC NULLS LAST, u.full_name
+        LIMIT :n
+    """), params).fetchall()
+    total = db.execute(text(f"""
+        SELECT COUNT(*) FROM student_resource_progress srp
+        JOIN student_profiles sp ON sp.profile_id = srp.profile_id
+        JOIN users u ON u.user_id = sp.user_id
+        WHERE u.role = 'student' AND u.is_active AND {COURSE_FILTER} AND srp.status = :status
+    """), params).scalar()
+    return {"status": status, "total": total, "activities": [dict(r._mapping) for r in rows]}
 
 
 # ── Advisor notes (human review of the AI results) ────────────

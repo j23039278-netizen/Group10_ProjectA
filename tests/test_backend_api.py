@@ -1725,7 +1725,9 @@ class TestAdvisorFeatures:
         assert sum(b["students"] for b in o["distribution"]) == o["students_assessed"]
         assert [b["band"] for b in o["distribution"]][-1] == "90-100" and len(o["distribution"]) == 10
         sc = o["status_counts"]
-        assert sc["on_track"] + sc["developing"] + sc["needs_support"] + sc["not_assessed"] == o["total_students"]
+        assert sum(sc[k] for k in ("on_track", "developing", "getting_started", "improving", "needs_support", "none")) == o["total_students"]
+        assert sc["not_assessed"] == sc["none"] and o["students_at_risk"] == sc["needs_support"]
+        assert o["status_rules"]["years"]["1"] == {"on_track": 45, "needs_support": 20}
         assert sc["needs_support"] == o["students_at_risk"]
         assert sum(r["students"] for r in o["target_roles"]) == o["total_students"]
         assert {"completed", "in_progress", "students_completed"} <= set(o["activities"])
@@ -1762,6 +1764,14 @@ class TestAdvisorFeatures:
         assert isinstance(body["top_resources"], list) and isinstance(body["students"], list)
         assert all(s["course"] == "CS" for s in body["students"])
         assert c.get("/api/advisor/cohort/progress?course=CS", headers=biz_dean).status_code == 403
+        # The single activities behind each number
+        for status in ("completed", "in_progress", "saved"):
+            acts = c.get(f"/api/advisor/cohort/activities?status={status}&course=CS", headers=advisor)
+            assert acts.status_code == 200, acts.text
+            assert acts.json()["total"] == body["totals"][status]
+            assert all(a["status"] == status and a["course"] == "CS" for a in acts.json()["activities"])
+        assert c.get("/api/advisor/cohort/activities?status=nope", headers=advisor).status_code == 422
+        assert c.get("/api/advisor/cohort/activities?status=completed&course=CS", headers=biz_dean).status_code == 403
 
     def test_notes_and_ai_review(self, env, advisor, alice):
         biz_dean = self.biz(env)
@@ -1897,13 +1907,53 @@ class TestCareerPaths:
         assert c.get("/api/students/career-paths", headers=advisor).status_code == 403
 
 
+# ── Who needs support: compared with the year of study and recent activity ──
+class TestStudentStatus:
+    CFG = {"years": {1: (45, 20), 2: (55, 30), 3: (65, 35)}, "default": (70, 40), "active_days": 30, "new_days": 120}
+
+    def test_rules(self):
+        from datetime import datetime, timedelta
+        from student_status import classify
+        now = datetime(2026, 11, 12)
+        old = now - timedelta(days=400)
+        row = lambda **kw: {"latest_score": 18, "year_of_study": 3, "account_created": old, "last_activity_at": None,
+                            "last_assessed": now - timedelta(days=60), "previous_score": None, **kw}
+        st = lambda **kw: classify(row(**kw), self.CFG, now)[0]
+        assert st(latest_score=None) == "none"
+        assert st(latest_score=50, year_of_study=1) == "on_track"          # 50% is On Track for Year 1 ...
+        assert st(latest_score=50, year_of_study=4) == "developing"        # ... but only Developing in Year 4
+        assert st(latest_score=25, year_of_study=1) == "developing"        # 25% is fine for Year 1
+        assert st(latest_score=25, year_of_study=3) == "needs_support"     # but below the Year 3 level
+        assert st(latest_score=25, year_of_study=None) == "needs_support"  # no year: the general limits
+        assert st(account_created=now - timedelta(days=10), year_of_study=1, latest_score=10) == "getting_started"
+        assert st(account_created=now - timedelta(days=10)) == "needs_support"   # Year 3 with a new account is not a new student
+        assert st(last_activity_at=now - timedelta(days=5)) == "improving"
+        assert st(last_activity_at=now - timedelta(days=45)) == "needs_support"   # active too long ago
+        assert st(previous_score=10, last_assessed=now - timedelta(days=3)) == "improving"
+        assert st(previous_score=30, last_assessed=now - timedelta(days=3)) == "needs_support"   # score went down
+        status, reason = classify(row(), self.CFG, now)
+        assert status == "needs_support" and "Year 3" in reason and "30 days" in reason
+
+    def test_advisor_sees_status_and_reason(self, env, advisor, alice):
+        c, conn = env["client"], env["conn"]
+        run(env, alice, role_id=env["da"])
+        alice_row = lambda: next(s for s in c.get("/api/advisor/students", headers=advisor).json() if s["full_name"] == "Alice")
+        row = alice_row()
+        assert row["status"] in ("on_track", "developing", "getting_started", "improving", "needs_support")
+        assert row["status_reason"] and "account_created" not in row
+        uid = row["user_id"]
+        assert c.get(f"/api/advisor/students/{uid}", headers=advisor).json()["status"]["status"] == row["status"]
+
+
 # ── System settings (FR-16) ──────────────────────────────────
 class TestSettings:
     def test_admin_changes_settings(self, env, admin, advisor, alice):
         c, conn = env["client"], env["conn"]
         defaults = c.get("/api/settings", headers=alice).json()
         assert defaults == {"semester_starts": ["01-01", "05-01", "09-01"], "readiness_on_track": 70,
-                            "readiness_needs_support": 40, "max_upload_mb": 5, "max_evidence_per_item": 5}
+                            "readiness_needs_support": 40, "max_upload_mb": 5, "max_evidence_per_item": 5,
+                            "year_expectations": {"1": [45, 20], "2": [55, 30], "3": [65, 35]},
+                            "support_active_days": 30, "new_student_days": 120}
         assert c.get("/api/admin/settings", headers=advisor).status_code == 403
         assert c.put("/api/admin/settings", headers=advisor, json={"values": {"max_upload_mb": 1}}).status_code == 403
         view = c.get("/api/admin/settings", headers=admin).json()
@@ -1915,6 +1965,9 @@ class TestSettings:
         assert put({"semester_starts": []}).status_code == 400
         assert put({"colour": "blue"}).status_code == 400
         assert put({"readiness_on_track": 2.5}).status_code == 400
+        assert put({"year_expectations": {"1": [20, 45], "2": [55, 30], "3": [65, 35]}}).status_code == 400   # lower above On Track
+        assert put({"year_expectations": {"1": [45, 20]}}).status_code == 400                                 # all three years
+        assert put({"support_active_days": 3}).status_code == 400
         try:
             r = put({"readiness_on_track": 60, "readiness_needs_support": 30, "max_evidence_per_item": 1, "max_upload_mb": 1})
             assert r.status_code == 200

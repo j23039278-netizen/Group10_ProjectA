@@ -31,7 +31,7 @@ export default function AuthLayout({ heading, title, subtitle, children }) {
         <div className="au-card hp-enter" style={{ '--d': '100ms' }}>
           <div className="au-card-head">
             <Link to="/" className="au-logo" aria-label="SEAGAS home">
-              <BrandLogo className="au-logo-img" />
+              <BrandLogo className="au-logo-img" scale={0.82} />
             </Link>
             {heading && <h1 className="au-heading">{heading}</h1>}
           </div>

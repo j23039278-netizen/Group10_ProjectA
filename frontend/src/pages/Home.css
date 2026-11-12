@@ -2045,3 +2045,6 @@
   .hp-link-hub, .hp-cta-rocket, .hp-cta-sparks span, .hp-cta-sheen, .hp .hp-cta .hp-cta-pulse { animation: none; }
   .hp-link-runner, .hp-cta-sparks, .hp-cta-sheen { display: none; }
 }
+
+/* Brand lockup: hide the INTI and Swinburne logos where the screen is too narrow */
+@media (max-width: 640px) { .brand-partners { display: none !important; } }

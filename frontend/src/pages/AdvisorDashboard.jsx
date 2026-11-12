@@ -31,12 +31,43 @@ const TABS = [
 ]
 
 // Readiness bands come from System Settings (overview.bands; defaults 70 and 40). A score of 0 is a real result.
+// Student status (computed by the backend, backend/student_status.py): the latest readiness
+// compared with what is expected for the student's year of study, and recent activity.
+// Only Needs Support asks the advisor to act; the order is the order of the status chart.
 const STATUS = {
-  on_track:      { label: 'On Track',      bg: '#dcfce7', color: C.green },
-  developing:    { label: 'Developing',    bg: '#fef3c7', color: C.amber },
-  needs_support: { label: 'Needs Support', bg: '#fee2e2', color: C.red },
-  none:          { label: 'No Assessment', bg: C.bg,      color: C.muted },
+  needs_support:   { label: 'Needs Support',   bg: '#fee2e2', color: C.red,
+                     help: 'Below the level expected for their year and no learning activity recently: worth contacting.' },
+  improving:       { label: 'Improving',       bg: '#e0f2fe', color: '#0369a1',
+                     help: 'Below the expected level, but working on activities or their score went up.' },
+  getting_started: { label: 'Getting Started', bg: '#f3e8ff', color: '#7e22ce',
+                     help: 'New Year 1 student this semester: a low score is normal at the start.' },
+  developing:      { label: 'Developing',      bg: '#fef3c7', color: C.amber,
+                     help: 'Within the expected range for their year.' },
+  on_track:        { label: 'On Track',        bg: '#dcfce7', color: C.green,
+                     help: 'At or above the On Track level for their year.' },
+  none:            { label: 'Not Assessed',    bg: C.bg,      color: C.muted,
+                     help: 'Has not run an assessment yet.' },
 }
+// Learning Progress cards: what each counts and what clicking it lists
+const PVIEWS = [
+  { id: 'completed',   label: 'Activities Completed', total: 'completed',   color: C.green, kind: 'activities', hint: 'See completed activities',
+    title: 'Completed activities', explain: 'Recommended activities students have finished with evidence, grouped by student.',
+    dateLabel: 'Completed', dateKey: 'completed_at', countLabel: 'Completed', unit: 'completed activities', empty: 'No activity has been completed yet.' },
+  { id: 'in_progress', label: 'In Progress',          total: 'in_progress', color: C.blue,  kind: 'activities', hint: 'See activities in progress',
+    title: 'Activities in progress', explain: 'Activities students have started but not finished yet, grouped by student.',
+    dateLabel: 'Started', dateKey: 'started_at', countLabel: 'In progress', unit: 'activities in progress', empty: 'No activity is in progress.' },
+  { id: 'saved',       label: 'Saved for Later',      total: 'saved',       color: C.muted, kind: 'activities', hint: 'See saved activities',
+    title: 'Activities saved for later', explain: 'Activities students saved but have not started, grouped by student.',
+    dateLabel: 'Saved', dateKey: 'created_at', countLabel: 'Saved', unit: 'saved activities', empty: 'No activity is saved for later.' },
+  { id: 'active',      label: 'Active Students',      total: 'students_active', color: C.ink, kind: 'students', hint: 'See active students',
+    sub: (t, all) => `${pct(t.students_active, all)}% of students started an activity`,
+    title: 'Students who started an activity', explain: 'Students with at least one saved, started or completed activity.',
+    empty: 'No student has started a recommended activity yet.' },
+  { id: 'completers',  label: 'Completed One or More', total: 'students_completed', color: C.green, kind: 'students', hint: 'See who completed one',
+    sub: (t, all) => `${pct(t.students_completed, all)}% of students`,
+    title: 'Students who completed an activity', explain: 'Students who finished at least one activity.',
+    empty: 'No student has completed an activity yet.' },
+]
 // Skill categories (skills_library.category); Soft is the soft-skill view the lecturer asked for
 const CATEGORIES = [
   { id: 'Technical',  label: 'Technical' },
@@ -47,23 +78,37 @@ const CATEGORIES = [
 const categoryLabel = (id) => CATEGORIES.find(c => c.id === id)?.label || id
 const num = (v) => (v == null ? null : parseFloat(v))
 let BANDS = { on_track: 70, needs_support: 40 }
-const statusOf = (score) => score == null ? 'none' : score >= BANDS.on_track ? 'on_track' : score >= BANDS.needs_support ? 'developing' : 'needs_support'
 const scoreColor = (s) => s == null ? C.muted : s >= BANDS.on_track ? C.green : s >= BANDS.needs_support ? C.amber : C.red
 const fmtDate = (d) => d ? new Date(d).toLocaleDateString('en-GB') : '—'
 const pct = (n, total) => total ? Math.round((n / total) * 100) : 0
 
-function Pill({ status }) {
-  const s = STATUS[status]
-  return <span style={{ padding: '3px 10px', borderRadius: '20px', fontSize: '11px', fontWeight: '600', background: s.bg, color: s.color, whiteSpace: 'nowrap' }}>{s.label}</span>
+function Pill({ status, title }) {
+  const s = STATUS[status] || STATUS.none
+  return <span title={title || s.help} style={{ padding: '3px 10px', borderRadius: '20px', fontSize: '11px', fontWeight: '600', background: s.bg, color: s.color, whiteSpace: 'nowrap' }}>{s.label}</span>
 }
 
-function StatCard({ label, value, sub, color = C.ink }) {
+// onClick: the card opens the list behind its number (e.g. the students who need support);
+// hint says where it goes
+function StatCard({ label, value, sub, color = C.ink, onClick, hint, active }) {
+  const [hover, setHover] = useState(false)
+  const body = <>
+    <div style={{ fontSize: '11px', fontWeight: '600', color: C.muted, textTransform: 'uppercase', letterSpacing: '0.5px' }}>{label}</div>
+    <div style={{ fontSize: '30px', fontWeight: '700', color, margin: '4px 0 2px', lineHeight: 1.1 }}>{value}</div>
+    {sub && <div style={{ fontSize: '12px', color: C.muted }}>{sub}</div>}
+    {onClick && <div style={{ fontSize: '12px', fontWeight: '600', color: hover || active ? color : C.muted, marginTop: '8px' }}>
+      {active ? 'Showing below ↓' : `${hint || 'View'} →`}</div>}
+  </>
+  if (!onClick) return <div style={{ ...card, marginBottom: 0, padding: '18px 20px' }}>{body}</div>
   return (
-    <div style={{ ...card, marginBottom: 0, padding: '18px 20px' }}>
-      <div style={{ fontSize: '11px', fontWeight: '600', color: C.muted, textTransform: 'uppercase', letterSpacing: '0.5px' }}>{label}</div>
-      <div style={{ fontSize: '30px', fontWeight: '700', color, margin: '4px 0 2px', lineHeight: 1.1 }}>{value}</div>
-      {sub && <div style={{ fontSize: '12px', color: C.muted }}>{sub}</div>}
-    </div>
+    <button type="button" onClick={onClick} title={hint} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}
+      onFocus={() => setHover(true)} onBlur={() => setHover(false)}
+      aria-pressed={active || undefined}
+      style={{ ...card, marginBottom: 0, padding: '18px 20px', textAlign: 'left', font: 'inherit', cursor: 'pointer', width: '100%',
+               borderColor: hover || active ? color : undefined, borderWidth: active ? '2px' : undefined,
+               transform: hover ? 'translateY(-2px)' : 'none',
+               boxShadow: hover ? '0 8px 20px rgba(17, 17, 17, 0.08)' : card.boxShadow, transition: 'transform .15s, box-shadow .15s, border-color .15s' }}>
+      {body}
+    </button>
   )
 }
 
@@ -110,6 +155,12 @@ export default function AdvisorDashboard() {
   const [programme, setProgramme] = useState('')
   const [target, setTarget]       = useState('')
   const [profileF, setProfileF]   = useState('')
+  const [year, setYear]           = useState('')
+  // Learning Progress: which card was clicked ('' = the full page). completed / in_progress /
+  // saved list single activities; active / completers list students
+  const [pview, setPview]         = useState(location.state?.pview || '')
+  const [acts, setActs]           = useState(null)   // { status, total, activities } for pview
+  const [openStu, setOpenStu]     = useState(null)   // student whose activities are unfolded in that list     // '' all, 'none' not set, or a year of study ('1', '2', ...)
   const [sort, setSort]           = useState({ key: 'full_name', dir: 'asc' })
   const [shownRows, setShownRows] = useState(PAGE_SIZE)
 
@@ -158,6 +209,15 @@ export default function AdvisorDashboard() {
     return () => { current = false }
   }, [tab, course])
 
+  // The single activities behind the clicked Learning Progress card
+  useEffect(() => {
+    if (tab !== 'progress' || !['completed', 'in_progress', 'saved'].includes(pview)) return
+    let current = true
+    setActs(null)
+    advisorAPI.activities(pview, course).then(r => current && setActs(r.data)).catch(() => current && setError('Could not load the activities.'))
+    return () => { current = false }
+  }, [tab, pview, course])
+
   const myCourses  = COURSES.filter(c => !me || (me.advisor_courses || []).includes(c.id))
   const courseIds  = course ? [course] : myCourses.map(c => c.id)
   const courseTabs = myCourses.length > 1 ? [{ id: '', label: 'All my courses' }, ...myCourses] : []
@@ -168,36 +228,48 @@ export default function AdvisorDashboard() {
   const inCourse = useMemo(() => students.filter(s => !course || s.course === course), [students, course])
   const programmes = [...new Set(inCourse.map(s => s.programme).filter(Boolean))].sort()
   const targets    = [...new Set(inCourse.map(s => s.target_role).filter(Boolean))].sort()
+  // Years of study present in the course (Year 1, Year 2, ...), for the Year filter
+  const years      = [...new Set(inCourse.map(s => s.year_of_study).filter(y => y != null))].map(Number).sort((a, b) => a - b)
+  const noYear     = inCourse.some(s => s.year_of_study == null)
   // Word by word, so extra spaces and the order of the words do not matter
   const words = search.toLowerCase().split(/\s+/).filter(Boolean)
   const filtered = inCourse.filter(s =>
-    (!status || statusOf(num(s.latest_score)) === status) &&
+    (!status || (status === 'assessed' ? s.status !== 'none' : s.status === status)) &&
     (band == null || (s.latest_score != null && num(s.latest_score) >= band && (band === 90 || num(s.latest_score) < band + 10))) &&
     (!programme || s.programme === programme) &&
     (!target || s.target_role === target) &&
+    (!year || (year === 'none' ? s.year_of_study == null : String(s.year_of_study) === year)) &&
     (!profileF || (profileF === 'complete') === !!s.profile_complete) &&
     words.every(w => [s.full_name, s.email, s.student_number, s.programme, s.target_role].some(v => (v || '').toLowerCase().includes(w)))
   )
   const sorted = [...filtered].sort((a, b) => {
     const dir = sort.dir === 'asc' ? 1 : -1
     let x = a[sort.key], y = b[sort.key]
-    if (['latest_score', 'activities_completed', 'note_count'].includes(sort.key)) { x = num(x); y = num(y) }
+    if (['latest_score', 'activities_completed', 'note_count', 'year_of_study'].includes(sort.key)) { x = num(x); y = num(y) }
     if (sort.key === 'last_assessed') { x = x ? Date.parse(x) : null; y = y ? Date.parse(y) : null }
     if (x == null && y == null) return 0
     if (x == null) return 1                       // students without a value always last
     if (y == null) return -1
     return (typeof x === 'string' ? x.localeCompare(y) : x - y) * dir
   })
-  const anyFilter = search || status || band != null || programme || target || profileF
-  const clearFilters = () => { setSearch(''); setStatus(''); setBand(null); setProgramme(''); setTarget(''); setProfileF(''); setShownRows(PAGE_SIZE) }
-  const openStudent = (id) => navigate(`/students/${id}`, { state: { course, tab } })
+  const anyFilter = search || status || band != null || programme || target || profileF || year
+  const clearFilters = () => { setSearch(''); setStatus(''); setBand(null); setProgramme(''); setTarget(''); setProfileF(''); setYear(''); setShownRows(PAGE_SIZE) }
+  const openStudent = (id) => navigate(`/students/${id}`, { state: { course, tab, pview } })
+  // Open the Students tab with only the given filter (overview cards)
+  const openList = ({ status: st = '', sort: so = { key: 'full_name', dir: 'asc' } }) => {
+    clearFilters()
+    setStatus(st)
+    setSort(so)
+    setTab('students')
+  }
 
   const exportStudents = () => downloadCsv(csvName('advisor_students'), [
     { label: 'Name', value: s => s.full_name }, { label: 'Student ID', value: s => s.student_number },
     { label: 'Email', value: s => s.email }, { label: 'Course', value: s => courseLabel(s.course) },
     { label: 'Programme', value: s => s.programme }, { label: 'Year', value: s => s.year_of_study },
     { label: 'Target role', value: s => s.target_role }, { label: 'GPA', value: s => s.gpa }, { label: 'CGPA', value: s => s.cgpa },
-    { label: 'Readiness %', value: s => s.latest_score }, { label: 'Status', value: s => STATUS[statusOf(num(s.latest_score))].label },
+    { label: 'Readiness %', value: s => s.latest_score }, { label: 'Status', value: s => STATUS[s.status]?.label },
+    { label: 'Why', value: s => s.status_reason },
     { label: 'Assessed role', value: s => s.assessed_role }, { label: 'Last assessed', value: s => fmtDate(s.last_assessed) },
     { label: 'Activities completed', value: s => s.activities_completed }, { label: 'Profile complete', value: s => (s.profile_complete ? 'Yes' : 'No') },
     { label: 'Advisor notes', value: s => s.note_count },
@@ -259,12 +331,18 @@ export default function AdvisorDashboard() {
       {tab === 'overview' && overview && (
         <>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))', gap: '16px', marginBottom: '16px' }}>
-            <StatCard label="Students" value={total} sub={`${overview.profiles_complete} profiles complete (${pct(overview.profiles_complete, total)}%)`} />
-            <StatCard label="Assessed" value={overview.students_assessed} sub={`${pct(overview.students_assessed, total)}% of students`} color={C.blue} />
-            <StatCard label="Avg Readiness" value={`${overview.avg_readiness_score}%`} sub="latest assessment of each student" color={scoreColor(overview.avg_readiness_score)} />
-            <StatCard label="Needs Support" value={sc.needs_support ?? 0} sub={`latest readiness below ${BANDS.needs_support}%`} color={C.red} />
+            <StatCard label="Students" value={total} sub={`${overview.profiles_complete} profiles complete (${pct(overview.profiles_complete, total)}%)`}
+              onClick={() => openList({})} hint="See all students" />
+            <StatCard label="Assessed" value={overview.students_assessed} sub={`${pct(overview.students_assessed, total)}% of students`} color={C.blue}
+              onClick={() => openList({ status: 'assessed' })} hint="See assessed students" />
+            <StatCard label="Avg Readiness" value={`${overview.avg_readiness_score}%`} sub="latest assessment of each student" color={scoreColor(overview.avg_readiness_score)}
+              onClick={() => openList({ status: 'assessed', sort: { key: 'latest_score', dir: 'desc' } })} hint="See students by readiness" />
+            <StatCard label="Needs Support" value={sc.needs_support ?? 0}
+              sub={`below their year's level, no activity in ${overview.status_rules?.active_days ?? 30} days`} color={C.red}
+              onClick={() => openList({ status: 'needs_support', sort: { key: 'latest_score', dir: 'asc' } })} hint="See who needs support" />
             <StatCard label="Activities Completed" value={overview.activities?.completed ?? 0}
-              sub={`by ${overview.activities?.students_completed ?? 0} students`} color={C.green} />
+              sub={`by ${overview.activities?.students_completed ?? 0} students`} color={C.green}
+              onClick={() => { setPview('completed'); setTab('progress') }} hint="See completed activities" />
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: '16px' }}>
@@ -292,13 +370,27 @@ export default function AdvisorDashboard() {
             <div style={card}>
               <div style={{ ...heading, marginBottom: '4px' }}>Student Status</div>
               <div style={{ fontSize: '12px', color: C.muted, marginBottom: '16px' }}>
-                On Track ≥ {BANDS.on_track}% · Developing {BANDS.needs_support}–{BANDS.on_track - 1}% · Needs Support &lt; {BANDS.needs_support}%
+                Each student is compared with what is expected for their year of study. Needs Support = below the
+                expected level <b>and</b> no learning activity in the last {overview.status_rules?.active_days ?? 30} days.
               </div>
-              {[['on_track', sc.on_track], ['developing', sc.developing], ['needs_support', sc.needs_support], ['none', sc.not_assessed]].map(([k, n]) => (
+              {overview.status_rules && (
+                <div style={{ display: 'grid', gridTemplateColumns: 'auto repeat(4, 1fr)', gap: '2px 10px', fontSize: '11px', color: C.body,
+                              background: C.bg, borderRadius: '8px', padding: '8px 10px', marginBottom: '14px' }}>
+                  <span style={{ color: C.muted }}>Year</span>
+                  {['1', '2', '3', '4+'].map(y => <b key={y} style={{ color: C.ink }}>{y}</b>)}
+                  <span style={{ color: C.green }}>On Track ≥</span>
+                  {['1', '2', '3'].map(y => <span key={y}>{overview.status_rules.years[y]?.on_track}%</span>)}
+                  <span>{overview.status_rules.default.on_track}%</span>
+                  <span style={{ color: C.red }}>Below expected &lt;</span>
+                  {['1', '2', '3'].map(y => <span key={y}>{overview.status_rules.years[y]?.needs_support}%</span>)}
+                  <span>{overview.status_rules.default.needs_support}%</span>
+                </div>
+              )}
+              {Object.keys(STATUS).map(k => [k, sc[k]]).map(([k, n]) => (
                 <button key={k} onClick={() => { setStatus(k); setBand(null); setTab('students'); setShownRows(PAGE_SIZE) }}
                   title="Show these students" style={{ display: 'block', width: '100%', textAlign: 'left', border: 'none', background: 'none', padding: '0 0 14px', cursor: 'pointer' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', color: C.body, marginBottom: '5px' }}>
-                    <span style={{ fontWeight: '600', color: STATUS[k].color }}>{STATUS[k].label}</span>
+                    <span style={{ fontWeight: '600', color: STATUS[k].color }} title={STATUS[k].help}>{STATUS[k].label}</span>
                     <span><b style={{ color: C.ink }}>{n ?? 0}</b> · {pct(n, total)}%</span>
                   </div>
                   <div style={{ height: '8px', background: C.line, borderRadius: '99px', overflow: 'hidden' }}>
@@ -449,11 +541,17 @@ export default function AdvisorDashboard() {
               value={search} onChange={e => { setSearch(e.target.value); setShownRows(PAGE_SIZE) }} style={{ ...input, flex: '1 1 260px' }} />
             <select aria-label="Filter by status" value={status} onChange={e => { setStatus(e.target.value); setShownRows(PAGE_SIZE) }} style={input}>
               <option value="">All statuses</option>
+              <option value="assessed">Assessed (any status)</option>
               {Object.entries(STATUS).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}
             </select>
             <select aria-label="Filter by programme" value={programme} onChange={e => { setProgramme(e.target.value); setShownRows(PAGE_SIZE) }} style={{ ...input, maxWidth: '280px' }}>
               <option value="">All programmes</option>
               {programmes.map(p => <option key={p} value={p}>{p}</option>)}
+            </select>
+            <select aria-label="Filter by year of study" value={year} onChange={e => { setYear(e.target.value); setShownRows(PAGE_SIZE) }} style={input}>
+              <option value="">All years</option>
+              {years.map(y => <option key={y} value={String(y)}>Year {y}</option>)}
+              {noYear && <option value="none">Year not set</option>}
             </select>
             <select aria-label="Filter by target role" value={target} onChange={e => { setTarget(e.target.value); setShownRows(PAGE_SIZE) }} style={input}>
               <option value="">All target roles</option>
@@ -480,6 +578,7 @@ export default function AdvisorDashboard() {
                   <th style={th}>Student ID</th>
                   {!course && myCourses.length > 1 && <th style={th}>Course</th>}
                   <SortTh label="Programme" k="programme" sort={sort} setSort={setSort} />
+                  <SortTh label="Year" k="year_of_study" sort={sort} setSort={setSort} />
                   <SortTh label="Target role" k="target_role" sort={sort} setSort={setSort} />
                   <SortTh label="Readiness" k="latest_score" sort={sort} setSort={setSort} />
                   <th style={th}>Status</th>
@@ -490,7 +589,7 @@ export default function AdvisorDashboard() {
               </thead>
               <tbody>
                 {sorted.length === 0 && (
-                  <tr><td colSpan={10} style={{ ...td, textAlign: 'center', padding: '32px', color: C.muted }}>No students match.</td></tr>
+                  <tr><td colSpan={11} style={{ ...td, textAlign: 'center', padding: '32px', color: C.muted }}>No students match.</td></tr>
                 )}
                 {sorted.slice(0, shownRows).map((s, i) => {
                   const score = num(s.latest_score)
@@ -505,9 +604,20 @@ export default function AdvisorDashboard() {
                       <td style={{ ...td, fontFamily: 'Consolas, monospace', whiteSpace: 'nowrap' }}>{s.student_number || '—'}</td>
                       {!course && myCourses.length > 1 && <td style={td}>{courseLabel(s.course)}</td>}
                       <td style={td}>{s.programme || '—'}</td>
+                      <td style={{ ...td, whiteSpace: 'nowrap' }}>{s.year_of_study != null ? `Year ${s.year_of_study}` : '—'}</td>
                       <td style={td}>{s.target_role || '—'}</td>
-                      <td style={{ ...td, fontSize: '14px', fontWeight: '700', color: scoreColor(score) }}>{score == null ? '—' : `${score}%`}</td>
-                      <td style={td}><Pill status={statusOf(score)} /></td>
+                      {/* Latest Job Readiness Score, with the role it was assessed against */}
+                      <td style={{ ...td, whiteSpace: 'nowrap' }}>
+                        {score == null ? <span style={{ color: C.muted }} title="This student has not run an assessment yet">Not assessed</span> : <>
+                          <div style={{ fontSize: '14px', fontWeight: '700', color: (STATUS[s.status] || STATUS.none).color }}>{score}%</div>
+                          <div style={{ fontSize: '11px', color: C.muted }}>{s.assessed_role || 'Job description'}</div>
+                        </>}
+                      </td>
+                      <td style={{ ...td, maxWidth: '260px' }}>
+                        <Pill status={s.status} title={s.status_reason} />
+                        {['needs_support', 'improving', 'getting_started'].includes(s.status) &&
+                          <div style={{ fontSize: '11px', color: C.muted, marginTop: '4px', lineHeight: 1.35 }}>{s.status_reason}</div>}
+                      </td>
                       <td style={{ ...td, whiteSpace: 'nowrap' }} title={s.assessed_role || undefined}>{fmtDate(s.last_assessed)}</td>
                       <td style={td}>{s.activities_completed ?? 0}</td>
                       <td style={td}>{s.note_count ? <b style={{ color: C.blue }}>{s.note_count}</b> : '—'}</td>
@@ -530,16 +640,118 @@ export default function AdvisorDashboard() {
       {tab === 'progress' && (
         !progress ? <div style={{ color: C.muted, padding: '20px' }}>Loading…</div> : (
           <>
+            {/* Each card opens only what its number counts; click it again (or "Show all") to go back */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))', gap: '16px', marginBottom: '16px' }}>
-              <StatCard label="Activities Completed" value={progress.totals.completed} color={C.green} />
-              <StatCard label="In Progress" value={progress.totals.in_progress} color={C.blue} />
-              <StatCard label="Saved for Later" value={progress.totals.saved} color={C.muted} />
-              <StatCard label="Active Students" value={progress.totals.students_active}
-                sub={`${pct(progress.totals.students_active, total)}% of students started an activity`} />
-              <StatCard label="Completed One or More" value={progress.totals.students_completed} color={C.green}
-                sub={`${pct(progress.totals.students_completed, total)}% of students`} />
+              {PVIEWS.map(v => (
+                <StatCard key={v.id} label={v.label} value={progress.totals[v.total]} color={v.color}
+                  sub={v.sub ? v.sub(progress.totals, total) : undefined}
+                  hint={v.hint} active={pview === v.id} onClick={() => setPview(pview === v.id ? '' : v.id)} />
+              ))}
             </div>
 
+            {pview ? (() => {
+              const v = PVIEWS.find(x => x.id === pview)
+              const studentRows = pview === 'active' ? progress.students : progress.students.filter(x => x.completed > 0)
+              return (
+                <div style={{ ...card, borderTop: `3px solid ${v.color}` }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px', flexWrap: 'wrap', marginBottom: '6px' }}>
+                    <div style={heading}>{v.title} ({progress.totals[v.total]})</div>
+                    <button style={{ ...btn(false), color: C.blue }} onClick={() => setPview('')}>Show all progress ✕</button>
+                  </div>
+                  <div style={{ fontSize: '12px', color: C.muted, marginBottom: '12px' }}>{v.explain} Click a student to open their full record.</div>
+
+                  {v.kind === 'activities' ? (
+                    !acts || acts.status !== pview ? <div style={{ color: C.muted, padding: '12px' }}>Loading…</div>
+                      : acts.activities.length === 0 ? <Empty>{v.empty}</Empty> : (() => {
+                        // One row per student with how many; click a student to see their activities
+                        const groups = []
+                        const byId = {}
+                        for (const a of acts.activities) {
+                          if (!byId[a.user_id]) { byId[a.user_id] = { ...a, items: [] }; groups.push(byId[a.user_id]) }
+                          byId[a.user_id].items.push(a)
+                        }
+                        groups.sort((x, y) => y.items.length - x.items.length || (x.full_name || '').localeCompare(y.full_name || ''))
+                        return (
+                          <div style={{ overflowX: 'auto', maxHeight: '620px' }}>
+                            <div style={{ fontSize: '12px', color: C.muted, margin: '-4px 0 10px' }}>
+                              {acts.total} {v.unit} by {groups.length} student{groups.length === 1 ? '' : 's'}. Click a student to see their {v.unit}.
+                            </div>
+                            <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '720px' }}>
+                              <thead><tr>{['', 'Student', 'Student ID', v.countLabel, `Latest ${v.dateLabel.toLowerCase()}`, ''].map((h, k) =>
+                                <th key={k} style={{ ...th, position: 'sticky', top: 0, zIndex: 1 }}>{h}</th>)}</tr></thead>
+                              <tbody>
+                                {groups.map((g, i) => {
+                                  const open = openStu === g.user_id
+                                  return [
+                                    <tr key={g.user_id} onClick={() => setOpenStu(open ? null : g.user_id)} aria-expanded={open}
+                                      style={{ background: open ? '#fff7f8' : i % 2 === 0 ? C.bg : '#fff', cursor: 'pointer' }}>
+                                      <td style={{ ...td, width: '28px', color: C.muted }}>{open ? '▾' : '▸'}</td>
+                                      <td style={{ ...td, fontSize: '13px', color: C.ink, fontWeight: '600', whiteSpace: 'nowrap' }}>{g.full_name}</td>
+                                      <td style={{ ...td, fontFamily: 'Consolas, monospace' }}>{g.student_number || '—'}</td>
+                                      <td style={{ ...td, fontSize: '15px', fontWeight: '700', color: v.color }}>{g.items.length}</td>
+                                      <td style={{ ...td, whiteSpace: 'nowrap' }}>{fmtDate(g.items[0][v.dateKey] || g.items[0].happened_at)}</td>
+                                      <td style={{ ...td, textAlign: 'right', whiteSpace: 'nowrap' }}>
+                                        <button style={{ ...btn(false), padding: '5px 10px', fontSize: '12px', color: C.blue }}
+                                          onClick={e => { e.stopPropagation(); openStudent(g.user_id) }}>Open record →</button>
+                                      </td>
+                                    </tr>,
+                                    open && (
+                                      <tr key={`${g.user_id}-items`}>
+                                        <td colSpan={6} style={{ padding: '4px 12px 14px 40px', background: '#fff7f8', borderBottom: `1px solid ${C.line}` }}>
+                                          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                                            <thead><tr>{['Activity', 'Type', 'Skill', v.dateLabel, ...(pview === 'completed' ? ['Evidence'] : [])].map(h =>
+                                              <th key={h} style={{ ...th, background: 'transparent', fontSize: '10px' }}>{h}</th>)}</tr></thead>
+                                            <tbody>
+                                              {g.items.map((a, k) => (
+                                                <tr key={k}>
+                                                  <td style={{ ...td, color: C.ink, fontWeight: '500' }}>{a.resource_title}</td>
+                                                  <td style={{ ...td, textTransform: 'capitalize' }}>{a.resource_type || '—'}</td>
+                                                  <td style={td}>{a.skill_name || '—'}</td>
+                                                  <td style={{ ...td, whiteSpace: 'nowrap' }}>{fmtDate(a[v.dateKey] || a.happened_at)}</td>
+                                                  {pview === 'completed' && <td style={td}>{a.evidence_count ? `${a.evidence_count} file${a.evidence_count === 1 ? '' : 's'}` : '—'}</td>}
+                                                </tr>
+                                              ))}
+                                            </tbody>
+                                          </table>
+                                        </td>
+                                      </tr>
+                                    ),
+                                  ]
+                                })}
+                              </tbody>
+                            </table>
+                            {acts.total > acts.activities.length &&
+                              <div style={{ fontSize: '12px', color: C.muted, padding: '10px' }}>Counted from the newest {acts.activities.length} of {acts.total}.</div>}
+                          </div>
+                        )
+                      })()
+                  ) : (
+                    studentRows.length === 0 ? <Empty>{v.empty}</Empty> : (
+                      <div style={{ overflowX: 'auto', maxHeight: '560px' }}>
+                        <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '760px' }}>
+                          <thead><tr>{['Name', 'Student ID', 'Target role', 'Completed', 'In progress', 'Saved', 'Last completed'].map(h =>
+                            <th key={h} style={{ ...th, position: 'sticky', top: 0 }}>{h}</th>)}</tr></thead>
+                          <tbody>
+                            {studentRows.slice(0, 500).map((x, i) => (
+                              <tr key={x.user_id} onClick={() => openStudent(x.user_id)} style={{ background: i % 2 === 0 ? C.bg : '#fff', cursor: 'pointer' }}>
+                                <td style={{ ...td, fontSize: '13px', color: C.blue, fontWeight: '500', whiteSpace: 'nowrap' }}>{x.full_name}</td>
+                                <td style={{ ...td, fontFamily: 'Consolas, monospace' }}>{x.student_number || '—'}</td>
+                                <td style={td}>{x.target_role || '—'}</td>
+                                <td style={{ ...td, color: C.green, fontWeight: '700' }}>{x.completed}</td>
+                                <td style={{ ...td, color: C.blue, fontWeight: '600' }}>{x.in_progress}</td>
+                                <td style={td}>{x.saved}</td>
+                                <td style={{ ...td, whiteSpace: 'nowrap' }}>{fmtDate(x.last_completed)}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                        {studentRows.length > 500 && <div style={{ fontSize: '12px', color: C.muted, padding: '10px' }}>Showing the first 500 of {studentRows.length}.</div>}
+                      </div>
+                    )
+                  )}
+                </div>
+              )
+            })() : <>
             <div style={card}>
               <div style={{ ...heading, marginBottom: '12px' }}>Most Completed Learning Resources</div>
               {progress.top_resources.length === 0 ? <Empty>No student has started a recommended activity yet.</Empty> : (
@@ -599,6 +811,7 @@ export default function AdvisorDashboard() {
                 </div>
               )}
             </div>
+            </>}
           </>
         )
       )}

@@ -6,7 +6,8 @@ uses its default here. Mail-server settings and passwords stay in backend/.env a
 are never stored or shown here.
 
 Used by: students.py (semester start dates for the GPA / CGPA reminder),
-advisor.py (readiness bands), evidence.py and cv.py (upload limits).
+advisor.py and student_status.py (readiness bands and who needs support),
+evidence.py and cv.py (upload limits).
 """
 
 import re
@@ -27,13 +28,31 @@ DEFINITIONS = {
     },
     "readiness_on_track": {
         "default": 70, "min": 1, "max": 100,
-        "label": "On Track from (readiness %)",
-        "help": "Students whose latest readiness score is at least this are On Track on the advisor dashboard.",
+        "label": "On Track from (readiness %), Year 4 and above",
+        "help": "Year 4+ students (and students without a year) whose latest readiness score is at least this are On Track.",
     },
     "readiness_needs_support": {
         "default": 40, "min": 0, "max": 99,
-        "label": "Needs Support below (readiness %)",
-        "help": "Students below this score are shown as Needs Support. Between the two limits: Developing.",
+        "label": "Below expected under (readiness %), Year 4 and above",
+        "help": "Year 4+ students below this score are below the expected level. Between the two limits: Developing.",
+    },
+    "year_expectations": {
+        "default": {"1": [45, 20], "2": [55, 30], "3": [65, 35]},
+        "label": "Expected readiness by year of study",
+        "help": "On Track from / below-expected limit for Years 1 to 3. New students naturally have fewer skills, "
+                "so they are compared with what is expected for their year.",
+    },
+    "support_active_days": {
+        "default": 30, "min": 7, "max": 180,
+        "label": "Counts as improving for (days)",
+        "help": "A student below the expected level is shown as Improving, not Needs Support, if they worked on a "
+                "recommended activity or raised their score within this many days.",
+    },
+    "new_student_days": {
+        "default": 120, "min": 0, "max": 365,
+        "label": "New student period (days)",
+        "help": "A Year 1 student whose account is younger than this is shown as Getting Started, not Needs Support "
+                "(about one semester). 0 turns this off.",
     },
     "max_upload_mb": {
         "default": 5, "min": 1, "max": HARD_MAX_MB,
@@ -77,6 +96,21 @@ def validate(changes, current):
         d = DEFINITIONS.get(key)
         if d is None:
             raise HTTPException(status_code=400, detail=f"Unknown setting: {key}")
+        if key == "year_expectations":
+            if not isinstance(value, dict) or set(value) != {"1", "2", "3"}:
+                raise HTTPException(status_code=400, detail="Give the expected readiness for Years 1, 2 and 3.")
+            years = {}
+            for y in ("1", "2", "3"):
+                pair = value[y]
+                if (not isinstance(pair, list) or len(pair) != 2
+                        or any(isinstance(n, bool) or not isinstance(n, (int, float)) or int(n) != n for n in pair)):
+                    raise HTTPException(status_code=400, detail=f"Year {y}: give two whole numbers (On Track from, below-expected under).")
+                on, need = int(pair[0]), int(pair[1])
+                if not (0 <= need < on <= 100):
+                    raise HTTPException(status_code=400, detail=f"Year {y}: the lower limit must be below the On Track limit (0-100).")
+                years[y] = [on, need]
+            out[key] = years
+            continue
         if key == "semester_starts":
             if not isinstance(value, list) or not 1 <= len(value) <= 6:
                 raise HTTPException(status_code=400, detail="Give between 1 and 6 semester start dates.")
@@ -93,5 +127,5 @@ def validate(changes, current):
             out[key] = int(value)
     merged = {**current, **out}
     if merged["readiness_needs_support"] >= merged["readiness_on_track"]:
-        raise HTTPException(status_code=400, detail="The Needs Support limit must be lower than the On Track limit.")
+        raise HTTPException(status_code=400, detail="The below-expected limit must be lower than the On Track limit.")
     return out

@@ -31,6 +31,15 @@ const STATUS = {
   developing: { label: 'Developing', bg: '#fef3c7', color: C.amber },
   gap:        { label: 'Skill Gap',  bg: '#fee2e2', color: C.red },
 }
+// Status on the advisor dashboard (backend/student_status.py), same colours as the dashboard
+const STUDENT_STATUS = {
+  needs_support:   { label: 'Needs Support',   bg: '#fee2e2', color: C.red },
+  improving:       { label: 'Improving',       bg: '#e0f2fe', color: '#0369a1' },
+  getting_started: { label: 'Getting Started', bg: '#f3e8ff', color: '#7e22ce' },
+  developing:      { label: 'Developing',      bg: '#fef3c7', color: C.amber },
+  on_track:        { label: 'On Track',        bg: '#dcfce7', color: C.green },
+  none:            { label: 'Not Assessed',    bg: '#f1f5f9', color: C.muted },
+}
 const PROGRESS = {
   completed:   { label: 'Completed',   bg: '#dcfce7', color: C.green },
   in_progress: { label: 'In progress', bg: 'var(--s-accent-soft, #dbeafe)', color: C.blue },
@@ -59,6 +68,7 @@ const PRINT_CSS = `
   .report-sheet { position: absolute; left: 0; top: 0; width: 100%; padding: 0 !important; }
   .report-sheet .no-print { display: none !important; }
   .report-card { break-inside: avoid; }
+  .report-sheet .print-only-row { display: table-row !important; }
 }`
 
 function Pill({ bg, color, children }) {
@@ -220,6 +230,9 @@ export default function AdvisorStudentDetail() {
   const [data, setData]       = useState(null)
   const [error, setError]     = useState('')
   const [loading, setLoading] = useState(true)
+  // Development Activities: search words and status filter (the printed report always lists all)
+  const [actSearch, setActSearch] = useState('')
+  const [actStatus, setActStatus] = useState('')
 
   useEffect(() => {
     setLoading(true)
@@ -263,6 +276,12 @@ export default function AdvisorStudentDetail() {
   )
 
   const { student, assessment, skills, skill_gaps, history, projects, certifications, progress, cv, notes = [], experiences = [] } = data
+  // Development Activities after the search words (every word must match somewhere) and status filter
+  const actWords = actSearch.toLowerCase().split(/\s+/).filter(Boolean)
+  const shownActs = progress.filter(p =>
+    (!actStatus || p.status === actStatus) &&
+    actWords.every(w => [p.resource_title, p.resource_type, p.skill_name, p.provider, PROGRESS[p.status]?.label,
+                         ...(p.files || []).map(f => f.file_name || f.link_url)].some(v => (v || '').toLowerCase().includes(w))))
   const score  = num(assessment?.readiness_score)
   const groups = ['strong', 'developing', 'gap'].map(k => ({ key: k, items: skill_gaps.filter(g => g.match_status === k) }))
   const done   = progress.filter(p => p.status === 'completed').length
@@ -291,6 +310,15 @@ export default function AdvisorStudentDetail() {
               {student.is_complete ? 'Profile complete' : 'Profile incomplete'}
             </Pill>
           </div>
+          {/* Dashboard status and why (compared with the year of study and recent activity) */}
+          {data.status?.status && STUDENT_STATUS[data.status.status] && (
+            <div style={{ marginTop: '10px', display: 'flex', gap: '8px', alignItems: 'flex-start', flexWrap: 'wrap', maxWidth: '720px' }}>
+              <Pill bg={STUDENT_STATUS[data.status.status].bg} color={STUDENT_STATUS[data.status.status].color}>
+                {STUDENT_STATUS[data.status.status].label}
+              </Pill>
+              <span style={{ fontSize: '12px', color: C.body, lineHeight: 1.5 }}>{data.status.status_reason}</span>
+            </div>
+          )}
         </div>
         <div className="no-print" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
           {cv ? (
@@ -372,14 +400,19 @@ export default function AdvisorStudentDetail() {
                 <div style={{ fontSize: '12px', fontWeight: '700', color: STATUS[g.key].color, marginBottom: '8px' }}>
                   {STATUS[g.key].label} ({g.items.length})
                 </div>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-                  {g.items.length === 0 && <span style={muted}>None</span>}
-                  {g.items.map(s => (
-                    <span key={s.skill_name} title={s.reason || undefined}>
-                      <Pill bg={STATUS[g.key].bg} color={STATUS[g.key].color}>{s.skill_name}</Pill>
-                    </span>
-                  ))}
-                </div>
+                {g.items.length === 0 ? <span style={muted}>None</span> : (
+                  // Same-width cells in A-Z order, so the names line up in neat columns
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: '6px' }}>
+                    {[...g.items].sort((a, b) => a.skill_name.localeCompare(b.skill_name)).map(s => (
+                      <span key={s.skill_name} title={s.reason ? `${s.skill_name}: ${s.reason}` : s.skill_name}
+                        style={{ display: 'block', padding: '5px 10px', borderRadius: '8px', fontSize: '12px', fontWeight: '600',
+                                 background: STATUS[g.key].bg, color: STATUS[g.key].color,
+                                 whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                        {s.skill_name}
+                      </span>
+                    ))}
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -409,20 +442,28 @@ export default function AdvisorStudentDetail() {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '16px' }}>
         {/* Skills by category */}
         <div className="report-card" style={card}>
-          <div style={heading}>Skills ({skills.length})</div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: '10px', flexWrap: 'wrap' }}>
+            <div style={heading}>Skills ({skills.length})</div>
+            <div style={{ fontSize: '11px', color: C.muted, marginBottom: '14px' }}>
+              <span style={{ letterSpacing: '1px' }}>●○○</span> Beginner · <span style={{ letterSpacing: '1px' }}>●●○</span> Intermediate · <span style={{ letterSpacing: '1px' }}>●●●</span> Advanced
+            </div>
+          </div>
           {skills.length === 0 ? <div style={muted}>No skills listed.</div> : SKILL_CATEGORIES.map(cat => {
-            const list = skills.filter(s => s.category === cat.id)
+            const list = skills.filter(s => s.category === cat.id).sort((a, b) => a.skill_name.localeCompare(b.skill_name))
             return (
-              <div key={cat.id} style={{ marginBottom: '10px' }}>
-                <div style={{ fontSize: '11px', fontWeight: '700', color: cat.color, textTransform: 'uppercase', marginBottom: '5px' }}>
+              <div key={cat.id} style={{ marginBottom: '14px' }}>
+                <div style={{ fontSize: '11px', fontWeight: '700', color: cat.color, textTransform: 'uppercase', marginBottom: '6px' }}>
                   {cat.title} ({list.length})
                 </div>
                 {list.length === 0 ? <div style={{ ...muted, fontSize: '12px' }}>None listed.</div> : (
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                  // Same-width cells: name on the left, level dots lined up on the right
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(175px, 1fr))', gap: '6px' }}>
                     {list.map(s => (
-                      <span key={s.skill_name} title={label(s.proficiency_level)}
-                        style={{ fontSize: '12px', padding: '4px 9px', borderRadius: '8px', background: cat.bg, border: `1px solid ${cat.border}`, color: C.ink }}>
-                        {s.skill_name} <span style={{ color: cat.color, letterSpacing: '1px' }}>{levelDots(s.proficiency_level)}</span>
+                      <span key={s.skill_name} title={`${s.skill_name}: ${label(s.proficiency_level)}`}
+                        style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', minWidth: 0,
+                                 fontSize: '12px', padding: '5px 10px', borderRadius: '8px', background: cat.bg, border: `1px solid ${cat.border}`, color: C.ink }}>
+                        <span style={{ minWidth: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{s.skill_name}</span>
+                        <span style={{ flex: 'none', color: cat.color, letterSpacing: '1px' }}>{levelDots(s.proficiency_level)}</span>
                       </span>
                     ))}
                   </div>
@@ -474,9 +515,36 @@ export default function AdvisorStudentDetail() {
 
       {/* Development progress */}
       <div className="report-card" style={card}>
-        <div style={heading}>Development Activities</div>
+        <div style={heading}>Development Activities ({progress.length})</div>
         {progress.length === 0 ? <div style={muted}>The student has not started any recommended activity yet.</div> : (
           <div style={{ overflowX: 'auto' }}>
+            {/* Search and status filter (not printed) */}
+            <div className="no-print" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center', marginBottom: '10px' }}>
+              <input type="search" aria-label="Search activities" placeholder="Search activity, skill, type, provider or evidence file"
+                value={actSearch} onChange={e => setActSearch(e.target.value)}
+                style={{ flex: '1 1 280px', padding: '8px 12px', fontSize: '13px', border: `1px solid ${C.line}`, borderRadius: '8px', outline: 'none' }} />
+              {[['', 'All', progress.length], ...Object.entries(PROGRESS).map(([k, v]) => [k, v.label, progress.filter(p => p.status === k).length])]
+                .filter(([k, , n]) => k === '' || n > 0)
+                .map(([k, lbl, n]) => {
+                  const on = actStatus === k
+                  return (
+                    <button key={k || 'all'} type="button" onClick={() => setActStatus(k)} aria-pressed={on}
+                      style={{ padding: '6px 12px', fontSize: '12px', fontWeight: '600', borderRadius: '999px', cursor: 'pointer',
+                               border: `1.5px solid ${on ? C.ink : C.line}`, background: on ? C.ink : '#fff', color: on ? '#fff' : C.body }}>
+                      {lbl} ({n})
+                    </button>
+                  )
+                })}
+            </div>
+            {shownActs.length === 0 && (
+              <div className="no-print" style={{ ...muted, padding: '12px 0' }}>
+                No activity matches. <button type="button" onClick={() => { setActSearch(''); setActStatus('') }}
+                  style={{ border: 'none', background: 'none', color: C.blue, fontWeight: '600', cursor: 'pointer', padding: 0, fontSize: '13px' }}>Clear search</button>
+              </div>
+            )}
+            {(actSearch || actStatus) && shownActs.length > 0 && (
+              <div className="no-print" style={{ fontSize: '12px', color: C.muted, marginBottom: '6px' }}>Showing {shownActs.length} of {progress.length}</div>
+            )}
             <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '760px' }}>
               <thead>
                 <tr>{['Activity', 'Type', 'Skill', 'Status', 'Started', 'Completed', 'Evidence'].map(h => (
@@ -486,8 +554,9 @@ export default function AdvisorStudentDetail() {
               <tbody>
                 {progress.map((p, i) => {
                   const st = PROGRESS[p.status] || PROGRESS.saved
+                  const shown = shownActs.includes(p)
                   return (
-                    <tr key={i}>
+                    <tr key={i} className={shown ? undefined : 'print-only-row'} style={shown ? undefined : { display: 'none' }}>
                       <td style={{ padding: '9px 10px', fontSize: '13px', color: C.ink }}>{p.resource_title}</td>
                       <td style={{ padding: '9px 10px', fontSize: '12px', color: C.body, textTransform: 'capitalize' }}>{p.resource_type}</td>
                       <td style={{ padding: '9px 10px', fontSize: '12px', color: C.body }}>{p.skill_name || '—'}</td>

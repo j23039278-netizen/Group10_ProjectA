@@ -115,12 +115,46 @@ export default function AdminSettings() {
 
       {/* Readiness bands */}
       <div style={{ ...card, padding: '22px 24px', marginBottom: '16px' }}>
-        <div style={{ ...heading, marginBottom: '14px' }}>Readiness bands (advisor dashboard)</div>
+        <div style={{ ...heading, marginBottom: '14px' }}>Student status on the advisor dashboard</div>
+        {/* Expected readiness per year of study: Years 1-3 here, Year 4+ below */}
+        <div style={{ marginBottom: '16px' }}>
+          <div style={label}>{byKey.year_expectations.label}</div>
+          <table style={{ borderCollapse: 'collapse', fontSize: '13px', marginTop: '4px' }}>
+            <thead><tr>{['Year', 'On Track from (%)', 'Below expected under (%)'].map(h =>
+              <th key={h} style={{ textAlign: 'left', fontSize: '11px', color: C.muted, padding: '4px 12px 4px 0', fontWeight: '600' }}>{h}</th>)}</tr></thead>
+            <tbody>
+              {['1', '2', '3'].map(y => (
+                <tr key={y}>
+                  <td style={{ padding: '4px 12px 4px 0', fontWeight: '600' }}>Year {y}</td>
+                  {[0, 1].map(i => (
+                    <td key={i} style={{ padding: '4px 12px 4px 0' }}>
+                      <input type="number" min={0} max={100} step={1} aria-label={`Year ${y} ${i === 0 ? 'On Track from' : 'below expected under'}`}
+                        style={{ ...input, width: '90px' }} value={form.year_expectations?.[y]?.[i] ?? ''}
+                        onChange={e => setForm(f => {
+                          const pair = [...(f.year_expectations?.[y] || [0, 0])]
+                          pair[i] = e.target.value === '' ? '' : Number(e.target.value)
+                          return { ...f, year_expectations: { ...f.year_expectations, [y]: pair } }
+                        })} />
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <div style={{ fontSize: '12px', color: C.muted, marginTop: '4px' }}>
+            {byKey.year_expectations.help} Default: {Object.entries(byKey.year_expectations.default).map(([y, [a, b]]) => `Year ${y} ${a}/${b}`).join(', ')}.
+          </div>
+        </div>
         {numberField('readiness_on_track')}
         {numberField('readiness_needs_support')}
-        <div style={{ fontSize: '12px', color: C.body, background: '#f8fafc', borderRadius: '8px', padding: '8px 10px' }}>
-          Preview: <b style={{ color: C.green }}>On Track</b> ≥ {form.readiness_on_track}% · <b style={{ color: C.amber }}>Developing</b> {form.readiness_needs_support}–{(Number(form.readiness_on_track) || 0) - 1}% ·{' '}
-          <b style={{ color: C.red }}>Needs Support</b> &lt; {form.readiness_needs_support}%
+        {numberField('support_active_days')}
+        {numberField('new_student_days')}
+        <div style={{ fontSize: '12px', color: C.body, background: '#f8fafc', borderRadius: '8px', padding: '8px 10px', lineHeight: 1.6 }}>
+          How a student is shown: <b style={{ color: C.green }}>On Track</b> at or above their year&apos;s On Track level ·{' '}
+          <b style={{ color: C.amber }}>Developing</b> between the two levels · below the lower level:{' '}
+          <b style={{ color: '#7e22ce' }}>Getting Started</b> if a Year 1 student whose account is younger than {form.new_student_days} days,{' '}
+          <b style={{ color: '#0369a1' }}>Improving</b> if active in the last {form.support_active_days} days,
+          otherwise <b style={{ color: C.red }}>Needs Support</b>.
         </div>
       </div>
 

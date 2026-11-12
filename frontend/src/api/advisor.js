@@ -16,6 +16,8 @@ export const advisorAPI = {
   skillCategories: (course, roleId, programme) =>
     API.get('/advisor/cohort/skill-categories', params({ course, role_id: roleId, programme })),
   progress:  (course)         => API.get('/advisor/cohort/progress',   params({ course })),
+  // Single activities with one status (completed / in_progress / saved), newest first
+  activities: (status, course) => API.get('/advisor/cohort/activities', params({ status, course, limit: 2000 })),
   students:  ()               => API.get('/advisor/students'),
   getStudent:(id)             => API.get(`/advisor/students/${id}`),
   downloadCv:(id)             => API.get(`/advisor/students/${id}/cv`, { responseType: 'blob' }),

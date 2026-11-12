@@ -6,7 +6,7 @@ import { assessmentLabel } from '../utils/assessments'
 import AssessmentDetails from '../components/AssessmentDetails'
 import { assessAPI, progressAPI } from '../api/client'
 import { label } from '../utils/labels'
-import { firstStepsTotal, resourceGainText, upToText } from '../utils/importance'
+import { firstStepsTotal, importanceOf, resourceGainText, upToText } from '../utils/importance'
 import CompleteActivity from '../components/CompleteActivity'
 import EvidenceFiles from '../components/EvidenceFiles'
 import ImportanceLabel from '../components/ImportanceLabel'
@@ -29,6 +29,17 @@ const CATEGORY_ORDER = [
   { id: 'Other',      title: 'Other' },
 ]
 const CATEGORY_IDS = CATEGORY_ORDER.map(c => c.id)
+const CATEGORY_TITLE = Object.fromEntries(CATEGORY_ORDER.map(c => [c.id, c.title.replace(' skills', '')]))
+// Inside each cost tab, skills are grouped by how much they count on the Job Readiness Score
+// (backend/readiness.py TIER_WEIGHTS: required 70%, preferred 25%, bonus 5%), required first
+const IMPORTANCE_GROUPS = [
+  { id: 'required',  title: 'Required skills',  weight: 70, note: 'Do these first: they make up 70% of your Job Readiness Score',
+    color: '#b91c1c', bg: '#fef2f2', border: '#dc2626' },
+  { id: 'preferred', title: 'Preferred skills', weight: 25, note: 'Next: together they make up 25% of the score',
+    color: '#a16207', bg: '#fefce8', border: '#eab308' },
+  { id: 'bonus',     title: 'Bonus skills',     weight: 5,  note: 'Nice to have: only 5% of the score',
+    color: '#475569', bg: '#f8fafc', border: '#cbd5e1' },
+]
 
 export default function Recommendations() {
   const location = useLocation()
@@ -172,7 +183,7 @@ export default function Recommendations() {
 
     // Not started
     return (
-      <button onClick={() => handleStart(rid)} disabled={busy}
+      <button onClick={() => startWithReminder(resource)} disabled={busy}
         style={actionBtn('#ffffff', '#111111', busy ? 'var(--s-disabled, #d1d5db)' : '#111111')}>
         {busy ? '…' : '▶ Start'}
       </button>
@@ -279,16 +290,38 @@ export default function Recommendations() {
 
   // ── Sections: cost tier first, then category, then skill (in the engine's priority order) ──
   const sections = TIERS.map(t => {
-    const categories = CATEGORY_ORDER.map(c => ({
-      ...c,
+    const groups = IMPORTANCE_GROUPS.map(g => ({
+      ...g,
       skills: openRecs
-        .filter(rec => (CATEGORY_IDS.includes(rec.category) ? rec.category : 'Other') === c.id)
+        .filter(rec => importanceOf(rec) === g.id)
         .map(rec => ({ ...rec, resources: rec.resources.filter(r => (r.cost_tier || 'paid') === t.id) }))
         .filter(rec => rec.resources.length > 0),
-    })).filter(c => c.skills.length > 0)
-    const count = categories.reduce((n, c) => n + c.skills.reduce((m, rec) => m + rec.resources.length, 0), 0)
-    return { ...t, categories, count }
+    })).filter(g => g.skills.length > 0)
+    const count = groups.reduce((n, g) => n + g.skills.reduce((m, rec) => m + rec.resources.length, 0), 0)
+    return { ...t, groups, count }
   })
+
+  // Skills still to work on, by importance (for the reminder)
+  const openBy = Object.fromEntries(IMPORTANCE_GROUPS.map(g => [g.id, openRecs.filter(rec => importanceOf(rec) === g.id)]))
+  // Required skills with no activity started yet
+  const requiredUntouched = openBy.required.filter(rec => !rec.resources.some(r => progressMap[r.resource_id]))
+
+  // Reminder before starting a preferred or bonus activity while required skills are untouched
+  const startWithReminder = (resource) => {
+    const rec = recs.find(x => x.resources.some(r => r.resource_id === resource.resource_id))
+    const importance = rec ? importanceOf(rec) : 'required'
+    const others = requiredUntouched.filter(x => x.skill_id !== rec?.skill_id)
+    if (importance !== 'required' && others.length > 0) {
+      const names = others.slice(0, 3).map(x => x.skill_name).join(', ') + (others.length > 3 ? ` and ${others.length - 3} more` : '')
+      const ok = window.confirm(
+        `Reminder: required skills count the most.\n\n` +
+        `${rec?.skill_name || 'This skill'} is a ${importance} skill (${importance === 'preferred' ? '25%' : '5%'} of the score), ` +
+        `but you have not started ${others.length} required skill${others.length === 1 ? '' : 's'} yet: ${names}. ` +
+        `Required skills make up 70% of your Job Readiness Score.\n\nStart this ${importance} activity anyway?`)
+      if (!ok) return
+    }
+    handleStart(resource.resource_id)
+  }
   const noResources = openRecs.filter(rec => rec.resources.length === 0)
 
   if (loading) return <div style={{ padding: '40px', color: 'var(--s-muted, #8b92a8)' }}>Loading...</div>
@@ -366,6 +399,35 @@ export default function Recommendations() {
         </section>
       )}
 
+      {/* ── Reminder: required skills count the most ── */}
+      {openRecs.length > 0 && (
+        <div role="note" style={{ display: 'flex', gap: '14px', alignItems: 'flex-start', flexWrap: 'wrap',
+                                  background: openBy.required.length ? '#fef2f2' : '#f0fdf4',
+                                  border: `1px solid ${openBy.required.length ? '#fecaca' : '#bbf7d0'}`,
+                                  borderLeft: `5px solid ${openBy.required.length ? '#dc2626' : '#16a34a'}`,
+                                  borderRadius: '12px', padding: '14px 18px', marginBottom: '16px' }}>
+          <span aria-hidden="true" style={{ fontSize: '20px', lineHeight: 1.2 }}>{openBy.required.length ? '🎯' : '✅'}</span>
+          <div style={{ flex: '1 1 320px', fontSize: '13px', color: '#374151', lineHeight: 1.55 }}>
+            {openBy.required.length ? (
+              <><b style={{ color: '#b91c1c' }}>Work on your required skills first.</b> They make up 70% of your Job Readiness Score;
+                preferred skills make up 25% and bonus skills only 5%, so one required skill is usually worth more than
+                several preferred or bonus ones.</>
+            ) : (
+              <><b style={{ color: '#15803d' }}>All required skills are covered.</b> Preferred skills (25% of the score) now add
+                the most, then bonus skills (5%).</>
+            )}
+          </div>
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+            {IMPORTANCE_GROUPS.map(g => (
+              <span key={g.id} style={{ fontSize: '12px', fontWeight: '700', padding: '5px 10px', borderRadius: '999px',
+                                        background: '#fff', color: g.color, border: `1.5px solid ${g.border}` }}>
+                {openBy[g.id].length} {g.id} · {g.weight}%
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* ── Progress Summary Bar ── */}
       {Object.keys(progressMap).length > 0 && (
         <div style={{
@@ -436,16 +498,20 @@ export default function Recommendations() {
             <span style={{ fontSize: '12px', color: 'var(--s-muted, #8b92a8)' }}>{sec.note} · {sec.count} resource{sec.count === 1 ? '' : 's'}</span>
           </div>
 
-          {sec.categories.map(cat => (
-            <div key={cat.id} style={{ marginBottom: '14px' }}>
-              <div style={{ fontSize: '12px', fontWeight: '700', color: 'var(--s-body, #4a5168)', textTransform: 'uppercase',
-                            letterSpacing: '0.5px', margin: '0 0 8px 2px' }}>
-                {cat.title}
+          {sec.groups.map(grp => (
+            <div key={grp.id} style={{ marginBottom: '18px' }}>
+              {/* Required / Preferred / Bonus heading, with what the group is worth */}
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px', flexWrap: 'wrap', margin: '0 0 10px 2px' }}>
+                <span style={{ fontSize: '13px', fontWeight: '800', color: grp.color, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                  {grp.title} ({grp.skills.length})
+                </span>
+                <span style={{ fontSize: '12px', color: 'var(--s-muted, #8b92a8)' }}>{grp.note}</span>
               </div>
-              {cat.skills.map(rec => (
+              {grp.skills.map(rec => (
                 <div key={rec.skill_id} style={{
-                  background: '#fff', border: '1px solid var(--s-line, #e4e6ef)',
+                  background: '#fff', border: '1px solid var(--s-line, #e4e6ef)', borderLeft: `5px solid ${grp.border}`,
                   borderRadius: '12px', padding: '20px', marginBottom: '12px',
+                  opacity: grp.id === 'bonus' ? 0.92 : 1,
                 }}>
                   {/* Skill Gap Header */}
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap', marginBottom: '14px' }}>
@@ -458,6 +524,9 @@ export default function Recommendations() {
                     </span>
                     <span style={{ fontSize: '15px', fontWeight: '700', color: 'var(--s-ink, #1a1f2e)' }}>{rec.skill_name}</span>
                     <ImportanceLabel item={rec} />
+                    <span style={{ fontSize: '11px', color: 'var(--s-muted, #8b92a8)' }}>
+                      {CATEGORY_TITLE[CATEGORY_IDS.includes(rec.category) ? rec.category : 'Other']}
+                    </span>
                     {upToText(rec.expected_gain) && (
                       <span style={{ fontSize: '12px', fontWeight: '600', color: 'var(--s-body, #4a5168)' }}>{upToText(rec.expected_gain)}</span>
                     )}

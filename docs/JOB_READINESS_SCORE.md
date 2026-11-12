@@ -126,7 +126,39 @@ a copy of the local database, reloaded with the synthetic data version
 `2026-11-05-ict-roles` and re-assessed with `python data/run_assessments.py` (hybrid). The
 statuses are those of the rules of 31 October.
 
-### 2.5 Readiness bands 70 / 40
+### 2.5 Who needs support: status by year of study and recent activity
+
+Sprint 3 feedback: a low score alone does not mean a student needs the advisor. A new
+Year 1 student naturally lists few skills, so under a single 40% limit almost every first-
+year student was shown as Needs Support, and the students who really needed help were
+hidden among them. Since 12 November 2026 the advisor dashboard status
+(`backend/student_status.py`) compares the latest score with what is expected for the
+student's year of study, and keeps Needs Support for students who are also not active:
+
+| Status | Rule |
+|---|---|
+| On Track | score ≥ the year's On Track level |
+| Developing | between the year's two levels |
+| Getting Started | below the lower level, a Year 1 student whose account is younger than 120 days |
+| Improving | below the lower level, but an activity was saved, started or completed in the last 30 days, or the score went up at an assessment in that time |
+| Needs Support | below the lower level, not a new Year 1 student and not active in the last 30 days |
+| Not Assessed | no assessment yet |
+
+| Year of study | On Track from | Below expected under |
+|---|---|---|
+| Year 1 | 45 | 20 |
+| Year 2 | 55 | 30 |
+| Year 3 | 65 | 35 |
+| Year 4 and above, or not set | 70 | 40 (section 2.6) |
+
+The year levels are a starting point for the institution to adjust; all of them, the 30-day
+window and the 120-day new-student period are System Settings (`year_expectations`,
+`support_active_days`, `new_student_days`). On the current data (5,012 students) Needs
+Support falls from 1,221 to 776 students, and in Year 1 from 275 to 27; 76 new Year 1
+students are Getting Started. The score itself does not change, only how the dashboard
+reads it, and each student's status comes with its reason so the advisor can check it.
+
+### 2.6 Readiness bands 70 / 40
 
 The advisor dashboard groups students as On Track (≥ 70), Developing (40 to 69) and
 Needs Support (< 40). These values did not change with the formula. On the representative
@@ -254,7 +286,7 @@ part of the research work still to do (see section 5).
   depends on how many skills share its tier (section 2.2).
 - **Scores before and after 5 November 2026 are not comparable** (section 2.6).
 - **The dimensions and the overall score count differently** (section 3).
-- **Synthetic data.** The figures in sections 2.4 and 2.5 come from synthetic students;
+- **Synthetic data.** The figures in sections 2.4 to 2.6 come from synthetic students;
   the planned evaluation with 25 UAD students and the SUS test will be the first check
   with real users.
 - **MQF mapping and Malaysian competency surveys** (section 4) are still to be
@@ -269,6 +301,7 @@ part of the research work still to do (see section 5).
 | Strong / Developing / Gap | `nlp/matcher.py`, `docs/NLP_CLASSIFICATION_RULES.md` |
 | Evidence from projects and certifications | `nlp/evidence.py` |
 | Readiness bands | `backend/settings.py` (`readiness_on_track`, `readiness_needs_support`), Admin → System Settings |
+| Student status (who needs support) | `backend/student_status.py`; levels per year and time windows in `backend/settings.py` (`year_expectations`, `support_active_days`, `new_student_days`) |
 | "Not required" / "No data yet" | `frontend/src/utils/dimensions.js`, `frontend/src/components/DimensionBar.jsx` |
 | Sensitivity analysis | `data/jrs_sensitivity.py` |
 | Real job descriptions covered (section 7) | `backend/jd_fit.py` (`JD_FIT_THRESHOLD`), `GET /api/assessments/{id}/jd-fit`, `frontend/src/pages/SkillGap.jsx` |
