@@ -18,6 +18,10 @@ if errorlevel 1 (
 )
 
 echo.
+REM Vite's pre-bundle cache is rebuilt each start: an old one (e.g. locked by OneDrive or
+REM left by a closed window) can stop Vite with "EPERM ... node_modules\.vite\deps".
+if exist "node_modules\.vite" rmdir /s /q "node_modules\.vite"
+
 echo [2/2] Starting frontend dev server...
 echo.
 echo ============================================

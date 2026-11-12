@@ -11,11 +11,14 @@ cd /d "%~dp0"
 
 set "SEAGAS_NO_DOCS=1"
 
+REM Each script is started by its full path: with only the file name, cmd in the new window
+REM may not find it when the project folder has non-English characters (e.g. a Desktop folder with a Chinese name),
+REM and that window then closes at once.
 echo Starting backend ...
-start "SEAGAS Backend" /D "%~dp0backend" cmd /c start_backend.bat
+start "SEAGAS Backend" /D "%~dp0backend" cmd /c call "%~dp0backend\start_backend.bat"
 
 echo Starting frontend ...
-start "SEAGAS Frontend" /D "%~dp0frontend" cmd /c start_frontend.bat
+start "SEAGAS Frontend" /D "%~dp0frontend" cmd /c call "%~dp0frontend\start_frontend.bat"
 
 echo Waiting for backend (first run may take a few minutes to load data) ...
 set /a TRIES=0
