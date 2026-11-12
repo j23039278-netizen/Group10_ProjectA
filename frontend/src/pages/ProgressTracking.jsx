@@ -167,8 +167,12 @@ export default function ProgressTracking() {
   const first     = forRole.length ? parseFloat(forRole[0].readiness_score) : null
   const current   = forRole.length ? parseFloat(forRole[forRole.length - 1].readiness_score) : null
   const change    = forRole.length > 1 ? Math.round((current - first) * 100) / 100 : null
-  const doneList  = progress.filter(p => p.status === 'completed')
-  const active    = progress.filter(p => p.status !== 'completed')
+  // Only the activities started from an assessment of the role being shown (the role chosen
+  // above the chart), so the lists and the count match that analysis
+  const roleIds   = new Set(forRole.map(h => h.assessment_id))
+  const roleProgress = progress.filter(p => roleIds.has(p.assessment_id))
+  const doneList  = roleProgress.filter(p => p.status === 'completed')
+  const active    = roleProgress.filter(p => p.status !== 'completed')
   // One point per assessment, keyed by its position: several assessments on the same day must stay
   // separate points (keyed by date, the tooltip showed the first one of that day for all of them)
   const chart     = forRole.map((h, i) => ({ n: i + 1, date: fmtDate(h.created_at), when: fmtDateTime(h.created_at),
@@ -220,8 +224,8 @@ export default function ProgressTracking() {
           { label: 'Change Since First', value: change == null ? '—' : `${change > 0 ? '+' : ''}${change}%`,
             color: change == null ? C.muted : change > 0 ? C.green : change < 0 ? C.red : C.body,
             note: change == null ? 'Run another assessment for this role' : `Over ${forRole.length} assessments` },
-          { label: 'Completed Actions', value: `${doneList.length} / ${progress.length}`, color: C.blue,
-            note: `${active.length} still in progress` },
+          { label: 'Completed Actions', value: `${doneList.length} / ${roleProgress.length}`, color: C.blue,
+            note: `${active.length} still in progress${role ? ` · ${role}` : ''}` },
         ].map(s => (
           <div key={s.label} style={{ ...card, marginBottom: 0, padding: '18px 20px' }}>
             <div style={{ fontSize: '11px', fontWeight: '600', color: C.muted, textTransform: 'uppercase', letterSpacing: '0.5px' }}>{s.label}</div>
@@ -270,11 +274,11 @@ export default function ProgressTracking() {
       {/* Activities */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '16px' }}>
         <div style={card}>
-          <div style={heading}>In Progress ({active.length})</div>
+          <div style={heading}>In Progress ({active.length}){role && <span style={{ fontWeight: 500, textTransform: 'none', letterSpacing: 0, color: C.muted }}> · {role}</span>}</div>
           <ActivityList items={active} empty="Nothing in progress. Start an activity from Recommendations." actions={activeActions} />
         </div>
         <div style={card}>
-          <div style={heading}>Completed ({doneList.length})</div>
+          <div style={heading}>Completed ({doneList.length}){role && <span style={{ fontWeight: 500, textTransform: 'none', letterSpacing: 0, color: C.muted }}> · {role}</span>}</div>
           <ActivityList items={doneList} empty="No completed activities yet." done />
         </div>
       </div>
