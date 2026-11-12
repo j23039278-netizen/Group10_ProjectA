@@ -336,13 +336,15 @@ data supports these standards:
   another country sets its own expectations without code changes.
 - **The skills are linked to a referenced framework.** Through the MQF clusters and the
   MQF–AQRF referencing (4.1, 4.2).
-- **What is still local is the data.** Most job descriptions for Computer Science and ICT
-  roles come from Malaysia and the Business ones from the United States (section 5), and
-  some learning resources are Malaysian (e.g. LHDN for taxation). Using SEAGAS in another
-  country needs job descriptions from that market for the role templates.
-- **Next step.** Add job descriptions from other countries (e.g. Singapore, Australia,
-  the United Kingdom), build the role templates per market, and check that student
-  rankings stay stable across markets (Spearman ρ, as in section 2.4). Linking skills to
+- **The data covers two markets.** The role templates come from 350 real job descriptions
+  (`data/jd_dataset/README.md`): 65 copied by hand from JobStreet and Indeed Malaysia for
+  the six IT roles, and 285 US postings from the LinkedIn Job Postings 2023–2024 dataset
+  (all Business-role JDs are US postings). Some learning resources are Malaysian (e.g. LHDN
+  for taxation). Using SEAGAS in another market needs job descriptions from that market.
+- **Next step.** Add job descriptions from more countries (e.g. Malaysian Business roles,
+  Singapore, Australia, the United Kingdom), build the role templates per market, and
+  check that student rankings stay stable across markets (Spearman ρ, as in section 2.4);
+  the Malaysian and US JDs of the IT roles already allow a first comparison. Linking skills to
   an international skills taxonomy such as ESCO would add a second, non-ASEAN reference.
 
 ## 5. Limitations and what is still to be validated
