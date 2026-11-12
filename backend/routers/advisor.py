@@ -18,6 +18,7 @@ from sqlalchemy import text
 
 import audit
 import evidence
+import mqf
 import settings
 import student_status
 from advisor_scope import ALL_COURSES, courses_of
@@ -257,6 +258,65 @@ def get_cohort_skill_categories(
     return [found.get(c, {"category": c, "gap_count": 0, "developing_count": 0, "strong_count": 0,
                           "total": 0, "assessments": 0, "gap_percentage": None})
             for c in SKILL_CATEGORIES]
+
+
+@router.get("/cohort/mqf-clusters")
+def get_cohort_mqf_clusters(
+    course: Optional[str] = None,
+    role_id: Optional[str] = None,
+    programme: Optional[str] = None,
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """The same latest assessments as /cohort/skill-gaps, summarised by the MQF learning-outcome
+    clusters (MQA; COPPA standard 1.1.4), with each cluster's most frequent gaps (backend/mqf.py)"""
+    require_advisor(current_user)
+    rows = db.execute(
+        text(f"""
+            SELECT sl.skill_id, sl.skill_name, sl.category,
+                   COUNT(*) FILTER (WHERE smr.match_status = 'gap')        AS gap_count,
+                   COUNT(*) FILTER (WHERE smr.match_status = 'developing') AS developing_count,
+                   COUNT(*) FILTER (WHERE smr.match_status = 'strong')     AS strong_count
+            FROM skill_match_results smr
+            JOIN ({LATEST_ASSESSMENTS}) latest ON latest.assessment_id = smr.assessment_id
+            JOIN skills_library sl ON sl.skill_id = smr.skill_id
+            GROUP BY sl.skill_id, sl.skill_name, sl.category
+        """),
+        gap_params(course, role_id, programme, current_user)
+    ).fetchall()
+    return mqf.summarise([dict(r._mapping) for r in rows])
+
+
+@router.get("/cohort/skill-students")
+def get_cohort_skill_students(
+    skill_id: str,
+    course: Optional[str] = None,
+    role_id: Optional[str] = None,
+    programme: Optional[str] = None,
+    current_user=Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """The students behind one skill's numbers: everyone whose latest assessment (same filters
+    as /cohort/skill-gaps) asked for the skill, with their result for it (gap first)"""
+    require_advisor(current_user)
+    try:
+        sid = str(UUID(skill_id))
+    except ValueError:
+        raise HTTPException(status_code=400, detail="skill_id is not valid")
+    rows = db.execute(
+        text(f"""
+            SELECT u.user_id, u.full_name, u.student_number, u.course, sp.programme, sp.year_of_study,
+                   smr.match_status, latest.readiness_score
+            FROM skill_match_results smr
+            JOIN ({LATEST_ASSESSMENTS}) latest ON latest.assessment_id = smr.assessment_id
+            JOIN student_profiles sp ON sp.profile_id = latest.profile_id
+            JOIN users u ON u.user_id = sp.user_id
+            WHERE smr.skill_id = CAST(:sid AS uuid)
+            ORDER BY CASE smr.match_status WHEN 'gap' THEN 0 WHEN 'developing' THEN 1 ELSE 2 END, u.full_name
+        """),
+        {**gap_params(course, role_id, programme, current_user), "sid": sid}
+    ).fetchall()
+    return [dict(r._mapping) for r in rows]
 
 
 # ── Student List ──────────────────────────────────────────────

@@ -1744,6 +1744,19 @@ class TestAdvisorFeatures:
         soft = c.get("/api/advisor/cohort/skill-gaps?category=Soft", headers=advisor).json()
         assert soft and {g["category"] for g in soft} == {"Soft"}
         assert c.get("/api/advisor/cohort/skill-gaps?category=Nope", headers=advisor).status_code == 400
+        clusters = c.get("/api/advisor/cohort/mqf-clusters", headers=advisor).json()
+        assert [x["cluster"] for x in clusters] == ["1", "2", "3a", "3b", "3c", "3d", "3e", "3f", "4", "5"]
+        assert all(x["gap_count"] + x["developing_count"] + x["strong_count"] == x["total"] for x in clusters)
+        assert all(len(x["top_gaps"]) <= 3 for x in clusters)
+        assert all(sum(s["total"] for s in x["skills"]) == x["total"] for x in clusters)   # every skill, for the detail view
+        # ... and one more level: the students behind a skill's numbers
+        sk = next(s for x in clusters for s in x["skills"] if s["total"] > 0)
+        who = c.get("/api/advisor/cohort/skill-students", headers=advisor, params={"skill_id": sk["skill_id"]}).json()
+        assert len(who) == sk["total"] and sum(w["match_status"] == "gap" for w in who) == sk["gap_count"]
+        assert c.get("/api/advisor/cohort/skill-students?skill_id=nope", headers=advisor).status_code == 400
+        from mqf import cluster_of
+        assert cluster_of("Teamwork", "Soft") == "3b" and cluster_of("Python", "Technical") == "3a"
+        assert cluster_of("Some New Skill", "Analytical") == "2"
         cats = c.get("/api/advisor/cohort/skill-categories", headers=advisor).json()
         assert [x["category"] for x in cats] == ["Technical", "AI_Digital", "Analytical", "Soft"]
         assert all(x["strong_count"] + x["developing_count"] + x["gap_count"] == x["total"] for x in cats)

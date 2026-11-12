@@ -16,6 +16,11 @@ export const advisorAPI = {
   skillCategories: (course, roleId, programme) =>
     API.get('/advisor/cohort/skill-categories', params({ course, role_id: roleId, programme })),
   progress:  (course)         => API.get('/advisor/cohort/progress',   params({ course })),
+  // Skill gaps summarised by the MQF learning-outcome clusters (MQA / COPPA 1.1.4)
+  mqfClusters: (course, roleId, programme) => API.get('/advisor/cohort/mqf-clusters', params({ course, role_id: roleId, programme })),
+  // Students whose latest assessment asked for one skill, with their result for it
+  skillStudents: (skillId, course, roleId, programme) =>
+    API.get('/advisor/cohort/skill-students', params({ skill_id: skillId, course, role_id: roleId, programme })),
   // Single activities with one status (completed / in_progress / saved), newest first
   activities: (status, course) => API.get('/advisor/cohort/activities', params({ status, course, limit: 2000 })),
   students:  ()               => API.get('/advisor/students'),

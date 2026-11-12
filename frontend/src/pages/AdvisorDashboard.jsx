@@ -144,6 +144,12 @@ export default function AdvisorDashboard() {
   const [gapCategory, setGapCategory]   = useState('')  // skill gaps of one skill category
   const [roleGaps, setRoleGaps] = useState(null)        // skill gaps with the filters above
   const [categories, setCategories] = useState(null)    // Strong / Developing / Gap per category
+  const [mqfOpen, setMqfOpen]   = useState(false)       // MQF learning-outcome cluster view shown
+  const [mqfRows, setMqfRows]   = useState(null)        // gaps per MQF cluster (same filters)
+  const [mqfCluster, setMqfCluster] = useState(null)    // cluster whose skills are unfolded
+  const [mqfSkill, setMqfSkill] = useState(null)        // skill (in that cluster) whose students are unfolded
+  const [skillStudents, setSkillStudents] = useState(null)
+  const [skillResult, setSkillResult] = useState('gap') // gap / developing / strong shown for that skill
   const [progress, setProgress] = useState(null)
   const [loading, setLoading]   = useState(true)
   const [error, setError]       = useState('')
@@ -200,6 +206,24 @@ export default function AdvisorDashboard() {
     advisorAPI.skillCategories(course, roleId, gapProgramme).then(r => current && setCategories(r.data)).catch(() => {})
     return () => { current = false }
   }, [tab, course, roleId, gapProgramme])
+
+  // Students behind one skill of the MQF view (same filters)
+  useEffect(() => {
+    if (!mqfSkill) return
+    let current = true
+    setSkillStudents(null)
+    advisorAPI.skillStudents(mqfSkill, course, roleId, gapProgramme).then(r => current && setSkillStudents(r.data)).catch(() => current && setSkillStudents([]))
+    return () => { current = false }
+  }, [mqfSkill, course, roleId, gapProgramme])
+
+  // MQF clusters: loaded when the view is opened, with the same course / role / programme filters
+  useEffect(() => {
+    if (tab !== 'skill gaps' || !mqfOpen) return
+    let current = true
+    setMqfRows(null)
+    advisorAPI.mqfClusters(course, roleId, gapProgramme).then(r => current && setMqfRows(r.data)).catch(() => {})
+    return () => { current = false }
+  }, [tab, mqfOpen, course, roleId, gapProgramme])
 
   useEffect(() => {
     if (tab !== 'progress') return
@@ -491,6 +515,145 @@ export default function AdvisorDashboard() {
                 </button>
               )
             })}
+          </div>
+
+          {/* The same gaps in the language of MQA accreditation: MQF learning-outcome clusters */}
+          <div style={{ border: `1px solid ${C.line}`, borderRadius: '10px', marginBottom: '16px', overflow: 'hidden' }}>
+            <button type="button" onClick={() => setMqfOpen(o => !o)} aria-expanded={mqfOpen}
+              style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '10px', padding: '12px 14px',
+                       background: mqfOpen ? '#fafafa' : '#fff', border: 'none', cursor: 'pointer', textAlign: 'left', font: 'inherit' }}>
+              <span>
+                <span style={{ fontSize: '13px', fontWeight: '700', color: C.ink }}>View by MQF learning-outcome cluster</span>
+                <span style={{ fontSize: '12px', color: C.muted, marginLeft: '8px' }}>MQA · COPPA standard 1.1.4 · aligned with the ASEAN framework (AQRF)</span>
+              </span>
+              <span style={{ color: C.muted }}>{mqfOpen ? '▾' : '▸'}</span>
+            </button>
+            {mqfOpen && (
+              <div style={{ padding: '4px 14px 14px' }}>
+                <div style={{ fontSize: '12px', color: C.muted, margin: '6px 0 12px', lineHeight: 1.5 }}>
+                  The skill gaps above, grouped by the five clusters of learning outcomes in the Malaysian Qualifications Framework
+                  (2nd edition), the clusters that every programme&apos;s learning outcomes must correspond to for MQA accreditation.
+                  Each skill counts in its main cluster; this mapping is our own preliminary one.
+                </div>
+                {mqfRows == null ? <Empty>Loading…</Empty> : (
+                  <div style={{ overflowX: 'auto' }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '720px' }}>
+                      <thead><tr>{['MQF cluster', 'Gap %', 'Strong · Developing · Gap', 'Most frequent gaps'].map(h => <th key={h} style={th}>{h}</th>)}</tr></thead>
+                      <tbody>
+                        {mqfRows.map(r => {
+                          const open = mqfCluster === r.cluster
+                          const canOpen = r.skills?.length > 0
+                          return [
+                          <tr key={r.cluster} onClick={() => { if (canOpen) { setMqfCluster(open ? null : r.cluster); setMqfSkill(null) } }} aria-expanded={canOpen ? open : undefined}
+                            title={canOpen ? (open ? 'Hide the skills' : 'Show every skill in this cluster') : undefined}
+                            style={{ cursor: canOpen ? 'pointer' : 'default', background: open ? '#fff7f8' : undefined }}>
+                            <td style={{ ...td, color: C.ink, fontWeight: '600' }}>
+                              <span style={{ display: 'inline-block', width: '16px', color: C.muted }}>{canOpen ? (open ? '▾' : '▸') : ''}</span>
+                              <span style={{ display: 'inline-block', minWidth: '26px', color: C.muted }}>{r.cluster}</span>{r.name}
+                              {canOpen && <div style={{ fontSize: '11px', fontWeight: '500', color: C.muted, marginLeft: '42px' }}>{r.skills.length} skill{r.skills.length === 1 ? '' : 's'} · click to see them</div>}
+                            </td>
+                            <td style={{ ...td, fontWeight: '700', color: r.gap_percentage == null ? C.muted : C.red, whiteSpace: 'nowrap' }}>
+                              {r.gap_percentage == null ? 'Not asked for' : `${r.gap_percentage}%`}
+                            </td>
+                            <td style={{ ...td, minWidth: '170px' }}>
+                              {r.total > 0 ? <>
+                                <div style={{ display: 'flex', height: '8px', borderRadius: '99px', overflow: 'hidden', background: C.line }}>
+                                  {[['strong_count', C.green], ['developing_count', C.amber], ['gap_count', C.red]].map(([k, col]) => (
+                                    <div key={k} style={{ width: `${pct(r[k], r.total)}%`, background: col }} />
+                                  ))}
+                                </div>
+                                <div style={{ fontSize: '11px', color: C.muted, marginTop: '3px' }}>{r.strong_count} · {r.developing_count} · {r.gap_count}</div>
+                              </> : '—'}
+                            </td>
+                            <td style={{ ...td, fontSize: '12px' }}>
+                              {r.top_gaps.length ? r.top_gaps.map(g => `${g.skill_name} (${g.gap_count})`).join(', ') : '—'}
+                            </td>
+                          </tr>,
+                          open && (
+                            <tr key={`${r.cluster}-skills`}>
+                              <td colSpan={4} style={{ padding: '6px 12px 14px 42px', background: '#fff7f8', borderBottom: `1px solid ${C.line}` }}>
+                                <div style={{ fontSize: '12px', color: C.muted, margin: '2px 0 8px' }}>
+                                  Every skill in cluster {r.cluster}, most gaps first. Counts are skill results in the latest assessments
+                                  (one per student). Click a skill to see the students.
+                                </div>
+                                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                                  <thead><tr>{['Skill', 'Category', 'Gap %', 'Strong', 'Developing', 'Gap', 'Assessments'].map(h =>
+                                    <th key={h} style={{ ...th, background: 'transparent', fontSize: '10px' }}>{h}</th>)}</tr></thead>
+                                  <tbody>
+                                    {r.skills.map(sk => {
+                                      const skOpen = mqfSkill === sk.skill_id
+                                      const shown = (skillStudents || []).filter(x => x.match_status === skillResult)
+                                      return [
+                                      <tr key={sk.skill_name} onClick={() => { setMqfSkill(skOpen ? null : sk.skill_id); setSkillResult(sk.gap_count ? 'gap' : sk.developing_count ? 'developing' : 'strong') }}
+                                        aria-expanded={skOpen} title={skOpen ? 'Hide the students' : 'Show the students'}
+                                        style={{ cursor: 'pointer', background: skOpen ? '#ffeef1' : undefined }}>
+                                        <td style={{ ...td, color: C.ink, fontWeight: '500' }}>
+                                          <span style={{ display: 'inline-block', width: '16px', color: C.muted }}>{skOpen ? '▾' : '▸'}</span>{sk.skill_name}
+                                        </td>
+                                        <td style={td}>{categoryLabel(sk.category)}</td>
+                                        <td style={{ ...td, fontWeight: '700', color: sk.gap_percentage == null ? C.muted : sk.gap_percentage >= 50 ? C.red : sk.gap_percentage >= 25 ? C.amber : C.green }}>
+                                          {sk.gap_percentage == null ? '—' : `${sk.gap_percentage}%`}
+                                        </td>
+                                        <td style={{ ...td, color: C.green }}>{sk.strong_count}</td>
+                                        <td style={{ ...td, color: C.amber }}>{sk.developing_count}</td>
+                                        <td style={{ ...td, color: C.red, fontWeight: '600' }}>{sk.gap_count}</td>
+                                        <td style={td}>{sk.total}</td>
+                                      </tr>,
+                                      skOpen && (
+                                        <tr key={`${sk.skill_name}-students`}>
+                                          <td colSpan={7} style={{ padding: '8px 10px 12px 26px', background: '#fff', borderBottom: `1px solid ${C.line}` }}>
+                                            {/* Gap / Developing / Strong: who is behind each number */}
+                                            <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '8px', alignItems: 'center' }}>
+                                              {[['gap', 'Gap', sk.gap_count, C.red], ['developing', 'Developing', sk.developing_count, C.amber], ['strong', 'Strong', sk.strong_count, C.green]].map(([k, lbl, n, col]) => (
+                                                <button key={k} type="button" onClick={() => setSkillResult(k)} aria-pressed={skillResult === k}
+                                                  style={{ padding: '5px 11px', fontSize: '12px', fontWeight: '600', borderRadius: '999px', cursor: 'pointer',
+                                                           border: `1.5px solid ${col}`, background: skillResult === k ? col : '#fff', color: skillResult === k ? '#fff' : col }}>
+                                                  {lbl} ({n})
+                                                </button>
+                                              ))}
+                                              <span style={{ fontSize: '11px', color: C.muted }}>Students whose latest assessment asked for {sk.skill_name}. Click a student to open their record.</span>
+                                            </div>
+                                            {skillStudents == null ? <div style={{ color: C.muted, fontSize: '12px', padding: '6px 0' }}>Loading…</div>
+                                              : shown.length === 0 ? <div style={{ color: C.muted, fontSize: '12px', padding: '6px 0' }}>No student in this group.</div> : (
+                                              <div style={{ maxHeight: '320px', overflowY: 'auto' }}>
+                                                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                                                  <thead><tr>{['Student', 'Student ID', 'Programme', 'Year', 'Readiness'].map(h =>
+                                                    <th key={h} style={{ ...th, fontSize: '10px', position: 'sticky', top: 0 }}>{h}</th>)}</tr></thead>
+                                                  <tbody>
+                                                    {shown.slice(0, 300).map(st => (
+                                                      <tr key={st.user_id} onClick={e => { e.stopPropagation(); openStudent(st.user_id) }} style={{ cursor: 'pointer' }}>
+                                                        <td style={{ ...td, color: C.blue, fontWeight: '500', whiteSpace: 'nowrap' }}>{st.full_name}</td>
+                                                        <td style={{ ...td, fontFamily: 'Consolas, monospace' }}>{st.student_number || '—'}</td>
+                                                        <td style={td}>{st.programme || '—'}</td>
+                                                        <td style={{ ...td, whiteSpace: 'nowrap' }}>{st.year_of_study != null ? `Year ${st.year_of_study}` : '—'}</td>
+                                                        <td style={{ ...td, fontWeight: '700', color: scoreColor(num(st.readiness_score)) }}>
+                                                          {st.readiness_score == null ? '—' : `${num(st.readiness_score)}%`}
+                                                        </td>
+                                                      </tr>
+                                                    ))}
+                                                  </tbody>
+                                                </table>
+                                                {shown.length > 300 && <div style={{ fontSize: '11px', color: C.muted, padding: '6px' }}>Showing the first 300 of {shown.length}.</div>}
+                                              </div>
+                                            )}
+                                          </td>
+                                        </tr>
+                                      ),
+                                      ]
+                                    })}
+                                  </tbody>
+                                </table>
+                              </td>
+                            </tr>
+                          ),
+                          ]
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
 
           {gapFilter && roleGaps == null ? <Empty>Loading…</Empty> : shownGaps.length === 0 ? <Empty>No assessment data for this selection yet.</Empty> : (

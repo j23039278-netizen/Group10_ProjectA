@@ -253,24 +253,97 @@ rather than a lack of skill. Since 1 November the pages show three cases differe
 The readiness score itself has no "no data" case: a profile with no skills cannot be
 assessed (the assessment asks the student to add a skill first).
 
-## 4. Link to the Malaysian Qualifications Framework (preliminary)
+## 4. Link to MQA: MQF clusters, AQRF referencing, COPPA and international use
 
-The lecturer also suggested aligning the skill categories with MQF 2.0 (Malaysian
-Qualifications Agency). MQF 2.0 describes learning outcomes in five clusters: knowledge
-and understanding; cognitive skills; functional work skills (practical, interpersonal,
-communication, digital and numeracy skills, and leadership, autonomy and responsibility);
-personal and entrepreneurial skills; and ethics and professionalism. A first mapping of
-our categories:
+Sprint 3 feedback asked that the readiness score can be used internationally, with
+reference to MQA referencing and the MQA COPPA. This section explains how SEAGAS results
+connect to the Malaysian Qualifications Agency's frameworks and, through them, to the
+ASEAN framework. Sources were read on 12 November 2026:
 
-| SEAGAS category | Closest MQF 2.0 cluster |
-|---|---|
-| Technical | Knowledge and understanding; functional work skills (practical skills) |
-| AI / Digital | Functional work skills (digital skills) |
-| Analytical | Cognitive skills; functional work skills (numeracy skills) |
-| Soft | Functional work skills (interpersonal, communication, leadership); personal and entrepreneurial skills; ethics and professionalism |
+- MQA, *Malaysian Qualifications Framework (MQF) 2nd edition (2024)*, MQA circular 5/2024
+  (in force from 1 August 2024, two-year transition).
+- MQA, *Code of Practice for Programme Accreditation (COPPA)*, 2nd edition (2017).
+- MQA, *AQRF Referencing Report of Malaysia* (2019).
 
-This mapping has not been checked against the MQF document skill by skill yet; that is
-part of the research work still to do (see section 5).
+### 4.1 The five MQF clusters of learning outcomes
+
+The MQF describes learning outcomes in five clusters (MQF 2nd edition, para. 46):
+(1) knowledge and understanding; (2) cognitive skills; (3) functional work skills, with
+six focuses: (a) practical, (b) interpersonal, (c) communication, (d) digital,
+(e) numeracy skills, and (f) leadership, autonomy and responsibility; (4) personal and
+entrepreneurial skills; (5) ethics and professionalism. A bachelor's degree is MQF Level 6.
+
+`backend/mqf.py` links every skill in our library to its main cluster. Most skills follow
+their SEAGAS category, and about 40 named skills are placed individually:
+
+| SEAGAS category | Default MQF cluster | Skills placed elsewhere (examples) |
+|---|---|---|
+| Technical | 3a Practical skills | Data Structures & Algorithms, OOP, Cryptography, Accounting, Taxation, Employment Law → 1 Knowledge and understanding |
+| AI / Digital | 3d Digital skills | Responsible AI → 5 Ethics and professionalism |
+| Analytical | 2 Cognitive skills | Statistical Analysis, Data Analysis, Financial Modelling, Budgeting & Forecasting → 3e Numeracy |
+| Soft | 4 Personal and entrepreneurial | Communication, Presentation → 3c; Teamwork, Customer Focus → 3b; Leadership, Project Management, Time Management → 3f |
+
+Advisors can see the cohort's skill gaps by these clusters (Skill Gaps → "View by MQF
+learning-outcome cluster", `GET /api/advisor/cohort/mqf-clusters`). On the current data
+(latest assessments of 5,003 students) the gap share is highest in personal and
+entrepreneurial skills (65.2%) and communication (63.3%), and lowest in interpersonal
+skills (35.5%). No job-role template asks for an ethics and professionalism skill, so
+cluster 5 has no data: the role templates do not yet cover one of the five clusters that
+programmes must address. This is a finding for the role templates, not for students.
+
+The mapping is our own and preliminary. It has not been reviewed by MQA or by the
+programme owners, and a skill can serve more than one cluster; we count each skill in its
+main cluster only, so totals are not double counted.
+
+### 4.2 MQA referencing to the ASEAN framework (AQRF)
+
+The MQF was reviewed in 2017 "to ensure alignment with the ASEAN Qualifications Reference
+Framework (AQRF)" (MQF 2nd edition, foreword), and Malaysia published its AQRF referencing
+report in 2019; Malaysia is one of the ASEAN members that have referenced their national
+framework to the AQRF. The MQF notes that the AQRF defines learning outcomes as knowledge
+and skills, and application and responsibility, while personal and ethical skills are left
+to the national system (para. 46, note 3).
+
+For SEAGAS this means: because our skills are linked to the MQF clusters, and the MQF is
+referenced to the AQRF, a university can describe SEAGAS results in terms that are
+comparable across ASEAN qualifications frameworks. This is a link through the frameworks,
+not a claim that a SEAGAS score is itself recognised by MQA or another country.
+
+### 4.3 COPPA: where SEAGAS gives evidence for programme accreditation
+
+COPPA 2nd edition has seven areas of evaluation: (1) Programme Development and Delivery,
+(2) Assessment of Student Learning, (3) Student Selection and Support Services, (4) Academic
+Staff, (5) Educational Resources, (6) Programme Management, and (7) Programme Monitoring,
+Review and Continual Quality Improvement. SEAGAS is not an accreditation tool, but its
+data supports these standards:
+
+| COPPA standard | What it asks | Evidence from SEAGAS |
+|---|---|---|
+| 1.1.4 | Programme learning outcomes correspond to the MQF level descriptors and five clusters | Skill gaps by MQF cluster (4.1) |
+| 1.1.5 | Career and further-study options shown to students | Career Paths: match with each role of the course |
+| 1.3.6 | Feedback from stakeholders to improve the programme | Role templates built from real employers' job descriptions (350 JDs) |
+| 3.3.4 | Academic, non-academic and career counselling | Advisor portal: student records, advisor notes, AI-result review |
+| 3.3.5 | Mechanisms that actively identify and assist students in need of support | Needs Support status by year of study and recent activity (section 2.5), with the reason |
+| 6.1.6 | Market needs and graduate employability analyses | Readiness against job roles, cohort readiness and target roles |
+| 7.1.6 | Student performance, progression and employment analysed for continual improvement | Readiness over time, cohort skill gaps by programme and cluster, learning progress, CSV export |
+
+### 4.4 What makes the score usable outside Malaysia
+
+- **The formula has no country-specific part.** Required, preferred and bonus weights
+  (70 / 25 / 5), skill levels and evidence are defined the same way everywhere (section 2).
+- **The levels are settings.** The On Track and below-expected levels per year of study,
+  the activity window and the upload limits are System Settings, so an institution in
+  another country sets its own expectations without code changes.
+- **The skills are linked to a referenced framework.** Through the MQF clusters and the
+  MQF–AQRF referencing (4.1, 4.2).
+- **What is still local is the data.** Most job descriptions for Computer Science and ICT
+  roles come from Malaysia and the Business ones from the United States (section 5), and
+  some learning resources are Malaysian (e.g. LHDN for taxation). Using SEAGAS in another
+  country needs job descriptions from that market for the role templates.
+- **Next step.** Add job descriptions from other countries (e.g. Singapore, Australia,
+  the United Kingdom), build the role templates per market, and check that student
+  rankings stay stable across markets (Spearman ρ, as in section 2.4). Linking skills to
+  an international skills taxonomy such as ESCO would add a second, non-ASEAN reference.
 
 ## 5. Limitations and what is still to be validated
 
@@ -289,8 +362,9 @@ part of the research work still to do (see section 5).
 - **Synthetic data.** The figures in sections 2.4 to 2.6 come from synthetic students;
   the planned evaluation with 25 UAD students and the SUS test will be the first check
   with real users.
-- **MQF mapping and Malaysian competency surveys** (section 4) are still to be
-  researched in detail.
+- **MQF mapping** (section 4) is our own preliminary skill-by-skill link; it should be
+  reviewed with programme owners. Malaysian competency surveys and job descriptions from
+  other countries (section 4.4) are still to be added.
 
 ## 6. Where it is in the code
 
@@ -301,6 +375,7 @@ part of the research work still to do (see section 5).
 | Strong / Developing / Gap | `nlp/matcher.py`, `docs/NLP_CLASSIFICATION_RULES.md` |
 | Evidence from projects and certifications | `nlp/evidence.py` |
 | Readiness bands | `backend/settings.py` (`readiness_on_track`, `readiness_needs_support`), Admin → System Settings |
+| MQF clusters of each skill (MQA, COPPA 1.1.4) | `backend/mqf.py`; `GET /api/advisor/cohort/mqf-clusters` |
 | Student status (who needs support) | `backend/student_status.py`; levels per year and time windows in `backend/settings.py` (`year_expectations`, `support_active_days`, `new_student_days`) |
 | "Not required" / "No data yet" | `frontend/src/utils/dimensions.js`, `frontend/src/components/DimensionBar.jsx` |
 | Sensitivity analysis | `data/jrs_sensitivity.py` |
