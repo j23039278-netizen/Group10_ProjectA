@@ -341,11 +341,19 @@ data supports these standards:
   the six IT roles, and 285 US postings from the LinkedIn Job Postings 2023–2024 dataset
   (all Business-role JDs are US postings). Some learning resources are Malaysian (e.g. LHDN
   for taxation). Using SEAGAS in another market needs job descriptions from that market.
+- **First cross-market check (F03, November 2026).** The Malaysian and US JDs of the six IT
+  roles were compared (`docs/report_drafts/cross_market_validation.md`,
+  `data/analysis/f03_cross_market.py`). The two markets name at least 79% of every role
+  template's skills, but rank them only moderately alike (Spearman ρ 0.28–0.53), and each
+  market alone would give the same importance tier to only 32–45% of the template skills
+  (72–91% within one tier). Ranking the synthetic students against a Malaysian-only and a
+  US-only template gives ρ 0.57–0.89 with the SEAGAS score. So the formula and the skill
+  lists transfer; the tiers are a property of the local market.
 - **Next step.** Add job descriptions from more countries (e.g. Malaysian Business roles,
-  Singapore, Australia, the United Kingdom), build the role templates per market, and
-  check that student rankings stay stable across markets (Spearman ρ, as in section 2.4);
-  the Malaysian and US JDs of the IT roles already allow a first comparison. Linking skills to
-  an international skills taxonomy such as ESCO would add a second, non-ASEAN reference.
+  Singapore, Australia, the United Kingdom), take each role's tiers from the local job
+  descriptions (a per-market template with the same skills), and repeat the check above with
+  more Malaysian JDs. Linking skills to an international skills taxonomy such as ESCO would
+  add a second, non-ASEAN reference.
 
 ## 5. Limitations and what is still to be validated
 

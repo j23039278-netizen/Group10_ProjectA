@@ -10,6 +10,7 @@ import { firstStepsTotal, importanceOf, resourceGainText, upToText } from '../ut
 import CompleteActivity from '../components/CompleteActivity'
 import EvidenceFiles from '../components/EvidenceFiles'
 import ImportanceLabel from '../components/ImportanceLabel'
+import RecommendationDetail from '../components/RecommendationDetail'
 
 // Cost tiers, in the order the page shows them (cost_tier comes from recommendation/engine.py)
 const TIERS = [
@@ -531,6 +532,7 @@ export default function Recommendations() {
                       <span style={{ fontSize: '12px', fontWeight: '600', color: 'var(--s-body, #4a5168)' }}>{upToText(rec.expected_gain)}</span>
                     )}
                   </div>
+                  <RecommendationDetail rec={rec} />
                   {rec.resources.map((r, j) => renderResource(r, j, rec.resources.length))}
                 </div>
               ))}

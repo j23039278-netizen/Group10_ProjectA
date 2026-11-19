@@ -1,0 +1,7 @@
+role_code,role_name,students,rho_seagas_my_tpl,rho_seagas_us_tpl,rho_my_tpl_us_tpl,rho_seagas_fit_my,rho_seagas_fit_us,mean_seagas,mean_my_tpl,mean_us_tpl,covers_my,covers_us
+DATA_ANALYST,Data Analyst,908,0.964,0.652,0.781,0.868,0.771,53.169,48.751,44.587,13.847,5.273
+DATA_SCIENTIST,Data Scientist,222,0.89,0.894,0.805,0.795,0.842,57.011,41.946,57.29,11.757,8.144
+SOFTWARE_DEV,Software Developer,390,0.572,0.829,0.536,0.561,0.776,51.157,37.715,55.695,2.88,4.744
+CYBER_ANALYST,Cybersecurity Analyst,411,0.889,0.751,0.699,0.876,0.796,49.678,49.637,45.637,17.153,5.655
+CLOUD_ENGINEER,Cloud Engineer,428,0.857,0.798,0.819,0.565,0.808,49.738,36.694,41.532,6.168,6.617
+WEB_DEV,Web Developer,975,0.898,0.894,0.926,0.798,0.779,51.613,56.591,40.638,12.242,6.286

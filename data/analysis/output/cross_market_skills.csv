@@ -1,0 +1,232 @@
+role_code,skill_name,in_template,pct_my,pct_us,diff_points,tier_my,tier_us
+DATA_ANALYST,Agile / Scrum,preferred,0.0,29.2,-29.2,,preferred
+DATA_ANALYST,Attention to Detail,preferred,45.5,29.2,16.3,preferred,preferred
+DATA_ANALYST,Azure,bonus,0.0,20.8,-20.8,,preferred
+DATA_ANALYST,Business Analysis,bonus,9.1,29.2,-20.1,,preferred
+DATA_ANALYST,Business Process Improvement,preferred,27.3,20.8,6.4,preferred,preferred
+DATA_ANALYST,Communication,preferred,54.5,58.3,-3.8,required,required
+DATA_ANALYST,Critical Thinking,preferred,36.4,20.8,15.5,preferred,preferred
+DATA_ANALYST,Customer Focus,,9.1,20.8,-11.7,,preferred
+DATA_ANALYST,Data Analysis,required,54.5,33.3,21.2,required,preferred
+DATA_ANALYST,Data Cleaning,required,36.4,8.3,28.0,preferred,
+DATA_ANALYST,Data Modelling,bonus,18.2,12.5,5.7,bonus,bonus
+DATA_ANALYST,Data Structures & Algorithms,,18.2,25.0,-6.8,bonus,preferred
+DATA_ANALYST,Data Visualisation,required,90.9,45.8,45.1,required,preferred
+DATA_ANALYST,Data Warehousing,bonus,9.1,25.0,-15.9,,preferred
+DATA_ANALYST,Decision Making,,36.4,8.3,28.0,preferred,
+DATA_ANALYST,Documentation,preferred,18.2,29.2,-11.0,bonus,preferred
+DATA_ANALYST,ETL,preferred,9.1,16.7,-7.6,,bonus
+DATA_ANALYST,Excel,required,72.7,41.7,31.1,required,preferred
+DATA_ANALYST,Git,bonus,0.0,12.5,-12.5,,bonus
+DATA_ANALYST,Interpersonal Skills,,27.3,12.5,14.8,preferred,bonus
+DATA_ANALYST,Leadership,,0.0,37.5,-37.5,,preferred
+DATA_ANALYST,Looker,bonus,9.1,8.3,0.8,,
+DATA_ANALYST,Machine Learning,bonus,18.2,12.5,5.7,bonus,bonus
+DATA_ANALYST,Microsoft Office,preferred,27.3,29.2,-1.9,preferred,preferred
+DATA_ANALYST,Pandas,preferred,9.1,0.0,9.1,,
+DATA_ANALYST,Power BI,required,54.5,25.0,29.5,required,preferred
+DATA_ANALYST,Presentation Skills,preferred,9.1,16.7,-7.6,,bonus
+DATA_ANALYST,Problem Solving,preferred,54.5,50.0,4.5,required,required
+DATA_ANALYST,Python,required,72.7,29.2,43.6,required,preferred
+DATA_ANALYST,R,bonus,18.2,16.7,1.5,bonus,bonus
+DATA_ANALYST,SQL,required,81.8,62.5,19.3,required,required
+DATA_ANALYST,Stakeholder Communication,preferred,9.1,20.8,-11.7,,preferred
+DATA_ANALYST,Statistical Analysis,required,81.8,12.5,69.3,required,bonus
+DATA_ANALYST,Tableau,preferred,27.3,20.8,6.4,preferred,preferred
+DATA_ANALYST,Teamwork,preferred,36.4,45.8,-9.5,preferred,preferred
+DATA_ANALYST,Time Management,preferred,27.3,8.3,18.9,preferred,
+DATA_SCIENTIST,AI Literacy,,20.0,8.0,12.0,preferred,
+DATA_SCIENTIST,Apache Spark,bonus,0.0,12.0,-12.0,,bonus
+DATA_SCIENTIST,Attention to Detail,,20.0,8.0,12.0,preferred,
+DATA_SCIENTIST,Business Analysis,,40.0,20.0,20.0,preferred,preferred
+DATA_SCIENTIST,Business Process Improvement,bonus,20.0,12.0,8.0,preferred,bonus
+DATA_SCIENTIST,Cloud Computing,bonus,40.0,8.0,32.0,preferred,
+DATA_SCIENTIST,Communication,preferred,70.0,48.0,22.0,required,preferred
+DATA_SCIENTIST,Critical Thinking,,40.0,12.0,28.0,preferred,bonus
+DATA_SCIENTIST,Data Analysis,required,60.0,48.0,12.0,required,preferred
+DATA_SCIENTIST,Data Cleaning,preferred,20.0,12.0,8.0,preferred,bonus
+DATA_SCIENTIST,Data Mining,bonus,10.0,12.0,-2.0,bonus,bonus
+DATA_SCIENTIST,Data Structures & Algorithms,,0.0,36.0,-36.0,,preferred
+DATA_SCIENTIST,Data Visualisation,preferred,70.0,40.0,30.0,required,preferred
+DATA_SCIENTIST,Decision Making,,0.0,20.0,-20.0,,preferred
+DATA_SCIENTIST,Deep Learning,preferred,10.0,16.0,-6.0,bonus,bonus
+DATA_SCIENTIST,Documentation,preferred,30.0,16.0,14.0,preferred,bonus
+DATA_SCIENTIST,ETL,preferred,20.0,20.0,0.0,preferred,preferred
+DATA_SCIENTIST,Excel,bonus,20.0,16.0,4.0,preferred,bonus
+DATA_SCIENTIST,Feature Engineering,preferred,0.0,4.0,-4.0,,
+DATA_SCIENTIST,Generative AI,bonus,10.0,20.0,-10.0,bonus,preferred
+DATA_SCIENTIST,Git,bonus,10.0,8.0,2.0,bonus,
+DATA_SCIENTIST,Jupyter,bonus,0.0,4.0,-4.0,,
+DATA_SCIENTIST,Leadership,,20.0,24.0,-4.0,preferred,preferred
+DATA_SCIENTIST,MLOps,bonus,0.0,8.0,-8.0,,
+DATA_SCIENTIST,Machine Learning,required,50.0,68.0,-18.0,required,required
+DATA_SCIENTIST,Model Evaluation,required,30.0,4.0,26.0,preferred,
+DATA_SCIENTIST,Natural Language Processing,preferred,0.0,20.0,-20.0,,preferred
+DATA_SCIENTIST,NumPy,bonus,10.0,0.0,10.0,bonus,
+DATA_SCIENTIST,Pandas,preferred,20.0,12.0,8.0,preferred,bonus
+DATA_SCIENTIST,Power BI,preferred,50.0,8.0,42.0,required,
+DATA_SCIENTIST,Problem Solving,preferred,50.0,32.0,18.0,required,preferred
+DATA_SCIENTIST,Project Management,bonus,10.0,16.0,-6.0,bonus,bonus
+DATA_SCIENTIST,PyTorch,bonus,10.0,12.0,-2.0,bonus,bonus
+DATA_SCIENTIST,Python,required,90.0,84.0,6.0,required,required
+DATA_SCIENTIST,R,preferred,30.0,48.0,-18.0,preferred,preferred
+DATA_SCIENTIST,Recruitment,,10.0,28.0,-18.0,bonus,preferred
+DATA_SCIENTIST,SQL,required,70.0,44.0,26.0,required,preferred
+DATA_SCIENTIST,Scikit-learn,preferred,20.0,8.0,12.0,preferred,
+DATA_SCIENTIST,Self-Motivation,,40.0,4.0,36.0,preferred,
+DATA_SCIENTIST,Stakeholder Communication,preferred,30.0,28.0,2.0,preferred,preferred
+DATA_SCIENTIST,Statistical Analysis,required,20.0,84.0,-64.0,preferred,required
+DATA_SCIENTIST,Tableau,preferred,40.0,24.0,16.0,preferred,preferred
+DATA_SCIENTIST,Teamwork,preferred,60.0,48.0,12.0,required,preferred
+DATA_SCIENTIST,TensorFlow,bonus,10.0,8.0,2.0,bonus,
+SOFTWARE_DEV,AWS,bonus,7.7,22.7,-15.0,,preferred
+SOFTWARE_DEV,Agile / Scrum,preferred,15.4,31.8,-16.4,bonus,preferred
+SOFTWARE_DEV,Angular,bonus,7.7,13.6,-5.9,,bonus
+SOFTWARE_DEV,Business Analysis,,30.8,22.7,8.0,preferred,preferred
+SOFTWARE_DEV,C#,preferred,30.8,13.6,17.1,preferred,bonus
+SOFTWARE_DEV,C++,preferred,7.7,27.3,-19.6,,preferred
+SOFTWARE_DEV,CI/CD,bonus,15.4,4.5,10.8,bonus,
+SOFTWARE_DEV,CSS,bonus,15.4,9.1,6.3,bonus,
+SOFTWARE_DEV,Cloud Computing,bonus,7.7,4.5,3.1,,
+SOFTWARE_DEV,Communication,preferred,38.5,45.5,-7.0,preferred,preferred
+SOFTWARE_DEV,Critical Thinking,,30.8,0.0,30.8,preferred,
+SOFTWARE_DEV,Data Structures & Algorithms,preferred,0.0,9.1,-9.1,,
+SOFTWARE_DEV,Docker,preferred,15.4,9.1,6.3,bonus,
+SOFTWARE_DEV,Documentation,preferred,46.2,27.3,18.9,preferred,preferred
+SOFTWARE_DEV,Git,preferred,15.4,13.6,1.7,bonus,bonus
+SOFTWARE_DEV,HTML,bonus,15.4,9.1,6.3,bonus,
+SOFTWARE_DEV,Java,required,23.1,50.0,-26.9,preferred,required
+SOFTWARE_DEV,JavaScript,required,38.5,36.4,2.1,preferred,preferred
+SOFTWARE_DEV,Linux,preferred,7.7,13.6,-5.9,,bonus
+SOFTWARE_DEV,Machine Learning,bonus,15.4,9.1,6.3,bonus,
+SOFTWARE_DEV,Microservices,bonus,7.7,18.2,-10.5,,bonus
+SOFTWARE_DEV,Node.js,bonus,0.0,31.8,-31.8,,preferred
+SOFTWARE_DEV,Object-Oriented Programming,required,7.7,18.2,-10.5,,bonus
+SOFTWARE_DEV,Problem Solving,preferred,61.5,45.5,16.1,required,preferred
+SOFTWARE_DEV,Project Management,,46.2,18.2,28.0,preferred,bonus
+SOFTWARE_DEV,Python,required,23.1,45.5,-22.4,preferred,preferred
+SOFTWARE_DEV,REST API,required,15.4,27.3,-11.9,bonus,preferred
+SOFTWARE_DEV,React,preferred,15.4,27.3,-11.9,bonus,preferred
+SOFTWARE_DEV,Recruitment,,0.0,22.7,-22.7,,preferred
+SOFTWARE_DEV,Requirements Analysis,bonus,23.1,13.6,9.4,preferred,bonus
+SOFTWARE_DEV,SQL,required,30.8,27.3,3.5,preferred,preferred
+SOFTWARE_DEV,Self-Motivation,,23.1,9.1,14.0,preferred,
+SOFTWARE_DEV,Software Testing,preferred,46.2,13.6,32.5,preferred,bonus
+SOFTWARE_DEV,Spring Boot,preferred,15.4,13.6,1.7,bonus,bonus
+SOFTWARE_DEV,Teamwork,preferred,46.2,40.9,5.2,preferred,preferred
+SOFTWARE_DEV,TypeScript,bonus,7.7,13.6,-5.9,,bonus
+SOFTWARE_DEV,UI/UX Design,,23.1,9.1,14.0,preferred,
+SOFTWARE_DEV,Unit Testing,required,15.4,13.6,1.7,bonus,bonus
+CYBER_ANALYST,AWS,preferred,0.0,20.0,-20.0,,preferred
+CYBER_ANALYST,Azure,preferred,0.0,28.0,-28.0,,preferred
+CYBER_ANALYST,Bash,bonus,10.0,16.0,-6.0,bonus,bonus
+CYBER_ANALYST,Cloud Computing,preferred,0.0,20.0,-20.0,,preferred
+CYBER_ANALYST,Communication,preferred,40.0,64.0,-24.0,preferred,required
+CYBER_ANALYST,Critical Thinking,,30.0,20.0,10.0,preferred,preferred
+CYBER_ANALYST,Customer Focus,,20.0,8.0,12.0,preferred,
+CYBER_ANALYST,Cybersecurity,required,70.0,80.0,-10.0,required,required
+CYBER_ANALYST,Documentation,preferred,30.0,24.0,6.0,preferred,preferred
+CYBER_ANALYST,Ethical Hacking,bonus,20.0,16.0,4.0,preferred,bonus
+CYBER_ANALYST,Firewall Management,preferred,40.0,20.0,20.0,preferred,preferred
+CYBER_ANALYST,Identity & Access Management,preferred,0.0,28.0,-28.0,,preferred
+CYBER_ANALYST,Incident Response,required,50.0,24.0,26.0,required,preferred
+CYBER_ANALYST,Kali Linux,bonus,10.0,4.0,6.0,bonus,
+CYBER_ANALYST,Linux,required,20.0,28.0,-8.0,preferred,preferred
+CYBER_ANALYST,Log Analysis,required,40.0,4.0,36.0,preferred,
+CYBER_ANALYST,Malware Analysis,bonus,20.0,12.0,8.0,preferred,bonus
+CYBER_ANALYST,Network Security,required,20.0,8.0,12.0,preferred,
+CYBER_ANALYST,Networking,required,40.0,44.0,-4.0,preferred,preferred
+CYBER_ANALYST,Nmap,bonus,10.0,8.0,2.0,bonus,
+CYBER_ANALYST,Problem Solving,preferred,30.0,44.0,-14.0,preferred,preferred
+CYBER_ANALYST,Python,preferred,10.0,36.0,-26.0,bonus,preferred
+CYBER_ANALYST,Risk Analysis,preferred,10.0,36.0,-26.0,bonus,preferred
+CYBER_ANALYST,SIEM,required,70.0,16.0,54.0,required,bonus
+CYBER_ANALYST,Security Frameworks,preferred,30.0,28.0,2.0,preferred,preferred
+CYBER_ANALYST,Security Operations (SOC),required,40.0,24.0,16.0,preferred,preferred
+CYBER_ANALYST,Splunk,bonus,10.0,8.0,2.0,bonus,
+CYBER_ANALYST,Teamwork,preferred,40.0,52.0,-12.0,preferred,required
+CYBER_ANALYST,Threat Intelligence,preferred,30.0,24.0,6.0,preferred,preferred
+CYBER_ANALYST,Vulnerability Assessment,required,30.0,52.0,-22.0,preferred,required
+CYBER_ANALYST,Windows Server,bonus,0.0,12.0,-12.0,,bonus
+CYBER_ANALYST,Wireshark,bonus,0.0,4.0,-4.0,,
+CLOUD_ENGINEER,AWS,required,50.0,76.0,-26.0,required,required
+CLOUD_ENGINEER,Agile / Scrum,preferred,10.0,28.0,-18.0,bonus,preferred
+CLOUD_ENGINEER,Ansible,preferred,20.0,20.0,0.0,preferred,preferred
+CLOUD_ENGINEER,Apache Spark,bonus,0.0,20.0,-20.0,,preferred
+CLOUD_ENGINEER,Azure,preferred,60.0,48.0,12.0,required,preferred
+CLOUD_ENGINEER,Bash,preferred,30.0,40.0,-10.0,preferred,preferred
+CLOUD_ENGINEER,CI/CD,required,20.0,40.0,-20.0,preferred,preferred
+CLOUD_ENGINEER,Cloud Computing,required,60.0,72.0,-12.0,required,required
+CLOUD_ENGINEER,Communication,preferred,60.0,52.0,8.0,required,required
+CLOUD_ENGINEER,Critical Thinking,preferred,50.0,12.0,38.0,required,bonus
+CLOUD_ENGINEER,Cybersecurity,,20.0,4.0,16.0,preferred,
+CLOUD_ENGINEER,DevOps,preferred,10.0,56.0,-46.0,bonus,required
+CLOUD_ENGINEER,Docker,required,10.0,32.0,-22.0,bonus,preferred
+CLOUD_ENGINEER,Documentation,preferred,40.0,16.0,24.0,preferred,bonus
+CLOUD_ENGINEER,Excel,,20.0,0.0,20.0,preferred,
+CLOUD_ENGINEER,GCP,preferred,40.0,32.0,8.0,preferred,preferred
+CLOUD_ENGINEER,Git,required,10.0,36.0,-26.0,bonus,preferred
+CLOUD_ENGINEER,Go,bonus,0.0,12.0,-12.0,,bonus
+CLOUD_ENGINEER,Identity & Access Management,required,30.0,16.0,14.0,preferred,bonus
+CLOUD_ENGINEER,Interpersonal Skills,,20.0,8.0,12.0,preferred,
+CLOUD_ENGINEER,Java,bonus,0.0,40.0,-40.0,,preferred
+CLOUD_ENGINEER,JavaScript,bonus,10.0,20.0,-10.0,bonus,preferred
+CLOUD_ENGINEER,Kubernetes,required,10.0,32.0,-22.0,bonus,preferred
+CLOUD_ENGINEER,Linux,required,50.0,32.0,18.0,required,preferred
+CLOUD_ENGINEER,Microservices,bonus,0.0,20.0,-20.0,,preferred
+CLOUD_ENGINEER,Microsoft Office,,20.0,0.0,20.0,preferred,
+CLOUD_ENGINEER,Monitoring & Observability,preferred,50.0,24.0,26.0,required,preferred
+CLOUD_ENGINEER,Networking,required,30.0,28.0,2.0,preferred,preferred
+CLOUD_ENGINEER,PHP,,20.0,0.0,20.0,preferred,
+CLOUD_ENGINEER,PowerShell,bonus,20.0,16.0,4.0,preferred,bonus
+CLOUD_ENGINEER,Problem Solving,preferred,80.0,44.0,36.0,required,preferred
+CLOUD_ENGINEER,Python,preferred,20.0,60.0,-40.0,preferred,required
+CLOUD_ENGINEER,REST API,bonus,0.0,16.0,-16.0,,bonus
+CLOUD_ENGINEER,SQL,preferred,30.0,28.0,2.0,preferred,preferred
+CLOUD_ENGINEER,Self-Motivation,,30.0,4.0,26.0,preferred,
+CLOUD_ENGINEER,Serverless,bonus,0.0,8.0,-8.0,,
+CLOUD_ENGINEER,Splunk,bonus,0.0,20.0,-20.0,,preferred
+CLOUD_ENGINEER,Stakeholder Communication,bonus,10.0,20.0,-10.0,bonus,preferred
+CLOUD_ENGINEER,Teamwork,preferred,30.0,28.0,2.0,preferred,preferred
+CLOUD_ENGINEER,Terraform,required,10.0,32.0,-22.0,bonus,preferred
+CLOUD_ENGINEER,Time Management,,20.0,0.0,20.0,preferred,
+CLOUD_ENGINEER,Windows Server,,20.0,4.0,16.0,preferred,
+WEB_DEV,AWS,preferred,9.1,25.0,-15.9,,preferred
+WEB_DEV,Agile / Scrum,preferred,9.1,50.0,-40.9,,required
+WEB_DEV,Angular,preferred,9.1,58.3,-49.2,,required
+WEB_DEV,Azure,preferred,9.1,25.0,-15.9,,preferred
+WEB_DEV,C#,preferred,9.1,25.0,-15.9,,preferred
+WEB_DEV,CI/CD,preferred,18.2,50.0,-31.8,bonus,required
+WEB_DEV,CSS,required,72.7,62.5,10.2,required,required
+WEB_DEV,Cloud Computing,bonus,9.1,20.8,-11.7,,preferred
+WEB_DEV,Communication,preferred,27.3,33.3,-6.1,preferred,preferred
+WEB_DEV,Data Modelling,bonus,18.2,12.5,5.7,bonus,bonus
+WEB_DEV,Data Visualisation,,27.3,4.2,23.1,preferred,
+WEB_DEV,DevOps,preferred,18.2,25.0,-6.8,bonus,preferred
+WEB_DEV,Docker,bonus,27.3,12.5,14.8,preferred,bonus
+WEB_DEV,Documentation,preferred,45.5,20.8,24.6,preferred,preferred
+WEB_DEV,Express.js,bonus,0.0,0.0,0.0,,
+WEB_DEV,Git,required,45.5,29.2,16.3,preferred,preferred
+WEB_DEV,HTML,required,54.5,50.0,4.5,required,required
+WEB_DEV,Java,preferred,9.1,33.3,-24.2,,preferred
+WEB_DEV,JavaScript,required,90.9,66.7,24.2,required,required
+WEB_DEV,Microservices,bonus,0.0,16.7,-16.7,,bonus
+WEB_DEV,MongoDB,bonus,9.1,4.2,4.9,,
+WEB_DEV,MySQL,bonus,36.4,12.5,23.9,preferred,bonus
+WEB_DEV,Node.js,required,18.2,29.2,-11.0,bonus,preferred
+WEB_DEV,PHP,bonus,36.4,8.3,28.0,preferred,
+WEB_DEV,PostgreSQL,preferred,18.2,16.7,1.5,bonus,bonus
+WEB_DEV,Problem Solving,preferred,36.4,37.5,-1.1,preferred,preferred
+WEB_DEV,Project Management,,18.2,25.0,-6.8,bonus,preferred
+WEB_DEV,Python,bonus,9.1,12.5,-3.4,,bonus
+WEB_DEV,REST API,required,36.4,33.3,3.0,preferred,preferred
+WEB_DEV,React,required,63.6,58.3,5.3,required,required
+WEB_DEV,SQL,required,27.3,45.8,-18.6,preferred,preferred
+WEB_DEV,Self-Motivation,,36.4,4.2,32.2,preferred,
+WEB_DEV,Software Testing,preferred,9.1,12.5,-3.4,,bonus
+WEB_DEV,Spring Boot,bonus,0.0,20.8,-20.8,,preferred
+WEB_DEV,Teamwork,preferred,36.4,45.8,-9.5,preferred,preferred
+WEB_DEV,TypeScript,required,36.4,12.5,23.9,preferred,bonus
+WEB_DEV,UI/UX Design,preferred,18.2,16.7,1.5,bonus,bonus
+WEB_DEV,Unit Testing,preferred,18.2,33.3,-15.2,bonus,preferred
+WEB_DEV,Vue.js,preferred,45.5,12.5,33.0,preferred,bonus

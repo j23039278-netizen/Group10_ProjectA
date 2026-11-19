@@ -21,6 +21,7 @@ import access
 import assessment_service
 import audit
 import jd_fit
+import rec_details
 import nlp_service
 from database import get_db
 from readiness import expected_gain, skill_points
@@ -184,15 +185,18 @@ def get_assessment_recommendations(
     Uses Aaron's rule-based recommendation engine (recommendation/engine.py).
     Author: Tan Jun Xiong (Aaron)
     """
-    access.get_assessment_or_404(db, current_user, assessment_id)
+    assessment = access.get_assessment_or_404(db, current_user, assessment_id)
     try:
         from recommendation.engine import get_recommendations_for_assessment
-        return get_recommendations_for_assessment(
+        result = get_recommendations_for_assessment(
             assessment_id=assessment_id,
             db=db,
             max_resources_per_skill=3,
             include_developing=True
         )
+        # F05: why each skill matters for the role, and current -> expected level
+        rec_details.add_details(db, assessment, result["recommendations"])
+        return result
     except ImportError:
         # Fallback if engine module not found: no first steps, and no gain per resource
         rows = _with_gain(assessment_service.load_match_rows(db, assessment_id))
@@ -222,4 +226,5 @@ def get_assessment_recommendations(
                 "resources":     [dict(r._mapping) for r in resources]
             })
 
+        rec_details.add_details(db, assessment, recommendations)
         return {"assessment_id": assessment_id, "recommendations": recommendations, "first_steps": []}

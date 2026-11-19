@@ -2320,3 +2320,67 @@ class TestSearchByName:
             assert found("lim nobody") == []
         finally:
             conn.execute("UPDATE users SET full_name = 'Alice' WHERE email = 'alice@student.newinti.edu.my'")
+
+
+# ── F05: why each recommended skill matters, current -> expected level ──
+class TestRecommendationDetail:
+    def recs(self, env, headers, aid):
+        r = env["client"].get(f"/api/assessments/{aid}/recommendations", headers=headers)
+        assert r.status_code == 200, r.text
+        return r.json()["recommendations"]
+
+    def test_role_assessment_shows_jd_evidence_and_levels(self, env, alice):
+        sys.path.insert(0, str(ROOT / "backend"))
+        import jd_fit
+        jds = [s for s in jd_fit.load_jd_skill_sets()["DATA_ANALYST"] if s]
+        aid = run(env, alice, role_id=env["da"]).json()["assessment_id"]
+        recs = self.recs(env, alice, aid)
+        assert recs
+        for rec in recs:
+            why = rec["why"]
+            assert why["source"] == "role" and why["jd_total"] == len(jds)
+            assert why["jd_count"] == sum(rec["skill_name"] in s for s in jds)     # counted from the dataset
+            assert "Data Analyst" in why["text"]
+            if why["example"]:
+                assert "<<" in why["example"]["quote"] and why["example"]["jd_ref"].startswith("JD-")
+            level = rec["level"]
+            assert level["target"] == "intermediate" and level["next_step"] and level["current_text"]
+            if rec["gap_type"] == "gap":
+                assert level["current"] is None and not level["met_now"]
+        assert any(r["why"]["jd_count"] for r in recs)
+
+    def test_pasted_jd_names_the_description(self, env, alice):
+        c = env["client"]
+        jd = c.post("/api/jobs/descriptions", headers=alice, json={
+            "title": "Junior Analyst", "raw_text": "Must know SQL and Power BI; Tableau is a plus. "
+                                                   "Good communication skills and teamwork are needed."}).json()["jd_id"]
+        c.post(f"/api/jobs/descriptions/{jd}/analyse?method=keyword", headers=alice)
+        aid = run(env, alice, jd_id=jd).json()["assessment_id"]
+        for rec in self.recs(env, alice, aid):
+            assert rec["why"]["source"] == "jd" and "Junior Analyst" in rec["why"]["text"]
+            assert rec["why"]["jd_count"] is None
+
+    def test_details_do_not_change_order_or_gain(self, env, alice):
+        aid = run(env, alice, role_id=env["da"]).json()["assessment_id"]
+        recs = self.recs(env, alice, aid)
+        assert [r["priority"] for r in recs] == list(range(1, len(recs) + 1))
+        assert all(r["expected_gain"] > 0 for r in recs)
+
+
+@pytest.mark.parametrize("mine, gap_type, matched, current, met", [
+    ({}, "gap", None, None, False),                                                      # not on the profile
+    ({"SQL": {"proficiency_level": "beginner", "evidence_type": []}}, "developing", "SQL", "beginner", False),
+    ({"SQL": {"proficiency_level": "beginner", "evidence_type": ["coursework"]}}, "developing", "SQL", "beginner", False),
+    ({"SQL": {"proficiency_level": "beginner", "evidence_type": ["project"]}}, "developing", "SQL", "beginner", True),
+    ({"SQL": {"proficiency_level": "intermediate", "evidence_type": []}}, "gap", None, "intermediate", True),
+    ({"MySQL": {"proficiency_level": "advanced", "evidence_type": []}}, "developing", "MySQL", None, False),  # related skill
+])
+def test_level_detail(mine, gap_type, matched, current, met):
+    sys.path.insert(0, str(ROOT / "backend"))
+    import rec_details
+    d = rec_details.level_detail("SQL", gap_type, matched, {k: {"skill_name": k, **v} for k, v in mine.items()})
+    assert d["current"] == current and d["met_now"] is met and d["target"] == "intermediate"
+    if matched == "MySQL":
+        assert d["related_skill"] == "MySQL" and "MySQL" in d["current_text"]
+    if met:
+        assert "Run the assessment again" in d["next_step"]
